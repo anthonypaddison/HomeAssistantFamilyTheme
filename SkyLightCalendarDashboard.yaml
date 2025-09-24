@@ -1,4 +1,5 @@
 title: Panogu Family
+theme: "Panogu Theme"
 views:
   - title: Panogu Family
     path: family
