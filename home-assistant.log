@@ -1,0 +1,6 @@
+2025-09-24 20:09:30.934 WARNING (SyncWorker_0) [homeassistant.loader] We found a custom integration hacs which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+2025-09-24 20:09:30.940 WARNING (SyncWorker_0) [homeassistant.loader] We found a custom integration browser_mod which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+2025-09-24 20:09:30.945 WARNING (SyncWorker_0) [homeassistant.loader] We found a custom integration yoto which has not been tested by Home Assistant. This component might cause stability problems, be sure to disable it if you experience issues with Home Assistant
+2025-09-24 20:09:36.364 WARNING (MainThread) [homeassistant.components.lovelace] Lovelace is running in storage mode. Define resources via user interface
+2025-09-24 20:09:36.463 WARNING (Recorder) [homeassistant.components.recorder.util] The system could not validate that the sqlite3 database at //config/home-assistant_v2.db was shutdown cleanly
+2025-09-24 20:10:06.630 WARNING (MainThread) [homeassistant.setup] Setup of stream is taking over 10 seconds.
