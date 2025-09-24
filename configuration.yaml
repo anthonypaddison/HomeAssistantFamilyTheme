@@ -1,7 +1,6 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
-# Load frontend themes from the themes folder
 frontend:
   themes: !include themes.yaml
   extra_module_url:
@@ -13,7 +12,7 @@ lovelace:
     - url: https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600&display=swap
       type: css
   dashboards:
-    family_dashboard:
+    family-dashboard:
       mode: yaml
       filename: SkyLightCalendarDashboard.yaml
       title: Family
@@ -21,12 +20,10 @@ lovelace:
       show_in_sidebar: true
       require_admin: false
 
-
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
-# Add these:
 input_select: !include input_select.yaml
 input_text: !include input_text.yaml
 input_datetime: !include input_datetime.yaml
