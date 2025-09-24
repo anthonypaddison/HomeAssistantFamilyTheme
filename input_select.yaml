@@ -1,0 +1,21 @@
+calendar_view:
+  name: Calendar View
+  options:
+    - Day
+    - Week
+    - Month
+  initial: Week
+
+chore_list_target:
+  name: Chore List Target
+  options:
+    - Lizzie
+    - Toby
+    - Family
+
+calendar_section:
+  name: Dashboard Section
+  options:
+    - Calendar
+    - Chores
+  initial: Calendar

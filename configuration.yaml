@@ -1,0 +1,25 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include themes.yaml
+  extra_module_url:
+    - /local/sidebarHandler.js?v=1
+    - /local/dashHandler.js?v=1
+
+lovelace:
+  resources:
+    - url: https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600&display=swap
+      type: css
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Add these:
+input_select: !include input_select.yaml
+input_text: !include input_text.yaml
+input_datetime: !include input_datetime.yaml
+input_boolean: !include input_boolean.yaml
+template: !include template.yaml

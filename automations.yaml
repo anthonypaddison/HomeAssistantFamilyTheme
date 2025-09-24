@@ -1,0 +1,42 @@
+- alias: Reset daily chores at 7am
+  id: reset_daily_chores_07
+  trigger:
+    - platform: time
+      at: "07:00:00"
+  action:
+    - service: todo.clear_completed_items
+      target:
+        entity_id:
+          - todo.lizzie_chores
+          - todo.toby_chores
+          - todo.family_chores
+    - service: todo.add_item
+      target: { entity_id: todo.lizzie_chores }
+      data: { item: "Teeth" }
+    - service: todo.add_item
+      target: { entity_id: todo.lizzie_chores }
+      data: { item: "Reading (10 min)" }
+    - service: todo.add_item
+      target: { entity_id: todo.toby_chores }
+      data: { item: "Teeth" }
+    - service: todo.add_item
+      target: { entity_id: todo.toby_chores }
+      data: { item: "Tidy toys" }
+- alias: Mark standard chores completed at 06:59
+  id: chores_mark_complete_0659
+  trigger:
+    - platform: time
+      at: "06:59:00"
+  action:
+    - service: todo.update_item
+      target: { entity_id: todo.lizzie_chores }
+      data: { item: "Teeth", status: "completed" }
+    - service: todo.update_item
+      target: { entity_id: todo.lizzie_chores }
+      data: { item: "Reading (10 min)", status: "completed" }
+    - service: todo.update_item
+      target: { entity_id: todo.toby_chores }
+      data: { item: "Teeth", status: "completed" }
+    - service: todo.update_item
+      target: { entity_id: todo.toby_chores }
+      data: { item: "Tidy toys", status: "completed" }

@@ -1,0 +1,254 @@
+# =======================================================
+# Skylight Family (string-only card-mod blocks)
+# Clean, bright UI with soft shadows and a blue accent
+# Requires: HACS "lovelace-card-mod"
+# =======================================================
+
+# ================================================
+# (DO NOT USE/MODIFY) - variables anchor
+# ================================================
+Skylight variables: &skylight-variables
+  # Typography
+  primary-font-family: >-
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    "Apple Color Emoji","Segoe UI Emoji"
+  mdc-typography-font-family: var(--primary-font-family)
+  ha-font-family-body: var(--primary-font-family)
+  ha-font-family-heading: var(--primary-font-family)
+  ha-font-family-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace
+  ha-font-family-longform: var(--primary-font-family)
+  ha-font-size-scale: 1
+  ha-font-weight-body: 400
+  ha-font-weight-heading: 600
+  ha-font-weight-action: 500
+  ha-line-height-normal: 1.5
+
+  # Accent colour
+  primary-color: "#009ac7"
+  accent-color: "#009ac7"
+  mdc-theme-primary: var(--primary-color)
+
+  # Backgrounds & text
+  primary-background-color: "#ffffff"
+  secondary-background-color: "#EDF2F6"
+  card-background-color: "#ffffff"
+  ha-card-background: var(--card-background-color)
+  primary-text-color: "#1A1A1A"
+  secondary-text-color: "rgba(26,26,26,0.70)"
+  disabled-text-color: "rgba(26,26,26,0.45)"
+  divider-color: var(--secondary-background-color)
+
+  # Cards
+  ha-card-border-radius: 16px
+  ha-card-box-shadow: "0 6px 20px rgba(0,0,0,0.12)"
+  paper-listbox-background-color: var(--primary-background-color)
+  paper-card-background-color: var(--ha-card-background)
+  ha-card-border-width: 0px
+  ha-config-card-border-radius: var(--ha-card-border-radius)
+
+  # Header / tabs
+  app-header-background-color: var(--card-background-color)
+  app-header-text-color: var(--primary-text-color)
+  app-header-selection-bar-color: var(--primary-background-color)
+
+  # Sidebar tokens
+  sidebar-background-color: var(--primary-background-color)
+  sidebar-text-color: var(--secondary-text-color)
+  sidebar-icon-color: var(--secondary-text-color)
+  sidebar-selected-background-color: var(--primary-background-color)
+  sidebar-selected-text-color: white
+  sidebar-selected-icon-color: white
+
+  # Inputs / controls
+  input-idle-line-color: var(--secondary-color)
+  input-hover-line-color: var(--primary-color)
+  input-label-ink-color: var(--secondary-text-color)
+  input-ink-color: var(--primary-text-color)
+  input-outlined-idle-border-color: "teal"
+  input-outlined-hover-border-color: var(--primary-color)
+
+  # Switches / toggles
+  switch-checked-button-color: var(--primary-color)
+  switch-checked-track-color: "color-mix(in srgb, var(--primary-color) 35%, transparent)"
+  switch-unchecked-button-color: "teal"
+  switch-unchecked-track-color: "teal"
+
+  # Badges
+  label-badge-background-color: var(--card-background-color)
+  label-badge-text-color: var(--primary-text-color)
+
+# ================================================
+# THEME
+# ================================================
+Skylight Family:
+  card-mod-theme: Skylight Family
+  <<: *skylight-variables
+
+  # ------------------------------
+  # (NEW) Calendar style variables
+  # ------------------------------
+  family-cal-today-chip-bg: var(--primary-color)
+  family-cal-today-chip-fg: var(--primary-background-color)
+  family-cal-today-chip-radius: 8px
+  family-cal-event-bg: "rgba(255,255,255,0.92)"
+
+  # ---- Calendar palette & spacing (new) ----
+  family-cal-header-color: "#5A5A5A"
+  family-cal-grid-line:    "#E7E7E7"
+  family-cal-today-bg:     "#EFEFEF"
+  family-cal-day-gap:      8px
+  family-cal-event-radius: 14px
+  family-cal-event-shadow: "0 2px 6px rgba(0,0,0,0.08)"
+
+  # Per-person colors (optional – used in the legend)
+  family-color-anthony: "#5F0980"
+  family-color-joy:     "#F0DA4D"
+  family-color-lizzie:  "#F569F1"
+  family-color-toby:    "#2546FF"
+  family-color-family:  "#115B08"
+
+  # -----------------------------------------
+  # Sidebar styling (kept EXACTLY as provided)
+  # -----------------------------------------
+  card-mod-sidebar-yaml: &card-mod-sidebar |
+    .: |
+      /* =============================================== */
+      /*            SECTION-SPECIFIC SETTINGS            */
+      /* =============================================== */
+
+      /* ============== HA 2025.05 UPDATES ============= */
+      :host {
+        content: "" !important;
+        border-right: 0px !important;
+      }
+
+      .menu {
+        background-color: var(--secondary-background-color) !important;
+      }
+
+      .divider {
+        background-color: var(--secondary-background-color) !important;
+        height: 0px !important;
+      }
+
+      .toolbar {
+        padding-bottom: 0px !important;
+        padding-top: 4px !important;
+      }
+
+      ha-md-list-item {
+        width: 105% !important;
+        border-radius: 0 !important;
+        border-radius: none !important;
+        border: none !important;
+        border-image-width: none !important;
+        background-color: var(--secondary-background-color) !important;
+        padding: 0px !important;
+        height: 60px !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        border-right: 0px !important;
+      }
+
+      ha-md-list-item span {
+        color: black !important;
+      }
+
+      ha-md-list-item.selected > ha-svg-icon {
+        color: black !important;
+      }
+
+      ha-md-list {
+        border-radius: none !important;
+        border-image-width: none !important;
+        background-color: var(--secondary-background-color) !important;
+        padding: 0px !important;
+      }
+
+      .ha-scrollbar {
+        scrollbar-gutter: left !important;
+        border-right: 0px !important;
+      }
+
+      .title {
+        display: none !important;
+      }
+
+      ha-md-list-item.selected,
+      ha-md-list-item.selected:focus,
+      ha-md-list-item.selected:hover,
+      ha-md-list-item.selected:active {
+        background-color: var(--primary-background-color) !important;
+        border-radius: 0 !important;
+        border-radius: none !important;
+        border-right: 0px !important;
+        border-color: var(--primary-background-color) !important;
+      }
+
+      /* Add "Panogu Family" before the clock using a pseudo-element */
+      digital-clock::before {
+        content: "Panogu Family " !important;
+        font-weight: bold !important;
+        margin-right: 10px !important;
+      }
+
+      /* Hide second line of digital clock (assumes it's a block or span inside) */
+      .second-line {
+        display: none !important;
+      }
+
+      /* Weather card tweaks */
+      hui-weather-forecast-card {
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+      }
+
+      /* Try to target the icon and temp inside the card */
+      hui-weather-forecast-card img {
+        width: 32px !important;
+        height: 32px !important;
+        object-fit: contain !important;
+      }
+
+      hui-weather-forecast-card span,
+      hui-weather-forecast-card .temp {
+        font-weight: 500 !important;
+        margin-left: 5px !important;
+      }
+
+  # ---------------------------------------------------------
+  # (NEW) Theme-level card styles (no inline per-card styling)
+  # ---------------------------------------------------------
+  card-mod-root-yaml: |
+    .: |
+      /* DIGITAL CLOCK (custom:digital-clock) */
+      ha-card.type-custom-digital-clock {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        text-align: left;
+        padding-left: 12px;
+      }
+      ha-card.type-custom-digital-clock .first-line {
+        font-size: 5.2rem!important;
+        font-weight: 500!important;
+        line-height: 1.0!important;
+      }
+      ha-card.type-custom-digital-clock .second-line {
+        font-size: 1.8rem!important;
+        opacity: 0.85!important;
+      }
+
+  # ---------------------------------------------------------
+  # (NEW) Week-planner "Today" highlight (author-recommended)
+  # ---------------------------------------------------------
+  card-mod-view-yaml: |
+    "ha-card.type-custom-week-planner-card$": |
+      .today .date {
+        background: var(--family-cal-today-chip-bg)!important;
+        color: var(--family-cal-today-chip-fg)!important;
+        border-radius: var(--family-cal-today-chip-radius)!important;
+        padding: 2px 6px!important;
+      }

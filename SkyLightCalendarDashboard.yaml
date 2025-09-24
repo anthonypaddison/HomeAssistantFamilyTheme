@@ -1,0 +1,466 @@
+title: Panogu Family
+views:
+  - title: Panogu Family
+    path: family
+    panel: true
+    badges: []
+    cards:
+      - type: custom:bootstrap-grid-card
+        class: container-fluid g-0
+        cards:
+
+          # =========================
+          # TOP BAR: LEFT / MIDDLE / RIGHT
+          # =========================
+          - type: row
+            class: row align-items-center
+            cards:
+
+              # ---------- LEFT: view drop-down (compact) + calendar/chores toggle ----------
+              - type: horizontal-stack
+                class: col-2
+                cards:
+                  # Very compact Day/Week/Month dropdown (Entities card with a single row)
+                  - type: entities
+                    show_header_toggle: false
+                    entities:
+                      - entity: input_select.calendar_view
+                        name: View
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: transparent !important;
+                          box-shadow: none !important;
+                          border: 0 !important;
+                          margin: 0 !important;
+                          padding: 0 !important;
+                          width: 160px;   /* < 1/6 of typical 1024+ widths */
+                        }
+                        .card-content {
+                          padding: 0 !important;
+                        }
+
+                  # Calendar / Chores segmented control
+                  - type: horizontal-stack
+                    cards:
+                      - type: button
+                        name: Calendar
+                        icon: mdi:calendar
+                        tap_action:
+                          action: call-service
+                          service: input_select.select_option
+                          target: { entity_id: input_select.calendar_section }
+                          data: { option: Calendar }
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --control-bg: var(--secondary-background-color);
+                              background: var(--control-bg);
+                              border: 1px solid var(--family-cal-grid-line);
+                              border-right: 0;
+                              border-radius: 18px 0 0 18px;
+                              padding: 4px 10px;
+                              min-width: 110px;
+                              font-weight: 600;
+                              color: var(--primary-text-color);
+                            }
+                            [[[
+                              if (states['input_select.calendar_section']?.state === 'Calendar') {
+                                return `ha-card{background:var(--primary-color);color:var(--primary-background-color);}`;
+                              }
+                              return '';
+                            ]]]
+
+                      - type: button
+                        name: Chores
+                        icon: mdi:check-circle-outline
+                        tap_action:
+                          action: call-service
+                          service: input_select.select_option
+                          target: { entity_id: input_select.calendar_section }
+                          data: { option: Chores }
+                        card_mod:
+                          style: |
+                            ha-card {
+                              --control-bg: var(--secondary-background-color);
+                              background: var(--control-bg);
+                              border: 1px solid var(--family-cal-grid-line);
+                              border-radius: 0 18px 18px 0;
+                              padding: 4px 10px;
+                              min-width: 110px;
+                              font-weight: 600;
+                              color: var(--primary-text-color);
+                            }
+                            [[[
+                              if (states['input_select.calendar_section']?.state === 'Chores') {
+                                return `ha-card{background:var(--primary-color);color:var(--primary-background-color);}`;
+                              }
+                              return '';
+                            ]]]
+
+              # ---------- MIDDLE: title + compact weather ----------
+              - type: horizontal-stack
+                class: col-8 justify-content-center
+                cards:
+                  - type: markdown
+                    content: |
+                      **Panogu Family**
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: transparent !important;
+                          border: none !important;
+                          box-shadow: none !important;
+                          margin: 0 8px 0 0 !important;
+                          text-align: right;
+                        }
+                        ha-card .markdown { font-size: 1.4rem; line-height: 1.2; }
+
+                  # Weather: keep only icon + temp
+                  - type: weather-forecast
+                    entity: weather.forecast_home
+                    forecast_type: daily
+                    card_mod:
+                      style: |
+                        ha-card {
+                          background: transparent !important;
+                          border: none !important;
+                          box-shadow: none !important;
+                          margin: 0 !important;
+                          padding: 0 !important;
+                        }
+                        hui-weather-forecast-card { display:flex !important; align-items:center !important; }
+                        hui-weather-forecast-card .content { display:flex !important; align-items:center !important; }
+                        hui-weather-forecast-card .conditions,
+                        hui-weather-forecast-card .slot-title,
+                        hui-weather-forecast-card .forecast { display:none !important; }
+                        hui-weather-forecast-card img {
+                          width: 32px !important; height: 32px !important;
+                          object-fit: contain !important; margin-left: 6px; margin-right: 6px;
+                        }
+                        hui-weather-forecast-card .temp,
+                        hui-weather-forecast-card .current .temp {
+                          font-size: 1.2rem !important; font-weight: 600 !important; line-height: 1 !important;
+                        }
+
+              # ---------- RIGHT: person legend toggles (A/J/L/T) ----------
+              # These are the actual calendar legend toggles provided by week-planner-card (legendToggle)
+              # We'll render the legend inside the calendar card and style it to align right.
+              # No extra cards needed here in the header.
+              - type: markdown
+                class: col-2
+                content: ""
+                card_mod:
+                  style: |
+                    ha-card { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+
+          # =========================
+          # SLIM CLOCK ROW UNDER HEADER
+          # =========================
+          - type: row
+            class: row
+            cards:
+              - type: custom:digital-clock
+                class: col-12
+                timeFormat: { hour: 2-digit, minute: 2-digit }
+                dateFormat: cccc d LLLL yyyy
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: transparent !important;
+                      border: none !important;
+                      box-shadow: none !important;
+                      margin-top: 2px !important;
+                      text-align: center !important;
+                    }
+                    .first-line { font-size: 180% !important; font-weight: 500; }
+                    .second-line { font-size: 100% !important; color: var(--family-cal-header-color); }
+
+          # =========================
+          # MAIN CONTENT: Calendar or Chores (toggle)
+          # =========================
+          - type: row
+            class: row
+            cards:
+
+              # ---------- CALENDAR SECTION ----------
+              - type: conditional
+                class: col-12
+                conditions:
+                  - entity: input_select.calendar_section
+                    state: Calendar
+                card:
+                  type: vertical-stack
+                  cards:
+
+                    # DAY
+                    - type: conditional
+                      conditions:
+                        - entity: input_select.calendar_view
+                          state: Day
+                      card:
+                        type: custom:week-planner-card
+                        title: ''
+                        days: 1
+                        startingDay: today
+                        noCardBackground: true
+                        eventBackground: "var(--family-cal-event-bg)"
+                        compact: true
+                        showLegend: true
+                        legendToggle: true   # click legend to show/hide calendars (multi-select)
+                        showNavigation: true
+                        hideDaysWithoutEvents: false
+                        columns: { extraLarge: 7, large: 7, medium: 5, small: 3, extraSmall: 1 }
+                        calendars:
+                          - entity: calendar.family
+                            name: Family
+                            color: var(--family-color-family)
+                            hideInLegend: true
+                          - entity: calendar.family
+                            name: A   # Anthony
+                            color: var(--family-color-anthony)
+                            filter: '^(?:(?!Anthony).)*$'
+                            filterText: '(?:\[?Anthony\]?\s?-\s?|Anthony:\s?)'
+                          - entity: calendar.family
+                            name: J   # Joy
+                            color: var(--family-color-joy)
+                            filter: '^(?:(?!Joy).)*$'
+                            filterText: '(?:\[?Joy\]?\s?-\s?|Joy:\s?)'
+                          - entity: calendar.family
+                            name: L   # Lizzie
+                            color: var(--family-color-lizzie)
+                            filter: '^(?:(?!Lizzie).)*$'
+                            filterText: '(?:\[?Lizzie\]?\s?-\s?|Lizzie:\s?)'
+                          - entity: calendar.family
+                            name: T   # Toby
+                            color: var(--family-color-toby)
+                            filter: '^(?:(?!Toby).)*$'
+                            filterText: '(?:\[?Toby\]?\s?-\s?|Toby:\s?)'
+                        card_mod:
+                          style: |
+                            /* Right-align the legend row and make color dots circular */
+                            ha-card .legend {
+                              display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+                              margin-right: 6px;
+                            }
+                            ha-card .legend .calendar .color {
+                              width: 14px; height: 14px; border-radius: 50%;
+                            }
+
+                    # WEEK
+                    - type: conditional
+                      conditions:
+                        - entity: input_select.calendar_view
+                          state: Week
+                      card:
+                        type: custom:week-planner-card
+                        title: ''
+                        days: 7
+                        startingDay: today
+                        noCardBackground: true
+                        eventBackground: "var(--family-cal-event-bg)"
+                        compact: true
+                        showLegend: true
+                        legendToggle: true
+                        showNavigation: true
+                        hideDaysWithoutEvents: false
+                        columns: { extraLarge: 7, large: 7, medium: 5, small: 3, extraSmall: 1 }
+                        calendars:
+                          - entity: calendar.family
+                            name: Family
+                            color: var(--family-color-family)
+                            hideInLegend: true
+                          - entity: calendar.family
+                            name: A
+                            color: var(--family-color-anthony)
+                            filter: '^(?:(?!Anthony).)*$'
+                            filterText: '(?:\[?Anthony\]?\s?-\s?|Anthony:\s?)'
+                          - entity: calendar.family
+                            name: J
+                            color: var(--family-color-joy)
+                            filter: '^(?:(?!Joy).)*$'
+                            filterText: '(?:\[?Joy\]?\s?-\s?|Joy:\s?)'
+                          - entity: calendar.family
+                            name: L
+                            color: var(--family-color-lizzie)
+                            filter: '^(?:(?!Lizzie).)*$'
+                            filterText: '(?:\[?Lizzie\]?\s?-\s?|Lizzie:\s?)'
+                          - entity: calendar.family
+                            name: T
+                            color: var(--family-color-toby)
+                            filter: '^(?:(?!Toby).)*$'
+                            filterText: '(?:\[?Toby\]?\s?-\s?|Toby:\s?)'
+                        card_mod:
+                          style: |
+                            ha-card .legend {
+                              display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+                              margin-right: 6px;
+                            }
+                            ha-card .legend .calendar .color {
+                              width: 14px; height: 14px; border-radius: 50%;
+                            }
+
+                    # MONTH
+                    - type: conditional
+                      conditions:
+                        - entity: input_select.calendar_view
+                          state: Month
+                      card:
+                        type: custom:week-planner-card
+                        title: ''
+                        days: 30
+                        startingDay: today
+                        noCardBackground: true
+                        eventBackground: "var(--family-cal-event-bg)"
+                        compact: true
+                        showLegend: true
+                        legendToggle: true
+                        showNavigation: true
+                        hideDaysWithoutEvents: false
+                        columns: { extraLarge: 7, large: 7, medium: 5, small: 3, extraSmall: 1 }
+                        calendars:
+                          - entity: calendar.family
+                            name: Family
+                            color: var(--family-color-family)
+                            hideInLegend: true
+                          - entity: calendar.family
+                            name: A
+                            color: var(--family-color-anthony)
+                            filter: '^(?:(?!Anthony).)*$'
+                            filterText: '(?:\[?Anthony\]?\s?-\s?|Anthony:\s?)'
+                          - entity: calendar.family
+                            name: J
+                            color: var(--family-color-joy)
+                            filter: '^(?:(?!Joy).)*$'
+                            filterText: '(?:\[?Joy\]?\s?-\s?|Joy:\s?)'
+                          - entity: calendar.family
+                            name: L
+                            color: var(--family-color-lizzie)
+                            filter: '^(?:(?!Lizzie).)*$'
+                            filterText: '(?:\[?Lizzie\]?\s?-\s?|Lizzie:\s?)'
+                          - entity: calendar.family
+                            name: T
+                            color: var(--family-color-toby)
+                            filter: '^(?:(?!Toby).)*$'
+                            filterText: '(?:\[?Toby\]?\s?-\s?|Toby:\s?)'
+                        card_mod:
+                          style: |
+                            ha-card .legend {
+                              display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+                              margin-right: 6px;
+                            }
+                            ha-card .legend .calendar .color {
+                              width: 14px; height: 14px; border-radius: 50%;
+                            }
+
+              # ---------- CHORES SECTION ----------
+              - type: conditional
+                class: col-12
+                conditions:
+                  - entity: input_select.calendar_section
+                    state: Chores
+                card:
+                  type: horizontal-stack
+                  cards:
+                    - type: todo-list
+                      entity: todo.lizzie_chores
+                      title: Lizzie's Chores
+                      item_tap_action: toggle
+                      hide_completed: false
+                      display_order: duedate_asc
+                      card_mod:
+                        style: |
+                          ha-card.type-todo-list div.header,
+                          ha-card.type-todo-list .addRow { display: none; }
+                          ha-check-list-item {
+                            max-height: 72px !important;
+                            background-color: #fff;
+                            border: 1px solid var(--family-cal-grid-line);
+                            border-radius: 18px;
+                            box-shadow: 0 2px 6px rgba(0,0,0,.06);
+                            padding: 6px 12px;
+                          }
+                    - type: todo-list
+                      entity: todo.toby_chores
+                      title: Toby's Chores
+                      item_tap_action: toggle
+                      hide_completed: false
+                      display_order: duedate_asc
+                      card_mod:
+                        style: |
+                          ha-card.type-todo-list div.header,
+                          ha-card.type-todo-list .addRow { display: none; }
+                          ha-check-list-item {
+                            max-height: 72px !important;
+                            background-color: #fff;
+                            border: 1px solid var(--family-cal-grid-line);
+                            border-radius: 18px;
+                            box-shadow: 0 2px 6px rgba(0,0,0,.06);
+                            padding: 6px 12px;
+                          }
+
+          # =========================
+          # FLOATING ADD EVENT FAB (bottom-right)
+          # =========================
+          - type: button
+            icon: mdi:plus
+            name: ""
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  title: Add Calendar Event
+                  size: wide
+                  content:
+                    type: vertical-stack
+                    card_mod:
+                      style: |
+                        :host ha-dialog {
+                          --mdc-dialog-min-width: 780px;
+                          --mdc-dialog-max-width: 980px;
+                        }
+                        div.mdc-dialog div.mdc-dialog__scrim {
+                          backdrop-filter: blur(6px);
+                          background: rgba(0,0,0,.15);
+                        }
+                        div.mdc-dialog .mdc-dialog__surface {
+                          background: #FFFFFF;
+                          border-radius: 16px;
+                          border: 1px solid var(--family-cal-grid-line);
+                        }
+                    cards:
+                      - type: input-text
+                        entity: input_text.calendar_event_title
+                        name: Title
+                      - type: input-text
+                        entity: input_text.calendar_event_description
+                        name: Description
+                      - type: input-datetime
+                        entity: input_datetime.calendar_event_start
+                        name: Start
+                        with_time: true
+                      - type: input-datetime
+                        entity: input_datetime.calendar_event_end
+                        name: End
+                        with_time: true
+                      - type: input-boolean
+                        entity: input_boolean.calendar_all_day
+                        name: All Day
+                      - type: button
+                        name: Save Event
+                        icon: mdi:check
+                        tap_action:
+                          action: call-service
+                          service: script.add_calendar_event
+            card_mod:
+              style: |
+                :host { position: fixed; right: 24px; bottom: 24px; z-index: 1000; }
+                ha-card {
+                  width: 64px; height: 64px;
+                  border-radius: 50%;
+                  background: var(--primary-color);
+                  color: var(--primary-background-color);
+                  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+                }
+                ha-card .icon { --mdc-icon-size: 28px; }

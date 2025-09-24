@@ -1,0 +1,6 @@
+- sensor:
+    - name: "weekday_name_lower"
+      unique_id: weekday_name_lower
+      state: >
+        {% set days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] %}
+        {{ days[now().weekday()] }}

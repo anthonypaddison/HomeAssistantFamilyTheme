@@ -1,0 +1,8 @@
+calendar_event_start:
+  name: Calendar Event Start
+  has_date: true
+  has_time: true
+calendar_event_end:
+  name: Calendar Event End
+  has_date: true
+  has_time: true
