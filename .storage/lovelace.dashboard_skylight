@@ -1,0 +1,453 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace.dashboard_skylight",
+  "data": {
+    "config": {
+      "title": "Panogu Family",
+      "views": [
+        {
+          "title": "Panogu Family",
+          "path": "family",
+          "panel": true,
+          "badges": [],
+          "cards": [
+            {
+              "type": "custom:bootstrap-grid-card",
+              "class": "container-fluid g-0",
+              "cards": [
+                {
+                  "type": "row",
+                  "class": "row align-items-center",
+                  "cards": [
+                    {
+                      "type": "horizontal-stack",
+                      "class": "col-4",
+                      "cards": [
+                        {
+                          "type": "horizontal-stack",
+                          "cards": [
+                            {
+                              "type": "button",
+                              "name": "Calendar",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_select.select_option",
+                                "target": {
+                                  "entity_id": "input_select.calendar_section"
+                                },
+                                "data": {
+                                  "option": "Calendar"
+                                }
+                              },
+                              "card_mod": {
+                                "style": ":host {\n  --horizontal-stack-card-gap: 0px !important;\n  --stack-card-gap: 0px !important;\n}\n#root {\n  display: flex !important;\n  --horizontal-stack-card-gap: 0px !important;\n  --stack-card-gap: 0px !important;\n  gap: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n}\nha-card span {\n  margin: 0px !important;\n  padding: 2px !important;\n}\nha-card {\n  background: white;\n  border: 1px solid #8769bf;\n  border-width: 1px 0.5px 1px 1px;\n  border-radius: 18px 0 0 18px;\n  margin: 0 !important;\n  padding: 0px !important;\n  font-weight: 600;\n  color: #8769bf;\n  box-shadow: none;\n  flex: 1;   /* makes it stretch */\n  margin: 0 !important;\n}\n:host {\n  {% if states('input_select.calendar_section') == 'Calendar' %}\n  --control-bg: #8769bf !important;\n  --primary-text-color: white !important;\n  {% endif %}\n}\n"
+                              }
+                            },
+                            {
+                              "type": "button",
+                              "name": "Chores",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "input_select.select_option",
+                                "target": {
+                                  "entity_id": "input_select.calendar_section"
+                                },
+                                "data": {
+                                  "option": "Chores"
+                                }
+                              },
+                              "card_mod": {
+                                "style": ":host {\n  --horizontal-stack-card-gap: 0px !important;\n  --stack-card-gap: 0px !important;\n}\n#root {\n  display: flex !important;\n  --horizontal-stack-card-gap: 0px !important;\n  --stack-card-gap: 0px !important;\n  gap: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n}\nha-card span {\n  margin: 0px !important;\n  padding: 2px !important;\n}\nha-card {\n  background: white;\n  border: 1px solid #8769bf;\n  border-width: 1px 1px 1px 0.5px;\n  border-radius: 0 18px 18px 0;\n  margin: 0 !important;\n  padding: 0px !important;\n  font-weight: 600;\n  color: #8769bf;\n  box-shadow: none;\n  flex: 1;   /* makes it stretch */\n}\n:host {\n  {% if states('input_select.calendar_section') == 'Chores' %}\n  --control-bg: #8769bf !important;\n  --primary-text-color: white !important;\n  {% endif %}\n}\n"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "entities",
+                          "show_header_toggle": false,
+                          "entities": [
+                            {
+                              "entity": "input_select.calendar_view",
+                              "name": "View"
+                            }
+                          ],
+                          "card_mod": {
+                            "style": ":host {\n  --mdc-icon-size: 0px !important;\n  --state-icon-color: transparent !important;\n  border-bottom-width: 0 !important;\n}\n\nmdc-line-ripple {\n  display: none !important;\n  border: none !important;\n  height: 0 !important;\n}\n\nha-card {\n  background: transparent !important;\n  box-shadow: none !important;\n  border: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n  --mdc-select-fill-color: transparent !important;\n  --ha-select-min-width: 0px !important;\n  --ha-select-height: 50% !important;\n  --ha-card-border-width: 0px !important;\n  --restore-card-border-width: 0px !important;\n  border-bottom-width: 0 !important;\n}\n.mdc-select .mdc-select__anchor .mdc-floating-label {\n  display: none !important;\n}\n.card-content {\n  padding: 0 !important;\n}\n"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "horizontal-stack",
+                      "class": "col-4 justify-content-center",
+                      "cards": [
+                        {
+                          "type": "markdown",
+                          "content": "**Panogu Family**\n",
+                          "card_mod": {
+                            "style": "ha-card {\n  background: transparent !important;\n  border: none !important;\n  box-shadow: none !important;\n  margin: 0 8px 0 0 !important;\n  text-align: center;\n  font-size: 3rem\n}\nha-card .markdown { font-size: 9rem; line-height: 1.2; }\n"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "markdown",
+                      "class": "col-4",
+                      "content": "",
+                      "card_mod": {
+                        "style": "ha-card { background: transparent !important; box-shadow: none !important; border: 0 !important; }\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "row",
+                  "class": "row",
+                  "cards": [
+                    {
+                      "type": "custom:digital-clock",
+                      "class": "col-12",
+                      "timeFormat": {
+                        "hour": "2-digit",
+                        "minute": "2-digit"
+                      },
+                      "dateFormat": "cccc d LLLL yyyy",
+                      "card_mod": {
+                        "style": "ha-card {\n  background: transparent !important;\n  border: none !important;\n  box-shadow: none !important;\n  margin-top: 2px !important;\n  text-align: center !important;\n}\n.first-line { font-size: 180% !important; font-weight: 500; }\n.second-line { font-size: 100% !important; color: var(--family-cal-header-color); }\n"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "row",
+                  "class": "row",
+                  "cards": [
+                    {
+                      "type": "conditional",
+                      "class": "col-12",
+                      "conditions": [
+                        {
+                          "entity": "input_select.calendar_section",
+                          "state": "Calendar"
+                        }
+                      ],
+                      "card": {
+                        "type": "vertical-stack",
+                        "cards": [
+                          {
+                            "type": "conditional",
+                            "conditions": [
+                              {
+                                "entity": "input_select.calendar_view",
+                                "state": "Day"
+                              }
+                            ],
+                            "card": {
+                              "type": "custom:week-planner-card",
+                              "title": "",
+                              "days": 1,
+                              "startingDay": "today",
+                              "noCardBackground": true,
+                              "eventBackground": "var(--family-cal-event-bg)",
+                              "compact": true,
+                              "showLegend": true,
+                              "legendToggle": true,
+                              "showNavigation": true,
+                              "hideDaysWithoutEvents": false,
+                              "columns": {
+                                "extraLarge": 7,
+                                "large": 7,
+                                "medium": 5,
+                                "small": 3,
+                                "extraSmall": 1
+                              },
+                              "calendars": [
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "Family",
+                                  "color": "var(--family-color-family)",
+                                  "hideInLegend": true
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "A",
+                                  "color": "var(--family-color-anthony)",
+                                  "filter": "^(?:(?!Anthony).)*$",
+                                  "filterText": "(?:\\[?Anthony\\]?\\s?-\\s?|Anthony:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "J",
+                                  "color": "var(--family-color-joy)",
+                                  "filter": "^(?:(?!Joy).)*$",
+                                  "filterText": "(?:\\[?Joy\\]?\\s?-\\s?|Joy:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "L",
+                                  "color": "var(--family-color-lizzie)",
+                                  "filter": "^(?:(?!Lizzie).)*$",
+                                  "filterText": "(?:\\[?Lizzie\\]?\\s?-\\s?|Lizzie:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "T",
+                                  "color": "var(--family-color-toby)",
+                                  "filter": "^(?:(?!Toby).)*$",
+                                  "filterText": "(?:\\[?Toby\\]?\\s?-\\s?|Toby:\\s?)"
+                                }
+                              ],
+                              "card_mod": {
+                                "style": "/* Right-align the legend row and make color dots circular */\nha-card .legend {\n  display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;\n  margin-right: 6px;\n}\nha-card .legend .calendar .color {\n  width: 14px; height: 14px; border-radius: 50%;\n}\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "conditions": [
+                              {
+                                "entity": "input_select.calendar_view",
+                                "state": "Week"
+                              }
+                            ],
+                            "card": {
+                              "type": "custom:week-planner-card",
+                              "title": "",
+                              "days": 5,
+                              "startingDay": "today",
+                              "noCardBackground": true,
+                              "eventBackground": "var(--family-cal-event-bg)",
+                              "compact": true,
+                              "showLegend": true,
+                              "legendToggle": true,
+                              "showNavigation": true,
+                              "hideDaysWithoutEvents": false,
+                              "columns": {
+                                "extraLarge": 7,
+                                "large": 7,
+                                "medium": 5,
+                                "small": 3,
+                                "extraSmall": 1
+                              },
+                              "calendars": [
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "Family",
+                                  "color": "var(--family-color-family)",
+                                  "hideInLegend": true
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "A",
+                                  "color": "var(--family-color-anthony)",
+                                  "filter": "^(?:(?!Anthony).)*$",
+                                  "filterText": "(?:\\[?Anthony\\]?\\s?-\\s?|Anthony:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "J",
+                                  "color": "var(--family-color-joy)",
+                                  "filter": "^(?:(?!Joy).)*$",
+                                  "filterText": "(?:\\[?Joy\\]?\\s?-\\s?|Joy:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "L",
+                                  "color": "var(--family-color-lizzie)",
+                                  "filter": "^(?:(?!Lizzie).)*$",
+                                  "filterText": "(?:\\[?Lizzie\\]?\\s?-\\s?|Lizzie:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "T",
+                                  "color": "var(--family-color-toby)",
+                                  "filter": "^(?:(?!Toby).)*$",
+                                  "filterText": "(?:\\[?Toby\\]?\\s?-\\s?|Toby:\\s?)"
+                                }
+                              ],
+                              "card_mod": {
+                                "style": "ha-card .legend {\n  display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;\n  margin-right: 6px;\n}\nha-card .legend .calendar .color {\n  width: 14px; height: 14px; border-radius: 50%;\n}\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "conditions": [
+                              {
+                                "entity": "input_select.calendar_view",
+                                "state": "Month"
+                              }
+                            ],
+                            "card": {
+                              "type": "custom:week-planner-card",
+                              "title": "",
+                              "days": 30,
+                              "startingDay": "today",
+                              "noCardBackground": true,
+                              "eventBackground": "var(--family-cal-event-bg)",
+                              "compact": true,
+                              "showLegend": true,
+                              "legendToggle": true,
+                              "showNavigation": true,
+                              "hideDaysWithoutEvents": false,
+                              "columns": {
+                                "extraLarge": 7,
+                                "large": 7,
+                                "medium": 5,
+                                "small": 3,
+                                "extraSmall": 1
+                              },
+                              "calendars": [
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "Family",
+                                  "color": "var(--family-color-family)",
+                                  "hideInLegend": true
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "A",
+                                  "color": "var(--family-color-anthony)",
+                                  "filter": "^(?:(?!Anthony).)*$",
+                                  "filterText": "(?:\\[?Anthony\\]?\\s?-\\s?|Anthony:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "J",
+                                  "color": "var(--family-color-joy)",
+                                  "filter": "^(?:(?!Joy).)*$",
+                                  "filterText": "(?:\\[?Joy\\]?\\s?-\\s?|Joy:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "L",
+                                  "color": "var(--family-color-lizzie)",
+                                  "filter": "^(?:(?!Lizzie).)*$",
+                                  "filterText": "(?:\\[?Lizzie\\]?\\s?-\\s?|Lizzie:\\s?)"
+                                },
+                                {
+                                  "entity": "calendar.family",
+                                  "name": "T",
+                                  "color": "var(--family-color-toby)",
+                                  "filter": "^(?:(?!Toby).)*$",
+                                  "filterText": "(?:\\[?Toby\\]?\\s?-\\s?|Toby:\\s?)"
+                                }
+                              ],
+                              "card_mod": {
+                                "style": "ha-card .legend {\n  display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;\n  margin-right: 6px;\n}\nha-card .legend .calendar .color {\n  width: 14px; height: 14px; border-radius: 50%;\n}\n"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "conditional",
+                      "class": "col-12",
+                      "conditions": [
+                        {
+                          "entity": "input_select.calendar_section",
+                          "state": "Chores"
+                        }
+                      ],
+                      "card": {
+                        "type": "horizontal-stack",
+                        "cards": [
+                          {
+                            "type": "todo-list",
+                            "entity": "todo.lizzie_chores",
+                            "title": "Lizzie's Chores",
+                            "item_tap_action": "toggle",
+                            "hide_completed": false,
+                            "display_order": "duedate_asc",
+                            "card_mod": {
+                              "style": "ha-card.type-todo-list div.header,\nha-card.type-todo-list .addRow { display: none; }\nha-check-list-item {\n  max-height: 72px !important;\n  background-color: #fff;\n  border: 1px solid var(--family-cal-grid-line);\n  border-radius: 18px;\n  box-shadow: 0 2px 6px rgba(0,0,0,.06);\n  padding: 6px 12px;\n}\n"
+                            }
+                          },
+                          {
+                            "type": "todo-list",
+                            "entity": "todo.toby_chores",
+                            "title": "Toby's Chores",
+                            "item_tap_action": "toggle",
+                            "hide_completed": false,
+                            "display_order": "duedate_asc",
+                            "card_mod": {
+                              "style": "ha-card.type-todo-list div.header,\nha-card.type-todo-list .addRow { display: none; }\nha-check-list-item {\n  max-height: 72px !important;\n  background-color: #fff;\n  border: 1px solid var(--family-cal-grid-line);\n  border-radius: 18px;\n  box-shadow: 0 2px 6px rgba(0,0,0,.06);\n  padding: 6px 12px;\n}\n"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "button",
+                  "icon": "mdi:plus",
+                  "name": "",
+                  "tap_action": {
+                    "action": "fire-dom-event",
+                    "browser_mod": {
+                      "service": "browser_mod.popup",
+                      "data": {
+                        "title": "Add Calendar Event",
+                        "size": "wide",
+                        "content": {
+                          "type": "vertical-stack",
+                          "card_mod": {
+                            "style": ":host ha-dialog {\n  --mdc-dialog-min-width: 780px;\n  --mdc-dialog-max-width: 980px;\n}\ndiv.mdc-dialog div.mdc-dialog__scrim {\n  backdrop-filter: blur(6px);\n  background: rgba(0,0,0,.15);\n}\ndiv.mdc-dialog .mdc-dialog__surface {\n  background: #FFFFFF;\n  border-radius: 16px;\n  border: 1px solid var(--family-cal-grid-line);\n}\n"
+                          },
+                          "cards": [
+                            {
+                              "type": "input-text",
+                              "entity": "input_text.calendar_event_title",
+                              "name": "Title"
+                            },
+                            {
+                              "type": "input-text",
+                              "entity": "input_text.calendar_event_description",
+                              "name": "Description"
+                            },
+                            {
+                              "type": "input-datetime",
+                              "entity": "input_datetime.calendar_event_start",
+                              "name": "Start",
+                              "with_time": true
+                            },
+                            {
+                              "type": "input-datetime",
+                              "entity": "input_datetime.calendar_event_end",
+                              "name": "End",
+                              "with_time": true
+                            },
+                            {
+                              "type": "input-boolean",
+                              "entity": "input_boolean.calendar_all_day",
+                              "name": "All Day"
+                            },
+                            {
+                              "type": "button",
+                              "name": "Save Event",
+                              "icon": "mdi:check",
+                              "tap_action": {
+                                "action": "call-service",
+                                "service": "script.add_calendar_event"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "card_mod": {
+                    "style": ":host { position: fixed; right: 24px; bottom: 24px; z-index: 1000; }\nha-card {\n  width: 64px; height: 64px;\n  border-radius: 50%;\n  background: var(--primary-color);\n  color: var(--primary-background-color);\n  box-shadow: 0 8px 18px rgba(0,0,0,.18);\n}\nha-card .icon { --mdc-icon-size: 28px; }\n"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

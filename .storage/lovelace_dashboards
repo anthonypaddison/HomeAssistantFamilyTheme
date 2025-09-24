@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace_dashboards",
+  "data": {
+    "items": [
+      {
+        "id": "map",
+        "icon": "mdi:map",
+        "title": "Map",
+        "url_path": "map",
+        "mode": "storage",
+        "show_in_sidebar": false,
+        "require_admin": false
+      },
+      {
+        "id": "dashboard_skylight",
+        "show_in_sidebar": true,
+        "title": "SkyLight",
+        "require_admin": false,
+        "mode": "storage",
+        "url_path": "dashboard-skylight",
+        "icon": "mdi:weather-night"
+      }
+    ]
+  }
+}

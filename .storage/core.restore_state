@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "core.restore_state",
+  "data": [
+    {
+      "state": {"entity_id":"update.home_assistant_supervisor_update","state":"off","attributes":{"auto_update":true,"display_precision":0,"installed_version":"2025.09.0","in_progress":false,"latest_version":"2025.09.0","release_summary":null,"release_url":"https://github.com/home-assistant/supervisor/releases/tag/2025.09.0","skipped_version":null,"title":"Home Assistant Supervisor","update_percentage":null,"entity_picture":"https://brands.home-assistant.io/hassio/icon.png","friendly_name":"Home Assistant Supervisor Update","supported_features":1},"last_changed":"2025-09-24T20:09:46.493398+00:00","last_reported":"2025-09-24T20:09:46.493398+00:00","last_updated":"2025-09-24T20:09:46.493398+00:00","context":{"id":"01K5YNHA7XM0S8C493YFV1Y5MT","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.home_assistant_core_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"2025.9.4","in_progress":false,"latest_version":"2025.9.4","release_summary":null,"release_url":"https://www.home-assistant.io/latest-release-notes/","skipped_version":null,"title":"Home Assistant Core","update_percentage":null,"entity_picture":"https://brands.home-assistant.io/homeassistant/icon.png","friendly_name":"Home Assistant Core Update","supported_features":11},"last_changed":"2025-09-24T20:09:46.495167+00:00","last_reported":"2025-09-24T20:09:46.495167+00:00","last_updated":"2025-09-24T20:09:46.495167+00:00","context":{"id":"01K5YNHA7ZHR3HR87VZEFJGQ5C","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.get_hacs_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"1.3.1","in_progress":false,"latest_version":"1.3.1","release_summary":null,"release_url":null,"skipped_version":null,"title":"Get HACS","update_percentage":null,"entity_picture":"/api/hassio/addons/cb646a50_get/icon","friendly_name":"Get HACS Update","supported_features":25},"last_changed":"2025-09-24T20:09:46.496437+00:00","last_reported":"2025-09-24T20:09:46.496437+00:00","last_updated":"2025-09-24T20:09:46.496437+00:00","context":{"id":"01K5YNHA8074G4DPTDY0PDGZNM","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.file_editor_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"5.8.0","in_progress":false,"latest_version":"5.8.0","release_summary":null,"release_url":null,"skipped_version":null,"title":"File editor","update_percentage":null,"entity_picture":"/api/hassio/addons/core_configurator/icon","friendly_name":"File editor Update","supported_features":25},"last_changed":"2025-09-24T20:09:46.497457+00:00","last_reported":"2025-09-24T20:09:46.497457+00:00","last_updated":"2025-09-24T20:09:46.497457+00:00","context":{"id":"01K5YNHA814AF35VXWNQMNW1DD","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.advanced_ssh_web_terminal_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"21.0.3","in_progress":false,"latest_version":"21.0.3","release_summary":null,"release_url":null,"skipped_version":null,"title":"Advanced SSH & Web Terminal","update_percentage":null,"entity_picture":"/api/hassio/addons/a0d7b954_ssh/icon","friendly_name":"Advanced SSH & Web Terminal Update","supported_features":25},"last_changed":"2025-09-24T20:09:46.498386+00:00","last_reported":"2025-09-24T20:09:46.498386+00:00","last_updated":"2025-09-24T20:09:46.498386+00:00","context":{"id":"01K5YNHA828R05FZK5M6313CDW","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.home_assistant_operating_system_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"16.2","in_progress":false,"latest_version":"16.2","release_summary":null,"release_url":"https://github.com/home-assistant/operating-system/releases/tag/16.2","skipped_version":null,"title":"Home Assistant Operating System","update_percentage":null,"entity_picture":"https://brands.home-assistant.io/homeassistant/icon.png","friendly_name":"Home Assistant Operating System Update","supported_features":11},"last_changed":"2025-09-24T20:09:46.499657+00:00","last_reported":"2025-09-24T20:09:46.499657+00:00","last_updated":"2025-09-24T20:09:46.499657+00:00","context":{"id":"01K5YNHA832A8T0VE907RKMZTX","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"conversation.home_assistant","state":"unknown","attributes":{"friendly_name":"Home Assistant","supported_features":1},"last_changed":"2025-09-24T20:09:54.389533+00:00","last_reported":"2025-09-24T20:09:54.389533+00:00","last_updated":"2025-09-24T20:09:54.389533+00:00","context":{"id":"01K5YNHHYN979D0BAWBYYXBE62","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"event.backup_automatic_backup","state":"unknown","attributes":{"event_types":["completed","failed","in_progress"],"event_type":null,"friendly_name":"Backup Automatic backup"},"last_changed":"2025-09-24T20:09:54.474360+00:00","last_reported":"2025-09-24T20:09:54.474360+00:00","last_updated":"2025-09-24T20:09:54.474360+00:00","context":{"id":"01K5YNHJ1AGAJGPXQWW0E19ZE2","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "last_event_type": null,
+        "last_event_attributes": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"script.add_calendar_event","state":"off","attributes":{"last_triggered":null,"mode":"single","current":0,"friendly_name":"Add Calendar Event"},"last_changed":"2025-09-24T20:09:54.913481+00:00","last_reported":"2025-09-24T20:09:54.913481+00:00","last_updated":"2025-09-24T20:09:54.913481+00:00","context":{"id":"01K5YNHJF14BCMSQ4STVXW28EW","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"person.anthony","state":"home","attributes":{"editable":true,"id":"anthony","device_trackers":["device_tracker.anthonys_work_mac","device_tracker.anthonys_iphone"],"latitude":53.82397083008385,"longitude":-0.9665261428351315,"gps_accuracy":3,"source":"person.anthony","user_id":"afa5c5d5f5324c9e9f055fb232b654cd","friendly_name":"Anthony"},"last_changed":"2025-09-24T20:09:54.930790+00:00","last_reported":"2025-09-24T20:09:54.930790+00:00","last_updated":"2025-09-24T20:09:54.930790+00:00","context":{"id":"01K5YNHJFJ7AA9QEA4BQYF6PK6","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"person.dashboard","state":"home","attributes":{"editable":true,"id":"dashboard","device_trackers":["device_tracker.dashboard_ipad"],"latitude":53.823967905088146,"longitude":-0.9665329800210636,"gps_accuracy":5,"source":"person.dashboard","user_id":"c1add6894d8c4ea0b7ff4175c081822c","friendly_name":"Dashboard"},"last_changed":"2025-09-24T20:09:54.931671+00:00","last_reported":"2025-09-24T20:09:54.931671+00:00","last_updated":"2025-09-24T20:09:54.931671+00:00","context":{"id":"01K5YNHJFKH0X200QEETYJSE1B","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_boolean.calendar_all_day","state":"off","attributes":{"editable":false,"friendly_name":"Calendar All Day"},"last_changed":"2025-09-24T20:09:54.932538+00:00","last_reported":"2025-09-24T20:09:54.932538+00:00","last_updated":"2025-09-24T20:09:54.932538+00:00","context":{"id":"01K5YNHJFMCX2MC9CJNKX7JPXD","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_select.calendar_view","state":"Week","attributes":{"options":["Day","Week","Month"],"editable":false,"friendly_name":"Calendar View"},"last_changed":"2025-09-24T20:09:54.934256+00:00","last_reported":"2025-09-24T20:09:54.934256+00:00","last_updated":"2025-09-24T20:09:54.934256+00:00","context":{"id":"01K5YNHJFPM7PWXC0H30JW5F5H","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_select.chore_list_target","state":"Lizzie","attributes":{"options":["Lizzie","Toby","Family"],"editable":false,"friendly_name":"Chore List Target"},"last_changed":"2025-09-24T20:09:54.934796+00:00","last_reported":"2025-09-24T20:09:54.934796+00:00","last_updated":"2025-09-24T20:09:54.934796+00:00","context":{"id":"01K5YNHJFP0ECG9K4RSNMN9J4N","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_select.calendar_section","state":"Calendar","attributes":{"options":["Calendar","Chores"],"editable":false,"friendly_name":"Dashboard Section"},"last_changed":"2025-09-24T20:09:54.935474+00:00","last_reported":"2025-09-24T20:09:54.935474+00:00","last_updated":"2025-09-24T20:09:54.935474+00:00","context":{"id":"01K5YNHJFQ6N7BZAN61EM7QGJK","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_select.calendar_person","state":"Family","attributes":{"options":["Family","Anthony","Joy","Toby","Lizzie"],"editable":true,"friendly_name":"calendar_person"},"last_changed":"2025-09-24T20:09:56.517561+00:00","last_reported":"2025-09-24T20:09:56.517561+00:00","last_updated":"2025-09-24T20:09:56.517561+00:00","context":{"id":"01K5YNHM15CSX24S77EF8EFTDD","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"automation.reset_daily_chores_at_7am","state":"on","attributes":{"id":"reset_daily_chores_07","last_triggered":"2025-09-24T06:00:00.443240+00:00","mode":"single","current":0,"friendly_name":"Reset daily chores at 7am"},"last_changed":"2025-09-24T20:09:56.799773+00:00","last_reported":"2025-09-24T20:09:56.799773+00:00","last_updated":"2025-09-24T20:09:56.799773+00:00","context":{"id":"01K5YNHM9Z02N7G9QG9C2E78N6","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_datetime.calendar_event_start","state":"2025-09-20 00:00:00","attributes":{"has_date":true,"has_time":true,"editable":false,"year":2025,"month":9,"day":20,"hour":0,"minute":0,"second":0,"timestamp":1758322800.0,"friendly_name":"Calendar Event Start"},"last_changed":"2025-09-24T20:10:11.615591+00:00","last_reported":"2025-09-24T20:10:11.615591+00:00","last_updated":"2025-09-24T20:10:11.615591+00:00","context":{"id":"01K5YNJ2RZA72G06T6D2Y5393M","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_datetime.calendar_event_end","state":"2025-09-20 00:00:00","attributes":{"has_date":true,"has_time":true,"editable":false,"year":2025,"month":9,"day":20,"hour":0,"minute":0,"second":0,"timestamp":1758322800.0,"friendly_name":"Calendar Event End"},"last_changed":"2025-09-24T20:10:11.616457+00:00","last_reported":"2025-09-24T20:10:11.616457+00:00","last_updated":"2025-09-24T20:10:11.616457+00:00","context":{"id":"01K5YNJ2S04T76PW8MY79YP211","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_text.calendar_event_title","state":"unknown","attributes":{"editable":false,"min":0,"max":100,"pattern":null,"mode":"text","friendly_name":"Calendar Event Title"},"last_changed":"2025-09-24T20:10:13.115964+00:00","last_reported":"2025-09-24T20:10:13.115964+00:00","last_updated":"2025-09-24T20:10:13.115964+00:00","context":{"id":"01K5YNJ47VPS5DY0QWR7HSYSTW","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_text.calendar_event_description","state":"unknown","attributes":{"editable":false,"min":0,"max":100,"pattern":null,"mode":"text","friendly_name":"Calendar Event Description"},"last_changed":"2025-09-24T20:10:13.116504+00:00","last_reported":"2025-09-24T20:10:13.116504+00:00","last_updated":"2025-09-24T20:10:13.116504+00:00","context":{"id":"01K5YNJ47W864S0DVC6CYHTJWH","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_text.chore_title","state":"unknown","attributes":{"editable":false,"min":0,"max":100,"pattern":null,"mode":"text","friendly_name":"Chore Title"},"last_changed":"2025-09-24T20:10:13.116931+00:00","last_reported":"2025-09-24T20:10:13.116931+00:00","last_updated":"2025-09-24T20:10:13.116931+00:00","context":{"id":"01K5YNJ47WENSD94P28YDWP966","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"input_text.calendar_filter","state":"Joy","attributes":{"editable":true,"min":0,"max":100,"pattern":null,"mode":"text","friendly_name":"calendar_filter"},"last_changed":"2025-09-24T20:10:13.119060+00:00","last_reported":"2025-09-24T20:10:13.119060+00:00","last_updated":"2025-09-24T20:10:13.119060+00:00","context":{"id":"01K5YNJ47ZWHM7RQKDG533XNF7","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"binary_sensor.anthonys_work_mac_camera_in_use","state":"off","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Camera In Use"},"last_changed":"2025-09-24T20:10:23.167373+00:00","last_reported":"2025-09-24T20:10:23.167373+00:00","last_updated":"2025-09-24T20:10:23.167373+00:00","context":{"id":"01K5YNJE1ZBYF54HKGW65E7C0H","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"binary_sensor.anthonys_work_mac_audio_input_in_use","state":"off","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Audio Input In Use"},"last_changed":"2025-09-24T20:10:23.168178+00:00","last_reported":"2025-09-24T20:10:23.168178+00:00","last_updated":"2025-09-24T20:10:23.168178+00:00","context":{"id":"01K5YNJE20MZG6CD92RE7E5NDG","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"binary_sensor.anthonys_work_mac_audio_output_in_use","state":"off","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Audio Output In Use"},"last_changed":"2025-09-24T20:10:23.168895+00:00","last_reported":"2025-09-24T20:10:23.168895+00:00","last_updated":"2025-09-24T20:10:23.168895+00:00","context":{"id":"01K5YNJE20H30F8JHEXDKEZJX1","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"binary_sensor.anthonys_work_mac_active","state":"off","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Active"},"last_changed":"2025-09-24T20:10:23.169500+00:00","last_reported":"2025-09-24T20:10:23.169500+00:00","last_updated":"2025-09-24T20:10:23.169500+00:00","context":{"id":"01K5YNJE21EZET5BB5CH213S90","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"device_tracker.anthonys_work_mac","state":"unknown","attributes":{"source_type":"gps","friendly_name":"Anthony’s Work Mac"},"last_changed":"2025-09-24T20:10:23.171083+00:00","last_reported":"2025-09-24T20:10:23.171083+00:00","last_updated":"2025-09-24T20:10:23.171083+00:00","context":{"id":"01K5YNJE23DRTGDD1WNCGK6XRN","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_internal_battery_level","state":"unavailable","attributes":{"unit_of_measurement":"%","device_class":"battery","icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Internal Battery Level"},"last_changed":"2025-09-24T20:10:23.174007+00:00","last_reported":"2025-09-24T20:10:23.174007+00:00","last_updated":"2025-09-24T20:10:23.174007+00:00","context":{"id":"01K5YNJE26B0PEB21S4WS9CXQ0","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": "%"
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_internal_battery_state","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Internal Battery State"},"last_changed":"2025-09-24T20:10:23.174957+00:00","last_reported":"2025-09-24T20:10:23.174957+00:00","last_updated":"2025-09-24T20:10:23.174957+00:00","context":{"id":"01K5YNJE262H3JF19AF9CEG7BT","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_storage","state":"unavailable","attributes":{"unit_of_measurement":"% available","icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Storage"},"last_changed":"2025-09-24T20:10:23.175726+00:00","last_reported":"2025-09-24T20:10:23.175726+00:00","last_updated":"2025-09-24T20:10:23.175726+00:00","context":{"id":"01K5YNJE27YS4AJ7A0AS56PGQA","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": "% available"
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_ssid","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac SSID"},"last_changed":"2025-09-24T20:10:23.176510+00:00","last_reported":"2025-09-24T20:10:23.176510+00:00","last_updated":"2025-09-24T20:10:23.176510+00:00","context":{"id":"01K5YNJE289GYA7N0FM61YEPK3","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_bssid","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac BSSID"},"last_changed":"2025-09-24T20:10:23.177318+00:00","last_reported":"2025-09-24T20:10:23.177318+00:00","last_updated":"2025-09-24T20:10:23.177318+00:00","context":{"id":"01K5YNJE29AZ4B39C6WWKN23FG","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_connection_type","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Connection Type"},"last_changed":"2025-09-24T20:10:23.178160+00:00","last_reported":"2025-09-24T20:10:23.178160+00:00","last_updated":"2025-09-24T20:10:23.178160+00:00","context":{"id":"01K5YNJE2AE7GGP35X65PFNQ3E","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_geocoded_location","state":"Unknown","attributes":{"icon":"mdi:map","friendly_name":"Anthony’s Work Mac Geocoded Location"},"last_changed":"2025-09-24T20:10:23.179127+00:00","last_reported":"2025-09-24T20:10:23.179127+00:00","last_updated":"2025-09-24T20:10:23.179127+00:00","context":{"id":"01K5YNJE2BD2P5Z6G8QMTCCRNP","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Unknown",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_active_camera","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Active Camera"},"last_changed":"2025-09-24T20:10:23.179893+00:00","last_reported":"2025-09-24T20:10:23.179893+00:00","last_updated":"2025-09-24T20:10:23.179893+00:00","context":{"id":"01K5YNJE2BXN6KZRKMZ4VGWKQQ","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_active_audio_input","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Active Audio Input"},"last_changed":"2025-09-24T20:10:23.180675+00:00","last_reported":"2025-09-24T20:10:23.180675+00:00","last_updated":"2025-09-24T20:10:23.180675+00:00","context":{"id":"01K5YNJE2CRRAF3686Z4ACN5WZ","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_active_audio_output","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Active Audio Output"},"last_changed":"2025-09-24T20:10:23.181413+00:00","last_reported":"2025-09-24T20:10:23.181413+00:00","last_updated":"2025-09-24T20:10:23.181413+00:00","context":{"id":"01K5YNJE2DKXGW5970T1YHEPTA","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_displays","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Displays"},"last_changed":"2025-09-24T20:10:23.182974+00:00","last_reported":"2025-09-24T20:10:23.182974+00:00","last_updated":"2025-09-24T20:10:23.182974+00:00","context":{"id":"01K5YNJE2E3QWCYAK316MQD2FY","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_primary_display_name","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Primary Display Name"},"last_changed":"2025-09-24T20:10:23.184517+00:00","last_reported":"2025-09-24T20:10:23.184517+00:00","last_updated":"2025-09-24T20:10:23.184517+00:00","context":{"id":"01K5YNJE2GDVEDE81B09ZD9FE2","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_primary_display_id","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Primary Display ID"},"last_changed":"2025-09-24T20:10:23.185277+00:00","last_reported":"2025-09-24T20:10:23.185277+00:00","last_updated":"2025-09-24T20:10:23.185277+00:00","context":{"id":"01K5YNJE2H126AHVV010856Z8V","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_frontmost_app","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Frontmost App"},"last_changed":"2025-09-24T20:10:23.185924+00:00","last_reported":"2025-09-24T20:10:23.185924+00:00","last_updated":"2025-09-24T20:10:23.185924+00:00","context":{"id":"01K5YNJE2H4CDQBVK8MM8TG25B","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_last_update_trigger","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Last Update Trigger"},"last_changed":"2025-09-24T20:10:23.186507+00:00","last_reported":"2025-09-24T20:10:23.186507+00:00","last_updated":"2025-09-24T20:10:23.186507+00:00","context":{"id":"01K5YNJE2J8W5VE75MY77K2NY4","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_app_version","state":"2025.7.2","attributes":{"icon":"mdi:cellphone","friendly_name":"Anthony’s Work Mac App Version"},"last_changed":"2025-09-24T20:10:23.187226+00:00","last_reported":"2025-09-24T20:10:23.187226+00:00","last_updated":"2025-09-24T20:10:23.187226+00:00","context":{"id":"01K5YNJE2KESGXXZ0YG266QVHD","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "2025.7.2",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_location_permission","state":"Denied","attributes":{"icon":"mdi:map","friendly_name":"Anthony’s Work Mac Location permission"},"last_changed":"2025-09-24T20:10:23.187992+00:00","last_reported":"2025-09-24T20:10:23.187992+00:00","last_updated":"2025-09-24T20:10:23.187992+00:00","context":{"id":"01K5YNJE2KFTBC8VYCERH217NJ","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Denied",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_work_mac_audio_output","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s Work Mac Audio Output"},"last_changed":"2025-09-24T20:10:23.188811+00:00","last_reported":"2025-09-24T20:10:23.188811+00:00","last_updated":"2025-09-24T20:10:23.188811+00:00","context":{"id":"01K5YNJE2MXZKZNTVZ86C4Z308","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"device_tracker.anthonys_iphone","state":"home","attributes":{"source_type":"gps","battery_level":75,"latitude":53.82397083008385,"longitude":-0.9665261428351315,"gps_accuracy":3,"altitude":14.62684048977593,"vertical_accuracy":30,"friendly_name":"Anthony’s iPhone"},"last_changed":"2025-09-24T20:10:23.190764+00:00","last_reported":"2025-09-24T20:10:23.190764+00:00","last_updated":"2025-09-24T20:10:23.190764+00:00","context":{"id":"01K5YNJE2PC1S1W4Y7AJFSA7KM","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_battery_level","state":"75","attributes":{"unit_of_measurement":"%","device_class":"battery","icon":"mdi:battery-70","friendly_name":"Anthony’s iPhone Battery Level"},"last_changed":"2025-09-24T20:10:23.193503+00:00","last_reported":"2025-09-24T20:10:23.193503+00:00","last_updated":"2025-09-24T20:10:23.193503+00:00","context":{"id":"01K5YNJE2S47R5RFPV8SEP6BNG","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": 75,
+        "native_unit_of_measurement": "%"
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_connection_type","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone Connection Type"},"last_changed":"2025-09-24T20:10:23.194221+00:00","last_reported":"2025-09-24T20:10:23.194221+00:00","last_updated":"2025-09-24T20:10:23.194221+00:00","context":{"id":"01K5YNJE2T4RJBTFGCRHYX53C8","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_storage","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone Storage"},"last_changed":"2025-09-24T20:10:23.194888+00:00","last_reported":"2025-09-24T20:10:23.194888+00:00","last_updated":"2025-09-24T20:10:23.194888+00:00","context":{"id":"01K5YNJE2TCTQFB7ZYSBFXQH8Q","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_ssid","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone SSID"},"last_changed":"2025-09-24T20:10:23.195730+00:00","last_reported":"2025-09-24T20:10:23.195730+00:00","last_updated":"2025-09-24T20:10:23.195730+00:00","context":{"id":"01K5YNJE2VEG2TDSWA56V2VAAM","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_bssid","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone BSSID"},"last_changed":"2025-09-24T20:10:23.196848+00:00","last_reported":"2025-09-24T20:10:23.196848+00:00","last_updated":"2025-09-24T20:10:23.196848+00:00","context":{"id":"01K5YNJE2WJFPCRWWPXHYGANR8","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_sim_2","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone SIM 2"},"last_changed":"2025-09-24T20:10:23.198169+00:00","last_reported":"2025-09-24T20:10:23.198169+00:00","last_updated":"2025-09-24T20:10:23.198169+00:00","context":{"id":"01K5YNJE2YCG1KWS80S2K80WE3","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_battery_state","state":"Not Charging","attributes":{"Low Power Mode":false,"icon":"mdi:battery-70","friendly_name":"Anthony’s iPhone Battery State"},"last_changed":"2025-09-24T20:10:23.198921+00:00","last_reported":"2025-09-24T20:10:23.198921+00:00","last_updated":"2025-09-24T20:10:23.198921+00:00","context":{"id":"01K5YNJE2YG6X990802JCK9RJ5","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Not Charging",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_sim_1","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone SIM 1"},"last_changed":"2025-09-24T20:10:23.199574+00:00","last_reported":"2025-09-24T20:10:23.199574+00:00","last_updated":"2025-09-24T20:10:23.199574+00:00","context":{"id":"01K5YNJE2Z0QDZFF53ZKBQVKZ5","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_geocoded_location","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone Geocoded Location"},"last_changed":"2025-09-24T20:10:23.200233+00:00","last_reported":"2025-09-24T20:10:23.200233+00:00","last_updated":"2025-09-24T20:10:23.200233+00:00","context":{"id":"01K5YNJE30X89BE0VK4VDAB17K","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_last_update_trigger","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone Last Update Trigger"},"last_changed":"2025-09-24T20:10:23.201072+00:00","last_reported":"2025-09-24T20:10:23.201072+00:00","last_updated":"2025-09-24T20:10:23.201072+00:00","context":{"id":"01K5YNJE31M48KS5J4TB3NKKP7","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_app_version","state":"2025.9.1","attributes":{"icon":"mdi:cellphone","friendly_name":"Anthony’s iPhone App Version"},"last_changed":"2025-09-24T20:10:23.201858+00:00","last_reported":"2025-09-24T20:10:23.201858+00:00","last_updated":"2025-09-24T20:10:23.201858+00:00","context":{"id":"01K5YNJE31402BCHHJGVAPQSZ3","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "2025.9.1",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_location_permission","state":"Authorized Always","attributes":{"icon":"mdi:map","friendly_name":"Anthony’s iPhone Location permission"},"last_changed":"2025-09-24T20:10:23.202725+00:00","last_reported":"2025-09-24T20:10:23.202725+00:00","last_updated":"2025-09-24T20:10:23.202725+00:00","context":{"id":"01K5YNJE32GB3J36CZMMPJT5WK","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Authorized Always",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.anthonys_iphone_audio_output","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Anthony’s iPhone Audio Output"},"last_changed":"2025-09-24T20:10:23.203557+00:00","last_reported":"2025-09-24T20:10:23.203557+00:00","last_updated":"2025-09-24T20:10:23.203557+00:00","context":{"id":"01K5YNJE338EW5J5R29QYXYCW3","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"device_tracker.dashboard_ipad","state":"home","attributes":{"source_type":"gps","battery_level":30,"latitude":53.823967905088146,"longitude":-0.9665329800210636,"gps_accuracy":5,"altitude":15.5973651745106,"vertical_accuracy":30,"friendly_name":"Dashboard - iPad"},"last_changed":"2025-09-24T20:10:23.207161+00:00","last_reported":"2025-09-24T20:10:23.207161+00:00","last_updated":"2025-09-24T20:10:23.207161+00:00","context":{"id":"01K5YNJE37PQVDEBDW4CHX67NQ","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_bssid","state":"34:19:4d:7a:94:9c","attributes":{"icon":"mdi:wifi-star","friendly_name":"Dashboard - iPad BSSID"},"last_changed":"2025-09-24T20:10:23.209861+00:00","last_reported":"2025-09-24T20:10:23.209861+00:00","last_updated":"2025-09-24T20:10:23.209861+00:00","context":{"id":"01K5YNJE39EFPYN9NG5N7PVW0K","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "34:19:4d:7a:94:9c",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_battery_state","state":"Not Charging","attributes":{"Low Power Mode":false,"icon":"mdi:battery-30","friendly_name":"Dashboard - iPad Battery State"},"last_changed":"2025-09-24T20:10:23.210678+00:00","last_reported":"2025-09-24T20:10:23.210678+00:00","last_updated":"2025-09-24T20:10:23.210678+00:00","context":{"id":"01K5YNJE3AV0M4BJFWKZT4Z40F","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Not Charging",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_storage","state":"unavailable","attributes":{"unit_of_measurement":"% available","icon":"mdi:dots-square","friendly_name":"Dashboard - iPad Storage"},"last_changed":"2025-09-24T20:10:23.211363+00:00","last_reported":"2025-09-24T20:10:23.211363+00:00","last_updated":"2025-09-24T20:10:23.211363+00:00","context":{"id":"01K5YNJE3BC3J4TVBB0BPVKY09","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": "% available"
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_sim_1","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Dashboard - iPad SIM 1"},"last_changed":"2025-09-24T20:10:23.211987+00:00","last_reported":"2025-09-24T20:10:23.211987+00:00","last_updated":"2025-09-24T20:10:23.211987+00:00","context":{"id":"01K5YNJE3BBJXRDAAG9ZF08KPS","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_battery_level","state":"30","attributes":{"unit_of_measurement":"%","device_class":"battery","icon":"mdi:battery-30","friendly_name":"Dashboard - iPad Battery Level"},"last_changed":"2025-09-24T20:10:23.212756+00:00","last_reported":"2025-09-24T20:10:23.212756+00:00","last_updated":"2025-09-24T20:10:23.212756+00:00","context":{"id":"01K5YNJE3C0N9Z50B1TGS8FKWF","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": 30,
+        "native_unit_of_measurement": "%"
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_geocoded_location","state":"3 Ash Close\nSelby\nEngland\nYO8 5TR\nUnited Kingdom","attributes":{"Administrative Area":"England","Areas Of Interest":"N/A","Country":"United Kingdom","Inland Water":"N/A","ISO Country Code":"GB","Locality":"Selby","Location":[53.823967905088146,-0.9665329800210636],"Name":"3 Ash Close","Ocean":"N/A","Postal Code":"YO8 5TR","Sub Administrative Area":"North Yorkshire","Sub Locality":"North Duffield","Sub Thoroughfare":"3","Thoroughfare":"Ash Close","Time Zone":"Europe/London","Zones":["Home"],"icon":"mdi:map","friendly_name":"Dashboard - iPad Geocoded Location"},"last_changed":"2025-09-24T20:10:23.213394+00:00","last_reported":"2025-09-24T20:10:23.213394+00:00","last_updated":"2025-09-24T20:10:23.213394+00:00","context":{"id":"01K5YNJE3D6PR05PZY0WJB7V85","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "3 Ash Close\nSelby\nEngland\nYO8 5TR\nUnited Kingdom",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_ssid","state":"vodafone1A8F21","attributes":{"icon":"mdi:wifi","friendly_name":"Dashboard - iPad SSID"},"last_changed":"2025-09-24T20:10:23.214154+00:00","last_reported":"2025-09-24T20:10:23.214154+00:00","last_updated":"2025-09-24T20:10:23.214154+00:00","context":{"id":"01K5YNJE3EVCWVKKXMTK0SYRRZ","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "vodafone1A8F21",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_last_update_trigger","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Dashboard - iPad Last Update Trigger"},"last_changed":"2025-09-24T20:10:23.214840+00:00","last_reported":"2025-09-24T20:10:23.214840+00:00","last_updated":"2025-09-24T20:10:23.214840+00:00","context":{"id":"01K5YNJE3EXQ0K2BXCW5ZFPQWC","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_connection_type","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Dashboard - iPad Connection Type"},"last_changed":"2025-09-24T20:10:23.215466+00:00","last_reported":"2025-09-24T20:10:23.215466+00:00","last_updated":"2025-09-24T20:10:23.215466+00:00","context":{"id":"01K5YNJE3FCKZMJ8QBN9FAZ70Q","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_app_version","state":"2025.9.1","attributes":{"icon":"mdi:cellphone","friendly_name":"Dashboard - iPad App Version"},"last_changed":"2025-09-24T20:10:23.216101+00:00","last_reported":"2025-09-24T20:10:23.216101+00:00","last_updated":"2025-09-24T20:10:23.216101+00:00","context":{"id":"01K5YNJE3G2PFDPCHC5GC8NVNQ","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "2025.9.1",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_location_permission","state":"Authorized Always","attributes":{"icon":"mdi:map","friendly_name":"Dashboard - iPad Location permission"},"last_changed":"2025-09-24T20:10:23.216695+00:00","last_reported":"2025-09-24T20:10:23.216695+00:00","last_updated":"2025-09-24T20:10:23.216695+00:00","context":{"id":"01K5YNJE3GH14YNH5XB2JFE2J9","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "Authorized Always",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"sensor.dashboard_ipad_audio_output","state":"unavailable","attributes":{"icon":"mdi:dots-square","friendly_name":"Dashboard - iPad Audio Output"},"last_changed":"2025-09-24T20:10:23.217296+00:00","last_reported":"2025-09-24T20:10:23.217296+00:00","last_updated":"2025-09-24T20:10:23.217296+00:00","context":{"id":"01K5YNJE3HXMHJXNPSZY5S8H5G","parent_id":null,"user_id":null}},
+      "extra_data": {
+        "native_value": "unavailable",
+        "native_unit_of_measurement": null
+      },
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"tts.google_translate_en_com","state":"unknown","attributes":{"friendly_name":"Google Translate en com"},"last_changed":"2025-09-24T20:10:23.295627+00:00","last_reported":"2025-09-24T20:10:23.295627+00:00","last_updated":"2025-09-24T20:10:23.295627+00:00","context":{"id":"01K5YNJE5ZZQM5N48NK4NFD33Z","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.hacs_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"2.0.5","in_progress":false,"latest_version":"2.0.5","release_summary":null,"release_url":"https://github.com/hacs/integration/releases/2.0.5","skipped_version":null,"title":null,"update_percentage":null,"entity_picture":"https://brands.home-assistant.io/_/hacs/icon.png","friendly_name":"HACS update","supported_features":23},"last_changed":"2025-09-24T20:10:23.330767+00:00","last_reported":"2025-09-24T20:10:23.330767+00:00","last_updated":"2025-09-24T20:10:23.330767+00:00","context":{"id":"01K5YNJE72MGCKEMFMMQYW3P87","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.button_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v4.3.0","in_progress":false,"latest_version":"v4.3.0","release_summary":null,"release_url":"https://github.com/custom-cards/button-card/releases/v4.3.0","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"button-card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.331640+00:00","last_reported":"2025-09-24T20:10:23.331640+00:00","last_updated":"2025-09-24T20:10:23.331640+00:00","context":{"id":"01K5YNJE737QVKKF3XYFNYMTWF","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.better_moment_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"2025.01.11","in_progress":false,"latest_version":"2025.01.11","release_summary":null,"release_url":"https://github.com/ibz0q/better-moment-card/releases/2025.01.11","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Better Moment Card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.332244+00:00","last_reported":"2025-09-24T20:10:23.332244+00:00","last_updated":"2025-09-24T20:10:23.332244+00:00","context":{"id":"01K5YNJE74YJ65616RA0KHXYYK","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.week_planner_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v1.12.1","in_progress":false,"latest_version":"v1.12.1","release_summary":null,"release_url":"https://github.com/FamousWolf/week-planner-card/releases/v1.12.1","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Week planner card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.334822+00:00","last_reported":"2025-09-24T20:10:23.334822+00:00","last_updated":"2025-09-24T20:10:23.334822+00:00","context":{"id":"01K5YNJE76Z2NA720936D3C4VG","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.stack_in_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"0.2.0","in_progress":false,"latest_version":"0.2.0","release_summary":null,"release_url":"https://github.com/custom-cards/stack-in-card/releases/0.2.0","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Stack In Card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.338799+00:00","last_reported":"2025-09-24T20:10:23.338799+00:00","last_updated":"2025-09-24T20:10:23.338799+00:00","context":{"id":"01K5YNJE7ACRT67AZWV0DCAQCZ","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.digital_clock_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v1.2.4","in_progress":false,"latest_version":"v1.2.4","release_summary":null,"release_url":"https://github.com/wassy92x/lovelace-digital-clock/releases/v1.2.4","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Digital Clock update","supported_features":23},"last_changed":"2025-09-24T20:10:23.339590+00:00","last_reported":"2025-09-24T20:10:23.339590+00:00","last_updated":"2025-09-24T20:10:23.339590+00:00","context":{"id":"01K5YNJE7BQ9DTM3K5XMQX4C2Q","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.bubble_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v3.0.3","in_progress":false,"latest_version":"v3.0.3","release_summary":null,"release_url":"https://github.com/Clooos/Bubble-Card/releases/v3.0.3","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Bubble Card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.340339+00:00","last_reported":"2025-09-24T20:10:23.340339+00:00","last_updated":"2025-09-24T20:10:23.340339+00:00","context":{"id":"01K5YNJE7CYXVT60P0KA4P2RDD","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.card_mod_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v3.4.5","in_progress":false,"latest_version":"v3.4.5","release_summary":null,"release_url":"https://github.com/thomasloven/lovelace-card-mod/releases/v3.4.5","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"card-mod update","supported_features":23},"last_changed":"2025-09-24T20:10:23.340928+00:00","last_reported":"2025-09-24T20:10:23.340928+00:00","last_updated":"2025-09-24T20:10:23.340928+00:00","context":{"id":"01K5YNJE7CZK5PBHJA5JGMYMYQ","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.config_template_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"1.3.6","in_progress":false,"latest_version":"1.3.6","release_summary":null,"release_url":"https://github.com/iantrich/config-template-card/releases/1.3.6","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"Config Template Card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.341473+00:00","last_reported":"2025-09-24T20:10:23.341473+00:00","last_updated":"2025-09-24T20:10:23.341473+00:00","context":{"id":"01K5YNJE7D7HC9N34H42NGSJ22","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.bootstrap_grid_card_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v0.2.2","in_progress":false,"latest_version":"v0.2.2","release_summary":null,"release_url":"https://github.com/ownbee/bootstrap-grid-card/releases/v0.2.2","skipped_version":null,"title":null,"update_percentage":null,"friendly_name":"bootstrap-grid-card update","supported_features":23},"last_changed":"2025-09-24T20:10:23.342066+00:00","last_reported":"2025-09-24T20:10:23.342066+00:00","last_updated":"2025-09-24T20:10:23.342066+00:00","context":{"id":"01K5YNJE7E4NGDW8W5ZZ440ZGV","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.browser_mod_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v2.6.0","in_progress":false,"latest_version":"v2.6.0","release_summary":null,"release_url":"https://github.com/thomasloven/hass-browser_mod/releases/v2.6.0","skipped_version":null,"title":null,"update_percentage":null,"entity_picture":"https://brands.home-assistant.io/_/browser_mod/icon.png","friendly_name":"browser_mod update","supported_features":23},"last_changed":"2025-09-24T20:10:23.342696+00:00","last_reported":"2025-09-24T20:10:23.342696+00:00","last_updated":"2025-09-24T20:10:23.342696+00:00","context":{"id":"01K5YNJE7E9G4RPD2JH1W16KMM","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"update.yoto_update","state":"off","attributes":{"auto_update":false,"display_precision":0,"installed_version":"v2.0.3","in_progress":false,"latest_version":"v2.0.3","release_summary":null,"release_url":"https://github.com/cdnninja/yoto_ha/releases/v2.0.3","skipped_version":null,"title":null,"update_percentage":null,"entity_picture":"https://brands.home-assistant.io/_/yoto/icon.png","friendly_name":"Yoto update","supported_features":23},"last_changed":"2025-09-24T20:10:23.343372+00:00","last_reported":"2025-09-24T20:10:23.343372+00:00","last_updated":"2025-09-24T20:10:23.343372+00:00","context":{"id":"01K5YNJE7FMFPDDH9F43KW68G5","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-24T20:10:24.176758+00:00"
+    },
+    {
+      "state": {"entity_id":"script.add_chore","state":"off","attributes":{"last_triggered":null,"mode":"single","current":0,"friendly_name":"Add Chore"},"last_changed":"2025-09-23T20:32:04.575981+00:00","last_reported":"2025-09-23T20:32:04.575981+00:00","last_updated":"2025-09-23T20:32:04.575981+00:00","context":{"id":"01K5W4DDYZMA4NEHCGP2GBYSSG","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-23T20:44:45.910026+00:00"
+    },
+    {
+      "state": {"entity_id":"script.google_create_event","state":"off","attributes":{"last_triggered":null,"mode":"single","current":0,"friendly_name":"google.create_event"},"last_changed":"2025-09-23T15:52:11.709586+00:00","last_reported":"2025-09-23T15:52:11.709586+00:00","last_updated":"2025-09-23T15:52:11.709586+00:00","context":{"id":"01K5VMCYNXRFRZ8C3CXZA4F9FY","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-23T20:31:02.210673+00:00"
+    },
+    {
+      "state": {"entity_id":"script.script_add_calendar_event","state":"off","attributes":{"last_triggered":null,"mode":"queued","current":0,"max":10,"friendly_name":"script.add_calendar_event"},"last_changed":"2025-09-23T15:52:11.710037+00:00","last_reported":"2025-09-23T15:52:11.710037+00:00","last_updated":"2025-09-23T15:52:11.710037+00:00","context":{"id":"01K5VMCYNYEVAKSA23XSNHG9AG","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-23T20:31:02.210673+00:00"
+    },
+    {
+      "state": {"entity_id":"input_text.input_text","state":"unknown","attributes":{"editable":true,"min":0,"max":100,"pattern":"[person]_calendar_filter","mode":"text","friendly_name":"input_text"},"last_changed":"2025-09-20T21:11:48.314384+00:00","last_reported":"2025-09-20T21:11:48.315622+00:00","last_updated":"2025-09-20T21:11:48.314384+00:00","context":{"id":"01K5MFG0TTJM2RVXQB8B7NBG2Y","parent_id":null,"user_id":null}},
+      "extra_data": null,
+      "last_seen": "2025-09-20T21:14:26.078057+00:00"
+    }
+  ]
+}

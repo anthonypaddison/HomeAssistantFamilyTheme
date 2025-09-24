@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "minor_version": 2,
+  "key": "repairs.issue_registry",
+  "data": {
+    "issues": [
+      {
+        "created": "2025-09-21T17:01:41.130773+00:00",
+        "dismissed_version": null,
+        "domain": "hacs",
+        "is_persistent": false,
+        "issue_id": "restart_required_786470226_tags/v2.0.3"
+      },
+      {
+        "created": "2025-09-23T20:32:04.574574+00:00",
+        "dismissed_version": "2025.9.4",
+        "domain": "script",
+        "is_persistent": false,
+        "issue_id": "script.add_calendar_event_validation_failed_schema"
+      }
+    ]
+  }
+}

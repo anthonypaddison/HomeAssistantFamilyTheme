@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "minor_version": 1,
+  "key": "lovelace_resources",
+  "data": {
+    "items": [
+      {
+        "id": "b555b48386e644a59e4cfd45d0b5bae3",
+        "url": "/hacsfiles/week-planner-card/week-planner-card.js?hacstag=7717287661121",
+        "type": "module"
+      },
+      {
+        "id": "10418e92b6d548c7b1ef34620a23ad87",
+        "url": "/hacsfiles/config-template-card/config-template-card.js?hacstag=172177543136",
+        "type": "module"
+      },
+      {
+        "id": "ce18454ed9554a90b389b8fc13ff7a0f",
+        "url": "/hacsfiles/Bubble-Card/bubble-card.js?hacstag=680112919303",
+        "type": "module"
+      },
+      {
+        "id": "94692162f813447d9e37f694cbf32a54",
+        "url": "/hacsfiles/better-moment-card/better-moment-card.js?hacstag=73702818820250111",
+        "type": "module"
+      },
+      {
+        "id": "ac7c0284853640bea3d79c28ea0fc82e",
+        "url": "/hacsfiles/button-card/button-card.js?hacstag=146194325430",
+        "type": "module"
+      },
+      {
+        "id": "5bc6dd84348e44c4bbb1d2ae06903464",
+        "url": "/hacsfiles/lovelace-card-mod/card-mod.js?hacstag=190927524345",
+        "type": "module"
+      },
+      {
+        "id": "623269a8434b4e64ba2fa22afd0bb217",
+        "url": "/hacsfiles/stack-in-card/stack-in-card.js?hacstag=248954055020",
+        "type": "module"
+      },
+      {
+        "id": "5763536fbc114cb8bd2013989ab39522",
+        "url": "/hacsfiles/bootstrap-grid-card/bootstrap-grid-card.js?hacstag=334448958022",
+        "type": "module"
+      },
+      {
+        "id": "4f4c7bf8bddd4433a1ea0c9a601d924c",
+        "url": "/hacsfiles/lovelace-digital-clock/digital-clock.js?hacstag=373832981124",
+        "type": "module"
+      },
+      {
+        "id": "0828184f8dd44230ac1473b44bdee94d",
+        "url": "/browser_mod.js?automatically-added&2.6.0",
+        "type": "module"
+      }
+    ]
+  }
+}

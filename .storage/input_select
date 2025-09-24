@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "minor_version": 2,
+  "key": "input_select",
+  "data": {
+    "items": [
+      {
+        "id": "calendar_person",
+        "name": "calendar_person",
+        "options": [
+          "Family",
+          "Anthony",
+          "Joy",
+          "Toby",
+          "Lizzie"
+        ]
+      }
+    ]
+  }
+}

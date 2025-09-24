@@ -15,3 +15,6 @@ packages:
   - build-base
 init_commands:
   - ls -la
+
+ssh anthonypaddison@192.168.1.199 < tablet Dash
+Toby3639
