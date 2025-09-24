@@ -12,6 +12,15 @@ lovelace:
   resources:
     - url: https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600&display=swap
       type: css
+  dashboards:
+    family_dashboard:
+      mode: yaml
+      filename: SkyLightCalendarDashboard.yaml
+      title: Family
+      icon: mdi:account-group
+      show_in_sidebar: true
+      require_admin: false
+
 
 automation: !include automations.yaml
 script: !include scripts.yaml
