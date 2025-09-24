@@ -1,0 +1,48 @@
+{
+  "title": "Yoto",
+  "config": {
+    "progress": {
+      "wait_for_device": "To authenticate, open the following URL and login at Yoto:\n{url}"
+    },
+    "step": {
+      "device_code": {
+        "title": "Yoto - Device Code",
+        "description": "Browse to the following URL, and confirm the code matches."
+      },
+      "reauth_confirm": {
+        "title": "Yoto - Reauthentication",
+        "description": "Your account is unable to authenticate.  Click Submit to re-setup."
+      }
+    },
+    "abort": {
+      "already_configured": "Device is already configured",
+      "reauth_successful": "Sucessfully reauthenticated"
+    },
+    "error": {
+      "invalid_auth": "Login failed into Yoto Servers. Please use official app to logout and log back in and try again!",
+      "unknown": "Unexpected error"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Yoto - Configuration",
+        "data": {
+          "scan_interval": "Scan Interval (min)"
+        }
+      }
+    }
+  },
+  "services": {
+    "update": {
+      "name": "Update",
+      "description": "Update player data from service cache",
+      "fields": {
+        "device_id": {
+          "name": "Player",
+          "description": "Target Player"
+        }
+      }
+    }
+  }
+}
