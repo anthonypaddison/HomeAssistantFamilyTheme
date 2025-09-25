@@ -5,6 +5,7 @@ style: |
     background: var(--app-header-background-color);
     padding: 8px;
     height: 100%;
+    width: 100%;
   }
 card:
   type: vertical-stack
@@ -20,7 +21,6 @@ card:
           entity_id: input_boolean.sidebar_collapsed
       styles:
         card:
-          - border-radius: 10px
           - box-shadow: none
           - background: transparent
           - margin: 0 0 4px 0
