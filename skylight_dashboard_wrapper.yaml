@@ -72,7 +72,19 @@ views:
             cards:
 
               # -------- LEFT SIDEBAR --------
-              - !include sidebar_menu.yaml
+              # Collapsed (col-1)
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.sidebar_collapsed
+                    state: 'on'
+                card: !include sidebar_menu_collapsed.yaml
+
+              # Expanded (col-2)
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.sidebar_collapsed
+                    state: 'off'
+                card: !include sidebar_menu_expanded.yaml
 
               # -------- RIGHT AREA --------
               - type: vertical-stack

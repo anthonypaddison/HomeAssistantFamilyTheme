@@ -1,0 +1,10 @@
+type: custom:mod-card
+class: col-1 sidebarMenu
+style: |
+  ha-card {
+    background: #EBF2F8;
+    border-radius: 16px;
+    padding: 6px;   /* slightly tighter */
+    height: 100%;
+  }
+card: !include sidebar_menu_inner.yaml
