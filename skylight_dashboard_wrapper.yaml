@@ -1,6 +1,46 @@
 title: Panogu Family
+
+# Button-card templates
+button_card_templates:
+  sidebar_item:
+    show_state: false
+    styles:
+      card:
+        - border-radius: 12px
+        - box-shadow: none
+        - padding: 10px 12px
+        - margin: 6px 0
+        - justify-content: flex-start
+        - background: >
+            [[[
+              const s = variables?.section || '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s ? 'white' : 'transparent';
+            ]]]
+      name:
+        - font-weight: 700
+        - font-size: 1.05rem
+        - color: >
+            [[[
+              const s = variables?.section || '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s ? 'var(--primary-text-color)' : 'var(--secondary-text-color)';
+            ]]]
+      icon:
+        - width: 24px
+        - color: >
+            [[[
+              const s = variables?.section || '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s ? 'var(--primary-color)' : 'var(--secondary-text-color)';
+            ]]]
+      grid:
+        - grid-template-areas: '"i n"'
+        - grid-template-columns: 28px 1fr
+        - grid-template-rows: min-content
+
 views:
-  - title: Panogu Familys
+  - title: Panogu Family
     path: panogu-family
     panel: true
     badges: []
@@ -12,15 +52,16 @@ views:
             class: row g-3 align-items-stretch
             cards:
 
-              # -------- LEFT SIDEBAR (include file) --------
+              # -------- LEFT SIDEBAR --------
               - !include sidebar_menu.yaml
 
-              # -------- RIGHT AREA (only headers; no calendar/chores content) --------
+              # -------- RIGHT AREA --------
               - type: vertical-stack
                 class: col-10
                 cards:
 
-                  # Calendar section -> choose header A or B by helper
+                  # Calendar section -> Top Bar Layout 1 (A):
+                  # Order: View selector -> Family name + time -> Small weather -> Legend
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
@@ -29,6 +70,8 @@ views:
                         state: A
                     card: !include topbar_calendar_layout1.yaml
 
+                  # Calendar section -> Top Bar Layout 2 (B):
+                  # Order: Family name -> Time -> Legend -> View selector
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
@@ -37,7 +80,7 @@ views:
                         state: B
                     card: !include topbar_calendar_layout2.yaml
 
-                  # Non-Calendar sections (Chores / Photos / Lists) use Layout 2 header
+                  # Non-Calendar sections (Chores / Photos / Lists) always use Layout 2
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
