@@ -58,6 +58,10 @@ views:
               # -------- RIGHT AREA --------
               - type: vertical-stack
                 class: col-10
+                style: |
+                  ha-card {
+                    height: 100vh !important;
+                  }
                 cards:
 
                   # -------- TOP BARS --------
