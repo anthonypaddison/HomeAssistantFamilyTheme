@@ -45,9 +45,13 @@ views:
       }
     cards:
       - type: custom:bootstrap-grid-card
-        class: container-fluid g-0
+        class: container-fluid g-0 otherThing
         styles: |
-          :host {
+          #staging {
+            height: 100% !important;
+            width: 100% !important;
+          }
+          .otherThing {
             height: 100% !important;
             width: 100% !important;
           }
