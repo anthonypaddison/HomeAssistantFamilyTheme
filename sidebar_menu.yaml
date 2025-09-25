@@ -1,56 +1,15 @@
 type: custom:mod-card
-class: sidebarMenu
+class: 'col-1'
 card_mod:
   style: |
-    .sidebarMenu {
-      /* Override column width here (col-2 ⇄ col-1 equivalent) */
-      --_sidebar-width: [[[
-        return states['input_boolean.sidebar_collapsed']?.state === 'on'
-          ? '8.333333%'   /* 1/12 */
-          : '16.666667%'; /* 2/12 */
-      ]]];
-      flex: 0 0 var(--_sidebar-width) !important;
-      max-width: var(--_sidebar-width) !important;
-      width: var(--_sidebar-width) !important;
-      transition: flex-basis 180ms ease, max-width 180ms ease, width 180ms ease;
-    }
     ha-card {
-      background: #EBF2F8;
-      border-radius: 16px;
-      padding: [[[
-        return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '6px' : '8px';
-      ]]];
+      background: var(--app-header-background-color);
+      padding: 4px;
       height: 100%;
     }
 card:
   type: vertical-stack
   cards:
-    # --- Collapse/Expand toggle ---
-    - type: custom:button-card
-      icon: >
-        [[[
-          return states['input_boolean.sidebar_collapsed']?.state === 'on'
-            ? 'mdi:chevron-double-right'  // expand
-            : 'mdi:chevron-double-left';  // collapse
-        ]]]
-      show_name: false
-      tap_action:
-        action: call-service
-        service: input_boolean.toggle
-        target:
-          entity_id: input_boolean.sidebar_collapsed
-      styles:
-        card:
-          - border-radius: 10px
-          - box-shadow: none
-          - background: transparent
-          - margin: 0 0 4px 0
-          - min-height: 36px
-          - justify-content: center
-        icon:
-          - width: 22px
-          - color: var(--secondary-text-color)
-
     # --- Calendar ---
     - type: custom:button-card
       template: sidebar_item

@@ -118,10 +118,6 @@ Skylight Family:
       /* =============================================== */
 
       /* ============== HA 2025.05 UPDATES ============= */
-      .sidebarMenu {
-        margin: 0 !important;
-      }
-      
       :host {
         content: "" !important;
         border-right: 0px !important;
@@ -225,7 +221,6 @@ Skylight Family:
   # ---------------------------------------------------------
   # (NEW) Theme-level card styles (no inline per-card styling)
   # ---------------------------------------------------------
-
   card-mod-root-yaml: |
     .: |
       /* DIGITAL CLOCK (custom:digital-clock) */
@@ -245,18 +240,7 @@ Skylight Family:
         font-size: 1.8rem!important;
         opacity: 0.85!important;
       }
-      .sidebarMenu {
-        /* Override column width here (col-2 ⇄ col-1 equivalent) */
-        --_sidebar-width: [[[
-          return states['input_boolean.sidebar_collapsed']?.state === 'on'
-            ? '8.333333%'   /* 1/12 */
-            : '16.666667%'; /* 2/12 */
-        ]]];
-        flex: 0 0 var(--_sidebar-width) !important;
-        max-width: var(--_sidebar-width) !important;
-        width: var(--_sidebar-width) !important;
-        transition: flex-basis 180ms ease, max-width 180ms ease, width 180ms ease;
-      }
+
   # ---------------------------------------------------------
   # (NEW) Week-planner "Today" highlight (author-recommended)
   # ---------------------------------------------------------

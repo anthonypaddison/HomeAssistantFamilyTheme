@@ -1,7 +1,3 @@
 calendar_all_day:
   name: Calendar All Day
   initial: off
-
-sidebar_collapsed:
-    name: Sidebar Collapsed
-    initial: off
