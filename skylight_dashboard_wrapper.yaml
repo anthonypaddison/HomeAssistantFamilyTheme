@@ -5,50 +5,29 @@ button_card_templates:
     show_name: false
     styles:
       card:
-        - box-shadow: none
-        - padding: 10px
-        - margin: 6px 0
-        - justify-content: center
+        - box-shadow: none !important;
+        - margin: 0 !important;
+        - padding: 6px !important;
+        - justify-content: center !important;
+        - height: 100% !important;
         - background: >
             [[[
               const s = variables?.section || '';
               const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'white' : 'transparent';
+              return current === s ? 'white !important;' : 'transparent !important;';
             ]]]
       grid:
-        - grid-template-areas: >
-            [[[
-              // icon-only when collapsed
-              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '"i"' : '"i n"';
-            ]]]
-        - grid-template-columns: >
-            [[[
-              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '1fr' : '28px 1fr';
-            ]]]
-        - grid-template-rows: min-content
+        - grid-template-areas: "i"
+        - grid-template-columns: 1fr !important;
+        - grid-template-rows: min-content !important;
       icon:
-        - width: 24px
-        - justify-self: center
+        - width: 24px !important;
+        - justify-self: center !important;
         - color: >
             [[[
               const s = variables?.section || '';
               const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'var(--primary-color)' : 'var(--secondary-text-color)';
-            ]]]
-      name:
-        - display: >
-            [[[
-              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? 'none' : 'block';
-            ]]]
-        - justify-self: start
-        - padding-left: 6px
-        - font-weight: 700
-        - font-size: 1.05rem
-        - color: >
-            [[[
-              const s = variables?.section || '';
-              const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'var(--primary-text-color)' : 'var(--secondary-text-color)';
+              return current === s ? 'var(--primary-color) !important;' : 'var(--secondary-text-color) !important;';
             ]]]
 
 views:
