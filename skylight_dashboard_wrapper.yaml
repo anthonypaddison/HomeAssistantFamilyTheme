@@ -1,23 +1,55 @@
 title: Panogu Family
-
-# Button-card templates available to all includes in this dashboard
 button_card_templates:
   sidebar_item:
     show_state: false
+    show_name: >
+      [[[
+        return states['input_boolean.sidebar_collapsed']?.state !== 'on';
+      ]]]
     styles:
       card:
         - border-radius: 12px
         - box-shadow: none
-        - padding: 10px 12px
+        - padding: >
+            [[[
+              // tighter padding when collapsed
+              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '10px' : '10px 12px';
+            ]]]
         - margin: 6px 0
-        - justify-content: flex-start
+        - justify-content: center
         - background: >
             [[[
               const s = variables?.section || '';
               const current = states['input_select.calendar_section']?.state;
               return current === s ? 'white' : 'transparent';
             ]]]
+      grid:
+        - grid-template-areas: >
+            [[[
+              // icon-only when collapsed
+              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '"i"' : '"i n"';
+            ]]]
+        - grid-template-columns: >
+            [[[
+              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? '1fr' : '28px 1fr';
+            ]]]
+        - grid-template-rows: min-content
+      icon:
+        - width: 24px
+        - justify-self: center
+        - color: >
+            [[[
+              const s = variables?.section || '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s ? 'var(--primary-color)' : 'var(--secondary-text-color)';
+            ]]]
       name:
+        - display: >
+            [[[
+              return states['input_boolean.sidebar_collapsed']?.state === 'on' ? 'none' : 'block';
+            ]]]
+        - justify-self: start
+        - padding-left: 6px
         - font-weight: 700
         - font-size: 1.05rem
         - color: >
@@ -26,18 +58,6 @@ button_card_templates:
               const current = states['input_select.calendar_section']?.state;
               return current === s ? 'var(--primary-text-color)' : 'var(--secondary-text-color)';
             ]]]
-      icon:
-        - width: 24px
-        - color: >
-            [[[
-              const s = variables?.section || '';
-              const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'var(--primary-color)' : 'var(--secondary-text-color)';
-            ]]]
-      grid:
-        - grid-template-areas: '"i n"'
-        - grid-template-columns: 28px 1fr
-        - grid-template-rows: min-content
 
 views:
   - title: Panogu Family
@@ -53,7 +73,20 @@ views:
             cards:
 
               # -------- LEFT SIDEBAR --------
-              - !include sidebar_menu.yaml
+              
+              # Expanded sidebar (col-2)
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.sidebar_collapsed
+                    state: 'off'
+                card: !include sidebar_menu_expanded.yaml
+
+              # Collapsed sidebar (col-1)
+              - type: conditional
+                conditions:
+                  - entity: input_boolean.sidebar_collapsed
+                    state: 'on'
+                card: !include sidebar_menu_collapsed.yaml
 
               # -------- RIGHT AREA --------
               - type: vertical-stack

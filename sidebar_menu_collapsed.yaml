@@ -1,0 +1,87 @@
+type: custom:mod-card
+class: col-1
+style: |
+  ha-card {
+    background: var(--app-header-background-color);
+    padding: 6px;
+    height: 100%;
+  }
+card:
+  type: vertical-stack
+  cards:
+    - type: custom:button-card
+      icon: mdi:chevron-double-right
+      name: Expand
+      show_name: false
+      tap_action:
+        action: call-service
+        service: input_boolean.toggle
+        target:
+          entity_id: input_boolean.sidebar_collapsed
+      styles:
+        card:
+          - border-radius: 10px
+          - box-shadow: none
+          - background: transparent
+          - margin: 0 0 4px 0
+          - min-height: 36px
+          - justify-content: center
+        icon:
+          - width: 22px
+          - color: var(--secondary-text-color)
+
+    # --- Calendar ---
+    - type: custom:button-card
+      template: sidebar_item
+      variables: { section: Calendar }
+      name: Calendar
+      icon: mdi:calendar
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target:
+          entity_id: input_select.calendar_section
+        service_data:
+          option: Calendar
+
+    # --- Chores ---
+    - type: custom:button-card
+      template: sidebar_item
+      variables: { section: Chores }
+      name: Chores
+      icon: mdi:brush
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target:
+          entity_id: input_select.calendar_section
+        service_data:
+          option: Chores
+
+    # --- Photos ---
+    - type: custom:button-card
+      template: sidebar_item
+      variables: { section: Photos }
+      name: Photos
+      icon: mdi:image-multiple
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target:
+          entity_id: input_select.calendar_section
+        service_data:
+          option: Photos
+
+    # --- Lists ---
+    - type: custom:button-card
+      template: sidebar_item
+      variables: { section: Lists }
+      name: Lists
+      icon: mdi:format-list-bulleted
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target:
+          entity_id: input_select.calendar_section
+        service_data:
+          option: Lists

@@ -2,15 +2,35 @@ type: custom:mod-card
 class: col-2
 style: |
   ha-card {
-    background: #EBF2F8;
-    border-radius: 16px;
+    background: var(--app-header-background-color);
     padding: 8px;
     height: 100%;
   }
 card:
   type: vertical-stack
   cards:
-    # Calendar
+    - type: custom:button-card
+      icon: mdi:chevron-double-left
+      name: Collapse
+      show_name: false
+      tap_action:
+        action: call-service
+        service: input_boolean.toggle
+        target:
+          entity_id: input_boolean.sidebar_collapsed
+      styles:
+        card:
+          - border-radius: 10px
+          - box-shadow: none
+          - background: transparent
+          - margin: 0 0 4px 0
+          - min-height: 36px
+          - justify-content: center
+        icon:
+          - width: 22px
+          - color: var(--secondary-text-color)
+
+    # --- Calendar ---
     - type: custom:button-card
       template: sidebar_item
       variables: { section: Calendar }
@@ -21,10 +41,10 @@ card:
         service: input_select.select_option
         target:
           entity_id: input_select.calendar_section
-        data:
+        service_data:
           option: Calendar
 
-    # Chores
+    # --- Chores ---
     - type: custom:button-card
       template: sidebar_item
       variables: { section: Chores }
@@ -35,10 +55,10 @@ card:
         service: input_select.select_option
         target:
           entity_id: input_select.calendar_section
-        data:
+        service_data:
           option: Chores
 
-    # Photos
+    # --- Photos ---
     - type: custom:button-card
       template: sidebar_item
       variables: { section: Photos }
@@ -49,10 +69,10 @@ card:
         service: input_select.select_option
         target:
           entity_id: input_select.calendar_section
-        data:
+        service_data:
           option: Photos
 
-    # Lists
+    # --- Lists ---
     - type: custom:button-card
       template: sidebar_item
       variables: { section: Lists }
@@ -63,5 +83,5 @@ card:
         service: input_select.select_option
         target:
           entity_id: input_select.calendar_section
-        data:
+        service_data:
           option: Lists

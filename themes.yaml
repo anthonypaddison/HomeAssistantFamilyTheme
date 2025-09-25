@@ -31,7 +31,7 @@ Skylight variables: &skylight-variables
 
   # Backgrounds & text
   primary-background-color: "#ffffff"
-  secondary-background-color: "#EDF2F6"
+  secondary-background-color: "#EBF2F8"
   card-background-color: "#ffffff"
   ha-card-background: var(--card-background-color)
   primary-text-color: "#1A1A1A"
@@ -48,7 +48,7 @@ Skylight variables: &skylight-variables
   ha-config-card-border-radius: var(--ha-card-border-radius)
 
   # Header / tabs
-  app-header-background-color: var(--card-background-color)
+  app-header-background-color: var(--secondary-background-color)
   app-header-text-color: var(--primary-text-color)
   app-header-selection-bar-color: var(--primary-background-color)
 
