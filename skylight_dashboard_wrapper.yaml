@@ -73,7 +73,6 @@ views:
             cards:
 
               # -------- LEFT SIDEBAR --------
-
               # Expanded sidebar (col-2)
               - type: conditional
                 conditions:
@@ -90,12 +89,7 @@ views:
 
               # -------- RIGHT AREA --------
               - type: vertical-stack
-                class: >
-                  [[[
-                    return states['input_boolean.sidebar_collapsed']?.state === 'on'
-                      ? 'col-10'
-                      : 'col-11';
-                  ]]]
+                class: col-10
                 cards:
 
                   # -------- TOP BARS --------
