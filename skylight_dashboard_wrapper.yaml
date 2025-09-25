@@ -103,7 +103,7 @@ views:
                     conditions:
                       - entity: input_select.calendar_section
                         state: Chores
-                    card: !include chores_view.yaml
+                    card: !include chore_view.yaml
 
                   # Photos content
                   - type: conditional
