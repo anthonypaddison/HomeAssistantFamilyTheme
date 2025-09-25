@@ -35,14 +35,6 @@ views:
     path: panogu-family
     panel: true
     badges: []
-    styles: |
-      ha-card {
-        background: transparent !important;
-        box-shadow: none !important;
-        border: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
     cards:
       - type: custom:bootstrap-grid-card
         class: container-fluid g-0 otherThing
