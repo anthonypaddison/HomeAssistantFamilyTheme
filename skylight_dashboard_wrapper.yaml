@@ -8,7 +8,6 @@ button_card_templates:
       ]]]
     styles:
       card:
-        - border-radius: 12px
         - box-shadow: none
         - padding: >
             [[[
