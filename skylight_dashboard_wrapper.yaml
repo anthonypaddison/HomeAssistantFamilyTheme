@@ -1,6 +1,6 @@
 title: Panogu Family
 
-# Button-card templates
+# Button-card templates available to all includes in this dashboard
 button_card_templates:
   sidebar_item:
     show_state: false
@@ -60,7 +60,9 @@ views:
                 class: col-10
                 cards:
 
-                  # Calendar section -> Top Bar Layout 1 (A):
+                  # -------- TOP BARS --------
+
+                  # Calendar -> Top Bar Layout 1 (A):
                   # Order: View selector -> Family name + time -> Small weather -> Legend
                   - type: conditional
                     conditions:
@@ -70,7 +72,7 @@ views:
                         state: A
                     card: !include topbar_calendar_layout1.yaml
 
-                  # Calendar section -> Top Bar Layout 2 (B):
+                  # Top Bar Layout 2 (B):
                   # Order: Family name -> Time -> Legend -> View selector
                   - type: conditional
                     conditions:
@@ -80,9 +82,39 @@ views:
                         state: B
                     card: !include topbar_calendar_layout2.yaml
 
-                  # Non-Calendar sections (Chores / Photos / Lists) always use Layout 2
+                  # Non-Calendar sections (Chores/Photos/Lists) always use Layout 2
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
                         state_not: Calendar
                     card: !include topbar_calendar_layout2.yaml
+
+                  # -------- CONDITIONAL CONTENT --------
+
+                  # Calendar content
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Calendar
+                    card: !include calendar_view.yaml
+
+                  # Chores content
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Chores
+                    card: !include chores_view.yaml
+
+                  # Photos content
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Photos
+                    card: !include photos_view.yaml
+
+                  # Lists content
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Lists
+                    card: !include lists_view.yaml
