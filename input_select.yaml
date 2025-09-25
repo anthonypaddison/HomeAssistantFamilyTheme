@@ -1,30 +1,20 @@
-calendar_view:
-  name: Calendar View
-  options:
-    - Day
-    - Week
-    - Month
-  initial: Week
-
 chore_list_target:
   name: Chore List Target
-  options:
-    - Lizzie
-    - Toby
-    - Family
+  options: [Lizzie, Toby, Family]
+  initial: Family
 
-  calendar_section:
-    name: Section
-    options: [Calendar, Chores, Photos, Lists]
-    initial: Calendar
+calendar_section:
+  name: Section
+  options: [Calendar, Chores, Photos, Lists]
+  initial: Calendar
 
-  calendar_view:
-    name: Calendar View
-    options: [Day, Week, Month]
-    initial: Week
+calendar_view:
+  name: Calendar View
+  options: [Day, Week, Month]
+  initial: Week
 
-  calendar_header_layout:
-    name: Calendar Header Layout
-    options: [A, B]
-    initial: A
+calendar_header_layout:
+  name: Calendar Header Layout
+  options: [A, B]
+  initial: A
 
