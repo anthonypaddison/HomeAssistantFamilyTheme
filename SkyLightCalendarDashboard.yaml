@@ -1,7 +1,7 @@
 title: Panogu Family
 views:
   - title: Panogu Family
-    path: family
+    path: panogu-family
     panel: true
     badges: []
     cards:
