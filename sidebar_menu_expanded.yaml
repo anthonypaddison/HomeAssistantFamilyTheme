@@ -1,5 +1,5 @@
 type: custom:mod-card
-class: col-2
+class: 'col-2'
 style: |
   ha-card {
     background: var(--app-header-background-color);

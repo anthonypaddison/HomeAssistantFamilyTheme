@@ -1,10 +1,11 @@
 type: custom:mod-card
-class: col-1
+class: 'col-1'
 style: |
   ha-card {
     background: var(--app-header-background-color);
     padding: 6px;
     height: 100%;
+    width: 100%;
   }
 card:
   type: vertical-stack
