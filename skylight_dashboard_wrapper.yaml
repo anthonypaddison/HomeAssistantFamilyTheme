@@ -90,7 +90,12 @@ views:
 
               # -------- RIGHT AREA --------
               - type: vertical-stack
-                class: col-10
+                class: >
+                  [[[
+                    return states['input_boolean.sidebar_collapsed']?.state === 'on'
+                      ? 'col-10'
+                      : 'col-11';
+                  ]]]
                 cards:
 
                   # -------- TOP BARS --------
