@@ -1,0 +1,121 @@
+type: custom:mod-card
+class: col-2
+style: |
+  ha-card {
+    background: #EBF2F8;
+    border-radius: 16px;
+    padding: 8px;
+    height: 100%;
+  }
+card:
+  type: vertical-stack
+  cards:
+    # ---- Calendar ----
+    - type: custom:button-card
+      name: Calendar
+      icon: mdi:calendar
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.calendar_section }
+        data: { option: Calendar }
+      styles:
+        card:
+          - border-radius: 12px
+          - box-shadow: none
+          - padding: 10px 12px
+          - margin: 6px 0
+          - justify-content: flex-start
+          - background: >
+              [[[ return states['input_select.calendar_section'].state === 'Calendar' ? 'white' : 'transparent'; ]]]
+        name:
+          - font-weight: 700
+          - font-size: 1.05rem
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Calendar' ? 'var(--primary-text-color)' : 'var(--secondary-text-color)'; ]]]
+        icon:
+          - width: 24px
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Calendar' ? 'var(--primary-color)' : 'var(--secondary-text-color)'; ]]]
+        grid:
+          - grid-template-areas: '"i n"'
+          - grid-template-columns: 28px 1fr
+          - grid-template-rows: min-content
+      show_state: false
+
+    # ---- Chores ----
+    - type: custom:button-card
+      name: Chores
+      icon: mdi:brush
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.calendar_section }
+        data: { option: Chores }
+      styles:
+        card: &menu_item_card
+          - border-radius: 12px
+          - box-shadow: none
+          - padding: 10px 12px
+          - margin: 6px 0
+          - justify-content: flex-start
+          - background: >
+              [[[ return states['input_select.calendar_section'].state === 'Chores' ? 'white' : 'transparent'; ]]]
+        name: &menu_item_name
+          - font-weight: 700
+          - font-size: 1.05rem
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Chores' ? 'var(--primary-text-color)' : 'var(--secondary-text-color)'; ]]]
+        icon: &menu_item_icon
+          - width: 24px
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Chores' ? 'var(--primary-color)' : 'var(--secondary-text-color)'; ]]]
+        grid: &menu_item_grid
+          - grid-template-areas: '"i n"'
+          - grid-template-columns: 28px 1fr
+          - grid-template-rows: min-content
+      show_state: false
+
+    # ---- Photos ----
+    - type: custom:button-card
+      name: Photos
+      icon: mdi:image-multiple
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.calendar_section }
+        data: { option: Photos }
+      styles:
+        card:
+          *menu_item_card
+          - background: >
+              [[[ return states['input_select.calendar_section'].state === 'Photos' ? 'white' : 'transparent'; ]]]
+        name: *menu_item_name
+        icon:
+          *menu_item_icon
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Photos' ? 'var(--primary-color)' : 'var(--secondary-text-color)'; ]]]
+        grid: *menu_item_grid
+      show_state: false
+
+    # ---- Lists ----
+    - type: custom:button-card
+      name: Lists
+      icon: mdi:format-list-bulleted
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.calendar_section }
+        data: { option: Lists }
+      styles:
+        card:
+          *menu_item_card
+          - background: >
+              [[[ return states['input_select.calendar_section'].state === 'Lists' ? 'white' : 'transparent'; ]]]
+        name: *menu_item_name
+        icon:
+          *menu_item_icon
+          - color: >
+              [[[ return states['input_select.calendar_section'].state === 'Lists' ? 'var(--primary-color)' : 'var(--secondary-text-color)'; ]]]
+        grid: *menu_item_grid
+      show_state: false

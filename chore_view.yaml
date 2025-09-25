@@ -1,0 +1,39 @@
+type: horizontal-stack
+cards:
+  - type: todo-list
+    entity: todo.lizzie_chores
+    title: Lizzie's Chores
+    item_tap_action: toggle
+    hide_completed: false
+    display_order: duedate_asc
+    card_mod:
+      style: |
+        ha-card.type-todo-list div.header,
+        ha-card.type-todo-list .addRow { display: none; }
+        ha-check-list-item {
+          max-height: 72px !important;
+          background-color: #fff;
+          border: 1px solid var(--family-cal-grid-line);
+          border-radius: 18px;
+          box-shadow: 0 2px 6px rgba(0,0,0,.06);
+          padding: 6px 12px;
+        }
+
+  - type: todo-list
+    entity: todo.toby_chores
+    title: Toby's Chores
+    item_tap_action: toggle
+    hide_completed: false
+    display_order: duedate_asc
+    card_mod:
+      style: |
+        ha-card.type-todo-list div.header,
+        ha-card.type-todo-list .addRow { display: none; }
+        ha-check-list-item {
+          max-height: 72px !important;
+          background-color: #fff;
+          border: 1px solid var(--family-cal-grid-line);
+          border-radius: 18px;
+          box-shadow: 0 2px 6px rgba(0,0,0,.06);
+          padding: 6px 12px;
+        }

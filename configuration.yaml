@@ -14,9 +14,9 @@ lovelace:
   dashboards:
     family-dashboard:
       mode: yaml
-      filename: SkyLightCalendarDashboard.yaml
-      title: Panogu-Family
-      icon: mdi:account-group
+      filename: skylight_dashboard_wrapper.yaml
+      title: Panogu Family
+      icon: mdi:home-heart
       show_in_sidebar: true
       require_admin: false
 

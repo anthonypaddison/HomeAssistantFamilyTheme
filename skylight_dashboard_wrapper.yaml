@@ -1,0 +1,45 @@
+title: Panogu Family
+views:
+  - title: Panogu Family
+    path: panogu-family
+    panel: true
+    badges: []
+    cards:
+      - type: custom:bootstrap-grid-card
+        class: container-fluid g-0
+        cards:
+          - type: row
+            class: row g-3 align-items-stretch
+            cards:
+
+              # -------- LEFT SIDEBAR (include file) --------
+              - !include sidebar_menu.yaml
+
+              # -------- RIGHT AREA (only headers; no calendar/chores content) --------
+              - type: vertical-stack
+                class: col-10
+                cards:
+
+                  # Calendar section -> choose header A or B by helper
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Calendar
+                      - entity: input_select.calendar_header_layout
+                        state: A
+                    card: !include topbar_calendar_layout1.yaml
+
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state: Calendar
+                      - entity: input_select.calendar_header_layout
+                        state: B
+                    card: !include topbar_calendar_layout2.yaml
+
+                  # Non-Calendar sections (Chores / Photos / Lists) use Layout 2 header
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.calendar_section
+                        state_not: Calendar
+                    card: !include topbar_calendar_layout2.yaml
