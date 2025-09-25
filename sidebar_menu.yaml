@@ -1,5 +1,10 @@
 type: custom:mod-card
-class: 'col-2'
+class: >
+  [[[
+    return states['input_boolean.sidebar_collapsed']?.state === 'on'
+      ? 'col-1 sidebarMenu'  // expand
+      : 'col-2 sidebarMenu';  // collapse
+  ]]]
 style: |
   ha-card {
     margin: 0 !important;
