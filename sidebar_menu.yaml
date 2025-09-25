@@ -1,8 +1,8 @@
 type: custom:mod-card
-class: col-2 sidebarMenu
+class: sidebarMenu
 card_mod:
   style: |
-    :host {
+    .sidebarMenu {
       /* Override column width here (col-2 ⇄ col-1 equivalent) */
       --_sidebar-width: [[[
         return states['input_boolean.sidebar_collapsed']?.state === 'on'
