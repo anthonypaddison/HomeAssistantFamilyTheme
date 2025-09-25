@@ -1,17 +1,17 @@
 type: custom:mod-card
-class: col-2
+class: col-1
 style: |
   ha-card {
     background: var(--app-header-background-color);
-    padding: 8px;
+    padding: 6px;
     height: 100%;
   }
 card:
   type: vertical-stack
   cards:
     - type: custom:button-card
-      icon: mdi:chevron-double-left
-      name: Collapse
+      icon: mdi:chevron-double-right
+      name: Expand
       show_name: false
       tap_action:
         action: call-service
