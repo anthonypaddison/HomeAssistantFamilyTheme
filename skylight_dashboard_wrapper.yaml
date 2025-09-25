@@ -1,13 +1,17 @@
 title: Panogu Family
+
+# Templates are global to this dashboard (used by the sidebar include)
 button_card_templates:
   sidebar_item:
     show_state: false
+    # Prefer show_name templating (newer button-card), with CSS fallback in "name" styles
     show_name: >
       [[[
         return states['input_boolean.sidebar_collapsed']?.state !== 'on';
       ]]]
     styles:
       card:
+        - border-radius: 12px
         - box-shadow: none
         - padding: >
             [[[
@@ -43,6 +47,7 @@ button_card_templates:
               return current === s ? 'var(--primary-color)' : 'var(--secondary-text-color)';
             ]]]
       name:
+        # CSS fallback (older button-card) – hide when collapsed
         - display: >
             [[[
               return states['input_boolean.sidebar_collapsed']?.state === 'on' ? 'none' : 'block';
@@ -71,18 +76,31 @@ views:
             class: row g-3 align-items-stretch
             cards:
 
-              # -------- LEFT SIDEBAR --------
+              # -------- LEFT SIDEBAR (single include; width controlled by card-mod) --------
               - !include sidebar_menu.yaml
 
-              # -------- RIGHT AREA --------
+              # -------- RIGHT AREA (top bars + content) --------
               - type: vertical-stack
                 class: col-10 mainPane
+                card_mod:
+                  style: |
+                    :host {
+                      /* Complementary width to sidebar: 10/12 or 11/12 */
+                      --_right-width: [[[
+                        return states['input_boolean.sidebar_collapsed']?.state === 'on'
+                          ? '91.666667%'   /* 11/12 */
+                          : '83.333333%';  /* 10/12 */
+                      ]]];
+                      flex: 0 0 var(--_right-width) !important;
+                      max-width: var(--_right-width) !important;
+                      width: var(--_right-width) !important;
+                      transition: flex-basis 180ms ease, max-width 180ms ease, width 180ms ease;
+                    }
                 cards:
 
-                  # -------- TOP BARS --------
+                  # === TOP BARS ===
 
-                  # Calendar -> Top Bar Layout 1 (A):
-                  # Order: View selector -> Family name + time -> Small weather -> Legend
+                  # Calendar → Top Bar Layout 1 (A)
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
@@ -91,8 +109,7 @@ views:
                         state: A
                     card: !include topbar_calendar_layout1.yaml
 
-                  # Top Bar Layout 2 (B):
-                  # Order: Family name -> Time -> Legend -> View selector
+                  # Calendar → Top Bar Layout 2 (B)
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
@@ -101,14 +118,14 @@ views:
                         state: B
                     card: !include topbar_calendar_layout2.yaml
 
-                  # Non-Calendar sections (Chores/Photos/Lists) always use Layout 2
+                  # Non-Calendar sections (Chores/Photos/Lists) → use Layout 2
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
                         state_not: Calendar
                     card: !include topbar_calendar_layout2.yaml
 
-                  # -------- CONDITIONAL CONTENT --------
+                  # === SECTION CONTENT ===
 
                   # Calendar content
                   - type: conditional
@@ -122,14 +139,14 @@ views:
                     conditions:
                       - entity: input_select.calendar_section
                         state: Chores
-                    card: !include chore_view.yaml
+                    card: !include chores_view.yaml
 
                   # Photos content
                   - type: conditional
                     conditions:
                       - entity: input_select.calendar_section
                         state: Photos
-                    card: !include photo_view.yaml
+                    card: !include photos_view.yaml
 
                   # Lists content
                   - type: conditional
