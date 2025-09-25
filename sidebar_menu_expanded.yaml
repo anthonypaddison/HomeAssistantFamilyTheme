@@ -6,6 +6,11 @@ style: |
     padding: 8px;
     height: 100%;
     width: 100%;
+    [[[
+      return states['input_boolean.sidebar_collapsed']?.state === 'on'
+        ? 'display: block !important;'
+        : 'display: none !important;';
+    ]]]
   }
 card:
   type: vertical-stack
