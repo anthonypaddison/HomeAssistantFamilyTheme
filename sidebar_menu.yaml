@@ -1,23 +1,32 @@
 type: custom:mod-card
-class: 'col-2'
+class: >
+  [[[
+    return states['input_boolean.sidebar_collapsed']?.state === 'on'
+      ? 'col-1'  // expand
+      : 'col-2';  // collapse
+  ]]]
 style: |
   ha-card {
     background: var(--app-header-background-color);
-    padding: 8px;
+    padding: 6px;
     height: 100%;
-    width: 100%;
-    [[[
-      return states['input_boolean.sidebar_collapsed']?.state === 'on'
-        ? 'display: block !important;'
-        : 'display: none !important;';
-    ]]]
   }
 card:
   type: vertical-stack
   cards:
     - type: custom:button-card
-      icon: mdi:chevron-double-left
-      name: Collapse
+      icon: >
+        [[[
+          return states['input_boolean.sidebar_collapsed']?.state === 'on'
+            ? 'mdi:chevron-double-right'  // expand
+            : 'mdi:chevron-double-left';  // collapse
+        ]]]
+      name: >
+        [[[
+          return states['input_boolean.sidebar_collapsed']?.state === 'on'
+            ? 'Expand'
+            : 'Collapse';
+        ]]]
       show_name: false
       tap_action:
         action: call-service
@@ -26,6 +35,7 @@ card:
           entity_id: input_boolean.sidebar_collapsed
       styles:
         card:
+          - border-radius: 10px
           - box-shadow: none
           - background: transparent
           - margin: 0 0 4px 0
