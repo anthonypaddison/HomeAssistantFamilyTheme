@@ -10,23 +10,23 @@ button_card_templates:
         - padding: 10px 8px !important
         - justify-content: center !important
         - border-radius: 0 !important
-        - background: var(--app-header-background-color) !important
-      icon:
         - background: >
             [[[
               const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
               return current === s
-                ? 'var(--primary-color) !important'
+                ? 'var(--app-header-background-color) !important'
                 : 'white !important';
             ]]]
+      icon:
+
         - color: >
             [[[
               const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
               return current === s
                 ? 'white !important'
-                : 'var(--primary-color) !important';
+                : 'var(--app-header-background-color) !important';
             ]]]
         - width: 32px !important
 
