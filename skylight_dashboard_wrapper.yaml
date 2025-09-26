@@ -6,10 +6,11 @@ button_card_templates:
     styles:
       card:
         - box-shadow: none !important
-        - margin: 4px !important
+        - margin: 0 !important
         - padding: 10px 8px !important
         - justify-content: center !important
         - border-radius: 0 !important
+        - border: none !important
         - background: >
             [[[
               const s = variables?.section ?? '';
@@ -26,7 +27,7 @@ button_card_templates:
               const current = states['input_select.calendar_section']?.state;
               return current === s
                 ? 'var(--state-icon-color) !important'
-                : 'white !important';
+                : 'var(--state-icon-color) !important';
             ]]]
         - width: 32px !important
 
