@@ -26,7 +26,7 @@ button_card_templates:
               const current = states['input_select.calendar_section']?.state;
               return current === s
                 ? 'white !important'
-                : 'var(--app-header-background-color) !important';
+                : 'var(--primary-text-color) !important';
             ]]]
         - width: 32px !important
 
