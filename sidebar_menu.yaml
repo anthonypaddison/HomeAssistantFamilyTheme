@@ -2,15 +2,15 @@ type: custom:mod-card
 class: 'col-1'
 card_mod:
   style: |
-    ha-card {
-      background: var(--app-header-background-color) !important;
-      margin: 0 !important;
-      padding: 8px 6px 12px !important;
-      border-radius: 0 !important;
-      height: calc(100vh - var(--header-height)) !important;
-      position: sticky;
-      top: 0;
-    }
+    # ha-card {
+    #   background: var(--app-header-background-color) !important;
+    #   margin: 0 !important;
+    #   padding: 8px 6px 12px !important;
+    #   border-radius: 0 !important;
+    #   height: calc(100vh - var(--header-height)) !important;
+    #   position: sticky;
+    #   top: 0;
+    # }
 card:
   type: vertical-stack
   cards:
