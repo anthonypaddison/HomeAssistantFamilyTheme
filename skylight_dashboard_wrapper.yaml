@@ -1,41 +1,30 @@
 title: Panogu Family
 button_card_templates:
   sidebar_item:
-    show_state: false
+    show_icon: true
     show_name: false
     styles:
       card:
         - box-shadow: none !important
         - margin: 0 !important
-        - padding: 8px 6px !important
+        - padding: 10px 8px !important
         - justify-content: center !important
         - height: 100% !important
         - border-radius: 0 !important
-        - background: >
-            [[[
-              const s = variables?.section ?? '';
-              const current = states['input_select.calendar_section']?.state;
-              // Selected: white chip/tag. Unselected: same as header so it blends in.
-              return current === s
-                ? 'white !important'
-                : 'var(--app-header-background-color) !important';
-            ]]]
+        # Keep it blending with header for now
+        - background: var(--app-header-background-color) !important
       grid:
         - grid-template-areas: "i"
         - grid-template-columns: 1fr !important
         - grid-template-rows: min-content !important
       icon:
-        - width: 26px !important
-        - justify-self: center !important
-        - color: >
-            [[[
-              const s = variables?.section ?? '';
-              const current = states['input_select.calendar_section']?.state;
-              // Selected: brand colour on white tag. Unselected: WHITE icon on header colour.
-              return current === s
-                ? 'var(--primary-color) !important'
-                : 'white !important';
-            ]]]
+        # MAKE IT LOUD for debugging
+        - color: #ff007a !important
+        - width: 32px !important
+        - opacity: 1 !important
+        - filter: drop-shadow(0 0 1px rgba(0,0,0,.35)) !important
+        - border: 1px dashed rgba(255,0,122,.4) !important
+
 
 views:
   - title: Panogu Family

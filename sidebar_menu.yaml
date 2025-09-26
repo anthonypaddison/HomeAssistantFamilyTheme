@@ -69,3 +69,7 @@ card:
           entity_id: input_select.calendar_section
         service_data:
           option: Lists
+
+    - type: button
+      name: Canary
+      icon: mdi:hexagon
