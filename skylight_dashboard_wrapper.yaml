@@ -14,7 +14,7 @@ button_card_templates:
         # Keep it blending with header for now
         - background: var(--app-header-background-color) !important
       grid:
-        - grid-template-areas: "i r"
+        - grid-template-areas: "i"
         - grid-template-columns: 1fr !important
         - grid-template-rows: min-content !important
       icon:
