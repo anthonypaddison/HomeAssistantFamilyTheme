@@ -12,14 +12,21 @@ button_card_templates:
         - border-radius: 0 !important
         - background: var(--app-header-background-color) !important
       icon:
+        - background: >
+            [[[
+              const s = variables?.section ?? '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s
+                ? 'var(--primary-color) !important'
+                : 'white !important';
+            ]]]
         - color: >
             [[[
               const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
-              // selected: brand on white; unselected: white icon on header colour
               return current === s
-                ? 'var(--primary-color) !important'
-                : 'white !important';
+                ? 'white !important'
+                : 'var(--primary-color) !important';
             ]]]
         - width: 32px !important
 
