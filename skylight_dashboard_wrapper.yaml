@@ -5,29 +5,36 @@ button_card_templates:
     show_name: false
     styles:
       card:
-        - box-shadow: none !important;
-        - margin: 0 !important;
-        - padding: 6px !important;
-        - justify-content: center !important;
-        - height: 100% !important;
+        - box-shadow: none !important
+        - margin: 0 !important
+        - padding: 8px 6px !important
+        - justify-content: center !important
+        - height: 100% !important
+        - border-radius: 0 !important
         - background: >
             [[[
-              const s = variables?.section || '';
+              const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'white !important;' : 'transparent !important;';
+              // Selected: white chip/tag. Unselected: same as header so it blends in.
+              return current === s
+                ? 'white !important'
+                : 'var(--app-header-background-color) !important';
             ]]]
       grid:
         - grid-template-areas: "i"
-        - grid-template-columns: 1fr !important;
-        - grid-template-rows: min-content !important;
+        - grid-template-columns: 1fr !important
+        - grid-template-rows: min-content !important
       icon:
-        - width: 24px !important;
-        - justify-self: center !important;
+        - width: 26px !important
+        - justify-self: center !important
         - color: >
             [[[
-              const s = variables?.section || '';
+              const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
-              return current === s ? 'var(--primary-color) !important;' : 'var(--secondary-text-color) !important;';
+              // Selected: brand colour on white tag. Unselected: WHITE icon on header colour.
+              return current === s
+                ? 'var(--primary-color) !important'
+                : 'white !important';
             ]]]
 
 views:
@@ -38,19 +45,28 @@ views:
     cards:
       - type: custom:bootstrap-grid-card
         class: container-fluid g-0 otherThing
-        styles: |
-          :host {
-            height: 100vh !important;
-            display: block;
-          }
-          #staging {
-            height: 100% !important;
-            width: 100% !important;
-          }
-          .otherThing {
-            height: 100% !important;
-            width: 100% !important;
-          }
+        card_mod:
+          style: |
+            ha-card {
+              margin: 0 !important;
+              padding: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
+              border: 0 !important;
+            }
+        # styles: |
+        #   :host {
+        #     height: 100vh !important;
+        #     display: block;
+        #   }
+        #   #staging {
+        #     height: 100% !important;
+        #     width: 100% !important;
+        #   }
+        #   .otherThing {
+        #     height: 100% !important;
+        #     width: 100% !important;
+        #   }
         cards:
           - type: row
             class: row g-3 align-items-stretch
