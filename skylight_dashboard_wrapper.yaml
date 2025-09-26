@@ -9,17 +9,18 @@ button_card_templates:
         - margin: 4px !important
         - padding: 10px 8px !important
         - justify-content: center !important
-        # - height: 100% !important
         - border-radius: 0 !important
-        # Keep it blending with header for now
         - background: var(--app-header-background-color) !important
-      # grid:
-      #   - grid-template-areas: "i"
-      #   - grid-template-columns: 1fr !important
-      #   - grid-template-rows: min-content !important
       icon:
-        # MAKE IT LOUD for debugging
-        - color: #ff007a !important
+        - color: >
+            [[[
+              const s = variables?.section ?? '';
+              const current = states['input_select.calendar_section']?.state;
+              // selected: brand on white; unselected: white icon on header colour
+              return current === s
+                ? 'var(--primary-color) !important'
+                : 'white !important';
+            ]]]
         - width: 32px !important
 
 views:
@@ -39,19 +40,6 @@ views:
               box-shadow: none !important;
               border: 0 !important;
             }
-        # styles: |
-        #   :host {
-        #     height: 100vh !important;
-        #     display: block;
-        #   }
-        #   #staging {
-        #     height: 100% !important;
-        #     width: 100% !important;
-        #   }
-        #   .otherThing {
-        #     height: 100% !important;
-        #     width: 100% !important;
-        #   }
         cards:
           - type: row
             class: row g-3 align-items-stretch
