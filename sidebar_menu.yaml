@@ -1,5 +1,9 @@
 type: custom:mod-card
 class: 'col-1'
+style: |
+  :root {
+    margin: 0 !important;
+  }
 card_mod:
   style: |
     ha-card {
