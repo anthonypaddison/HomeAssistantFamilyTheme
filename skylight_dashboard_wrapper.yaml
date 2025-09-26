@@ -15,8 +15,8 @@ button_card_templates:
               const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
               return current === s
-                ? 'var(--app-header-background-color) !important'
-                : 'white !important';
+                ? 'white !important'
+                : 'var(--app-header-background-color) !important';
             ]]]
       icon:
 
@@ -25,8 +25,8 @@ button_card_templates:
               const s = variables?.section ?? '';
               const current = states['input_select.calendar_section']?.state;
               return current === s
-                ? 'white !important'
-                : 'var(--primary-text-color) !important';
+                ? 'var(--state-icon-color) !important'
+                : 'white !important';
             ]]]
         - width: 32px !important
 
