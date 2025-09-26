@@ -44,7 +44,7 @@ card:
 
     # --- Photos ---
     - type: custom:button-card
-      # template: sidebar_item
+      template: sidebar_item
       variables: { section: Photos }
       name: Photos
       icon: mdi:image-multiple
@@ -58,7 +58,7 @@ card:
 
     # --- Lists ---
     - type: custom:button-card
-      # template: sidebar_item
+      template: sidebar_item
       variables: { section: Lists }
       name: Lists
       icon: mdi:format-list-bulleted

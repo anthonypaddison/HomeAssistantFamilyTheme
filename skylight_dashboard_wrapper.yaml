@@ -6,25 +6,21 @@ button_card_templates:
     styles:
       card:
         - box-shadow: none !important
-        - margin: 0 !important
+        - margin: 4px !important
         - padding: 10px 8px !important
         - justify-content: center !important
-        - height: 100% !important
+        # - height: 100% !important
         - border-radius: 0 !important
         # Keep it blending with header for now
         - background: var(--app-header-background-color) !important
-      grid:
-        - grid-template-areas: "i"
-        - grid-template-columns: 1fr !important
-        - grid-template-rows: min-content !important
+      # grid:
+      #   - grid-template-areas: "i"
+      #   - grid-template-columns: 1fr !important
+      #   - grid-template-rows: min-content !important
       icon:
         # MAKE IT LOUD for debugging
         - color: #ff007a !important
         - width: 32px !important
-        - opacity: 1 !important
-        - filter: drop-shadow(0 0 1px rgba(0,0,0,.35)) !important
-        - border: 1px dashed rgba(255,0,122,.4) !important
-
 
 views:
   - title: Panogu Family
