@@ -233,6 +233,7 @@
         });
         // Undo variable fallback on noIcon
         root.querySelectorAll(config.noIconSelector).forEach(el => {
+          console.log(el.text());
           el.style.removeProperty('--legend-dot-size');
           el.style.removeProperty('--legend-calendar-color');
         });
