@@ -156,9 +156,4 @@
   // Expose API
   global.legendStyler = { start, stop, revert, config };
 })(window);
-
-// --- AUTO-START 3s AFTER THIS FILE IS INCLUDED ---
-window.legendStyler.start(5000);
-
-// If you want to ensure DOM is ready first, use:
-// window.legendStyler.start({ delay: 3000, waitForDom: true });
+window.legendStyler.start({ delay: 1000, waitForDom: true });
