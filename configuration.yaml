@@ -4,9 +4,9 @@ default_config:
 frontend:
   themes: !include themes.yaml
   extra_module_url:
-    - /local/sidebarHandler.js?v=4
-    - /local/dashHandler.js?v=4
-    - /local/calendarHandler.js?v=4
+    - /local/sidebarHandler.js?v={{ now().timestamp() | int }}
+    - /local/dashHandler.js?v={{ now().timestamp() | int }}
+    - /local/calendarHandler.js?v={{ now().timestamp() | int }}
 
 lovelace:
   resources:
