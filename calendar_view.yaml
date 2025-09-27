@@ -97,19 +97,19 @@ cards:
             height: 35px !important;
             border-radius: 50% !important;
           }
-          # li.noIcon.hasToggle {
-          #   display: flex !important;
-          #   justify-content: center !important;
-          #   align-items: center !important;
-          #   width: 28px !important;
-          #   height: 28px !important;
-          #   border-radius: 50% !important;
-          #   background-color: var(--legend-calendar-color) !important;
-          #   color: white !important;
-          #   font-weight: bold !important;
-          #   font-size: 14px !important;
-          #   list-style: none !important;
-          # }
+          .container .legend ul li.hasToggle {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            background-color: var(--legend-calendar-color) !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+            list-style: none !important;
+          }
 
 
   # WEEK
