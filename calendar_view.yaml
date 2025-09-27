@@ -65,23 +65,22 @@ cards:
         - entity: calendar.family
           name: A
           color: var(--family-color-anthony)
-          filter: ^(?:\(?\!Anthony\).)*$
-          filterText: (?:\[\?Anthony\]?\s?\-\s?Anthony:\s?)
+          filter: "(?i)(^Anthony:|\\[A\\])"
+
         - entity: calendar.family
           name: J
           color: var(--family-color-joy)
-          filter: ^(?:\(?\!Joy\).)*$
-          filterText: (?:\[\?Joy\]?\s?\-\s?Joy:\s?)
+          filter: "(?i)(^Joy:|\\[J\\])"
+
         - entity: calendar.family
           name: L
           color: var(--family-color-lizzie)
-          filter: ^(?:\(?\!Lizzie\).)*$
-          filterText: (?:\[\?Lizzie\]?\s?\-\s?Lizzie:\s?)
+          filter: "(?i)(^Lizzie:|\\[L\\])"
+
         - entity: calendar.family
           name: T
           color: var(--family-color-toby)
-          filter: ^(?:\(?\!Toby\).)*$
-          filterText: (?:\[\?Toby\]?\s?\-\s?Toby:\s?)
+          filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
           /* Right-align the legend row and make color dots circular */
@@ -143,23 +142,22 @@ cards:
         - entity: calendar.family
           name: A
           color: var(--family-color-anthony)
-          filter: ^(?:\(?\!Anthony\).)*$
-          filterText: (?:\[\?Anthony\]?\s?\-\s?Anthony:\s?)
+          filter: "(?i)(^Anthony:|\\[A\\])"
+
         - entity: calendar.family
           name: J
           color: var(--family-color-joy)
-          filter: ^(?:\(?\!Joy\).)*$
-          filterText: (?:\[\?Joy\]?\s?\-\s?Joy:\s?)
+          filter: "(?i)(^Joy:|\\[J\\])"
+
         - entity: calendar.family
           name: L
           color: var(--family-color-lizzie)
-          filter: ^(?:\(?\!Lizzie\).)*$
-          filterText: (?:\[\?Lizzie\]?\s?\-\s?Lizzie:\s?)
+          filter: "(?i)(^Lizzie:|\\[L\\])"
+
         - entity: calendar.family
           name: T
           color: var(--family-color-toby)
-          filter: ^(?:\(?\!Toby\).)*$
-          filterText: (?:\[\?Toby\]?\s?\-\s?Toby:\s?)
+          filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
           ha-card .legend {
@@ -201,23 +199,22 @@ cards:
         - entity: calendar.family
           name: A
           color: var(--family-color-anthony)
-          filter: ^(?:\(?\!Anthony\).)*$
-          filterText: (?:\[\?Anthony\]?\s?\-\s?Anthony:\s?)
+          filter: "(?i)(^Anthony:|\\[A\\])"
+
         - entity: calendar.family
           name: J
           color: var(--family-color-joy)
-          filter: ^(?:\(?\!Joy\).)*$
-          filterText: (?:\[\?Joy\]?\s?\-\s?Joy:\s?)
+          filter: "(?i)(^Joy:|\\[J\\])"
+
         - entity: calendar.family
           name: L
           color: var(--family-color-lizzie)
-          filter: ^(?:\(?\!Lizzie\).)*$
-          filterText: (?:\[\?Lizzie\]?\s?\-\s?Lizzie:\s?)
+          filter: "(?i)(^Lizzie:|\\[L\\])"
+
         - entity: calendar.family
           name: T
           color: var(--family-color-toby)
-          filter: ^(?:\(?\!Toby\).)*$
-          filterText: (?:\[\?Toby\]?\s?\-\s?Toby:\s?)
+          filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
           ha-card .legend {

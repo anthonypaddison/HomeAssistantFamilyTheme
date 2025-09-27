@@ -4,19 +4,19 @@ add_calendar_event:
   sequence:
     - variables:
         # Form values
-        title: "{{ states('input_text.calendar_event_title') | trim }}"
-        desc: "{{ states('input_text.calendar_event_description') | trim }}"
+        title: "{{ states('input_text.calendar_event_title') | trim }}"           # CHANGE: add pipe
+        desc: "{{ states('input_text.calendar_event_description') | trim }}"      # CHANGE: add pipe
         start_dt: "{{ states('input_datetime.calendar_event_start') }}"
         end_dt: "{{ states('input_datetime.calendar_event_end') }}"
-        all_day: "{{ is_state('input_boolean.calendar_all_day', 'on') }}"
+        all_day: "{{ is_state('input_boolean.calendar_all_day', 'on') | bool }}"  # CHANGE: cast to bool
 
         # Local date strings (for all-day events)
-        start_date_str: "{{ as_datetime(start_dt) | as_local | timestamp_custom('%Y-%m-%d') }}"
-        end_date_str:   "{{ as_datetime(end_dt)   | as_local | timestamp_custom('%Y-%m-%d') }}"
+        start_date_str: "{{ as_datetime(start_dt) | as_local | timestamp_custom('%Y-%m-%d') }}"  # CHANGE: add pipes
+        end_date_str:   "{{ as_datetime(end_dt)   | as_local | timestamp_custom('%Y-%m-%d') }}"  # (kept for completeness)
 
-        # ISO-like local datetimes for timed events
-        start_iso: "{{ as_datetime(start_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"
-        end_iso:   "{{ as_datetime(end_dt)   | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"
+        # Local ISO-like datetimes for timed events
+        start_iso: "{{ as_datetime(start_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"  # CHANGE: add pipes
+        end_iso:   "{{ as_datetime(end_dt)   | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"  # CHANGE: add pipes
 
         # If end <= start, use start + 60 minutes (prevents zero/negative duration)
         end_iso_effective: >-
@@ -25,7 +25,7 @@ add_calendar_event:
           {% if e <= s %}{{ (s + timedelta(minutes=60)).strftime('%Y-%m-%dT%H:%M:%S') }}
           {% else %}{{ e.strftime('%Y-%m-%dT%H:%M:%S') }}{% endif %}
 
-        # For all-day events, HA/ICS expects end_date to be the day AFTER the last day
+        # For all-day events, end_date must be the day AFTER the last day
         end_date_all_day: >-
           {% set sd = as_datetime(start_dt) | as_local %}
           {% set ed = as_datetime(end_dt)   | as_local %}
@@ -43,11 +43,11 @@ add_calendar_event:
     - choose:
         - conditions:
             - condition: template
-              value_template: "{{ all_day | bool }}"
+              value_template: "{{ all_day }}"
           sequence:
             - service: calendar.create_event
               target:
-                entity_id: calendar.family     # change if your calendar entity differs
+                entity_id: calendar.family   # change if your calendar entity differs
               data:
                 summary: "{{ title }}"
                 description: "{{ desc }}"
@@ -69,27 +69,23 @@ add_calendar_event:
         message: 'Saved "{{ title }}"'
         duration: 2500
 
-    # Reset helpers
-    - service: input_text.set_value
-      target: { entity_id: input_text.calendar_event_title }
-      data: { value: "" }
-
-    - service: input_text.set_value
-      target: { entity_id: input_text.calendar_event_description }
-      data: { value: "" }
-
+    # Reset helpers (set end = start + 60 min by default)  # CHANGE: improved defaults
+    - variables:
+        _now_local: "{{ now() | as_local }}"
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.calendar_event_start }
       data:
-        # For the form reset, a space separator is fine.
-        datetime: "{{ now() | as_local | timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
-
+        datetime: "{{ _now_local.timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.calendar_event_end }
       data:
-        datetime: "{{ now() | as_local | timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
-
+        datetime: "{{ (_now_local + timedelta(minutes=60)).timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
+    - service: input_text.set_value
+      target: { entity_id: input_text.calendar_event_title }
+      data: { value: "" }
+    - service: input_text.set_value
+      target: { entity_id: input_text.calendar_event_description }
+      data: { value: "" }
     - service: input_boolean.turn_off
       target: { entity_id: input_boolean.calendar_all_day }
-
     - service: browser_mod.close_popup
