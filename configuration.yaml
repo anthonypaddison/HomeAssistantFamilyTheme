@@ -6,6 +6,7 @@ frontend:
   extra_module_url:
     - /local/sidebarHandler.js?v=1
     - /local/dashHandler.js?v=1
+    - /local/calendarHandler.js?v=1
 
 lovelace:
   resources:
