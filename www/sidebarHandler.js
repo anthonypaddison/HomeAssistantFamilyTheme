@@ -1,9 +1,9 @@
 
-// === HA extra_module_url — Hide chosen sidebar items (deep-shadow aware, FULL logging) ===
+// === HA extra_module_url - Hide chosen sidebar items (deep-shadow aware, FULL logging) ===
 // Fixes Safari/WebKit requestIdleCallback signature issue and keeps verbose logs.
 
 (() => {
-  const DEBUG = true; // set false to reduce logs
+  const DEBUG = false; // set false to reduce logs
   const log  = (...args) => DEBUG && console.log("[HA sidebar hide]", ...args);
   const warn = (...args) => console.warn("[HA sidebar hide]", ...args);
   const ts   = () => new Date().toISOString();
