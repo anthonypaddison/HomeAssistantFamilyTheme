@@ -52,8 +52,6 @@
   function walkAllOpenShadows(root = document) {
     scanRoot(root);
     root.querySelectorAll('*').forEach(node => {
-        console.log('querySelectorAll:', node);
-
       if (node.shadowRoot) {
         scanRoot(node.shadowRoot);
         walkAllOpenShadows(node.shadowRoot);
@@ -104,8 +102,6 @@
     // Attach observers
     observeRoot(document);
     document.querySelectorAll('*').forEach(el => {
-        console.log('obs:', el);
-
       if (el.shadowRoot) observeRoot(el.shadowRoot);
     });
 
