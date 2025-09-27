@@ -231,10 +231,6 @@ Skylight Family:
         text-align: left;
         padding-left: 12px;
       }
-      .annoying {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
       ha-card.type-custom-digital-clock .first-line {
         font-size: 5.2rem!important;
         font-weight: 500!important;

@@ -1,5 +1,5 @@
 type: custom:mod-card
-class: 'col-1 annoying'
+class: 'col-1'
 card_mod:
   style: |
     ha-card {

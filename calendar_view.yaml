@@ -52,10 +52,10 @@ cards:
       showNavigation: true
       hideDaysWithoutEvents: false
       columns:
-        extraLarge: 7
-        large: 7
-        medium: 5
-        small: 3
+        extraLarge: 5
+        large: 5
+        medium: 3
+        small: 2
         extraSmall: 1
       calendars:
         - entity: calendar.family
@@ -92,6 +92,20 @@ cards:
           ha-card .legend .calendar .color {
             width: 14px; height: 14px; border-radius: 50%;
           }
+          li.noIcon.hasToggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--legend-calendar-color);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            list-style: none;
+          }
+
 
   # WEEK
   - type: conditional
