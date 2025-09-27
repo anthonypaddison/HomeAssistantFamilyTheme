@@ -4,9 +4,9 @@ default_config:
 frontend:
   themes: !include themes.yaml
   extra_module_url:
-    - /local/sidebarHandler.js?v=3
-    - /local/dashHandler.js?v=3
-    - /local/calendarHandler.js?v=3
+    - /local/sidebarHandler.js?v=4
+    - /local/dashHandler.js?v=4
+    - /local/calendarHandler.js?v=4
 
 lovelace:
   resources:
