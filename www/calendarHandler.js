@@ -28,6 +28,8 @@
     ['font-weight', '700'],
     ['font-size', '14px'],
     ['list-style', 'none'],
+    ['--legend-dot-size', '0'],
+    ['list-style', 'none'],
   ];
 
   function styleLegendItem(el) {
