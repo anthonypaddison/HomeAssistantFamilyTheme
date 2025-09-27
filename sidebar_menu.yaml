@@ -1,8 +1,9 @@
 type: custom:mod-card
-class: 'col-1'
+class: 'col-1 annoying'
 style: |
-  :host {
+  .annoying {
     margin: 0 !important;
+    padding: 0 !important;
   }
 card_mod:
   style: |
