@@ -86,24 +86,29 @@ cards:
         style: |
           /* Right-align the legend row and make color dots circular */
           ha-card .legend {
-            display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
-            margin-right: 6px;
+            display: flex !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+            flex-wrap: wrap !important;
+            margin-right: 6px !important;
           }
           ha-card .legend .calendar .color {
-            width: 14px; height: 14px; border-radius: 50%;
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
           }
           li.noIcon.hasToggle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background-color: var(--legend-calendar-color);
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            list-style: none;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            background-color: var(--legend-calendar-color) !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+            list-style: none !important;
           }
 
 
