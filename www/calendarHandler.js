@@ -31,6 +31,8 @@
   ];
 
   function styleLegendItem(el) {
+    console.log('styleLegendItem:', el);
+
     if (!el || el.nodeType !== 1 || el.getAttribute(state.appliedAttr)) return;
     for (const [prop, value] of PROPS) {
       el.style.setProperty(prop, typeof value === 'function' ? value() : value, 'important');
@@ -49,6 +51,8 @@
   function walkAllOpenShadows(root = document) {
     scanRoot(root);
     root.querySelectorAll('*').forEach(node => {
+        console.log('querySelectorAll:', node);
+
       if (node.shadowRoot) {
         scanRoot(node.shadowRoot);
         walkAllOpenShadows(node.shadowRoot);
@@ -99,6 +103,8 @@
     // Attach observers
     observeRoot(document);
     document.querySelectorAll('*').forEach(el => {
+        console.log('obs:', el);
+
       if (el.shadowRoot) observeRoot(el.shadowRoot);
     });
 
