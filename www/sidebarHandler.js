@@ -5,7 +5,7 @@
 (() => {
   const DEBUG = false; // set false to reduce logs
   const log  = (...args) => DEBUG && console.log("[HA sidebar hide]", ...args);
-  const warn = (...args) => console.warn("[HA sidebar hide]", ...args);
+  const warn = (...args) => DEBUG && console.warn("[HA sidebar hide]", ...args);
   const ts   = () => new Date().toISOString();
 
   log("Boot @", ts(), "href=", location.href);
