@@ -52,7 +52,7 @@ views:
           - type: row
             class: row g-3 align-items-stretch
             style: |
-              div.col-1 {
+              col, [class^="col-"] {
                 margin: 0 !important;
                 padding: 0 !important;
               }
