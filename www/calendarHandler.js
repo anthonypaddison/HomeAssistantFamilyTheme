@@ -31,8 +31,7 @@
   ];
 
   function styleLegendItem(el) {
-    console.log('styleLegendItem:', el);
-    console.log('styleLegendItem:', el.text());
+    console.log('styleLegendItem:', el.html());
 
     if (!el || el.nodeType !== 1 || el.getAttribute(state.appliedAttr)) return;
     for (const [prop, value] of PROPS) {
