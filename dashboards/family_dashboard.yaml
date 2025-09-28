@@ -127,7 +127,7 @@ views:
             conditions:
               - entity: input_select.family_section
                 state: Calendar
-            card: !include ../calendar_5day.yaml
+            card: !include /config/dashboards/includes/calendar_5day.yaml
 
           # --- Chores (multiple lists) ---
           - type: conditional
