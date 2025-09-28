@@ -1,8 +1,8 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# FAB → Conditional Popup (Calendar / Chores / Lists)
+# -----------------------------------------------------------------------------
+# FAB -> Conditional Popup (Calendar / Chores / Lists)
 # Uses Browser Mod popup with ha-form schema (no helpers required).
 # IMPORTANT: we pass browser_id so popup opens only on current browser. [6](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/services.md)
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 
 family_fab_open:
   alias: "Family: FAB open popup per active section"
@@ -15,7 +15,7 @@ family_fab_open:
     - variables:
         section: "{{ states('input_select.family_section') | default('Calendar') }}"
     - choose:
-        # ─── Calendar "Create Event" form ─────────────────────────────────────
+        # --- Calendar "Create Event" form -------------------------------------
         - conditions: "{{ section == 'Calendar' }}"
           sequence:
             - action: browser_mod.popup
@@ -54,7 +54,7 @@ family_fab_open:
                 left_button: "Cancel"
                 dismissable: true
 
-        # ─── Chores "Add to-do" form ──────────────────────────────────────────
+        # --- Chores "Add to-do" form ------------------------------------------
         - conditions: "{{ section == 'Chores' }}"
           sequence:
             - action: browser_mod.popup
@@ -84,7 +84,7 @@ family_fab_open:
                 left_button: "Cancel"
                 dismissable: true
 
-        # ─── Lists "Add generic list item" form ───────────────────────────────
+        # --- Lists "Add generic list item" form -------------------------------
         - conditions: "{{ section == 'Lists' }}"
           sequence:
             - action: browser_mod.popup
@@ -115,7 +115,7 @@ family_fab_open:
                 left_button: "Cancel"
                 dismissable: true
 
-        # ─── Photos: hint only (no form) ──────────────────────────────────────
+        # --- Photos: hint only (no form) --------------------------------------
         - conditions: "{{ section == 'Photos' }}"
           sequence:
             - action: browser_mod.popup

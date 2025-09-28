@@ -173,7 +173,7 @@ FamilyBoard:
       color: var(--primary-text-color);
     }
 
-  # 5) Sidebar (HA’s left rail—not your custom sticky stack)
+  # 5) Sidebar (HA's left rail-not your custom sticky stack)
   card-mod-sidebar: |
     :host {
       --sidebar-background-color: var(--family-surface);

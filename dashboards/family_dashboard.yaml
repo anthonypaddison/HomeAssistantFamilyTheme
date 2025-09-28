@@ -4,7 +4,7 @@ views:
     icon: mdi:home-heart
     type: custom:grid-layout
     layout:
-      grid-template-columns: 56px 1fr   # ← thin sidebar (56px) + main
+      grid-template-columns: 56px 1fr   # - thin sidebar (56px) + main
       grid-template-rows: auto
       grid-template-areas: |
         "sidebar main"
