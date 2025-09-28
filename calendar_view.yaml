@@ -1,47 +1,70 @@
+
 type: vertical-stack
 cards:
-
-  # DAY (hourly time‑grid via FullCalendar)
+  # =========================
+  # DAY (time grid + toggles)
+  # =========================
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
         state: Day
     card:
       type: custom:fullcalendar-card
+
+      # Split one HA calendar into virtual calendars per person using regex filters.
+      # These become toggleable in the card's calendar list.
       entities:
         - entity: calendar.family
-          eventColor: var(--family-color-family)
+          name: Family
+          color: var(--family-color-family)
+          # No filter: "general" family events
+        - entity: calendar.family
+          name: Anthony
+          color: var(--family-color-anthony)
+          filter: '(?i)(^Anthony:\[A\])'
+        - entity: calendar.family
+          name: Joy
+          color: var(--family-color-joy)
+          filter: '(?i)(^Joy:\[J\])'
+        - entity: calendar.family
+          name: Lizzie
+          color: var(--family-color-lizzie)
+          filter: '(?i)(^Lizzie:\[L\])'
+        - entity: calendar.family
+          name: Toby
+          color: var(--family-color-toby)
+          filter: '(?i)(^Toby:\[T\])'
 
-      # Some builds expect "options:", others "fullcalendar:". Keep both.
-      options:
-        initialView: timeGridDay             # Single day with hour column
-        nowIndicator: true                   # Moving "you-are-here" line
-        slotDuration: "00:30:00"             # 30-min rows (use "01:00:00" for hourly)
-        slotMinTime: "06:00:00"              # Earliest hour shown
-        slotMaxTime: "22:00:00"              # Latest hour shown
-        scrollTime: "08:00:00"               # Where to scroll to on load
-        allDaySlot: true
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-        locale: "en-gb"
-
+      # FullCalendar options
       fullcalendar:
         initialView: timeGridDay
+        locale: "en-gb"
         nowIndicator: true
+        allDaySlot: true
+
+        # Time grid down the left
         slotDuration: "00:30:00"
         slotMinTime: "06:00:00"
         slotMaxTime: "22:00:00"
         scrollTime: "08:00:00"
-        allDaySlot: true
+        slotLabelFormat:
+          hour: "2-digit"
+          minute: "2-digit"
+          hour12: false
+        eventTimeFormat:
+          hour: "2-digit"
+          minute: "2-digit"
+          hour12: false
+
+        # Show a toggleable calendar list (legend) in the card
+        calendarList: true
+        showCalendarList: true
+
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
           right: ''
-        locale: "en-gb"
 
-      # Match your clean, backgroundless look
       card_mod:
         style: |
           ha-card {
@@ -49,56 +72,66 @@ cards:
             border: none !important;
             box-shadow: none !important;
           }
-          /* Keep a sensible min height for the grid */
           .fc { min-height: 560px; }
 
-  # WEEK (5-day hourly time‑grid via FullCalendar)
+  # ==========================
+  # WEEK (7-day time grid + toggles)
+  # ==========================
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
         state: Week
     card:
       type: custom:fullcalendar-card
+
       entities:
         - entity: calendar.family
-          eventColor: var(--family-color-family)
-
-      # Use a custom 5-day TimeGrid view starting from today
-      options:
-        initialView: timeGridFiveDay
-        nowIndicator: true
-        slotDuration: "00:30:00"
-        slotMinTime: "06:00:00"
-        slotMaxTime: "22:00:00"
-        scrollTime: "08:00:00"
-        allDaySlot: true
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-        locale: "en-gb"
-        views:
-          timeGridFiveDay:
-            type: timeGrid
-            duration: { days: 5 }
+          name: Family
+          color: var(--family-color-family)
+        - entity: calendar.family
+          name: Anthony
+          color: var(--family-color-anthony)
+          filter: '(?i)(^Anthony:\[A\])'
+        - entity: calendar.family
+          name: Joy
+          color: var(--family-color-joy)
+          filter: '(?i)(^Joy:\[J\])'
+        - entity: calendar.family
+          name: Lizzie
+          color: var(--family-color-lizzie)
+          filter: '(?i)(^Lizzie:\[L\])'
+        - entity: calendar.family
+          name: Toby
+          color: var(--family-color-toby)
+          filter: '(?i)(^Toby:\[T\])'
 
       fullcalendar:
-        initialView: timeGridFiveDay
+        initialView: timeGridWeek
+        firstDay: 1                # Monday start
+        locale: "en-gb"
         nowIndicator: true
+        allDaySlot: true
+
         slotDuration: "00:30:00"
         slotMinTime: "06:00:00"
         slotMaxTime: "22:00:00"
         scrollTime: "08:00:00"
-        allDaySlot: true
+        slotLabelFormat:
+          hour: "2-digit"
+          minute: "2-digit"
+          hour12: false
+        eventTimeFormat:
+          hour: "2-digit"
+          minute: "2-digit"
+          hour12: false
+
+        calendarList: true
+        showCalendarList: true
+
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
           right: ''
-        locale: "en-gb"
-        views:
-          timeGridFiveDay:
-            type: timeGrid
-            duration: { days: 5 }
 
       card_mod:
         style: |
@@ -109,7 +142,9 @@ cards:
           }
           .fc { min-height: 560px; }
 
-  # MONTH (rolling 30 days, no times) — keep week-planner-card
+  # =========================================
+  # MONTH (rolling 30 days with legend toggles)
+  # =========================================
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
@@ -132,6 +167,8 @@ cards:
         medium: 5
         small: 2
         extraSmall: 1
+
+      # Same per-person breakdown using filters (as before)
       calendars:
         - entity: calendar.family
           name: ''
@@ -142,22 +179,23 @@ cards:
           name: ''
           icon: 'mdi:alpha-a'
           color: var(--family-color-anthony)
-          filter: "(?i)(^Anthony:\\[A\\])"
+          filter: '(?i)(^Anthony:\[A\])'
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-j'
           color: var(--family-color-joy)
-          filter: "(?i)(^Joy:\\[J\\])"
+          filter: '(?i)(^Joy:\[J\])'
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-l'
           color: var(--family-color-lizzie)
-          filter: "(?i)(^Lizzie:\\[L\\])"
+          filter: '(?i)(^Lizzie:\[L\])'
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-t'
           color: var(--family-color-toby)
-          filter: "(?i)(^Toby:\\[T\\])"
+          filter: '(?i)(^Toby:\[T\])'
+
       card_mod:
         style: |
           ha-card .legend {
@@ -191,7 +229,9 @@ cards:
             --mdc-icon-size: 50px !important;
           }
 
-  # Add Calendar Event (popup) - visible on Calendar section
+  # =========================
+  # Add Calendar Event (FAB)
+  # =========================
   - type: button
     icon: mdi:plus
     name: ''
