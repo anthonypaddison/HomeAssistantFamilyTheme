@@ -1,0 +1,30 @@
+completed_family_today:
+  name: Completed Family Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_anthony_today:
+  name: Completed Anthony Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_joy_today:
+  name: Completed Joy Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_lizzie_today:
+  name: Completed Lizzie Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_toby_today:
+  name: Completed Toby Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
