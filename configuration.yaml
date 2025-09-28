@@ -8,10 +8,22 @@ frontend:
     - /local/dashHandler.js?v={{ now().timestamp() | int }}
     - /local/calendarHandler.js?v={{ now().timestamp() | int }}
 
+
 lovelace:
   resources:
-    - url: https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600&display=swap
-      type: css
+    - url: /hacsfiles/lovelace-fullcalendar-card/lovelace-fullcalendar-card.js
+      type: module
+    - url: /hacsfiles/gallery-card/gallery-card.js
+      type: module
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/bootstrap-grid-card/bootstrap-grid-card.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/digital-clock/digital-clock.js
+      type: module
+
   dashboards:
     family-dashboard:
       mode: yaml

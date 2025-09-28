@@ -10,7 +10,6 @@ fab_add_calendar_event:
         all_day: "{{ is_state('input_boolean.event_all_day','on') }}"
         s_dt: "{{ states('input_datetime.event_start') }}"
         e_dt: "{{ states('input_datetime.event_end') }}"
-        # Map the selection to your Google Calendar entities (as provided)
         cal_map:
           Family: calendar.family
           Anthony: calendar.anthony
@@ -18,10 +17,7 @@ fab_add_calendar_event:
           Lizzie: calendar.lizzie
           Toby: calendar.toby
         cal_entity: "{{ cal_map.get(target_sel, 'calendar.family') }}"
-
-        # Localized strings for the two service variants
-        start_iso: >-
-          {{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}
+        start_iso: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"
         end_iso: >-
           {% set s = as_datetime(s_dt) | as_local %}
           {% set e = as_datetime(e_dt) | as_local %}
@@ -30,9 +26,7 @@ fab_add_calendar_event:
           {% else %}
             {{ e.strftime('%Y-%m-%dT%H:%M:%S') }}
           {% endif %}
-        start_date_str: >-
-          {{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%d') }}
-        # For all-day events, Google expects end_date to be EXCLUSIVE (next day)
+        start_date_str: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%d') }}"
         end_date_all_day: >-
           {% set sd = (as_datetime(s_dt) | as_local).date() %}
           {% set ed = (as_datetime(e_dt) | as_local).date() %}
@@ -46,58 +40,42 @@ fab_add_calendar_event:
       value_template: "{{ title != '' }}"
 
     - choose:
-        # All-day path
         - conditions: "{{ all_day | bool }}"
           sequence:
             - service: calendar.create_event
-              target:
-                entity_id: "{{ cal_entity }}"
+              target: { entity_id: "{{ cal_entity }}" }
               data:
                 summary: "{{ title }}"
                 description: "{{ desc }}"
                 start_date: "{{ start_date_str }}"
                 end_date: "{{ end_date_all_day }}"
       default:
-        # Timed path
         - service: calendar.create_event
-          target:
-            entity_id: "{{ cal_entity }}"
+          target: { entity_id: "{{ cal_entity }}" }
           data:
             summary: "{{ title }}"
             description: "{{ desc }}"
             start_date_time: "{{ start_iso }}"
             end_date_time: "{{ end_iso }}"
 
-    # Toast & reset form
     - service: browser_mod.notification
-      data:
-        message: "Saved “{{ title }}” to {{ target_sel }}"
-        duration: 2500
+      data: { message: "Saved “{{ title }}” to {{ target_sel }}", duration: 2500 }
 
-    - variables:
-        _now: "{{ now() | as_local }}"
-
+    - variables: { _now: "{{ now() | as_local }}" }
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.event_start }
-      data:
-        datetime: "{{ _now.timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
-
+      data: { datetime: "{{ _now.timestamp_custom('%Y-%m-%d %H:%M:%S') }}" }
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.event_end }
-      data:
-        datetime: "{{ (_now + timedelta(minutes=60)).timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
-
+      data: { datetime: "{{ (_now + timedelta(minutes=60)).timestamp_custom('%Y-%m-%d %H:%M:%S') }}" }
     - service: input_text.set_value
       target: { entity_id: input_text.event_title }
       data: { value: "" }
-
     - service: input_text.set_value
       target: { entity_id: input_text.event_description }
       data: { value: "" }
-
     - service: input_boolean.turn_off
       target: { entity_id: input_boolean.event_all_day }
-
     - service: browser_mod.close_popup
 
 
@@ -110,12 +88,11 @@ fab_add_todo_item:
         list_sel: "{{ states('input_select.active_todo_list') | trim }}"
         item: "{{ states('input_text.new_todo_item') | trim }}"
         desc: "{{ states('input_text.new_todo_description') | trim }}"
-        # Map the selection to your Todoist-backed To‑do entities (as provided)
         todo_map:
           Family: todo.family
           Anthony: todo.anthony
           Joy: todo.joy
-          Lizzie: todo.lizz ie
+          Lizzie: todo.lizzie
           Toby: todo.toby
         todo_entity: "{{ todo_map.get(list_sel, 'todo.family') }}"
 
@@ -123,22 +100,18 @@ fab_add_todo_item:
       value_template: "{{ item != '' }}"
 
     - service: todo.add_item
-      target:
-        entity_id: "{{ todo_entity }}"
+      target: { entity_id: "{{ todo_entity }}" }
       data:
         item: "{{ item }}"
         description: "{{ desc }}"
 
     - service: browser_mod.notification
-      data:
-        message: "Added “{{ item }}” to {{ list_sel }}"
-        duration: 2000
+      data: { message: "Added “{{ item }}” to {{ list_sel }}", duration: 2000 }
 
     - service: input_text.set_value
       target: { entity_id: input_text.new_todo_item }
       data: { value: "" }
-
     - service: input_text.set_value
       target: { entity_id: input_text.new_todo_description }
       data: { value: "" }
-
+    - service: browser_mod.close_popup
