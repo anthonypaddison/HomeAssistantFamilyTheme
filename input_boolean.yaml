@@ -1,3 +1,7 @@
 event_all_day:
   name: All Day
   initial: off
+
+calendar_month_from_today:
+  name: Month view starts from Today
+  initial: off

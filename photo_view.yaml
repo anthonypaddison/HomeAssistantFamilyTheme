@@ -1,7 +1,14 @@
+# Photos / Slideshow (uses Media Source so you can point to /media folders)
 type: vertical-stack
 cards:
-  - type: markdown
-    content: "🖼️ **Photos** – add your gallery/media cards here."
-    card_mod:
-      style: |
-        ha-card { background: transparent; border: 0; box-shadow: none; font-size: 1.25rem; }
+  - type: custom:gallery-card
+    menu_alignment: Hidden
+    recursive: true
+    slideshow_timer: 20     # seconds per slide
+    parsed_date_sort: false
+    entities:
+      # Local photos you drop into Media -> "My media"/photos
+      - path: media-source://media_source/photos
+
+      # If you sync iCloud photos into /media/icloud via an add-on/integration,
+      # uncomment the next line:
