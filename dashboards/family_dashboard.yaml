@@ -1,4 +1,17 @@
 title: Family
+theme: FamilyBoard
+type: custom:grid-layout
+layout:
+  grid-template-columns: 10% 1fr
+  grid-template-areas: |
+    "sidebar main"
+  # Optional: stack on phones
+  mediaquery:
+    "(max-width: 900px)":
+      grid-template-columns: 1fr
+      grid-template-areas: |
+        "main"
+
 button_card_templates:
   sidebar_item:
     show_label: false
