@@ -1,126 +1,56 @@
 type: vertical-stack
 cards:
-  # DAY
+
+  # DAY (hourly time‑grid via FullCalendar)
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
         state: Day
     card:
-      type: custom:week-planner-card
-      title: ''
-      days: 1
-      startingDay: today
-      noCardBackground: true
-      eventBackground: var(--family-cal-event-bg)
-      timeFormat: 'HH:mm'
-      showTitle: true
-      compact: false
-      showLegend: true
-      legendToggle: true
-      showNavigation: true
-      hideDaysWithoutEvents: false
-      columns:
-        extraLarge: 5
-        large: 5
-        medium: 5
-        small: 2
-        extraSmall: 1
-      calendars:
+      type: custom:fullcalendar-card
+      entities:
         - entity: calendar.family
-          name: ''
-          icon: 'mdi:home-heart'
-          color: var(--family-color-family)
-          hideInLegend: true
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-a'
-          color: var(--family-color-anthony)
-          filter: "(?i)(^Anthony:|\\[A\\])"
+          eventColor: var(--family-color-family)
 
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-j'
-          color: var(--family-color-joy)
-          filter: "(?i)(^Joy:|\\[J\\])"
+      # Some builds expect "options:", others "fullcalendar:". Keep both.
+      options:
+        initialView: timeGridDay           # Hourly grid
+        nowIndicator: true                 # Moving "you-are-here" line
+        slotDuration: "00:30:00"           # 30‑min increments (use "01:00:00" for hourly)
+        slotMinTime: "06:00:00"            # Earliest row shown
+        slotMaxTime: "22:00:00"            # Latest row shown
+        scrollTime: "08:00:00"             # Where to scroll to on load
+        allDaySlot: true
+        headerToolbar:
+          left: 'prev,next today'
+          center: 'title'
+          right: ''
+        locale: "en-gb"
 
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-l'
-          color: var(--family-color-lizzie)
-          filter: "(?i)(^Lizzie:|\\[L\\])"
+      fullcalendar:
+        initialView: timeGridDay
+        nowIndicator: true
+        slotDuration: "00:30:00"
+        slotMinTime: "06:00:00"
+        slotMaxTime: "22:00:00"
+        scrollTime: "08:00:00"
+        allDaySlot: true
+        headerToolbar:
+          left: 'prev,next today'
+          center: 'title'
+          right: ''
+        locale: "en-gb"
 
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-t'
-          color: var(--family-color-toby)
-          filter: "(?i)(^Toby:|\\[T\\])"
+      # Match your clean, backgroundless look
       card_mod:
         style: |
-          /* ---------- HEADER: put the legend on the far right ---------- */
-          .container .header {
-            display: flex !important;
-            align-items: center !important;
-            gap: .5rem !important;
-            flex-wrap: wrap !important;
+          ha-card {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
           }
-          .container .legend {
-            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
-            display: flex !important;
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-          }
-
-          /* Keep your circular legend icons (based on your current rules) */
-          .container .legend ul {
-            display: flex !important;
-            gap: 8px !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-          .container .legend ul li.hasToggle {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            inline-size: 28px !important;
-            block-size: 28px !important;
-            border-radius: 50% !important;
-            background-color: var(--legend-calendar-color) !important;
-            color: #fff !important;
-            font-size: 0 !important;   /* hide letter, show icon only */
-            list-style: none !important;
-            padding: 0 !important;
-          }
-          .container .legend ul li ha-icon {
-            color: #fff !important;
-            --mdc-icon-size: 20px !important;
-            margin: 0 !important;
-          }
-
-          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
-          .container {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;   /* center the whole cluster of days */
-            gap: 12px !important;                 /* space between columns/rows */
-          }
-          .container > .header {
-            flex: 0 0 100% !important;            /* header stays on its own row */
-          }
-          .container > .day {
-            flex: 1 1 260px !important;           /* min width per day; grows evenly */
-            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
-          }
-
-          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
-          .container .day .date {
-            text-align: end !important;
-          }
-          .container .day .events {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: flex-end !important;
-            text-align: end !important;
-          }
+          /* Keep a sensible min height for the grid */
+          .fc { min-height: 560px; }
 
   # WEEK
   - type: conditional
@@ -134,9 +64,7 @@ cards:
       startingDay: today
       noCardBackground: true
       eventBackground: var(--family-cal-event-bg)
-      timeFormat: 'HH:mm'
-      showTitle: true
-      compact: false
+      compact: true
       showLegend: true
       legendToggle: true
       showNavigation: true
@@ -157,94 +85,57 @@ cards:
           name: ''
           icon: 'mdi:alpha-a'
           color: var(--family-color-anthony)
-          filter: "(?i)(^Anthony:|\\[A\\])"
-
+          filter: "(?i)(^Anthony:\\[A\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-j'
           color: var(--family-color-joy)
-          filter: "(?i)(^Joy:|\\[J\\])"
-
+          filter: "(?i)(^Joy:\\[J\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-l'
           color: var(--family-color-lizzie)
-          filter: "(?i)(^Lizzie:|\\[L\\])"
-
+          filter: "(?i)(^Lizzie:\\[L\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-t'
           color: var(--family-color-toby)
-          filter: "(?i)(^Toby:|\\[T\\])"
+          filter: "(?i)(^Toby:\\[T\\])"
       card_mod:
         style: |
-          /* ---------- HEADER: put the legend on the far right ---------- */
-          .container .header {
+          ha-card .legend {
             display: flex !important;
-            align-items: center !important;
-            gap: .5rem !important;
-            flex-wrap: wrap !important;
-          }
-          .container .legend {
-            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
-            display: flex !important;
+            justify-content: flex-end !important;
             gap: 8px !important;
             flex-wrap: wrap !important;
+            margin-right: 6px !important;
           }
-
-          /* Keep your circular legend icons (based on your current rules) */
-          .container .legend ul {
-            display: flex !important;
-            gap: 8px !important;
-            margin: 0 !important;
-            padding: 0 !important;
+          ha-card .legend .calendar .color {
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
           }
-          .container .legend ul li.hasToggle {
+          .header .legend ul li.hasToggle {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            inline-size: 28px !important;
-            block-size: 28px !important;
+            width: 28px !important;
+            height: 28px !important;
             border-radius: 50% !important;
             background-color: var(--legend-calendar-color) !important;
-            color: #fff !important;
-            font-size: 0 !important;   /* hide letter, show icon only */
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 0px !important;
             list-style: none !important;
-            padding: 0 !important;
+            padding: 3px !important;
           }
-          .container .legend ul li ha-icon {
-            color: #fff !important;
-            --mdc-icon-size: 20px !important;
-            margin: 0 !important;
-          }
-
-          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
-          .container {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;   /* center the whole cluster of days */
-            gap: 12px !important;                 /* space between columns/rows */
-          }
-          .container > .header {
-            flex: 0 0 100% !important;            /* header stays on its own row */
-          }
-          .container > .day {
-            flex: 1 1 200px !important;           /* min width per day; grows evenly */
-            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
+          .header .legend ul li ha-icon {
+            color: white !important;
+            --mdc-icon-size: 50px !important;
+            margin: 3px !important;
           }
 
-          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
-          .container .day .date {
-            text-align: end !important;
-          }
-          .container .day .events {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: flex-end !important;
-            text-align: end !important;
-          }
-
-
+  # MONTH
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
@@ -256,9 +147,7 @@ cards:
       startingDay: today
       noCardBackground: true
       eventBackground: var(--family-cal-event-bg)
-      timeFormat: 'HH:mm'
-      showTitle: true
-      compact: false
+      compact: true
       showLegend: true
       legendToggle: true
       showNavigation: true
@@ -279,91 +168,53 @@ cards:
           name: ''
           icon: 'mdi:alpha-a'
           color: var(--family-color-anthony)
-          filter: "(?i)(^Anthony:|\\[A\\])"
-
+          filter: "(?i)(^Anthony:\\[A\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-j'
           color: var(--family-color-joy)
-          filter: "(?i)(^Joy:|\\[J\\])"
-
+          filter: "(?i)(^Joy:\\[J\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-l'
           color: var(--family-color-lizzie)
-          filter: "(?i)(^Lizzie:|\\[L\\])"
-
+          filter: "(?i)(^Lizzie:\\[L\\])"
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-t'
           color: var(--family-color-toby)
-          filter: "(?i)(^Toby:|\\[T\\])"
+          filter: "(?i)(^Toby:\\[T\\])"
       card_mod:
         style: |
-          /* ---------- HEADER: put the legend on the far right ---------- */
-          .container .header {
+          ha-card .legend {
             display: flex !important;
-            align-items: center !important;
-            gap: .5rem !important;
-            flex-wrap: wrap !important;
-          }
-          .container .legend {
-            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
-            display: flex !important;
+            justify-content: flex-end !important;
             gap: 8px !important;
             flex-wrap: wrap !important;
+            margin-right: 6px !important;
+            float: right !important;
           }
-
-          /* Keep your circular legend icons (based on your current rules) */
-          .container .legend ul {
-            display: flex !important;
-            gap: 8px !important;
-            margin: 0 !important;
-            padding: 0 !important;
+          ha-card .legend .calendar .color {
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
           }
           .container .legend ul li.hasToggle {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            inline-size: 28px !important;
-            block-size: 28px !important;
+            width: 28px !important;
+            height: 28px !important;
             border-radius: 50% !important;
             background-color: var(--legend-calendar-color) !important;
-            color: #fff !important;
-            font-size: 0 !important;   /* hide letter, show icon only */
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 0px !important;
             list-style: none !important;
-            padding: 0 !important;
           }
           .container .legend ul li ha-icon {
-            color: #fff !important;
-            --mdc-icon-size: 20px !important;
-            margin: 0 !important;
-          }
-
-          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
-          .container {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;   /* center the whole cluster of days */
-            gap: 12px !important;                 /* space between columns/rows */
-          }
-          .container > .header {
-            flex: 0 0 100% !important;            /* header stays on its own row */
-          }
-          .container > .day {
-            flex: 1 1 260px !important;           /* min width per day; grows evenly */
-            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
-          }
-
-          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
-          .container .day .date {
-            text-align: end !important;
-          }
-          .container .day .events {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: flex-end !important;
-            text-align: end !important;
+            color: white !important;
+            --mdc-icon-size: 50px !important;
           }
 
   # Add Calendar Event (popup) - visible on Calendar section
@@ -385,63 +236,62 @@ cards:
       action: fire-dom-event
       browser_mod:
         service: browser_mod.popup
-      data:
-        title: Add Calendar Event
-        size: wide
-        content:
-          type: vertical-stack
-          card_mod:
-            style: |
-              :host ha-dialog {
-                --mdc-dialog-min-width: 80%;
-                --mdc-dialog-max-width: 80%;
-              }
-              div.mdc-dialog div.mdc-dialog__scrim {
-                backdrop-filter: blur(6px);
-              }
-              div.mdc-dialog .mdc-dialog__surface {
-                border-radius: 50%;
-                border: 1px solid var(--family-cal-grid-line);
-              }
-          cards:
-            - type: input-text
-              entity: input_text.calendar_event_title
-              name: Title
-            - type: input-text
-              entity: input_text.calendar_event_description
-              name: Description
-            - type: input-datetime
-              entity: input_datetime.calendar_event_start
-              name: Start
-              with_time: true
-            - type: input-datetime
-              entity: input_datetime.calendar_event_end
-              name: End
-              with_time: true
-            - type: input-boolean
-              entity: input_boolean.calendar_all_day
-              name: All Day
-            - type: button
-              name: Save Event
-              icon: mdi:check
-              tap_action:
-                action: call-service
-                service: script.add_calendar_event
-              card_mod:
-                style: |
-                          /* Float the FAB inside the dialog content area (bottom-right) */
-                          :host {
-                            position: absolute;
-                            inset-inline-end: 24px; /* right in LTR, left in RTL */
-                            inset-block-end: 24px;  /* bottom */
-                            z-index: 10;
-                          }
-                          ha-card {
-                            width: 64px; height: 64px;
-                            border-radius: 50%;
-                            display: grid; place-items: center;
-                            background: var(--primary-color);
-                            color: var(--primary-background-color);
-                            box-shadow: 0 8px 18px rgba(0,0,0,.18);
-                          }
-                          ha-card .icon { --mdc-icon-size: 28px; }
+        data:
+          title: Add Calendar Event
+          size: wide
+          content:
+            type: vertical-stack
+            card_mod:
+              style: |
+                :host ha-dialog {
+                  --mdc-dialog-min-width: 80%;
+                  --mdc-dialog-max-width: 80%;
+                }
+                div.mdc-dialog div.mdc-dialog__scrim {
+                  backdrop-filter: blur(6px);
+                }
+                div.mdc-dialog .mdc-dialog__surface {
+                  border-radius: 50%;
+                  border: 1px solid var(--family-cal-grid-line);
+                }
+            cards:
+              - type: input-text
+                entity: input_text.calendar_event_title
+                name: Title
+              - type: input-text
+                entity: input_text.calendar_event_description
+                name: Description
+              - type: input-datetime
+                entity: input_datetime.calendar_event_start
+                name: Start
+                with_time: true
+              - type: input-datetime
+                entity: input_datetime.calendar_event_end
+                name: End
+                with_time: true
+              - type: input-boolean
+                entity: input_boolean.calendar_all_day
+                name: All Day
+              - type: button
+                name: Save Event
+                icon: mdi:check
+                tap_action:
+                  action: call-service
+                  service: script.add_calendar_event
+                card_mod:
+                  style: |
+                    /* Float the FAB inside the dialog content area (bottom-right) */
+                    :host {
+                      position: absolute;
+                      inset-inline-end: 24px; /* right in LTR, left in RTL */
+                      inset-block-end: 24px;  /* bottom */
+                      z-index: 10;
+                    }
+                    ha-card {
+                      width: 64px; height: 64px;
+                      border-radius: 50%;
+                      display: grid; place-items: center;
+                      background: var(--primary-color);
+                      color: var(--primary-background-color);
+                      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+                    }
