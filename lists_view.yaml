@@ -1,7 +1,3 @@
-type: vertical-stack
-cards:
-  - type: markdown
-    content: "📝 **Lists** – shopping lists, note cards, or grouped todos."
-    card_mod:
-      style: |
-        ha-card { background: transparent; border: 0; box-shadow: none; font-size: 1.25rem; }
+- type: todo-list
+  entity: todo.family
+  title: Family

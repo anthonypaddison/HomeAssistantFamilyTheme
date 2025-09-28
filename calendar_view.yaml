@@ -1,344 +1,60 @@
-type: vertical-stack
-cards:
-  # =========================
-  # DAY (time grid)
-  # =========================
-  - type: conditional
-    conditions:
-      - condition: state
-        entity: input_select.calendar_view
-        state: Day
-    card:
-      type: custom:fullcalendar-card
+# Day (time grid)
+- type: conditional
+  conditions:
+    - entity: input_select.calendar_view
+      state: Day
+  card:
+    type: custom:fullcalendar-card
+    entities:
+      - entity: calendar.family
+        name: Family
+    options:
+      initialView: timeGridDay
+      nowIndicator: true
+      allDaySlot: true
+      slotMinTime: "06:00:00"
+      slotMaxTime: "22:00:00"
+      locale: "en-gb"
+    card_mod:
+      style: |
+        ha-card { background: none; border: 0; box-shadow: none; }
 
-      # Keep this simple for stability; we’ll re-add per-person toggles once we confirm your fullcalendar-card build.
-      entities:
-        - entity: calendar.family
-          name: Family
-          color: var(--family-color-family)
+# Week (rolling 5 days from today)
+- type: conditional
+  conditions:
+    - entity: input_select.calendar_view
+      state: Week
+  card:
+    type: custom:fullcalendar-card
+    entities:
+      - entity: calendar.family
+        name: Family
+    options:
+      initialView: timeGridFiveDay
+      views:
+        timeGridFiveDay:
+          type: timeGrid
+          duration: { days: 5 }
+      nowIndicator: true
+      allDaySlot: true
+      slotMinTime: "06:00:00"
+      slotMaxTime: "22:00:00"
+      locale: "en-gb"
+    card_mod:
+      style: |
+        ha-card { background: none; border: 0; box-shadow: none; }
 
-      # Compatibility for different fullcalendar-card builds: include both keys.
-      options:
-        initialView: timeGridDay
-        locale: "en-gb"
-        nowIndicator: true
-        allDaySlot: true
-        slotDuration: "00:30:00"
-        slotMinTime: "06:00:00"
-        slotMaxTime: "22:00:00"
-        scrollTime: "08:00:00"
-        slotLabelFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        eventTimeFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-      fullcalendar:
-        initialView: timeGridDay
-        locale: "en-gb"
-        nowIndicator: true
-        allDaySlot: true
-        slotDuration: "00:30:00"
-        slotMinTime: "06:00:00"
-        slotMaxTime: "22:00:00"
-        scrollTime: "08:00:00"
-        slotLabelFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        eventTimeFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-
-      card_mod:
-        style: |
-          ha-card {
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-          }
-          /* Ensure the left time axis is visible and readable */
-          .fc .fc-timegrid-axis { width: 56px !important; }
-          .fc .fc-timegrid-axis-cushion,
-          .fc .fc-timegrid-slot-label-cushion {
-            color: var(--primary-text-color) !important;
-            opacity: 0.9 !important;
-            font-size: 0.95rem !important;
-          }
-          /* Subtle grid lines to match your theme */
-          .fc .fc-timegrid-slot,
-          .fc .fc-timegrid-slot-lane {
-            border-color: var(--family-cal-grid-line) !important;
-          }
-          .fc { min-height: 560px; }
-
-  # ==========================
-  # WEEK (7-day time grid)
-  # ==========================
-  - type: conditional
-    conditions:
-      - condition: state
-        entity: input_select.calendar_view
-        state: Week
-    card:
-      type: custom:fullcalendar-card
-
-      entities:
-        - entity: calendar.family
-          name: Family
-          color: var(--family-color-family)
-
-      options:
-        initialView: timeGridWeek
-        firstDay: 1                # Monday
-        locale: "en-gb"
-        nowIndicator: true
-        allDaySlot: true
-        slotDuration: "00:30:00"
-        slotMinTime: "06:00:00"
-        slotMaxTime: "22:00:00"
-        scrollTime: "08:00:00"
-        slotLabelFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        eventTimeFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-      fullcalendar:
-        initialView: timeGridWeek
-        firstDay: 1
-        locale: "en-gb"
-        nowIndicator: true
-        allDaySlot: true
-        slotDuration: "00:30:00"
-        slotMinTime: "06:00:00"
-        slotMaxTime: "22:00:00"
-        scrollTime: "08:00:00"
-        slotLabelFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        eventTimeFormat:
-          hour: "2-digit"
-          minute: "2-digit"
-          hour12: false
-        headerToolbar:
-          left: 'prev,next today'
-          center: 'title'
-          right: ''
-
-      card_mod:
-        style: |
-          ha-card {
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-          }
-          .fc .fc-timegrid-axis { width: 56px !important; }
-          .fc .fc-timegrid-axis-cushion,
-          .fc .fc-timegrid-slot-label-cushion {
-            color: var(--primary-text-color) !important;
-            opacity: 0.9 !important;
-            font-size: 0.95rem !important;
-          }
-          .fc .fc-timegrid-slot,
-          .fc .fc-timegrid-slot-lane {
-            border-color: var(--family-cal-grid-line) !important;
-          }
-          .fc { min-height: 560px; }
-
-  # =========================================
-  # MONTH (rolling 30 days, legend toggles)
-  # =========================================
-  - type: conditional
-    conditions:
-      - condition: state
-        entity: input_select.calendar_view
-        state: Month
-    card:
-      type: custom:week-planner-card
-      title: ''
-      days: 30
-      startingDay: today
-      noCardBackground: true
-      eventBackground: var(--family-cal-event-bg)
-      compact: true
-      showLegend: true
-      legendToggle: true
-      showNavigation: true
-      hideDaysWithoutEvents: false
-      columns:
-        extraLarge: 5
-        large: 5
-        medium: 5
-        small: 2
-        extraSmall: 1
-
-      # IMPORTANT: week-planner-card 'filter' REMOVES matches.
-      # To keep only a specific person, we remove everything NOT matching that person
-      # via a negative look-ahead (no inline (?i) flags in JS regex).
-      calendars:
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:home-heart'
-          color: var(--family-color-family)
-          hideInLegend: true
-
-        # Anthony only
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-a'
-          color: var(--family-color-anthony)
-          filter: '^(?!Anthony:\[A\]).*'
-
-        # Joy only
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-j'
-          color: var(--family-color-joy)
-          filter: '^(?!Joy:\[J\]).*'
-
-        # Lizzie only
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-l'
-          color: var(--family-color-lizzie)
-          filter: '^(?!Lizzie:\[L\]).*'
-
-        # Toby only
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-t'
-          color: var(--family-color-toby)
-          filter: '^(?!Toby:\[T\]).*'
-
-      card_mod:
-        style: |
-          ha-card .legend {
-            display: flex !important;
-            justify-content: flex-end !important;
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-            margin-right: 6px !important;
-            float: right !important;
-          }
-          ha-card .legend .calendar .color {
-            width: 14px !important;
-            height: 14px !important;
-            border-radius: 50% !important;
-          }
-          .container .legend ul li.hasToggle {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 28px !important;
-            height: 28px !important;
-            border-radius: 50% !important;
-            background-color: var(--legend-calendar-color) !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 0px !important;
-            list-style: none !important;
-          }
-          .container .legend ul li ha-icon {
-            color: white !important;
-            --mdc-icon-size: 50px !important;
-          }
-
-  # =========================
-  # Add Calendar Event (FAB)
-  # =========================
-  - type: button
-    icon: mdi:plus
-    name: ''
-    style: |
-      :host {
-        position: fixed !important;
-        bottom: 20px !important;
-        right: 20px !important;
-        background: #0078d7 !important;
-        color: white !important;
-        padding: 10px 15px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-      }
-    tap_action:
-      action: fire-dom-event
-      browser_mod:
-        service: browser_mod.popup
-        data:
-          title: Add Calendar Event
-          size: wide
-          content:
-            type: vertical-stack
-            card_mod:
-              style: |
-                :host ha-dialog {
-                  --mdc-dialog-min-width: 80%;
-                  --mdc-dialog-max-width: 80%;
-                }
-                div.mdc-dialog div.mdc-dialog__scrim {
-                  backdrop-filter: blur(6px);
-                }
-                div.mdc-dialog .mdc-dialog__surface {
-                  border-radius: 50%;
-                  border: 1px solid var(--family-cal-grid-line);
-                }
-            cards:
-              - type: input-text
-                entity: input_text.calendar_event_title
-                name: Title
-              - type: input-text
-                entity: input_text.calendar_event_description
-                name: Description
-              - type: input-datetime
-                entity: input_datetime.calendar_event_start
-                name: Start
-                with_time: true
-              - type: input-datetime
-                entity: input_datetime.calendar_event_end
-                name: End
-                with_time: true
-              - type: input-boolean
-                entity: input_boolean.calendar_all_day
-                name: All Day
-              - type: button
-                name: Save Event
-                icon: mdi:check
-                tap_action:
-                  action: call-service
-                  service: script.add_calendar_event
-                card_mod:
-                  style: |
-                    :host {
-                      position: absolute;
-                      inset-inline-end: 24px;
-                      inset-block-end: 24px;
-                      z-index: 10;
-                    }
-                    ha-card {
-                      width: 64px; height: 64px;
-                      border-radius: 50%;
-                      display: grid; place-items: center;
-                      background: var(--primary-color);
-                      color: var(--primary-background-color);
-                      box-shadow: 0 8px 18px rgba(0,0,0,.18);
-                    }
-                    ha-card .icon { --mdc-icon-size: 28px; }
+# Month (classic grid)
+- type: conditional
+  conditions:
+    - entity: input_select.calendar_view
+      state: Month
+  card:
+    type: custom:atomic-calendar-revive
+    entities:
+      - entity: calendar.family
+    showMonth: true
+    showWeekDay: true
+    card_mod:
+      style: |
+        ha-card { background: none; border: 0; box-shadow: none; }

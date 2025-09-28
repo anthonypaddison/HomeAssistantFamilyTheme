@@ -193,68 +193,7 @@ views:
                     card:
                       type: vertical-stack
                       cards:
-
-                        # Day (time grid)
-                        - type: conditional
-                          conditions:
-                            - entity: input_select.calendar_view
-                              state: Day
-                          card:
-                            type: custom:fullcalendar-card
-                            entities:
-                              - entity: calendar.family
-                                name: Family
-                            options:
-                              initialView: timeGridDay
-                              nowIndicator: true
-                              allDaySlot: true
-                              slotMinTime: "06:00:00"
-                              slotMaxTime: "22:00:00"
-                              locale: "en-gb"
-                            card_mod:
-                              style: |
-                                ha-card { background: none; border: 0; box-shadow: none; }
-
-                        # Week (rolling 5 days from today)
-                        - type: conditional
-                          conditions:
-                            - entity: input_select.calendar_view
-                              state: Week
-                          card:
-                            type: custom:fullcalendar-card
-                            entities:
-                              - entity: calendar.family
-                                name: Family
-                            options:
-                              initialView: timeGridFiveDay
-                              views:
-                                timeGridFiveDay:
-                                  type: timeGrid
-                                  duration: { days: 5 }
-                              nowIndicator: true
-                              allDaySlot: true
-                              slotMinTime: "06:00:00"
-                              slotMaxTime: "22:00:00"
-                              locale: "en-gb"
-                            card_mod:
-                              style: |
-                                ha-card { background: none; border: 0; box-shadow: none; }
-
-                        # Month (classic grid)
-                        - type: conditional
-                          conditions:
-                            - entity: input_select.calendar_view
-                              state: Month
-                          card:
-                            type: custom:atomic-calendar-revive
-                            entities:
-                              - entity: calendar.family
-                            showMonth: true
-                            showWeekDay: true
-                            card_mod:
-                              style: |
-                                ha-card { background: none; border: 0; box-shadow: none; }
-
+                        - !include calendar_view.yaml 
                   # ---- CHORES SECTION ----
                   - type: conditional
                     conditions:
@@ -263,15 +202,8 @@ views:
                     card:
                       type: horizontal-stack
                       cards:
-                        - type: todo-list
-                          entity: todo.lizzie
-                          title: Lizzie
-                        - type: todo-list
-                          entity: todo.toby
-                          title: Toby
-                        - type: todo-list
-                          entity: todo.family
-                          title: Family
+                        - !include chore_view.yaml 
+
 
                   # ---- LISTS SECTION (generic lists; adjust as you prefer) ----
                   - type: conditional
@@ -281,12 +213,7 @@ views:
                     card:
                       type: horizontal-stack
                       cards:
-                        - type: todo-list
-                          entity: todo.anthony
-                          title: Anthony List
-                        - type: todo-list
-                          entity: todo.joy
-                          title: Joy List
+                        - !include lists_view.yaml 
 
                   # ---- PHOTOS SECTION ----
                   - type: conditional
@@ -294,10 +221,9 @@ views:
                       - entity: input_select.family_section
                         state: Photos
                     card:
-                      type: markdown
-                      content: >
-                        📷 **Photos** — Drop images under `/media/photos` and we’ll plug in a
-                        gallery view (or a simple grid) next.
+                      type: horizontal-stack
+                      cards:
+                        - !include photo_view.yaml 
 
                   # ======== CONTEXT-AWARE FABs ========
 
