@@ -58,57 +58,57 @@ views:
           type: horizontal-stack
           cards:
             # Section chips (quick filters)
-            - type: custom:button-card
-              name: Calendar
-              icon: mdi:calendar
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                target: { entity_id: input_select.family_section }
-                service_data: { option: Calendar }
-              styles:
-                card: [padding: 6px 10px, border-radius: 16px]
+            # - type: custom:button-card
+            #   name: Calendar
+            #   icon: mdi:calendar
+            #   tap_action:
+            #     action: call-service
+            #     service: input_select.select_option
+            #     target: { entity_id: input_select.family_section }
+            #     service_data: { option: Calendar }
+            #   styles:
+            #     card: [padding: 6px 10px, border-radius: 16px]
 
-            - type: custom:button-card
-              name: Chores
-              icon: mdi:brush
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                target: { entity_id: input_select.family_section }
-                service_data: { option: Chores }
-              styles:
-                card: [padding: 6px 10px, border-radius: 16px]
+            # - type: custom:button-card
+            #   name: Chores
+            #   icon: mdi:brush
+            #   tap_action:
+            #     action: call-service
+            #     service: input_select.select_option
+            #     target: { entity_id: input_select.family_section }
+            #     service_data: { option: Chores }
+            #   styles:
+            #     card: [padding: 6px 10px, border-radius: 16px]
 
-            - type: custom:button-card
-              name: Photos
-              icon: mdi:image-multiple
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                target: { entity_id: input_select.family_section }
-                service_data: { option: Photos }
-              styles:
-                card: [padding: 6px 10px, border-radius: 16px]
+            # - type: custom:button-card
+            #   name: Photos
+            #   icon: mdi:image-multiple
+            #   tap_action:
+            #     action: call-service
+            #     service: input_select.select_option
+            #     target: { entity_id: input_select.family_section }
+            #     service_data: { option: Photos }
+            #   styles:
+            #     card: [padding: 6px 10px, border-radius: 16px]
 
-            - type: custom:button-card
-              name: Lists
-              icon: mdi:format-list-bulleted
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                target: { entity_id: input_select.family_section }
-                service_data: { option: Lists }
-              styles:
-                card: [padding: 6px 10px, border-radius: 16px]
+            # - type: custom:button-card
+            #   name: Lists
+            #   icon: mdi:format-list-bulleted
+            #   tap_action:
+            #     action: call-service
+            #     service: input_select.select_option
+            #     target: { entity_id: input_select.family_section }
+            #     service_data: { option: Lists }
+            #   styles:
+            #     card: [padding: 6px 10px, border-radius: 16px]
 
             # Current section indicator
-            - type: custom:button-card
-              icon: mdi:chevron-right
-              name: '[[[ return states["input_select.family_section"]?.state || "Calendar" ]]]'
-              styles:
-                card: [padding: 6px 10px, border-radius: 20px, background: 'rgba(0,0,0,0.04)']
-                name: [font-weight: 700]
+            # - type: custom:button-card
+            #   icon: mdi:chevron-right
+            #   name: '[[[ return states["input_select.family_section"]?.state || "Calendar" ]]]'
+            #   styles:
+            #     card: [padding: 6px 10px, border-radius: 20px, background: 'rgba(0,0,0,0.04)']
+            #     name: [font-weight: 700]
 
             # Quick stats chips (today’s completed counts)
             - type: custom:button-card
