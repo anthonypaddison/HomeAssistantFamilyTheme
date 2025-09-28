@@ -2,7 +2,6 @@
 type: custom:week-planner-card
 view_layout:
   grid-area: main
-  type: custom:week-planner-card
   days: 5
   startingDay: today
   columns:

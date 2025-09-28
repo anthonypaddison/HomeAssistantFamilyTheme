@@ -25,9 +25,7 @@ views:
       # =========================
       # 1) SIDEBAR (sticky)
       # =========================
-      - type: custom:mod-card
-        view_layout: { grid-area: sidebar }
-        card: !include /config/dashboards/includes/sidebar_menu.yaml
+      - !include /config/dashboards/includes/sidebar_menu.yaml
 
       # =========================
       # 2) CHIPS ROW (top)
@@ -174,8 +172,16 @@ views:
       # =========================
       # 4) FAB (context-aware popup)
       # =========================
-      - type: custom:mod-card
+      - type: button
         view_layout: { grid-area: main }
+        icon: mdi:plus
+        name: Add
+        show_name: false
+        tap_action:
+          action: call-service
+          service: script.family_fab_open
+          data:
+            browser_id: THIS
         card_mod:
           style: |
             ha-card {
@@ -190,13 +196,3 @@ views:
               color: white;
               z-index: 1000;
             }
-        card:
-          type: button
-          icon: mdi:plus
-          name: Add
-          show_name: false
-          tap_action:
-            action: call-service
-            service: script.family_fab_open
-            data:
-              browser_id: THIS   # Browser Mod will replace THIS with current browser at call time
