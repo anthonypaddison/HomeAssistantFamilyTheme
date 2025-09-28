@@ -1,4 +1,4 @@
-# ===== Script: FAB -> Add Calendar Event =====
+# ===== FAB → Add Calendar Event =====
 fab_add_calendar_event:
   alias: FAB • Add Calendar Event
   mode: single
@@ -10,8 +10,7 @@ fab_add_calendar_event:
         all_day: "{{ is_state('input_boolean.event_all_day','on') }}"
         s_dt: "{{ states('input_datetime.event_start') }}"
         e_dt: "{{ states('input_datetime.event_end') }}"
-
-        # Map the selection to the real entity_id you provided
+        # Map the selection to your Google Calendar entities (as provided)
         cal_map:
           Family: calendar.family
           Anthony: calendar.anthony
@@ -21,20 +20,26 @@ fab_add_calendar_event:
         cal_entity: "{{ cal_map.get(target_sel, 'calendar.family') }}"
 
         # Localized strings for the two service variants
-        start_iso: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"
-        end_iso: >
+        start_iso: >-
+          {{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}
+        end_iso: >-
           {% set s = as_datetime(s_dt) | as_local %}
           {% set e = as_datetime(e_dt) | as_local %}
-          {% if e <= s %}{{ (s + timedelta(minutes=60)).strftime('%Y-%m-%dT%H:%M:%S') }}
-          {% else %}{{ e.strftime('%Y-%m-%dT%H:%M:%S') }}{% endif %}
-        start_date_str: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%d') }}"
-        end_date_all_day: >
-          {% set sd = as_datetime(s_dt) | as_local %}
-          {% set ed = as_datetime(e_dt) | as_local %}
-          {% if ed.date() <= sd.date() %}
-            {{ (sd + timedelta(days=1)).date() }}
+          {% if e <= s %}
+            {{ (s + timedelta(minutes=60)).strftime('%Y-%m-%dT%H:%M:%S') }}
           {% else %}
-            {{ (ed + timedelta(days=1)).date() }}
+            {{ e.strftime('%Y-%m-%dT%H:%M:%S') }}
+          {% endif %}
+        start_date_str: >-
+          {{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%d') }}
+        # For all-day events, Google expects end_date to be EXCLUSIVE (next day)
+        end_date_all_day: >-
+          {% set sd = (as_datetime(s_dt) | as_local).date() %}
+          {% set ed = (as_datetime(e_dt) | as_local).date() %}
+          {% if ed <= sd %}
+            {{ (sd + timedelta(days=1)) }}
+          {% else %}
+            {{ (ed + timedelta(days=1)) }}
           {% endif %}
 
     - condition: template
@@ -66,62 +71,74 @@ fab_add_calendar_event:
     # Toast & reset form
     - service: browser_mod.notification
       data:
-        message: 'Saved “{{ title }}” to {{ target_sel }}'
+        message: "Saved “{{ title }}” to {{ target_sel }}"
         duration: 2500
 
     - variables:
         _now: "{{ now() | as_local }}"
+
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.event_start }
       data:
         datetime: "{{ _now.timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
+
     - service: input_datetime.set_datetime
       target: { entity_id: input_datetime.event_end }
       data:
         datetime: "{{ (_now + timedelta(minutes=60)).timestamp_custom('%Y-%m-%d %H:%M:%S') }}"
+
     - service: input_text.set_value
       target: { entity_id: input_text.event_title }
       data: { value: "" }
+
     - service: input_text.set_value
       target: { entity_id: input_text.event_description }
       data: { value: "" }
+
     - service: input_boolean.turn_off
       target: { entity_id: input_boolean.event_all_day }
+
     - service: browser_mod.close_popup
 
-# ===== Script: FAB -> Add To-do Item =====
+
+# ===== FAB → Add To‑do Item =====
 fab_add_todo_item:
-  alias: FAB • Add To-do Item
+  alias: FAB • Add To‑do Item
   mode: single
   sequence:
     - variables:
         list_sel: "{{ states('input_select.active_todo_list') | trim }}"
         item: "{{ states('input_text.new_todo_item') | trim }}"
         desc: "{{ states('input_text.new_todo_description') | trim }}"
+        # Map the selection to your Todoist-backed To‑do entities (as provided)
         todo_map:
           Family: todo.family
           Anthony: todo.anthony
           Joy: todo.joy
-          Lizzie: todo.lizzie
+          Lizzie: todo.lizz ie
           Toby: todo.toby
         todo_entity: "{{ todo_map.get(list_sel, 'todo.family') }}"
+
     - condition: template
       value_template: "{{ item != '' }}"
+
     - service: todo.add_item
       target:
         entity_id: "{{ todo_entity }}"
       data:
         item: "{{ item }}"
-        # description is supported by many To-do implementations; harmless if ignored
         description: "{{ desc }}"
+
     - service: browser_mod.notification
       data:
-        message: 'Added “{{ item }}” to {{ list_sel }}'
+        message: "Added “{{ item }}” to {{ list_sel }}"
         duration: 2000
+
     - service: input_text.set_value
       target: { entity_id: input_text.new_todo_item }
       data: { value: "" }
+
     - service: input_text.set_value
       target: { entity_id: input_text.new_todo_description }
       data: { value: "" }
-    - service: browser_mod.close_popup
+
