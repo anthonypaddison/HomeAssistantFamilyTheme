@@ -1,11 +1,12 @@
 title: Family
 button_card_templates:
   sidebar_item:
-    show_label: true
+    show_label: false
     show_state: false
     styles:
       card:
         - border-radius: 12px
+        - width: 10%
         - padding: 10px
         - margin: 6px
         - background: >
