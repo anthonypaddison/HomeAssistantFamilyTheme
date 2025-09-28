@@ -5,29 +5,31 @@ cards:
   # =========================
   - type: conditional
     conditions:
-      - entity: input_select.calendar_view
+      - condition: state
+        entity: input_select.calendar_view
         state: Day
     card:
       type: custom:fullcalendar-card
 
-      # One HA calendar, split per person using regex filters (toggleable list)
+      # Split one HA calendar into virtual calendars per person (if your build supports filtering).
+      # If your fullcalendar-card ignores 'filter', it will still render; we’ll adjust after we confirm your build.
       entities:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.anthony
+        - entity: calendar.family
           name: Anthony
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.joy
+        - entity: calendar.family
           name: Joy
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.lizzie
+        - entity: calendar.family
           name: Lizzie
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.toby
+        - entity: calendar.family
           name: Toby
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
@@ -84,32 +86,33 @@ cards:
 
       card_mod:
         style: |
-          # ha-card {
-          #   background: none !important;
-          #   border: none !important;
-          #   box-shadow: none !important;
-          # }
-          # /* Ensure the left time axis is visible and readable */
-          # .fc .fc-timegrid-axis { width: 56px !important; }
-          # .fc .fc-timegrid-axis-cushion,
-          # .fc .fc-timegrid-slot-label-cushion {
-          #   color: var(--primary-text-color) !important;
-          #   opacity: 0.9 !important;
-          #   font-size: 0.95rem !important;
-          # }
-          # /* Subtle grid lines to match your theme */
-          # .fc .fc-timegrid-slot,
-          # .fc .fc-timegrid-slot-lane {
-          #   border-color: var(--family-cal-grid-line) !important;
-          # }
-          # .fc { min-height: 560px; }
+          ha-card {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+          /* Ensure the left time axis is visible and readable */
+          .fc .fc-timegrid-axis { width: 56px !important; }
+          .fc .fc-timegrid-axis-cushion,
+          .fc .fc-timegrid-slot-label-cushion {
+            color: var(--primary-text-color) !important;
+            opacity: 0.9 !important;
+            font-size: 0.95rem !important;
+          }
+          /* Subtle grid lines to match your theme */
+          .fc .fc-timegrid-slot,
+          .fc .fc-timegrid-slot-lane {
+            border-color: var(--family-cal-grid-line) !important;
+          }
+          .fc { min-height: 560px; }
 
   # ==========================
   # WEEK (7-day time grid + toggles)
   # ==========================
   - type: conditional
     conditions:
-      - entity: input_select.calendar_view
+      - condition: state
+        entity: input_select.calendar_view
         state: Week
     card:
       type: custom:fullcalendar-card
@@ -118,19 +121,19 @@ cards:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.anthony
+        - entity: calendar.family
           name: Anthony
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.joy
+        - entity: calendar.family
           name: Joy
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.lizzie
+        - entity: calendar.family
           name: Lizzie
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.toby
+        - entity: calendar.family
           name: Toby
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
@@ -189,30 +192,31 @@ cards:
 
       card_mod:
         style: |
-          # ha-card {
-          #   background: none !important;
-          #   border: none !important;
-          #   box-shadow: none !important;
-          # }
-          # .fc .fc-timegrid-axis { width: 56px !important; }
-          # .fc .fc-timegrid-axis-cushion,
-          # .fc .fc-timegrid-slot-label-cushion {
-          #   color: var(--primary-text-color) !important;
-          #   opacity: 0.9 !important;
-          #   font-size: 0.95rem !important;
-          # }
-          # .fc .fc-timegrid-slot,
-          # .fc .fc-timegrid-slot-lane {
-          #   border-color: var(--family-cal-grid-line) !important;
-          # }
-          # .fc { min-height: 560px; }
+          ha-card {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+          .fc .fc-timegrid-axis { width: 56px !important; }
+          .fc .fc-timegrid-axis-cushion,
+          .fc .fc-timegrid-slot-label-cushion {
+            color: var(--primary-text-color) !important;
+            opacity: 0.9 !important;
+            font-size: 0.95rem !important;
+          }
+          .fc .fc-timegrid-slot,
+          .fc .fc-timegrid-slot-lane {
+            border-color: var(--family-cal-grid-line) !important;
+          }
+          .fc { min-height: 560px; }
 
   # =========================================
   # MONTH (rolling 30 days with legend toggles)
   # =========================================
   - type: conditional
     conditions:
-      - entity: input_select.calendar_view
+      - condition: state
+        entity: input_select.calendar_view
         state: Month
     card:
       type: custom:week-planner-card
@@ -234,59 +238,64 @@ cards:
         extraSmall: 1
 
       calendars:
-      entities:
         - entity: calendar.family
-          name: Family
+          name: ''
+          icon: 'mdi:home-heart'
           color: var(--family-color-family)
-        - entity: calendar.anthony
-          name: Anthony
+          hideInLegend: true
+        - entity: calendar.family
+          name: ''
+          icon: 'mdi:alpha-a'
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.joy
-          name: Joy
+        - entity: calendar.family
+          name: ''
+          icon: 'mdi:alpha-j'
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.lizzie
-          name: Lizzie
+        - entity: calendar.family
+          name: ''
+          icon: 'mdi:alpha-l'
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.toby
-          name: Toby
+        - entity: calendar.family
+          name: ''
+          icon: 'mdi:alpha-t'
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
 
       card_mod:
         style: |
-          # ha-card .legend {
-          #   display: flex !important;
-          #   justify-content: flex-end !important;
-          #   gap: 8px !important;
-          #   flex-wrap: wrap !important;
-          #   margin-right: 6px !important;
-          #   float: right !important;
-          # }
-          # ha-card .legend .calendar .color {
-          #   width: 14px !important;
-          #   height: 14px !important;
-          #   border-radius: 50% !important;
-          # }
-          # .container .legend ul li.hasToggle {
-          #   display: flex !important;
-          #   justify-content: center !important;
-          #   align-items: center !important;
-          #   width: 28px !important;
-          #   height: 28px !important;
-          #   border-radius: 50% !important;
-          #   background-color: var(--legend-calendar-color) !important;
-          #   color: white !important;
-          #   font-weight: bold !important;
-          #   font-size: 0px !important;
-          #   list-style: none !important;
-          # }
-          # .container .legend ul li ha-icon {
-          #   color: white !important;
-          #   --mdc-icon-size: 50px !important;
-          # }
+          ha-card .legend {
+            display: flex !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+            flex-wrap: wrap !important;
+            margin-right: 6px !important;
+            float: right !important;
+          }
+          ha-card .legend .calendar .color {
+            width: 14px !important;
+            height: 14px !important;
+            border-radius: 50% !important;
+          }
+          .container .legend ul li.hasToggle {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            background-color: var(--legend-calendar-color) !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 0px !important;
+            list-style: none !important;
+          }
+          .container .legend ul li ha-icon {
+            color: white !important;
+            --mdc-icon-size: 50px !important;
+          }
 
   # =========================
   # Add Calendar Event (FAB)

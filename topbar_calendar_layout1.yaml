@@ -39,9 +39,9 @@ cards:
                 .second-line { font-size: 90% !important; color: var(--family-cal-header-color); }
 
       # 3) Tiny weather (edit entity if needed)
-      - type: custom:simple-weather-card
-        class: col-2
-        entity: weather.smhi
+      # - type: custom:simple-weather-card
+      #   class: col-2
+      #   entity: weather.smhi
 
       # 4) Legend (display-only)
       - type: markdown
