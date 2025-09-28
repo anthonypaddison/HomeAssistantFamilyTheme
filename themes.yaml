@@ -76,7 +76,7 @@ FamilyBoard:
   # =========================
   state-icon-color:            "#64748B"   # slate-500-ish
   state-icon-active-color:     var(--primary-color)
-  state-icon-unavailable-color:"#CBD5E1"
+  state-icon-unavailable-color: "#CBD5E1"
 
   # =========================
   # MUSHROOM TUNING (Cards & Chips)
@@ -92,7 +92,7 @@ FamilyBoard:
   mush-subtitle-color:          var(--secondary-text-color)
 
   mush-card-primary-font-size:  15px
-  mush-card-secondary-font-size:13px
+  mush-card-secondary-font-size: 13px
   mush-card-primary-color:      var(--primary-text-color)
   mush-card-secondary-color:    var(--secondary-text-color)
 
