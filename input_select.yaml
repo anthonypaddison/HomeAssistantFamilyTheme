@@ -8,7 +8,6 @@ calendar_view:
   options: [Day, Week, Month]
   initial: Week
 
-
 calendar_target:
   name: Calendar Target
   options: [Family, Anthony, Joy, Lizzie, Toby]

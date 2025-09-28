@@ -1,370 +1,101 @@
-title: Family Board
-
-# ========= REUSABLE BUTTON-CARD TEMPLATES =========
+title: Panogu Family
 button_card_templates:
-  progress_chip:
-    variables:
-      # Required for each use:
-      completed: input_number.completed_family_today  # helper entity id (string)
-      title: 'List'                                   # caption text
-      # Optional:
-      bar_color: "var(--primary-color)"               # bar color
-    show_icon: false
-    show_state: false
-    show_label: true
-    tap_action:
-      action: more-info
-    custom_fields:
-      bar: >
-        [[[
-          // Read "completed today" from helper
-          const compId = variables.completed;
-          const completedEnt = compId ? states[compId] : null;
-          const completed = Number(completedEnt?.state ?? 0);
-
-          // Outstanding now = state of the bound To-do entity
-          const outstanding = Number(entity?.state ?? 0);
-
-          const total = completed + outstanding;
-          const pct = total > 0 ? Math.min(100, Math.round(100 * completed / total)) : 0;
-
-          const color = variables.bar_color || 'var(--primary-color)';
-          const title = variables.title || (entity?.attributes?.friendly_name ?? 'List');
-
-          const aria = `${title}: ${completed} completed, ${outstanding} outstanding (${pct}%)`;
-
-          return `
-            <style>
-              .pbar { height: 8px; border-radius: 6px; background: var(--divider-color);
-                      overflow: hidden; position: relative; margin: 4px 0 2px; }
-              .pbar .fill { height: 100%; background: ${color}; border-radius: 6px 0 0 6px;
-                            transition: width .35s ease; }
-              .cap { font-size: 12px; opacity: .8; margin-top: 2px; }
-            </style>
-            <div class="pbar" role="img" aria-label="${aria}">
-              <div class="fill" style="width:${pct}%"></div>
-            </div>
-            <div class="cap">${title} • ${completed}/${total} today</div>
-          `;
-        ]]]
+  sidebar_item:
+    show_icon: true
+    show_name: false
     styles:
       card:
-        - padding: 8px 10px
-        - border-radius: 12px
-        - box-shadow: none
-        - background: var(--card-background-color)
-      custom_fields:
-        bar:
-          - width: 100%
+        - box-shadow: none !important
+        - margin: 0 !important
+        - padding: 10px 8px !important
+        - justify-content: center !important
+        - border-radius: 0 !important
+        - border: none !important
+        - background: >
+            [[[
+              const s = variables?.section ?? '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s
+                ? 'white !important'
+                : 'var(--app-header-background-color) !important';
+            ]]]
+      icon:
 
-# ========= VIEWS =========
+        - color: >
+            [[[
+              const s = variables?.section ?? '';
+              const current = states['input_select.calendar_section']?.state;
+              return current === s
+                ? 'var(--state-icon-color) !important'
+                : 'var(--state-icon-color) !important';
+            ]]]
+        - width: 32px !important
+
 views:
-  - title: Family
-    path: family
+  - title: Panogu Family
+    path: panogu-family
     panel: true
     badges: []
     cards:
-
-      # ======== PAGE LAYOUT (SIDEBAR + MAIN) ========
       - type: custom:bootstrap-grid-card
         class: container-fluid g-0
+        card_mod:
+          style: |
+            ha-card {
+              margin: 0 !important;
+              padding: 0 !important;
+              background: transparent !important;
+              box-shadow: none !important;
+              border: 0 !important;
+            }
         cards:
           - type: row
             class: row g-3 align-items-stretch
+            style: |
+              col, [class^="col-"] {
+                margin: 0 !important;
+                padding: 0 !important;
+              }
             cards:
-
-              # ---- LEFT: YOUR SIDEBAR (keep your existing file) ----
+              # -------- LEFT SIDEBAR --------
               - !include sidebar_menu.yaml
 
-              # ---- RIGHT: MAIN COLUMN ----
+              # -------- RIGHT AREA --------
               - type: vertical-stack
                 class: col-10
+                style: |
+                  ha-card {
+                    height: 100vh !important;
+                  }
                 cards:
+                  -  !include topbar_calendar_layout2.yaml
 
-                  # ======== TOP BAR ========
-                  - type: custom:bootstrap-grid-card
-                    class: container-fluid g-0
-                    cards:
-                      - type: row
-                        class: row g-2 align-items-center
-                        cards:
+                  # -------- CONDITIONAL CONTENT --------
 
-                          # ---- Clock ----
-                          - type: custom:digital-clock
-                            class: col-4
-                            timeFormat:
-                              hour: '2-digit'
-                              minute: '2-digit'
-                            dateFormat:
-                              weekday: 'long'
-                              day: '2-digit'
-                              month: 'long'
-                              year: 'numeric'
-                            card_mod:
-                              style: |
-                                ha-card {
-                                  background: transparent !important;
-                                  border: 0 !important;
-                                  box-shadow: none !important;
-                                  margin: 0;
-                                  text-align: left;
-                                }
-                                .first-line { font-size: 160% !important; font-weight: 600; }
-                                .second-line { opacity: .85; }
-
-                          # ---- Progress chips per person/list ----
-                          - type: horizontal-stack
-                            class: col-5
-                            cards:
-
-                              # FAMILY
-                              - type: custom:button-card
-                                template: progress_chip
-                                entity: todo.family
-                                variables:
-                                  completed: input_number.completed_family_today
-                                  title: Family
-                                  bar_color: "var(--family-color-family)"
-
-                              # ANTHONY
-                              - type: custom:button-card
-                                template: progress_chip
-                                entity: todo.anthony
-                                variables:
-                                  completed: input_number.completed_anthony_today
-                                  title: Anthony
-                                  bar_color: "var(--family-color-anthony)"
-
-                              # JOY
-                              - type: custom:button-card
-                                template: progress_chip
-                                entity: todo.joy
-                                variables:
-                                  completed: input_number.completed_joy_today
-                                  title: Joy
-                                  bar_color: "var(--family-color-joy)"
-
-                              # LIZZIE
-                              - type: custom:button-card
-                                template: progress_chip
-                                entity: todo.lizzie
-                                variables:
-                                  completed: input_number.completed_lizzie_today
-                                  title: Lizzie
-                                  bar_color: "var(--family-color-lizzie)"
-
-                              # TOBY
-                              - type: custom:button-card
-                                template: progress_chip
-                                entity: todo.toby
-                                variables:
-                                  completed: input_number.completed_toby_today
-                                  title: Toby
-                                  bar_color: "var(--family-color-toby)"
-
-                          # ---- Calendar view selector (only on Calendar section) ----
-                          - type: conditional
-                            class: col-3
-                            conditions:
-                              - entity: input_select.family_section
-                                state: Calendar
-                            card:
-                              type: entities
-                              show_header_toggle: false
-                              entities:
-                                - entity: input_select.calendar_view
-                                  name: View
-                              card_mod:
-                                style: |
-                                  ha-card {
-                                    background: transparent !important;
-                                    border: 0 !important;
-                                    box-shadow: none !important;
-                                    margin: 0;
-                                  }
-
-                  # ======== MAIN CONTENT BY SECTION ========
-
-                  # ---- CALENDAR SECTION ----
+                  # Calendar content
                   - type: conditional
                     conditions:
-                      - entity: input_select.family_section
+                      - entity: input_select.calendar_section
                         state: Calendar
-                    card:
-                      type: vertical-stack
-                      cards:
-                        - !include calendar_view.yaml 
-                  # ---- CHORES SECTION ----
+                    card: !include calendar_view.yaml
+
+                  # Chores content
                   - type: conditional
                     conditions:
-                      - entity: input_select.family_section
+                      - entity: input_select.calendar_section
                         state: Chores
-                    card:
-                      type: horizontal-stack
-                      cards:
-                        - !include chore_view.yaml 
+                    card: !include chore_view.yaml
 
-
-                  # ---- LISTS SECTION (generic lists; adjust as you prefer) ----
+                  # Photos content
                   - type: conditional
                     conditions:
-                      - entity: input_select.family_section
-                        state: Lists
-                    card:
-                      type: horizontal-stack
-                      cards:
-                        - !include lists_view.yaml 
-
-                  # ---- PHOTOS SECTION ----
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.family_section
+                      - entity: input_select.calendar_section
                         state: Photos
-                    card:
-                      type: horizontal-stack
-                      cards:
-                        - !include photo_view.yaml 
+                    card: !include photo_view.yaml
 
-                  # ======== CONTEXT-AWARE FABs ========
-
-                  # FAB: Calendar
+                  # Lists content
                   - type: conditional
                     conditions:
-                      - entity: input_select.family_section
-                        state: Calendar
-                    card:
-                      type: custom:button-card
-                      name: ''
-                      icon: mdi:plus
-                      styles:
-                        card:
-                          - position: fixed
-                          - right: 20px
-                          - bottom: 20px
-                          - width: 64px
-                          - height: 64px
-                          - border-radius: 50%
-                          - background: var(--primary-color)
-                          - color: var(--primary-background-color)
-                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
-                          - z-index: 50
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          command: popup
-                          title: Add Calendar Event
-                          content:
-                            type: vertical-stack
-                            cards:
-                              - type: entities
-                                show_header_toggle: false
-                                entities:
-                                  - entity: input_select.calendar_target
-                                    name: Calendar
-                                  - entity: input_text.event_title
-                                    name: Title
-                                  - entity: input_text.event_description
-                                    name: Description
-                                  - type: divider
-                                  - entity: input_datetime.event_start
-                                    name: Start
-                                  - entity: input_datetime.event_end
-                                    name: End
-                                  - entity: input_boolean.event_all_day
-                                    name: All Day
-                              - type: button
-                                name: Save
-                                icon: mdi:check
-                                tap_action:
-                                  action: call-service
-                                  service: script.fab_add_calendar_event
-
-                  # FAB: Chores
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.family_section
-                        state: Chores
-                    card:
-                      type: custom:button-card
-                      name: ''
-                      icon: mdi:plus
-                      styles:
-                        card:
-                          - position: fixed
-                          - right: 20px
-                          - bottom: 20px
-                          - width: 64px
-                          - height: 64px
-                          - border-radius: 50%
-                          - background: var(--primary-color)
-                          - color: var(--primary-background-color)
-                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
-                          - z-index: 50
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          command: popup
-                          title: Add Chore
-                          content:
-                            type: vertical-stack
-                            cards:
-                              - type: entities
-                                show_header_toggle: false
-                                entities:
-                                  - entity: input_select.active_todo_list
-                                    name: Target list
-                                  - entity: input_text.new_todo_item
-                                    name: Title
-                                  - entity: input_text.new_todo_description
-                                    name: Description
-                              - type: button
-                                name: Save
-                                icon: mdi:check
-                                tap_action:
-                                  action: call-service
-                                  service: script.fab_add_todo_item
-
-                  # FAB: Lists
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.family_section
+                      - entity: input_select.calendar_section
                         state: Lists
-                    card:
-                      type: custom:button-card
-                      name: ''
-                      icon: mdi:plus
-                      styles:
-                        card:
-                          - position: fixed
-                          - right: 20px
-                          - bottom: 20px
-                          - width: 64px
-                          - height: 64px
-                          - border-radius: 50%
-                          - background: var(--primary-color)
-                          - color: var(--primary-background-color)
-                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
-                          - z-index: 50
-                      tap_action:
-                        action: fire-dom-event
-                        browser_mod:
-                          command: popup
-                          title: Add List Item
-                          content:
-                            type: vertical-stack
-                            cards:
-                              - type: entities
-                                show_header_toggle: false
-                                entities:
-                                  - entity: input_select.active_todo_list
-                                    name: Target list
-                                  - entity: input_text.new_todo_item
-                                    name: Title
-                                  - entity: input_text.new_todo_description
-                                    name: Description
-                              - type: button
-                                name: Save
-                                icon: mdi:check
-                                tap_action:
-                                  action: call-service
-                                  service: script.fab_add_todo_item
+                    card: !include lists_view.yaml
