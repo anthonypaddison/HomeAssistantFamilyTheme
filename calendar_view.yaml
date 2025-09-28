@@ -82,7 +82,7 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
-            --mdc-icon-size: 30px !important;
+            --mdc-icon-size: 50px !important;
           }
 
   # WEEK
@@ -166,7 +166,7 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
-            --mdc-icon-size: 30px !important;
+            --mdc-icon-size: 50px !important;
           }
 
   # MONTH
@@ -229,6 +229,7 @@ cards:
             gap: 8px !important;
             flex-wrap: wrap !important;
             margin-right: 6px !important;
+            float: right !important;
           }
           ha-card .legend .calendar .color {
             width: 14px !important;
@@ -250,7 +251,7 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
-            --mdc-icon-size: 30px !important;
+            --mdc-icon-size: 50px !important;
           }
 
   # Add Calendar Event (popup) - visible on Calendar section
