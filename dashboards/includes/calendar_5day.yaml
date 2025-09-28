@@ -1,7 +1,63 @@
 type: custom:week-planner-card
 days: 5
 startingDay: today
+columns:
+  extraLarge: 5
+  large: 5
+  medium: 5
+  small: 3
+  extraSmall: 1
 calendars:
   - entity: calendar.family
-    color: '#36B37E'
-noCardBackground: true
+    color: var(--cal-color-family)
+  - entity: calendar.anthony
+    color: var(--cal-color-anthony)
+  - entity: calendar.joy
+    color: var(--cal-color-joy)
+  - entity: calendar.lizzie
+    color: var(--cal-color-lizzie)
+  - entity: calendar.toby
+    color: var(--cal-color-toby)
+noCardBackground: false
+card_mod:
+  # We style the interior to show a 1-hour grid and make it scroll
+  # (Week Planner provides multi-day columns; we add the visual hour grid in CSS). [1](https://github.com/FamousWolf/week-planner-card)
+  style: |
+    /* Max height + vertical scroll for the calendar body */
+    ha-card {
+      max-height: calc(100vh - 220px);
+      overflow: auto;
+    }
+
+    /* Hour grid overlay (each "hour" ≈ 64px high; adjust if you prefer) */
+    ha-card .days {
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 63px,
+        rgba(0,0,0,0.06) 64px
+      );
+    }
+
+    /* Subtle 30-min tick (optional) */
+    ha-card .days {
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 31px,
+          rgba(0,0,0,0.03) 32px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 63px,
+          rgba(0,0,0,0.06) 64px
+        );
+    }
+
+    /* Tighten day header and add weight */
+    .day .header {
+      font-weight: 700;
+      color: var(--primary-text-color);
+    }
