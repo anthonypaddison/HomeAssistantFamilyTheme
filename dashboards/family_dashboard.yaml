@@ -158,9 +158,6 @@ views:
               type: vertical-stack
               cards:
                 - type: todo-list
-                  entity: todo.family
-                  title: Family
-                - type: todo-list
                   entity: todo.anthony
                   title: Anthony
                 - type: todo-list
@@ -188,7 +185,7 @@ views:
                 state: Lists
             card:
               type: todo-list
-              entity: todo.lists
+              entity: todo.family
               title: Lists
 
       # =========================

@@ -23,12 +23,17 @@ family_fab_open:
                   - name: summary
                     label: Title
                     selector: { text: null }
+
                   - name: start_date_time
                     label: Start
+                    default: "{{ now().replace(second=0, microsecond=0).isoformat() }}"
                     selector: { datetime: null }
+
                   - name: end_date_time
                     label: End
+                    default: "{{ (now() + timedelta(hours=1)).replace(second=0, microsecond=0).isoformat() }}"
                     selector: { datetime: null }
+
                   - name: calendar
                     label: Calendar
                     default: calendar.family
@@ -36,11 +41,16 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - calendar.family
-                          - calendar.anthony
-                          - calendar.joy
-                          - calendar.lizzie
-                          - calendar.toby
+                          - label: Family
+                            value: calendar.family
+                          - label: Anthony
+                            value: calendar.anthony
+                          - label: Joy
+                            value: calendar.joy
+                          - label: Lizzie
+                            value: calendar.lizzie
+                          - label: Toby
+                            value: calendar.toby
                 right_button: "Create"
                 right_button_action:
                   service: script.popup_create_calendar_event
@@ -60,17 +70,22 @@ family_fab_open:
                     label: Chore
                     selector: { text: null }
                   - name: list_entity
-                    label: List (Todoist project)
+                    label: List
                     default: todo.family
                     selector:
                       select:
                         mode: dropdown
                         options:
-                          - todo.family
-                          - todo.anthony
-                          - todo.joy
-                          - todo.lizzie
-                          - todo.toby
+                          - label: Family
+                            value: todo.family
+                          - label: Anthony
+                            value: todo.anthony
+                          - label: Joy
+                            value: todo.joy
+                          - label: Lizzie
+                            value: todo.lizzie
+                          - label: Toby
+                            value: todo.toby
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
@@ -91,17 +106,21 @@ family_fab_open:
                     selector: { text: null }
                   - name: list_entity
                     label: List (Todoist project)
-                    default: todo.lists
+                    default: todo.family
                     selector:
                       select:
                         mode: dropdown
                         options:
-                          - todo.lists
-                          - todo.family
-                          - todo.anthony
-                          - todo.joy
-                          - todo.lizzie
-                          - todo.toby
+                          - label: Family
+                            value: todo.family
+                          - label: Anthony
+                            value: todo.anthony
+                          - label: Joy
+                            value: todo.joy
+                          - label: Lizzie
+                            value: todo.lizzie
+                          - label: Toby
+                            value: todo.toby
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
@@ -125,18 +144,29 @@ popup_create_calendar_event:
   alias: "Popup: create calendar event (from ha-form)"
   mode: queued
   fields:
-    summary: { description: "Title", example: "Appointment" }
-    start_date_time: { description: "Start", example: "2025-09-28T13:00:00" }
-    end_date_time: { description: "End", example: "2025-09-28T14:00:00" }
-    calendar: { description: "calendar.entity_id", example: "calendar.family" }
+    summary: {}
+    start_date_time: {}
+    end_date_time: {}
+    calendar: {}
   sequence:
+    - variables:
+        start_dt: >-
+          {{ as_datetime(start_date_time) if start_date_time else now() }}
+        proposed_end: >-
+          {{ as_datetime(end_date_time) if end_date_time else (start_dt + timedelta(hours=1)) }}
+        end_dt: >-
+          {% if proposed_end <= start_dt %}
+            {{ start_dt + timedelta(hours=1, seconds=1) }}
+          {% else %}
+            {{ proposed_end }}
+          {% endif %}
     - service: calendar.create_event
       target:
         entity_id: "{{ calendar }}"
       data:
         summary: "{{ summary }}"
-        start_date_time: "{{ start_date_time }}"
-        end_date_time: "{{ end_date_time }}"
+        start_date_time: "{{ start_dt.isoformat() }}"
+        end_date_time: "{{ end_dt.isoformat() }}"
 
 popup_add_todo:
   alias: "Popup: add to-do (from ha-form)"
