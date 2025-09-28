@@ -19,7 +19,7 @@ cards:
             ha-card { background: transparent !important; box-shadow: none !important; border: 0 !important; margin: 0 !important; padding: 0 !important; }
 
       # 2) Family name + time
-      - type: horizontal-stack
+      - type: row
         class: col-4 justify-content-center
         cards:
           - type: markdown
@@ -46,9 +46,9 @@ cards:
         show_state: false
         show_label: true
         label: >
-          [[[ 
+          [[[
             const w = states['weather.home'];
-            if (!w) return '—';
+            if (!w) return '-';
             const t = (w.attributes && w.attributes.temperature !== undefined) ? `${w.attributes.temperature}°` : '';
             const c = w.state ? w.state.replace('_',' ') : '';
             return `${t} ${c}`;

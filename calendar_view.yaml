@@ -1,39 +1,5 @@
 type: vertical-stack
 cards:
-  # View selector
-  - type: entities
-    show_header_toggle: false
-    entities:
-      - entity: input_select.calendar_view
-        name: View
-    card_mod:
-      style: |
-        :host {
-          --mdc-icon-size: 0px !important;
-          --state-icon-color: transparent !important;
-          border-bottom-width: 0 !important;
-        }
-        mdc-line-ripple {
-          display: none !important;
-          border: none !important;
-          height: 0 !important;
-        }
-        ha-card {
-          background: transparent !important;
-          box-shadow: none !important;
-          border: 0 !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          --mdc-select-fill-color: transparent !important;
-          --ha-select-min-width: 0px !important;
-          --ha-select-height: 50% !important;
-          --ha-card-border-width: 0px !important;
-          --restore-card-border-width: 0px !important;
-          border-bottom-width: 0 !important;
-        }
-        .mdc-select .mdc-select__anchor .mdc-floating-label { display: none !important; }
-        .card-content { padding: 0 !important; }
-
   # DAY
   - type: conditional
     conditions:
@@ -129,10 +95,10 @@ cards:
       showNavigation: true
       hideDaysWithoutEvents: false
       columns:
-        extraLarge: 7
-        large: 7
-        medium: 5
-        small: 3
+        extraLarge: 5
+        large: 5
+        medium: 3
+        small: 2
         extraSmall: 1
       calendars:
         - entity: calendar.family
@@ -186,10 +152,10 @@ cards:
       showNavigation: true
       hideDaysWithoutEvents: false
       columns:
-        extraLarge: 7
-        large: 7
-        medium: 5
-        small: 3
+        extraLarge: 5
+        large: 5
+        medium: 3
+        small: 2
         extraSmall: 1
       calendars:
         - entity: calendar.family
@@ -225,7 +191,7 @@ cards:
             width: 14px; height: 14px; border-radius: 50%;
           }
 
-  # Add Calendar Event (popup) – visible on Calendar section
+  # Add Calendar Event (popup) - visible on Calendar section
   - type: button
     icon: mdi:plus
     name: ''
@@ -241,16 +207,28 @@ cards:
           card_mod:
             style: |
               :host ha-dialog {
-                --mdc-dialog-min-width: 780px;
-                --mdc-dialog-max-width: 980px;
+                --mdc-dialog-min-width: 50px;
+                --mdc-dialog-max-width: 50px;
+              }
+              hui-button-card {
+                position: fixed !important;
+                bottom: 20px !important;
+                right: 20px !important;
+                background: #0078d7 !important;
+                color: white !important;
+                padding: 10px 15px !important;
+                border-radius: 8px !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
               }
               div.mdc-dialog div.mdc-dialog__scrim {
                 backdrop-filter: blur(6px);
-                background: rgba(0,0,0,.15);
+                background: green;
+                color: white;
               }
               div.mdc-dialog .mdc-dialog__surface {
-                background: #FFFFFF;
-                border-radius: 16px;
+                background: green;
+                color: white;
+                border-radius: 50%;
                 border: 1px solid var(--family-cal-grid-line);
               }
           cards:
