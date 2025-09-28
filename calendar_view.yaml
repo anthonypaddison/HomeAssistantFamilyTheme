@@ -20,7 +20,7 @@ cards:
       columns:
         extraLarge: 5
         large: 5
-        medium: 3
+        medium: 5
         small: 2
         extraSmall: 1
       calendars:
@@ -105,7 +105,7 @@ cards:
       columns:
         extraLarge: 5
         large: 5
-        medium: 3
+        medium: 5
         small: 2
         extraSmall: 1
       calendars:
@@ -189,7 +189,7 @@ cards:
       columns:
         extraLarge: 5
         large: 5
-        medium: 3
+        medium: 5
         small: 2
         extraSmall: 1
       calendars:
