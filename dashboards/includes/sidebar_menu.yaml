@@ -1,67 +1,91 @@
-type: custom:mod-card
-card_mod:
-  style: |
-    ha-card {
-      background: var(--app-header-background-color) !important;
-      margin: 0 !important;
-      border-radius: 0 !important;
-      border: none !important;
-      height: calc(100vh - var(--header-height)) !important;
-      position: sticky;
-      top: 0;
-      padding: 8px 6px 12px;
-    }
-card:
-  type: vertical-stack
-  cards:
-    # --- Calendar ---
-    - type: custom:button-card
-      template: sidebar_item
-      variables: { section: Calendar }
-      name: Calendar
-      icon: mdi:calendar
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        service_data: { option: Calendar }
+type: vertical-stack
+view_layout: { grid-area: sidebar }
+cards:
+  - type: custom:mod-card
+    card_mod:
+      style: |
+        :host { display: block; width: 56px; }
+        ha-card {
+          background: var(--sidebar-background-color);
+          border: none; box-shadow: none; padding: 6px 0; 
+          height: calc(100vh - var(--header-height));
+          position: sticky; top: 0;
+        }
+    card:
+      type: vertical-stack
+      cards:
+        # Calendar
+        - type: custom:button-card
+          icon: mdi:calendar
+          show_name: false
+          show_label: false
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.family_section }
+            service_data: { option: Calendar }
+          styles:
+            card:
+              - width: 44px
+              - height: 44px
+              - margin: 6px auto
+              - border-radius: 12px
+              - background: >
+                  [[[
+                    return states['input_select.family_section']?.state === 'Calendar'
+                      ? 'var(--primary-color)' : 'var(--card-background-color)';
+                  ]]]
+            icon:
+              - color: var(--primary-text-color)
 
-    # --- Chores ---
-    - type: custom:button-card
-      template: sidebar_item
-      variables: { section: Chores }
-      name: Chores
-      icon: mdi:brush
-      label: >
-        [[[ return states['todo.family'] ? states['todo.family'].state : '' ]]]
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        service_data: { option: Chores }
+        # Chores
+        - type: custom:button-card
+          icon: mdi:brush
+          show_name: false
+          show_label: false
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.family_section }
+            service_data: { option: Chores }
+          styles:
+            card: &iconbtn
+              - width: 44px
+              - height: 44px
+              - margin: 6px auto
+              - border-radius: 12px
+              - background: >
+                  [[[
+                    return states['input_select.family_section']?.state === 'Chores'
+                      ? 'var(--primary-color)' : 'var(--card-background-color)';
+                  ]]]
+            icon:
+              - color: var(--primary-text-color)
 
-    # --- Photos ---
-    - type: custom:button-card
-      template: sidebar_item
-      variables: { section: Photos }
-      name: Photos
-      icon: mdi:image-multiple
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        service_data: { option: Photos }
+        # Photos
+        - type: custom:button-card
+          icon: mdi:image-multiple
+          show_name: false
+          show_label: false
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.family_section }
+            service_data: { option: Photos }
+          styles:
+            card: *iconbtn
+            icon: [ color: var(--primary-text-color) ]
 
-    # --- Lists ---
-    - type: custom:button-card
-      template: sidebar_item
-      variables: { section: Lists }
-      name: Lists
-      icon: mdi:format-list-bulleted
-      label: >
-        [[[ return states['todo.lists'] ? states['todo.lists'].state : '' ]]]  # <-- change to your Lists project entity
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        service_data: { option: Lists }
+        # Lists
+        - type: custom:button-card
+          icon: mdi:format-list-bulleted
+          show_name: false
+          show_label: false
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.family_section }
+            service_data: { option: Lists }
+          styles:
+            card: *iconbtn
+            icon: [ color: var(--primary-text-color) ]

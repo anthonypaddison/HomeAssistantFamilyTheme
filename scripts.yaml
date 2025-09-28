@@ -1,30 +1,159 @@
-family_add_item:
-    alias: "Family: Add item based on active section"
-    mode: single
-    sequence:
-      - variables:
-          section: "{{ states('input_select.family_section') }}"
-      - choose:
-          - conditions: "{{ section == 'Chores' }}"
-            sequence:
-              - action: todo.add_item
-                target:
-                  entity_id: todo.family
-                data:
-                  item: "New chore"
-          - conditions: "{{ section == 'Lists' }}"
-            sequence:
-              - action: todo.add_item
-                target:
-                  entity_id: todo.lists     # <-- CHANGE to your Lists project entity if different
-                data:
-                  item: "New list item"
-          - conditions: "{{ section == 'Calendar' }}"
-            sequence:
-              - action: calendar.create_event
-                target:
-                  entity_id: calendar.family
-                data:
-                  summary: "New event"
-                  start_date_time: "{{ now().strftime('%Y-%m-%dT%H:%M:%S') }}"
-                  end_date_time: "{{ (now() + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%S') }}"
+# ─────────────────────────────────────────────────────────────────────────────
+# FAB → Conditional Popup (Calendar / Chores / Lists)
+# Uses Browser Mod popup with ha-form schema (no helpers required).
+# IMPORTANT: we pass browser_id so popup opens only on current browser. [6](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/services.md)
+# ─────────────────────────────────────────────────────────────────────────────
+
+family_fab_open:
+  alias: "Family: FAB open popup per active section"
+  mode: parallel
+  fields:
+    browser_id:
+      description: Browser Mod ID (use THIS via a browser call)
+      example: THIS
+  sequence:
+    - variables:
+        section: "{{ states('input_select.family_section') | default('Calendar') }}"
+    - choose:
+        # ─── Calendar "Create Event" form ─────────────────────────────────────
+        - conditions: "{{ section == 'Calendar' }}"
+          sequence:
+            - action: browser_mod.popup
+              data:
+                browser_id: "{{ browser_id }}"
+                title: "Add calendar event"
+                initial_style: wide
+                content:
+                  # Form fields; data is passed to right_button_action. [7](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/popups.md)
+                  - name: summary
+                    label: Title
+                    selector: { text: null }
+                  - name: start_date_time
+                    label: Start
+                    # Home Assistant selector dtype datetime is accepted by Browser Mod.
+                    selector: { datetime: null }
+                  - name: end_date_time
+                    label: End
+                    selector: { datetime: null }
+                  - name: calendar
+                    label: Calendar
+                    default: calendar.family
+                    selector:
+                      select:
+                        mode: dropdown
+                        options:
+                          - calendar.family
+                          - calendar.anthony
+                          - calendar.joy
+                          - calendar.lizzie
+                          - calendar.toby
+                right_button: "Create"
+                right_button_action:
+                  # Route through a script to map form data to calendar.create_event
+                  action: script.popup_create_calendar_event
+                left_button: "Cancel"
+                dismissable: true
+
+        # ─── Chores "Add to-do" form ──────────────────────────────────────────
+        - conditions: "{{ section == 'Chores' }}"
+          sequence:
+            - action: browser_mod.popup
+              data:
+                browser_id: "{{ browser_id }}"
+                title: "Add chore"
+                initial_style: normal
+                content:
+                  - name: item
+                    label: Chore
+                    selector: { text: null }
+                  - name: list_entity
+                    label: List (Todoist project)
+                    default: todo.family
+                    selector:
+                      select:
+                        mode: dropdown
+                        options:
+                          - todo.family
+                          - todo.anthony
+                          - todo.joy
+                          - todo.lizzie
+                          - todo.toby
+                right_button: "Add"
+                right_button_action:
+                  action: script.popup_add_todo
+                left_button: "Cancel"
+                dismissable: true
+
+        # ─── Lists "Add generic list item" form ───────────────────────────────
+        - conditions: "{{ section == 'Lists' }}"
+          sequence:
+            - action: browser_mod.popup
+              data:
+                browser_id: "{{ browser_id }}"
+                title: "Add list item"
+                initial_style: normal
+                content:
+                  - name: item
+                    label: Item
+                    selector: { text: null }
+                  - name: list_entity
+                    label: List (Todoist project)
+                    default: todo.lists
+                    selector:
+                      select:
+                        mode: dropdown
+                        options:
+                          - todo.lists
+                          - todo.family
+                          - todo.anthony
+                          - todo.joy
+                          - todo.lizzie
+                          - todo.toby
+                right_button: "Add"
+                right_button_action:
+                  action: script.popup_add_todo
+                left_button: "Cancel"
+                dismissable: true
+
+        # ─── Photos: hint only (no form) ──────────────────────────────────────
+        - conditions: "{{ section == 'Photos' }}"
+          sequence:
+            - action: browser_mod.popup
+              data:
+                browser_id: "{{ browser_id }}"
+                title: "Photos"
+                content:
+                  type: markdown
+                  content: >
+                    Drop images into your configured album folder for the *Local Photos* integration.
+                right_button: "Close"
+
+popup_create_calendar_event:
+  alias: "Popup: create calendar event (from ha-form)"
+  mode: queued
+  fields:
+    summary: { description: "Title", example: "Appointment" }
+    start_date_time: { description: "Start", example: "2025-09-28T13:00:00" }
+    end_date_time: { description: "End", example: "2025-09-28T14:00:00" }
+    calendar: { description: "calendar.entity_id", example: "calendar.family" }
+  sequence:
+    - action: calendar.create_event
+      target:
+        entity_id: "{{ calendar }}"
+      data:
+        summary: "{{ summary }}"
+        start_date_time: "{{ start_date_time }}"
+        end_date_time: "{{ end_date_time }}"
+
+popup_add_todo:
+  alias: "Popup: add to-do (from ha-form)"
+  mode: queued
+  fields:
+    item: { description: "Item text", example: "Buy milk" }
+    list_entity: { description: "todo.entity_id", example: "todo.family" }
+  sequence:
+    - action: todo.add_item
+      target:
+        entity_id: "{{ list_entity }}"
+      data:
+        item: "{{ item }}"
