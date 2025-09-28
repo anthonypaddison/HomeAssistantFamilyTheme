@@ -4,199 +4,199 @@ theme: FamilyBoard
 views:
   - title: Family
     path: family
-    type: custom:grid-layout
-    layout:
-      # 10% fixed sidebar + flexible main
-      grid-template-columns: 10% 1fr
-      grid-template-rows: auto 1fr
-      grid-template-areas: |
-        "sidebar chips"
-        "sidebar main"
+    # type: custom:grid-layout
+    # layout:
+    #   # 10% fixed sidebar + flexible main
+    #   grid-template-columns: 10% 1fr
+    #   grid-template-rows: auto 1fr
+    #   grid-template-areas: |
+    #     "sidebar chips"
+    #     "sidebar main"
 
-      # # Stack on small screens (sidebar collapses; chips then main)
-      # mediaquery:
-      #   "(max-width: 900px)":
-      #     grid-template-columns: 1fr
-      #     grid-template-areas: |
-      #       "chips"
-      #       "main"
+    #   # # Stack on small screens (sidebar collapses; chips then main)
+    #   # mediaquery:
+    #   #   "(max-width: 900px)":
+    #   #     grid-template-columns: 1fr
+    #   #     grid-template-areas: |
+    #   #       "chips"
+    #   #       "main"
 
-    cards:
-      # =========================
-      # 1) SIDEBAR (sticky)
-      # =========================
-      - type: custom:mod-card
-        view_layout: { grid-area: sidebar }
-        card: !include /config/dashboards/includes/sidebar_menu.yaml
+    # cards:
+    #   # =========================
+    #   # 1) SIDEBAR (sticky)
+    #   # =========================
+    #   - type: custom:mod-card
+    #     view_layout: { grid-area: sidebar }
+    #     card: !include /config/dashboards/includes/sidebar_menu.yaml
 
-      # =========================
-      # 2) CHIPS ROW (top)
-      # =========================
-      # - type: custom:mod-card
-      #   view_layout: { grid-area: chips }
-      #   card:
-      #     type: horizontal-stack
-      #     cards:
-      #       # Section chips (quick filters)
-      #       - type: custom:button-card
-      #         name: Calendar
-      #         icon: mdi:calendar
-      #         tap_action:
-      #           action: call-service
-      #           service: input_select.select_option
-      #           target: { entity_id: input_select.family_section }
-      #           service_data: { option: Calendar }
-      #         styles:
-      #           card: [padding: 6px 10px, border-radius: 16px]
+    #   # =========================
+    #   # 2) CHIPS ROW (top)
+    #   # =========================
+    #   # - type: custom:mod-card
+    #   #   view_layout: { grid-area: chips }
+    #   #   card:
+    #   #     type: horizontal-stack
+    #   #     cards:
+    #   #       # Section chips (quick filters)
+    #   #       - type: custom:button-card
+    #   #         name: Calendar
+    #   #         icon: mdi:calendar
+    #   #         tap_action:
+    #   #           action: call-service
+    #   #           service: input_select.select_option
+    #   #           target: { entity_id: input_select.family_section }
+    #   #           service_data: { option: Calendar }
+    #   #         styles:
+    #   #           card: [padding: 6px 10px, border-radius: 16px]
 
-      #       - type: custom:button-card
-      #         name: Chores
-      #         icon: mdi:brush
-      #         tap_action:
-      #           action: call-service
-      #           service: input_select.select_option
-      #           target: { entity_id: input_select.family_section }
-      #           service_data: { option: Chores }
-      #         styles:
-      #           card: [padding: 6px 10px, border-radius: 16px]
+    #   #       - type: custom:button-card
+    #   #         name: Chores
+    #   #         icon: mdi:brush
+    #   #         tap_action:
+    #   #           action: call-service
+    #   #           service: input_select.select_option
+    #   #           target: { entity_id: input_select.family_section }
+    #   #           service_data: { option: Chores }
+    #   #         styles:
+    #   #           card: [padding: 6px 10px, border-radius: 16px]
 
-      #       - type: custom:button-card
-      #         name: Photos
-      #         icon: mdi:image-multiple
-      #         tap_action:
-      #           action: call-service
-      #           service: input_select.select_option
-      #           target: { entity_id: input_select.family_section }
-      #           service_data: { option: Photos }
-      #         styles:
-      #           card: [padding: 6px 10px, border-radius: 16px]
+    #   #       - type: custom:button-card
+    #   #         name: Photos
+    #   #         icon: mdi:image-multiple
+    #   #         tap_action:
+    #   #           action: call-service
+    #   #           service: input_select.select_option
+    #   #           target: { entity_id: input_select.family_section }
+    #   #           service_data: { option: Photos }
+    #   #         styles:
+    #   #           card: [padding: 6px 10px, border-radius: 16px]
 
-      #       - type: custom:button-card
-      #         name: Lists
-      #         icon: mdi:format-list-bulleted
-      #         tap_action:
-      #           action: call-service
-      #           service: input_select.select_option
-      #           target: { entity_id: input_select.family_section }
-      #           service_data: { option: Lists }
-      #         styles:
-      #           card: [padding: 6px 10px, border-radius: 16px]
+    #   #       - type: custom:button-card
+    #   #         name: Lists
+    #   #         icon: mdi:format-list-bulleted
+    #   #         tap_action:
+    #   #           action: call-service
+    #   #           service: input_select.select_option
+    #   #           target: { entity_id: input_select.family_section }
+    #   #           service_data: { option: Lists }
+    #   #         styles:
+    #   #           card: [padding: 6px 10px, border-radius: 16px]
 
-      #       # Current section indicator
-      #       - type: custom:button-card
-      #         icon: mdi:chevron-right
-      #         name: '[[[ return states["input_select.family_section"]?.state || "Calendar" ]]]'
-      #         styles:
-      #           card: [padding: 6px 10px, border-radius: 20px, background: 'rgba(0,0,0,0.04)']
-      #           name: [font-weight: 700]
+    #   #       # Current section indicator
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:chevron-right
+    #   #         name: '[[[ return states["input_select.family_section"]?.state || "Calendar" ]]]'
+    #   #         styles:
+    #   #           card: [padding: 6px 10px, border-radius: 20px, background: 'rgba(0,0,0,0.04)']
+    #   #           name: [font-weight: 700]
 
-      #       # Quick stats chips (today’s completed counts)
-      #       - type: custom:button-card
-      #         icon: mdi:account-group
-      #         name: 'Family [[[ return states["input_number.completed_family_today"]?.state ?? "0" ]]]'
-      #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
+    #   #       # Quick stats chips (today’s completed counts)
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:account-group
+    #   #         name: 'Family [[[ return states["input_number.completed_family_today"]?.state ?? "0" ]]]'
+    #   #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
 
-      #       - type: custom:button-card
-      #         icon: mdi:account
-      #         name: 'Anthony [[[ return states["input_number.completed_anthony_today"]?.state ?? "0" ]]]'
-      #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:account
+    #   #         name: 'Anthony [[[ return states["input_number.completed_anthony_today"]?.state ?? "0" ]]]'
+    #   #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
 
-      #       - type: custom:button-card
-      #         icon: mdi:account
-      #         name: 'Joy [[[ return states["input_number.completed_joy_today"]?.state ?? "0" ]]]'
-      #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:account
+    #   #         name: 'Joy [[[ return states["input_number.completed_joy_today"]?.state ?? "0" ]]]'
+    #   #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
 
-      #       - type: custom:button-card
-      #         icon: mdi:account
-      #         name: 'Lizzie [[[ return states["input_number.completed_lizzie_today"]?.state ?? "0" ]]]'
-      #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:account
+    #   #         name: 'Lizzie [[[ return states["input_number.completed_lizzie_today"]?.state ?? "0" ]]]'
+    #   #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
 
-      #       - type: custom:button-card
-      #         icon: mdi:account
-      #         name: 'Toby [[[ return states["input_number.completed_toby_today"]?.state ?? "0" ]]]'
-      #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
+    #   #       - type: custom:button-card
+    #   #         icon: mdi:account
+    #   #         name: 'Toby [[[ return states["input_number.completed_toby_today"]?.state ?? "0" ]]]'
+    #   #         styles: { card: [padding: 6px 10px, border-radius: 16px] }
 
-      # =========================
-      # 3) MAIN AREA (conditional)
-      # =========================
-      # - type: vertical-stack
-      #   view_layout: { grid-area: main }
-      #   cards:
-      #     # --- Calendar ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Calendar
-      #       card: !include /config/dashboards/includes/calendar_5day.yaml
+    #   # =========================
+    #   # 3) MAIN AREA (conditional)
+    #   # =========================
+    #   # - type: vertical-stack
+    #   #   view_layout: { grid-area: main }
+    #   #   cards:
+    #   #     # --- Calendar ---
+    #   #     - type: conditional
+    #   #       conditions:
+    #   #         - entity: input_select.family_section
+    #   #           state: Calendar
+    #   #       card: !include /config/dashboards/includes/calendar_5day.yaml
 
-      #     # --- Chores (multiple lists) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Chores
-      #       card:
-      #         type: vertical-stack
-      #         cards:
-      #           - type: todo-list
-      #             entity: todo.family
-      #             title: Family
-      #           - type: todo-list
-      #             entity: todo.anthony
-      #             title: Anthony
-      #           - type: todo-list
-      #             entity: todo.joy
-      #             title: Joy
-      #           - type: todo-list
-      #             entity: todo.lizzie
-      #             title: Lizzie
-      #           - type: todo-list
-      #             entity: todo.toby
-      #             title: Toby
+    #   #     # --- Chores (multiple lists) ---
+    #   #     - type: conditional
+    #   #       conditions:
+    #   #         - entity: input_select.family_section
+    #   #           state: Chores
+    #   #       card:
+    #   #         type: vertical-stack
+    #   #         cards:
+    #   #           - type: todo-list
+    #   #             entity: todo.family
+    #   #             title: Family
+    #   #           - type: todo-list
+    #   #             entity: todo.anthony
+    #   #             title: Anthony
+    #   #           - type: todo-list
+    #   #             entity: todo.joy
+    #   #             title: Joy
+    #   #           - type: todo-list
+    #   #             entity: todo.lizzie
+    #   #             title: Lizzie
+    #   #           - type: todo-list
+    #   #             entity: todo.toby
+    #   #             title: Toby
 
-      #     # --- Photos (browse your configured media/photos) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Photos
-      #       card:
-      #         type: media-browser
+    #   #     # --- Photos (browse your configured media/photos) ---
+    #   #     - type: conditional
+    #   #       conditions:
+    #   #         - entity: input_select.family_section
+    #   #           state: Photos
+    #   #       card:
+    #   #         type: media-browser
 
-      #     # --- Lists (generic list) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Lists
-      #       card:
-      #         type: todo-list
-      #         entity: todo.lists
-      #         title: Lists
+    #   #     # --- Lists (generic list) ---
+    #   #     - type: conditional
+    #   #       conditions:
+    #   #         - entity: input_select.family_section
+    #   #           state: Lists
+    #   #       card:
+    #   #         type: todo-list
+    #   #         entity: todo.lists
+    #   #         title: Lists
 
-      # # =========================
-      # # 4) FAB (context-aware popup)
-      # # =========================
-      # - type: custom:mod-card
-      #   view_layout: { grid-area: main }
-      #   card_mod:
-      #     style: |
-      #       ha-card {
-      #         position: fixed;
-      #         right: 24px;
-      #         bottom: 24px;
-      #         width: 56px;
-      #         height: 56px;
-      #         border-radius: 28px;
-      #         box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-      #         background: var(--primary-color);
-      #         color: white;
-      #         z-index: 1000;
-      #       }
-      #   card:
-      #     type: button
-      #     icon: mdi:plus
-      #     name: Add
-      #     show_name: false
-      #     tap_action:
-      #       action: call-service
-      #       service: script.family_fab_open
-      #       data:
-      #         browser_id: THIS   # Browser Mod will replace THIS with current browser at call time
+    #   # # =========================
+    #   # # 4) FAB (context-aware popup)
+    #   # # =========================
+    #   # - type: custom:mod-card
+    #   #   view_layout: { grid-area: main }
+    #   #   card_mod:
+    #   #     style: |
+    #   #       ha-card {
+    #   #         position: fixed;
+    #   #         right: 24px;
+    #   #         bottom: 24px;
+    #   #         width: 56px;
+    #   #         height: 56px;
+    #   #         border-radius: 28px;
+    #   #         box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    #   #         background: var(--primary-color);
+    #   #         color: white;
+    #   #         z-index: 1000;
+    #   #       }
+    #   #   card:
+    #   #     type: button
+    #   #     icon: mdi:plus
+    #   #     name: Add
+    #   #     show_name: false
+    #   #     tap_action:
+    #   #       action: call-service
+    #   #       service: script.family_fab_open
+    #   #       data:
+    #   #         browser_id: THIS   # Browser Mod will replace THIS with current browser at call time
