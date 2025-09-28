@@ -1,9 +1,11 @@
 type: custom:mod-card
 card_mod:
   style: |
+    :host {
+          width: 10% !important;
+    }
     ha-card {
       background: var(--app-header-background-color) !important;
-      width: 10% !important;
       margin: 0 !important;
       border-radius: 0 !important;
       border: none !important;
