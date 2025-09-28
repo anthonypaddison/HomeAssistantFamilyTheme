@@ -1,6 +1,8 @@
-calendar_event_title:
-  name: Calendar Event Title
-calendar_event_description:
-  name: Calendar Event Description
-chore_title:
-  name: Chore Title
+event_title:
+  name: Event Title
+event_description:
+  name: Event Description
+new_todo_item:
+  name: New To-do Item
+new_todo_description:
+  name: To-do Description

@@ -1,8 +1,8 @@
-calendar_event_start:
-  name: Calendar Event Start
+event_start:
+  name: Event Start
   has_date: true
   has_time: true
-calendar_event_end:
-  name: Calendar Event End
+event_end:
+  name: Event End
   has_date: true
   has_time: true

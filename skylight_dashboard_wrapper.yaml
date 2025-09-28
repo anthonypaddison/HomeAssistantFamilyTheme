@@ -1,101 +1,366 @@
-title: Panogu Family
-button_card_templates:
-  sidebar_item:
-    show_icon: true
-    show_name: false
-    styles:
-      card:
-        - box-shadow: none !important
-        - margin: 0 !important
-        - padding: 10px 8px !important
-        - justify-content: center !important
-        - border-radius: 0 !important
-        - border: none !important
-        - background: >
-            [[[
-              const s = variables?.section ?? '';
-              const current = states['input_select.calendar_section']?.state;
-              return current === s
-                ? 'white !important'
-                : 'var(--app-header-background-color) !important';
-            ]]]
-      icon:
-
-        - color: >
-            [[[
-              const s = variables?.section ?? '';
-              const current = states['input_select.calendar_section']?.state;
-              return current === s
-                ? 'var(--state-icon-color) !important'
-                : 'var(--state-icon-color) !important';
-            ]]]
-        - width: 32px !important
-
+title: Family Board
 views:
-  - title: Panogu Family
-    path: panogu-family
+  - title: Family
+    path: family
     panel: true
     badges: []
     cards:
+
+      # ======= PAGE LAYOUT WITH SIDEBAR + MAIN =======
       - type: custom:bootstrap-grid-card
         class: container-fluid g-0
-        card_mod:
-          style: |
-            ha-card {
-              margin: 0 !important;
-              padding: 0 !important;
-              background: transparent !important;
-              box-shadow: none !important;
-              border: 0 !important;
-            }
         cards:
           - type: row
             class: row g-3 align-items-stretch
-            style: |
-              col, [class^="col-"] {
-                margin: 0 !important;
-                padding: 0 !important;
-              }
             cards:
-              # -------- LEFT SIDEBAR --------
+
+              # ---- LEFT: YOUR EXISTING SIDEBAR ----
               - !include sidebar_menu.yaml
 
-              # -------- RIGHT AREA --------
+              # ---- RIGHT: MAIN COLUMN ----
               - type: vertical-stack
                 class: col-10
-                style: |
-                  ha-card {
-                    height: 100vh !important;
-                  }
                 cards:
-                  - !include topbar_calendar_layout2.yaml
 
-                  # -------- CONDITIONAL CONTENT --------
+                  # ======= TOP BAR (Clock + Outstanding counts + Calendar view switch) =======
+                  - type: custom:bootstrap-grid-card
+                    class: container-fluid g-0
+                    cards:
+                      - type: row
+                        class: row g-2 align-items-center
+                        cards:
 
-                  # Calendar content
+                          # Clock
+                          - type: custom:digital-clock
+                            class: col-4
+                            timeFormat:
+                              hour: '2-digit'
+                              minute: '2-digit'
+                            dateFormat:
+                              weekday: 'long'
+                              day: '2-digit'
+                              month: 'long'
+                              year: 'numeric'
+                            card_mod:
+                              style: |
+                                ha-card {
+                                  background: transparent !important;
+                                  border: 0 !important;
+                                  box-shadow: none !important;
+                                  margin: 0;
+                                  text-align: left;
+                                }
+                                .first-line { font-size: 160% !important; font-weight: 600; }
+                                .second-line { opacity: .85; }
+
+                          # Outstanding counts (state = # incomplete)
+                          - type: horizontal-stack
+                            class: col-5
+                            cards:
+                              - type: button
+                                entity: todo.family
+                                name: Family
+                                show_icon: false
+                                show_state: true
+                              - type: button
+                                entity: todo.anthony
+                                name: Anthony
+                                show_icon: false
+                                show_state: true
+                              - type: button
+                                entity: todo.joy
+                                name: Joy
+                                show_icon: false
+                                show_state: true
+                              - type: button
+                                entity: todo.lizzie
+                                name: Lizzie
+                                show_icon: false
+                                show_state: true
+                              - type: button
+                                entity: todo.toby
+                                name: Toby
+                                show_icon: false
+                                show_state: true
+
+                          # Calendar view selector (only shown when Calendar section is active)
+                          - type: conditional
+                            class: col-3
+                            conditions:
+                              - entity: input_select.family_section
+                                state: Calendar
+                            card:
+                              type: entities
+                              show_header_toggle: false
+                              entities:
+                                - entity: input_select.calendar_view
+                                  name: View
+                              card_mod:
+                                style: |
+                                  ha-card {
+                                    background: transparent !important;
+                                    border: 0 !important;
+                                    box-shadow: none !important;
+                                    margin: 0;
+                                  }
+
+                  # ======= MAIN CONTENT: CONDITIONAL BY SECTION =======
+
+                  # --- Calendar section ---
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Calendar
-                    card: !include calendar_view.yaml
+                    card:
+                      type: vertical-stack
+                      cards:
 
-                  # Chores content
+                        # DAY View (hour-by-hour)
+                        - type: conditional
+                          conditions:
+                            - entity: input_select.calendar_view
+                              state: Day
+                          card:
+                            type: custom:fullcalendar-card
+                            entities:
+                              - entity: calendar.family
+                                name: Family
+                            options:
+                              initialView: timeGridDay
+                              nowIndicator: true
+                              allDaySlot: true
+                              slotMinTime: "06:00:00"
+                              slotMaxTime: "22:00:00"
+                              locale: "en-gb"
+                            card_mod:
+                              style: |
+                                ha-card { background: none; border: 0; box-shadow: none; }
+
+                        # WEEK View (rolling 5 days from today)
+                        - type: conditional
+                          conditions:
+                            - entity: input_select.calendar_view
+                              state: Week
+                          card:
+                            type: custom:fullcalendar-card
+                            entities:
+                              - entity: calendar.family
+                                name: Family
+                            options:
+                              initialView: timeGridFiveDay
+                              views:
+                                timeGridFiveDay:
+                                  type: timeGrid
+                                  duration: { days: 5 }
+                              nowIndicator: true
+                              allDaySlot: true
+                              slotMinTime: "06:00:00"
+                              slotMaxTime: "22:00:00"
+                              locale: "en-gb"
+                            card_mod:
+                              style: |
+                                ha-card { background: none; border: 0; box-shadow: none; }
+
+                        # MONTH View (classic month grid)
+                        - type: conditional
+                          conditions:
+                            - entity: input_select.calendar_view
+                              state: Month
+                          card:
+                            type: custom:atomic-calendar-revive
+                            entities:
+                              - entity: calendar.family
+                            showMonth: true
+                            showWeekDay: true
+                            card_mod:
+                              style: |
+                                ha-card { background: none; border: 0; box-shadow: none; }
+
+                  # --- Chores section ---
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Chores
-                    card: !include chore_view.yaml
+                    card:
+                      type: horizontal-stack
+                      cards:
+                        - type: todo-list
+                          entity: todo.lizzie
+                          title: Lizzie
+                        - type: todo-list
+                          entity: todo.toby
+                          title: Toby
+                        - type: todo-list
+                          entity: todo.family
+                          title: Family
 
-                  # Photos content
+                  # --- Lists section (generic lists; adjust projects as needed) ---
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
-                        state: Photos
-                    card: !include photo_view.yaml
-
-                  # Lists content
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Lists
-                    card: !include lists_view.yaml
+                    card:
+                      type: horizontal-stack
+                      cards:
+                        - type: todo-list
+                          entity: todo.anthony
+                          title: Anthony List
+                        - type: todo-list
+                          entity: todo.joy
+                          title: Joy List
+
+                  # --- Photos section (placeholder - gallery card can replace) ---
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.family_section
+                        state: Photos
+                    card:
+                      type: markdown
+                      content: >
+                        📷 **Photos** - place images in `/media/photos` and we'll wire
+                        in a gallery view next. (You chose local storage, so no iCloud sync.)
+
+                  # ======= GLOBAL FLOATING FAB (placeholder; to be wired per section) =======
+                  # --- FAB: Calendar (context-aware) ---
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.family_section
+                        state: Calendar
+                    card:
+                      type: custom:button-card
+                      name: ''
+                      icon: mdi:plus
+                      styles:
+                        card:
+                          - position: fixed
+                          - right: 20px
+                          - bottom: 20px
+                          - width: 64px
+                          - height: 64px
+                          - border-radius: 50%
+                          - background: var(--primary-color)
+                          - color: var(--primary-background-color)
+                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
+                          - z-index: 50
+                      tap_action:
+                        action: fire-dom-event
+                        browser_mod:
+                          command: popup
+                          title: Add Calendar Event
+                          content:
+                            type: vertical-stack
+                            cards:
+                              - type: entities
+                                show_header_toggle: false
+                                entities:
+                                  - entity: input_select.calendar_target
+                                    name: Calendar
+                                  - entity: input_text.event_title
+                                    name: Title
+                                  - entity: input_text.event_description
+                                    name: Description
+                                  - type: divider
+                                  - entity: input_datetime.event_start
+                                    name: Start
+                                    # Lovelace "entities" card honors with_time for input_datetime
+                                    # (leave out if your version no longer requires it)
+                                  - entity: input_datetime.event_end
+                                    name: End
+                                  - entity: input_boolean.event_all_day
+                                    name: All Day
+                              - type: button
+                                name: Save
+                                icon: mdi:check
+                                tap_action:
+                                  action: call-service
+                                  service: script.fab_add_calendar_event
+
+                  # --- FAB: Chores (context-aware) ---
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.family_section
+                        state: Chores
+                    card:
+                      type: custom:button-card
+                      name: ''
+                      icon: mdi:plus
+                      styles:
+                        card:
+                          - position: fixed
+                          - right: 20px
+                          - bottom: 20px
+                          - width: 64px
+                          - height: 64px
+                          - border-radius: 50%
+                          - background: var(--primary-color)
+                          - color: var(--primary-background-color)
+                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
+                          - z-index: 50
+                      tap_action:
+                        action: fire-dom-event
+                        browser_mod:
+                          command: popup
+                          title: Add Chore
+                          content:
+                            type: vertical-stack
+                            cards:
+                              - type: entities
+                                show_header_toggle: false
+                                entities:
+                                  - entity: input_select.active_todo_list
+                                    name: Target list
+                                  - entity: input_text.new_todo_item
+                                    name: Title
+                                  - entity: input_text.new_todo_description
+                                    name: Description
+                              - type: button
+                                name: Save
+                                icon: mdi:check
+                                tap_action:
+                                  action: call-service
+                                  service: script.fab_add_todo_item
+
+                  # --- FAB: Lists (context-aware) ---
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.family_section
+                        state: Lists
+                    card:
+                      type: custom:button-card
+                      name: ''
+                      icon: mdi:plus
+                      styles:
+                        card:
+                          - position: fixed
+                          - right: 20px
+                          - bottom: 20px
+                          - width: 64px
+                          - height: 64px
+                          - border-radius: 50%
+                          - background: var(--primary-color)
+                          - color: var(--primary-background-color)
+                          - box-shadow: 0 8px 18px rgba(0,0,0,.18)
+                          - z-index: 50
+                      tap_action:
+                        action: fire-dom-event
+                        browser_mod:
+                          command: popup
+                          title: Add List Item
+                          content:
+                            type: vertical-stack
+                            cards:
+                              - type: entities
+                                show_header_toggle: false
+                                entities:
+                                  - entity: input_select.active_todo_list
+                                    name: Target list
+                                  - entity: input_text.new_todo_item
+                                    name: Title
+                                  - entity: input_text.new_todo_description
+                                    name: Description
+                              - type: button
+                                name: Save
+                                icon: mdi:check
+                                tap_action:
+                                  action: call-service
+                                  service: script.fab_add_todo_item
