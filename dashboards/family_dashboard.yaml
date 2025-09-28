@@ -11,7 +11,7 @@ views:
     cards:
 
       # -- Sidebar (icon-only) ----------------------------
-      - !include /config/dashboards/includes/sidebar_menu.yaml
+      - !include /dashboards/includes/sidebar_menu.yaml
         # Sidebar file sets its own area via view_layout
 
       # -- Main column ------------------------------------
@@ -63,7 +63,7 @@ views:
                 type: vertical-stack
                 cards:
                   # Single unified 5-day calendar with grid overlay + scroll
-                  - !include /config/dashboards/includes/calendar_5day.yaml
+                  - !include /dashboards/includes/calendar_5day.yaml
 
               Chores:
                 type: grid
