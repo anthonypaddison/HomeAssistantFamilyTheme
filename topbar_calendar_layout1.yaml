@@ -19,7 +19,7 @@ cards:
             ha-card { background: transparent !important; box-shadow: none !important; border: 0 !important; margin: 0 !important; padding: 0 !important; }
 
       # 2) Family name + time
-      - type: row
+      - type: horizontal-stack
         class: col-4 justify-content-center
         cards:
           - type: markdown
