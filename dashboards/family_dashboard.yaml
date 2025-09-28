@@ -4,8 +4,8 @@ theme: FamilyBoard
 views:
   - title: Family
     path: family
-    # type: custom:grid-layout
-    # layout:
+    type: custom:grid-layout
+    layout:
     #   # 10% fixed sidebar + flexible main
     #   grid-template-columns: 10% 1fr
     #   grid-template-rows: auto 1fr
