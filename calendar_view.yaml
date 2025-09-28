@@ -12,7 +12,9 @@ cards:
       startingDay: today
       noCardBackground: true
       eventBackground: var(--family-cal-event-bg)
-      compact: true
+      timeFormat: 'HH:mm'
+      showTitle: true
+      compact: false
       showLegend: true
       legendToggle: true
       showNavigation: true
@@ -54,37 +56,71 @@ cards:
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
-          /* Right-align the legend row and make color dots circular */
-          ha-card .legend {
+          /* ---------- HEADER: put the legend on the far right ---------- */
+          .container .header {
             display: flex !important;
-            justify-content: flex-end !important;
+            align-items: center !important;
+            gap: .5rem !important;
+            flex-wrap: wrap !important;
+          }
+          .container .legend {
+            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
+            display: flex !important;
             gap: 8px !important;
             flex-wrap: wrap !important;
-            margin-right: 6px !important;
           }
-          ha-card .legend .calendar .color {
-            width: 14px !important;
-            height: 14px !important;
-            border-radius: 50% !important;
+
+          /* Keep your circular legend icons (based on your current rules) */
+          .container .legend ul {
+            display: flex !important;
+            gap: 8px !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
           .container .legend ul li.hasToggle {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            width: 28px !important;
-            height: 28px !important;
+            inline-size: 28px !important;
+            block-size: 28px !important;
             border-radius: 50% !important;
             background-color: var(--legend-calendar-color) !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 0px !important;
+            color: #fff !important;
+            font-size: 0 !important;   /* hide letter, show icon only */
             list-style: none !important;
+            padding: 0 !important;
           }
           .container .legend ul li ha-icon {
-            color: white !important;
-            --mdc-icon-size: 50px !important;
+            color: #fff !important;
+            --mdc-icon-size: 20px !important;
+            margin: 0 !important;
           }
 
+          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
+          .container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;   /* center the whole cluster of days */
+            gap: 12px !important;                 /* space between columns/rows */
+          }
+          .container > .header {
+            flex: 0 0 100% !important;            /* header stays on its own row */
+          }
+          .container > .day {
+            flex: 1 1 260px !important;           /* min width per day; grows evenly */
+            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
+          }
+
+          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
+          .container .day .date {
+            text-align: end !important;
+          }
+          .container .day .events {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            text-align: end !important;
+          }
 
   # WEEK
   - type: conditional
@@ -98,7 +134,9 @@ cards:
       startingDay: today
       noCardBackground: true
       eventBackground: var(--family-cal-event-bg)
-      compact: true
+      timeFormat: 'HH:mm'
+      showTitle: true
+      compact: false
       showLegend: true
       legendToggle: true
       showNavigation: true
@@ -140,40 +178,73 @@ cards:
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
-          ha-card .legend {
+          /* ---------- HEADER: put the legend on the far right ---------- */
+          .container .header {
             display: flex !important;
-            justify-content: flex-end !important;
+            align-items: center !important;
+            gap: .5rem !important;
+            flex-wrap: wrap !important;
+          }
+          .container .legend {
+            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
+            display: flex !important;
             gap: 8px !important;
             flex-wrap: wrap !important;
-            margin-right: 6px !important;
           }
-          ha-card .legend .calendar .color {
-            width: 14px !important;
-            height: 14px !important;
-            border-radius: 50% !important;
+
+          /* Keep your circular legend icons (based on your current rules) */
+          .container .legend ul {
+            display: flex !important;
+            gap: 8px !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
-          .header .legend ul li.hasToggle {
+          .container .legend ul li.hasToggle {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            width: 28px !important;
-            height: 28px !important;
+            inline-size: 28px !important;
+            block-size: 28px !important;
             border-radius: 50% !important;
             background-color: var(--legend-calendar-color) !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 0px !important;
+            color: #fff !important;
+            font-size: 0 !important;   /* hide letter, show icon only */
             list-style: none !important;
-            padding: 3px !important;
+            padding: 0 !important;
           }
-          .header .legend ul li ha-icon {
-            color: white !important;
-            --mdc-icon-size: 50px !important;
-            margin: 3px !important;
+          .container .legend ul li ha-icon {
+            color: #fff !important;
+            --mdc-icon-size: 20px !important;
+            margin: 0 !important;
+          }
+
+          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
+          .container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;   /* center the whole cluster of days */
+            gap: 12px !important;                 /* space between columns/rows */
+          }
+          .container > .header {
+            flex: 0 0 100% !important;            /* header stays on its own row */
+          }
+          .container > .day {
+            flex: 1 1 260px !important;           /* min width per day; grows evenly */
+            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
+          }
+
+          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
+          .container .day .date {
+            text-align: end !important;
+          }
+          .container .day .events {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            text-align: end !important;
           }
 
 
-  # MONTH
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
@@ -185,7 +256,9 @@ cards:
       startingDay: today
       noCardBackground: true
       eventBackground: var(--family-cal-event-bg)
-      compact: true
+      timeFormat: 'HH:mm'
+      showTitle: true
+      compact: false
       showLegend: true
       legendToggle: true
       showNavigation: true
@@ -227,37 +300,71 @@ cards:
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
         style: |
-          ha-card .legend {
+          /* ---------- HEADER: put the legend on the far right ---------- */
+          .container .header {
             display: flex !important;
-            justify-content: flex-end !important;
+            align-items: center !important;
+            gap: .5rem !important;
+            flex-wrap: wrap !important;
+          }
+          .container .legend {
+            margin-inline-start: auto !important;   /* pushes legend right in LTR/RTL */
+            display: flex !important;
             gap: 8px !important;
             flex-wrap: wrap !important;
-            margin-right: 6px !important;
-            float: right !important;
           }
-          ha-card .legend .calendar .color {
-            width: 14px !important;
-            height: 14px !important;
-            border-radius: 50% !important;
+
+          /* Keep your circular legend icons (based on your current rules) */
+          .container .legend ul {
+            display: flex !important;
+            gap: 8px !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
           .container .legend ul li.hasToggle {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
-            width: 28px !important;
-            height: 28px !important;
+            inline-size: 28px !important;
+            block-size: 28px !important;
             border-radius: 50% !important;
             background-color: var(--legend-calendar-color) !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 0px !important;
+            color: #fff !important;
+            font-size: 0 !important;   /* hide letter, show icon only */
             list-style: none !important;
+            padding: 0 !important;
           }
           .container .legend ul li ha-icon {
-            color: white !important;
-            --mdc-icon-size: 50px !important;
+            color: #fff !important;
+            --mdc-icon-size: 20px !important;
+            margin: 0 !important;
           }
 
+          /* ---------- LAYOUT: center and evenly spread the day columns ---------- */
+          .container {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;   /* center the whole cluster of days */
+            gap: 12px !important;                 /* space between columns/rows */
+          }
+          .container > .header {
+            flex: 0 0 100% !important;            /* header stays on its own row */
+          }
+          .container > .day {
+            flex: 1 1 260px !important;           /* min width per day; grows evenly */
+            max-inline-size: 360px !important;    /* cap so they don’t get too wide */
+          }
+
+          /* ---------- TYPOGRAPHY: right-align inside each day ---------- */
+          .container .day .date {
+            text-align: end !important;
+          }
+          .container .day .events {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-end !important;
+            text-align: end !important;
+          }
 
   # Add Calendar Event (popup) - visible on Calendar section
   - type: button
