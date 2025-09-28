@@ -1,254 +1,192 @@
-# =======================================================
-# Skylight Family (string-only card-mod blocks)
-# Clean, bright UI with soft shadows and a blue accent
-# Requires: HACS "lovelace-card-mod"
-# =======================================================
+FamilyBoard:
+  # --- REQUIRED by card-mod: theme name must equal card-mod-theme ---
+  # Ref: card-mod theme docs. [1](https://github.com/thomasloven/lovelace-card-mod/blob/master/README-themes.md)
+  card-mod-theme: FamilyBoard
 
-# ================================================
-# (DO NOT USE/MODIFY) - variables anchor
-# ================================================
-Skylight variables: &skylight-variables
-  # Typography
-  primary-font-family: >-
-    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    "Apple Color Emoji","Segoe UI Emoji"
-  mdc-typography-font-family: var(--primary-font-family)
-  ha-font-family-body: var(--primary-font-family)
-  ha-font-family-heading: var(--primary-font-family)
-  ha-font-family-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace
-  ha-font-family-longform: var(--primary-font-family)
-  ha-font-size-scale: 1
-  ha-font-weight-body: 400
-  ha-font-weight-heading: 600
-  ha-font-weight-action: 500
-  ha-line-height-normal: 1.5
+  # =========================
+  # BRAND / FAMILY COLOURS
+  # =========================
+  # Family = green, Anthony = purple, Joy = yellow, Lizzie = pink, Toby = blue
+  family-color-family:    "#36B37E"
+  family-color-anthony:   "#7E57C2"
+  family-color-joy:       "#F4B400"
+  family-color-lizzie:    "#EC407A"
+  family-color-toby:      "#42A5F5"
 
-  # Accent colour
-  primary-color: "#009ac7"
-  accent-color: "#009ac7"
-  mdc-theme-primary: var(--primary-color)
+  # =========================
+  # CORE THEME COLOURS (LIGHT)
+  # =========================
+  # Primary is used for accents, toggles, buttons, selection, etc.
+  primary-color:               var(--family-color-family)
+  accent-color:                var(--family-color-anthony)
+  error-color:                 "#E53935"
 
-  # Backgrounds & text
-  primary-background-color: "#ffffff"
-  secondary-background-color: "#EBF2F8"
-  card-background-color: "#ffffff"
-  ha-card-background: var(--card-background-color)
-  primary-text-color: "#1A1A1A"
-  secondary-text-color: "rgba(26,26,26,0.70)"
-  disabled-text-color: "rgba(26,26,26,0.45)"
-  divider-color: var(--secondary-background-color)
+  # Text colours
+  primary-text-color:          "#0F172A"     # slate-900-ish
+  secondary-text-color:        "#475569"     # slate-600-ish
+  text-primary-color:          var(--primary-text-color)
 
-  # Cards
-  ha-card-border-radius: 16px
-  ha-card-box-shadow: "0 6px 20px rgba(0,0,0,0.12)"
-  paper-listbox-background-color: var(--primary-background-color)
-  paper-card-background-color: var(--ha-card-background)
-  ha-card-border-width: 0px
-  ha-config-card-border-radius: var(--ha-card-border-radius)
+  # Backgrounds
+  # Use lovelace-background for full-view background where supported. [2](https://material3-themes-manual.amoebelabs.com/using/how-to-use-material3-themes/)
+  family-surface:              "#FFFFFF"
+  family-background:           "#F6F8FB"
+  lovelace-background:         var(--family-background)
+  card-background-color:       var(--family-surface)
 
-  # Header / tabs
-  app-header-background-color: var(--secondary-background-color)
-  app-header-text-color: var(--primary-text-color)
-  app-header-selection-bar-color: var(--primary-background-color)
+  # Dividers / borders / scrollbars
+  divider-color:               "#E6EAF1"
+  scrollbar-thumb-color:       "rgba(15, 23, 42, 0.25)"
+  scrollbar-track-color:       "transparent"
 
-  # Sidebar tokens
-  sidebar-background-color: var(--primary-background-color)
-  sidebar-text-color: var(--secondary-text-color)
-  sidebar-icon-color: var(--secondary-text-color)
-  sidebar-selected-background-color: var(--primary-background-color)
-  sidebar-selected-text-color: white
-  sidebar-selected-icon-color: white
+  # Header / sidebar
+  app-header-background-color: var(--family-surface)
+  app-header-text-color:       var(--primary-text-color)
+  sidebar-background-color:    var(--family-surface)
+  sidebar-icon-color:          var(--secondary-text-color)
+  sidebar-text-color:          var(--primary-text-color)
+  sidebar-selected-icon-color: var(--primary-color)
+  sidebar-selected-text-color: var(--primary-text-color)
 
-  # Inputs / controls
-  input-idle-line-color: var(--secondary-color)
-  input-hover-line-color: var(--primary-color)
-  input-label-ink-color: var(--secondary-text-color)
-  input-ink-color: var(--primary-text-color)
-  input-outlined-idle-border-color: "teal"
-  input-outlined-hover-border-color: var(--primary-color)
+  # =========================
+  # TYPOGRAPHY
+  # =========================
+  # Material (MWC) and HA use these variables for font families.
+  # We keep it modern and readable; falls back safely if Inter is unavailable. [2](https://material3-themes-manual.amoebelabs.com/using/how-to-use-material3-themes/)
+  primary-font-family: >
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+  mdc-typography-font-family:  var(--primary-font-family)
+  # Legacy paper elements (still used in places)
+  paper-font-common-base_-_font-family: var(--primary-font-family)
+  paper-font-common-code_-_font-family: var(--primary-font-family)
 
-  # Switches / toggles
-  switch-checked-button-color: var(--primary-color)
-  switch-checked-track-color: "color-mix(in srgb, var(--primary-color) 35%, transparent)"
-  switch-unchecked-button-color: "teal"
-  switch-unchecked-track-color: "teal"
+  # =========================
+  # CARD & CONTAINER SHAPES
+  # =========================
+  # These HA theme vars control global card borders/shadows. [3](https://community.home-assistant.io/t/2022-11-card-borders/485102)
+  ha-card-border-radius: "16px"
+  ha-card-border-width:  "0px"
+  ha-card-box-shadow: >
+    0 8px 24px rgba(16,20,24,0.06), 0 2px 6px rgba(16,20,24,0.06)
+  ha-badge-border-radius: "14px"
 
-  # Badges
-  label-badge-background-color: var(--card-background-color)
-  label-badge-text-color: var(--primary-text-color)
+  # =========================
+  # ICONS / STATES
+  # =========================
+  state-icon-color:            "#64748B"   # slate-500-ish
+  state-icon-active-color:     var(--primary-color)
+  state-icon-unavailable-color:"#CBD5E1"
 
-# ================================================
-# THEME
-# ================================================
-Skylight Family:
-  card-mod-theme: Skylight Family
-  <<: *skylight-variables
+  # =========================
+  # MUSHROOM TUNING (Cards & Chips)
+  # =========================
+  # Mushroom exposes many theme variables you can override.
+  # Ref: Mushroom theme variables. [4](https://github.com/piitaya/lovelace-mushroom-themes)
+  mush-spacing:                 12px
+  mush-title-font-size:         28px
+  mush-title-font-weight:       700
+  mush-title-line-height:       32px
+  mush-title-color:             var(--primary-text-color)
+  mush-subtitle-font-size:      15px
+  mush-subtitle-color:          var(--secondary-text-color)
 
-  # ------------------------------
-  # (NEW) Calendar style variables
-  # ------------------------------
-  family-cal-today-chip-bg: var(--primary-color)
-  family-cal-today-chip-fg: var(--primary-background-color)
-  family-cal-today-chip-radius: 8px
-  family-cal-event-bg: "rgba(255,255,255,0.92)"
+  mush-card-primary-font-size:  15px
+  mush-card-secondary-font-size:13px
+  mush-card-primary-color:      var(--primary-text-color)
+  mush-card-secondary-color:    var(--secondary-text-color)
 
-  # ---- Calendar palette & spacing (new) ----
-  family-cal-header-color: "#5A5A5A"
-  family-cal-grid-line:    "#E7E7E7"
-  family-cal-today-bg:     "#EFEFEF"
-  family-cal-day-gap:      8px
-  family-cal-event-radius: 14px
-  family-cal-event-shadow: "0 2px 6px rgba(0,0,0,0.08)"
+  mush-chip-height:             36px
+  mush-chip-border-radius:      18px
+  mush-chip-padding:            0 0.6em
+  mush-chip-spacing:            8px
 
-  # Per-person colors (optional – used in the legend)
-  family-color-anthony: "#5F0980"
-  family-color-joy:     "#F0DA4D"
-  family-color-lizzie:  "#F569F1"
-  family-color-toby:    "#2546FF"
-  family-color-family:  "#115B08"
+  # =========================
+  # OPTIONAL: CALENDAR / FAMILY ACCENT TOKENS
+  # =========================
+  # Use these from your dashboard (e.g. Week Planner Card via card-mod) for event colours per person.
+  cal-color-family:   var(--family-color-family)
+  cal-color-anthony:  var(--family-color-anthony)
+  cal-color-joy:      var(--family-color-joy)
+  cal-color-lizzie:   var(--family-color-lizzie)
+  cal-color-toby:     var(--family-color-toby)
 
-  # -----------------------------------------
-  # Sidebar styling (kept EXACTLY as provided)
-  # -----------------------------------------
-  card-mod-sidebar-yaml: &card-mod-sidebar |
-    .: |
-      /* =============================================== */
-      /*            SECTION-SPECIFIC SETTINGS            */
-      /* =============================================== */
+  # =========================
+  # CARD-MOD GLOBAL STYLING
+  # =========================
+  # These apply CSS globally without touching each card's YAML.
+  # Ref: card-mod readme + theme support announcement. [5](https://github.com/thomasloven/lovelace-card-mod)[6](https://community.home-assistant.io/t/card-mod-super-charge-your-themes/212176)
 
-      /* ============== HA 2025.05 UPDATES ============= */
-      :host {
-        content: "" !important;
-        border-right: 0px !important;
-      }
+  # 1) Root / header / scrollbars
+  card-mod-root: |
+    :host {
+      --mdc-theme-primary: var(--primary-color);
+    }
+    app-header, .toolbar {
+      box-shadow: 0 1px 0 0 var(--divider-color);
+    }
+    ::-webkit-scrollbar {
+      width: 10px; height: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb-color);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-color);
+    }
 
-      .menu {
-        background-color: var(--secondary-background-color) !important;
-      }
+  # 2) View background & card spacing
+  card-mod-view: |
+    /* View container (whole page inside Lovelace) */
+    hui-view {
+      padding: 12px !important;
+    }
+    /* Tighter grid spacing without killing readability */
+    :host {
+      --grid-card-gap: 10px;
+    }
 
-      .divider {
-        background-color: var(--secondary-background-color) !important;
-        height: 0px !important;
-      }
+  # 3) HA cards baseline cosmetics
+  card-mod-card: |
+    ha-card {
+      border-radius: var(--ha-card-border-radius);
+      box-shadow: var(--ha-card-box-shadow);
+      border: var(--ha-card-border-width) solid var(--divider-color);
+      color: var(--primary-text-color);
+      background: var(--card-background-color);
+    }
+    ha-card .card-header {
+      font-weight: 700;
+      color: var(--primary-text-color);
+      letter-spacing: -0.2px;
+    }
 
-      .toolbar {
-        padding-bottom: 0px !important;
-        padding-top: 4px !important;
-      }
+  # 4) Entities rows (hover affordance)
+  card-mod-row: |
+    .mdc-list-item__primary-text {
+      color: var(--primary-text-color);
+    }
+    :host(:hover) .mdc-list-item__primary-text {
+      color: var(--primary-text-color);
+    }
 
-      ha-md-list-item {
-        width: 105% !important;
-        border-radius: 0 !important;
-        border-radius: none !important;
-        border: none !important;
-        border-image-width: none !important;
-        background-color: var(--secondary-background-color) !important;
-        padding: 0px !important;
-        height: 60px !important;
-        font-weight: bold !important;
-        font-size: 16px !important;
-        border-right: 0px !important;
-      }
+  # 5) Sidebar (HA’s left rail—not your custom sticky stack)
+  card-mod-sidebar: |
+    :host {
+      --sidebar-background-color: var(--family-surface);
+      --sidebar-selected-icon-color: var(--primary-color);
+      --sidebar-icon-color: var(--secondary-text-color);
+    }
 
-      ha-md-list-item span {
-        color: black !important;
-      }
-
-      ha-md-list-item.selected > ha-svg-icon {
-        color: black !important;
-      }
-
-      ha-md-list {
-        border-radius: none !important;
-        border-image-width: none !important;
-        background-color: var(--secondary-background-color) !important;
-        padding: 0px !important;
-      }
-
-      .ha-scrollbar {
-        scrollbar-gutter: left !important;
-        border-right: 0px !important;
-      }
-
-      .title {
-        display: none !important;
-      }
-
-      ha-md-list-item.selected,
-      ha-md-list-item.selected:focus,
-      ha-md-list-item.selected:hover,
-      ha-md-list-item.selected:active {
-        background-color: var(--primary-background-color) !important;
-        border-radius: 0 !important;
-        border-radius: none !important;
-        border-right: 0px !important;
-        border-color: var(--primary-background-color) !important;
-      }
-
-      /* Add "Panogu Family" before the clock using a pseudo-element */
-      digital-clock::before {
-        content: "Panogu Family " !important;
-        font-weight: bold !important;
-        margin-right: 10px !important;
-      }
-
-      /* Hide second line of digital clock (assumes it's a block or span inside) */
-      .second-line {
-        display: none !important;
-      }
-
-      /* Weather card tweaks */
-      hui-weather-forecast-card {
-        display: flex !important;
-        align-items: center !important;
-        gap: 5px !important;
-      }
-
-      /* Try to target the icon and temp inside the card */
-      hui-weather-forecast-card img {
-        width: 32px !important;
-        height: 32px !important;
-        object-fit: contain !important;
-      }
-
-      hui-weather-forecast-card span,
-      hui-weather-forecast-card .temp {
-        font-weight: 500 !important;
-        margin-left: 5px !important;
-      }
-
-  # ---------------------------------------------------------
-  # (NEW) Theme-level card styles (no inline per-card styling)
-  # ---------------------------------------------------------
-  card-mod-root-yaml: |
-    .: |
-      /* DIGITAL CLOCK (custom:digital-clock) */
-      ha-card.type-custom-digital-clock {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        text-align: left;
-        padding-left: 12px;
-      }
-      ha-card.type-custom-digital-clock .first-line {
-        font-size: 5.2rem!important;
-        font-weight: 500!important;
-        line-height: 1.0!important;
-      }
-      ha-card.type-custom-digital-clock .second-line {
-        font-size: 1.8rem!important;
-        opacity: 0.85!important;
-      }
-
-  # ---------------------------------------------------------
-  # (NEW) Week-planner "Today" highlight (author-recommended)
-  # ---------------------------------------------------------
-  card-mod-view-yaml: |
-    "ha-card.type-custom-week-planner-card$": |
-      .today .date {
-        background: var(--family-cal-today-chip-bg)!important;
-        color: var(--family-cal-today-chip-fg)!important;
-        border-radius: var(--family-cal-today-chip-radius)!important;
-        padding: 2px 6px!important;
-      }
+  # =========================
+  # OPTIONAL: TILE / CONTROL RADIUS ALIGNMENT
+  # =========================
+  # Some built-in Tile features don't follow border radius perfectly; community uses these theme vars +
+  # card-mod for consistency. [7](https://github.com/home-assistant/frontend/discussions/21357)
+  # You can tune sliders/buttons globally if needed:
+  control-slider-border-radius: var(--ha-card-border-radius)
+  control-select-border-radius: var(--ha-card-border-radius)
+  control-number-buttons-border-radius: var(--ha-card-border-radius)

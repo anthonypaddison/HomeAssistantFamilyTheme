@@ -113,16 +113,22 @@ views:
                                 - calendar.toby
 
                             "5-Day":
+                              # dashboards/family_dashboard.yaml (inside the "5-Day" Week Planner Card)
                               type: custom:week-planner-card
                               title: "Next 5 days"
                               days: 5
                               startingDay: today
                               calendars:
                                 - entity: calendar.family
+                                  color: var(--cal-color-family)
                                 - entity: calendar.anthony
+                                  color: var(--cal-color-anthony)
                                 - entity: calendar.joy
+                                  color: var(--cal-color-joy)
                                 - entity: calendar.lizzie
+                                  color: var(--cal-color-lizzie)
                                 - entity: calendar.toby
+                                  color: var(--cal-color-toby)
                               compact: false
 
                             Month:
