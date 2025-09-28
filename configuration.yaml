@@ -3,6 +3,7 @@ default_config:
 
 # Ensure card-mod loads as a frontend module (needed for sticky sidebar stylings)
 frontend:
+  themes: !include themes.yaml
   extra_module_url:
     - /hacsfiles/lovelace-card-mod/card-mod.js
 
