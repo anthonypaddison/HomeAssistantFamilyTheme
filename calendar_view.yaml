@@ -15,19 +15,19 @@ cards:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.family
+        - entity: calendar.anthony
           name: Anthony
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.family
+        - entity: calendar.joy
           name: Joy
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.family
+        - entity: calendar.lizzie
           name: Lizzie
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.family
+        - entity: calendar.toby
           name: Toby
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
@@ -118,19 +118,19 @@ cards:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.family
+        - entity: calendar.anthony
           name: Anthony
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.family
+        - entity: calendar.joy
           name: Joy
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.family
+        - entity: calendar.lizzie
           name: Lizzie
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.family
+        - entity: calendar.toby
           name: Toby
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
@@ -234,29 +234,24 @@ cards:
         extraSmall: 1
 
       calendars:
+      entities:
         - entity: calendar.family
-          name: ''
-          icon: 'mdi:home-heart'
+          name: Family
           color: var(--family-color-family)
-          hideInLegend: true
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-a'
+        - entity: calendar.anthony
+          name: Anthony
           color: var(--family-color-anthony)
           filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-j'
+        - entity: calendar.joy
+          name: Joy
           color: var(--family-color-joy)
           filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-l'
+        - entity: calendar.lizzie
+          name: Lizzie
           color: var(--family-color-lizzie)
           filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-t'
+        - entity: calendar.toby
+          name: Toby
           color: var(--family-color-toby)
           filter: '(?i)(^Toby:\[T\])'
 
