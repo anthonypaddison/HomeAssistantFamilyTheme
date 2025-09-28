@@ -75,27 +75,27 @@ views:
                   # Calendar content
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Calendar
                     card: !include calendar_view.yaml
 
                   # Chores content
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Chores
                     card: !include chore_view.yaml
 
                   # Photos content
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Photos
                     card: !include photo_view.yaml
 
                   # Lists content
                   - type: conditional
                     conditions:
-                      - entity: input_select.calendar_section
+                      - entity: input_select.family_section
                         state: Lists
                     card: !include lists_view.yaml
