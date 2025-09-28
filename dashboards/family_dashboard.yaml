@@ -1,5 +1,27 @@
 title: Family Board
 theme: FamilyBoard
+button_card_templates:
+  sidebar_item:
+    show_label: true
+    show_state: false
+    styles:
+      card:
+        - border-radius: 12px
+        - padding: 10px
+        - margin: 6px
+        - background: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? 'var(--primary-color)' : 'var(--card-background-color)';
+            ]]]
+        - color: var(--primary-text-color)
+      name: [justify-self: start, font-weight: 600]
+      label:
+        - justify-self: end
+        - font-weight: 700
+        - background: rgba(0,0,0,0.15)
+        - padding: 2px 8px
+        - border-radius: 999px
 
 views:
   - title: Family
