@@ -68,35 +68,7 @@ views:
                     height: 100vh !important;
                   }
                 cards:
-
-                  # -------- TOP BARS --------
-
-                  # Calendar -> Top Bar Layout 1 (A):
-                  # Order: View selector -> Family name + time -> Small weather -> Legend
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.calendar_section
-                        state: Calendar
-                      - entity: input_select.calendar_header_layout
-                        state: A
-                    card: !include topbar_calendar_layout1.yaml
-
-                  # Top Bar Layout 2 (B):
-                  # Order: Family name -> Time -> Legend -> View selector
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.calendar_section
-                        state: Calendar
-                      - entity: input_select.calendar_header_layout
-                        state: B
-                    card: !include topbar_calendar_layout2.yaml
-
-                  # Non-Calendar sections (Chores/Photos/Lists) always use Layout 2
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.calendar_section
-                        state_not: Calendar
-                    card: !include topbar_calendar_layout2.yaml
+                  - !include topbar_calendar_layout2.yaml
 
                   # -------- CONDITIONAL CONTENT --------
 

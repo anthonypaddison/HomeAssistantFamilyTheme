@@ -1,7 +1,7 @@
 type: vertical-stack
 cards:
   # =========================
-  # DAY (time grid + toggles)
+  # DAY (time grid)
   # =========================
   - type: conditional
     conditions:
@@ -11,30 +11,13 @@ cards:
     card:
       type: custom:fullcalendar-card
 
-      # Split one HA calendar into virtual calendars per person (if your build supports filtering).
-      # If your fullcalendar-card ignores 'filter', it will still render; we’ll adjust after we confirm your build.
+      # Keep this simple for stability; we’ll re-add per-person toggles once we confirm your fullcalendar-card build.
       entities:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.family
-          name: Anthony
-          color: var(--family-color-anthony)
-          filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.family
-          name: Joy
-          color: var(--family-color-joy)
-          filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.family
-          name: Lizzie
-          color: var(--family-color-lizzie)
-          filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.family
-          name: Toby
-          color: var(--family-color-toby)
-          filter: '(?i)(^Toby:\[T\])'
 
-      # --- Compatibility block for older builds ---
+      # Compatibility for different fullcalendar-card builds: include both keys.
       options:
         initialView: timeGridDay
         locale: "en-gb"
@@ -52,14 +35,10 @@ cards:
           hour: "2-digit"
           minute: "2-digit"
           hour12: false
-        calendarList: true
-        showCalendarList: true
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
           right: ''
-
-      # --- Preferred key for newer builds ---
       fullcalendar:
         initialView: timeGridDay
         locale: "en-gb"
@@ -77,8 +56,6 @@ cards:
           hour: "2-digit"
           minute: "2-digit"
           hour12: false
-        calendarList: true
-        showCalendarList: true
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
@@ -107,7 +84,7 @@ cards:
           .fc { min-height: 560px; }
 
   # ==========================
-  # WEEK (7-day time grid + toggles)
+  # WEEK (7-day time grid)
   # ==========================
   - type: conditional
     conditions:
@@ -121,24 +98,7 @@ cards:
         - entity: calendar.family
           name: Family
           color: var(--family-color-family)
-        - entity: calendar.family
-          name: Anthony
-          color: var(--family-color-anthony)
-          filter: '(?i)(^Anthony:\[A\])'
-        - entity: calendar.family
-          name: Joy
-          color: var(--family-color-joy)
-          filter: '(?i)(^Joy:\[J\])'
-        - entity: calendar.family
-          name: Lizzie
-          color: var(--family-color-lizzie)
-          filter: '(?i)(^Lizzie:\[L\])'
-        - entity: calendar.family
-          name: Toby
-          color: var(--family-color-toby)
-          filter: '(?i)(^Toby:\[T\])'
 
-      # --- Compatibility (older builds) ---
       options:
         initialView: timeGridWeek
         firstDay: 1                # Monday
@@ -157,14 +117,10 @@ cards:
           hour: "2-digit"
           minute: "2-digit"
           hour12: false
-        calendarList: true
-        showCalendarList: true
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
           right: ''
-
-      # --- Preferred (newer builds) ---
       fullcalendar:
         initialView: timeGridWeek
         firstDay: 1
@@ -183,8 +139,6 @@ cards:
           hour: "2-digit"
           minute: "2-digit"
           hour12: false
-        calendarList: true
-        showCalendarList: true
         headerToolbar:
           left: 'prev,next today'
           center: 'title'
@@ -211,7 +165,7 @@ cards:
           .fc { min-height: 560px; }
 
   # =========================================
-  # MONTH (rolling 30 days with legend toggles)
+  # MONTH (rolling 30 days, legend toggles)
   # =========================================
   - type: conditional
     conditions:
@@ -237,32 +191,43 @@ cards:
         small: 2
         extraSmall: 1
 
+      # IMPORTANT: week-planner-card 'filter' REMOVES matches.
+      # To keep only a specific person, we remove everything NOT matching that person
+      # via a negative look-ahead (no inline (?i) flags in JS regex).
       calendars:
         - entity: calendar.family
           name: ''
           icon: 'mdi:home-heart'
           color: var(--family-color-family)
           hideInLegend: true
+
+        # Anthony only
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-a'
           color: var(--family-color-anthony)
-          filter: '(?i)(^Anthony:\[A\])'
+          filter: '^(?!Anthony:\[A\]).*'
+
+        # Joy only
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-j'
           color: var(--family-color-joy)
-          filter: '(?i)(^Joy:\[J\])'
+          filter: '^(?!Joy:\[J\]).*'
+
+        # Lizzie only
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-l'
           color: var(--family-color-lizzie)
-          filter: '(?i)(^Lizzie:\[L\])'
+          filter: '^(?!Lizzie:\[L\]).*'
+
+        # Toby only
         - entity: calendar.family
           name: ''
           icon: 'mdi:alpha-t'
           color: var(--family-color-toby)
-          filter: '(?i)(^Toby:\[T\])'
+          filter: '^(?!Toby:\[T\]).*'
 
       card_mod:
         style: |
