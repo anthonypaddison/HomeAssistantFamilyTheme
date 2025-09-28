@@ -26,25 +26,30 @@ cards:
       calendars:
         - entity: calendar.family
           name: Family
+          icon: ''
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
           name: A
+          icon: ''
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
           name: J
+          icon: ''
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
           name: L
+          icon: ''
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
           name: T
+          icon: ''
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
@@ -103,25 +108,30 @@ cards:
       calendars:
         - entity: calendar.family
           name: Family
+          icon: ''
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
           name: A
+          icon: ''
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
           name: J
+          icon: ''
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
           name: L
+          icon: ''
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
           name: T
+          icon: ''
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
@@ -178,25 +188,30 @@ cards:
       calendars:
         - entity: calendar.family
           name: Family
+          icon: ''
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
           name: A
+          icon: ''
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
           name: J
+          icon: ''
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
           name: L
+          icon: ''
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
           name: T
+          icon: ''
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
@@ -231,7 +246,7 @@ cards:
     icon: mdi:plus
     name: ''
     style: |
-      ha-card {
+      :host {
         position: fixed !important;
         bottom: 20px !important;
         right: 20px !important;
@@ -253,17 +268,13 @@ cards:
           card_mod:
             style: |
               :host ha-dialog {
-                --mdc-dialog-min-width: 50px;
-                --mdc-dialog-max-width: 50px;
+                --mdc-dialog-min-width: 80%;
+                --mdc-dialog-max-width: 80%;
               }
               div.mdc-dialog div.mdc-dialog__scrim {
                 backdrop-filter: blur(6px);
-                background: green;
-                color: white;
               }
               div.mdc-dialog .mdc-dialog__surface {
-                background: green;
-                color: white;
                 border-radius: 50%;
                 border: 1px solid var(--family-cal-grid-line);
               }
