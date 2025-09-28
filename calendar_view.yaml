@@ -25,31 +25,31 @@ cards:
         extraSmall: 1
       calendars:
         - entity: calendar.family
-          name: Family
-          icon: ''
+          name: ''
+          icon: 'mdi:home-heart'
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
-          name: A
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-a-circle-outline'
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
-          name: J
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-j-circle-outline'
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
-          name: L
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-L-circle-outline'
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
-          name: T
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-aTcircle-outline'
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
@@ -107,31 +107,31 @@ cards:
         extraSmall: 1
       calendars:
         - entity: calendar.family
-          name: Family
-          icon: ''
+          name: ''
+          icon: 'mdi:home-heart'
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
-          name: A
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-a-circle-outline'
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
-          name: J
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-j-circle-outline'
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
-          name: L
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-L-circle-outline'
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
-          name: T
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-aTcircle-outline'
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
@@ -187,31 +187,31 @@ cards:
         extraSmall: 1
       calendars:
         - entity: calendar.family
-          name: Family
-          icon: ''
+          name: ''
+          icon: 'mdi:home-heart'
           color: var(--family-color-family)
           hideInLegend: true
         - entity: calendar.family
-          name: A
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-a-circle-outline'
           color: var(--family-color-anthony)
           filter: "(?i)(^Anthony:|\\[A\\])"
 
         - entity: calendar.family
-          name: J
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-j-circle-outline'
           color: var(--family-color-joy)
           filter: "(?i)(^Joy:|\\[J\\])"
 
         - entity: calendar.family
-          name: L
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-L-circle-outline'
           color: var(--family-color-lizzie)
           filter: "(?i)(^Lizzie:|\\[L\\])"
 
         - entity: calendar.family
-          name: T
-          icon: ''
+          name: ''
+          icon: 'mdi:alpha-aTcircle-outline'
           color: var(--family-color-toby)
           filter: "(?i)(^Toby:|\\[T\\])"
       card_mod:
