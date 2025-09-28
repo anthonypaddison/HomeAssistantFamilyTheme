@@ -1,42 +1,104 @@
-- alias: Reset daily chores at 7am
-  id: reset_daily_chores_07
+- alias: To-do - Increment completed counter (on complete)
+  id: todo_increment_completed_on_complete
+  mode: parallel
+  trigger:
+    - platform: event
+      event_type: call_service
+      event_data:
+        domain: todo
+        service: update_item
+  variables:
+    svc: "{{ trigger.event.data.service_data }}"
+    # entity_id in call_service is a list; get first element
+    list_entity: "{{ (svc.entity_id | default([])) | first | default('') }}"
+    status: "{{ svc.status | default('') }}"
+  condition:
+    - condition: template
+      value_template: "{{ status == 'completed' }}"
+    - condition: template
+      value_template: >
+        {{ list_entity in [
+           'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
+        ] }}
+  action:
+    - choose:
+        - conditions: "{{ list_entity == 'todo.family' }}"
+          sequence:
+            - service: input_number.increment
+              target: { entity_id: input_number.completed_family_today }
+        - conditions: "{{ list_entity == 'todo.anthony' }}"
+          sequence:
+            - service: input_number.increment
+              target: { entity_id: input_number.completed_anthony_today }
+        - conditions: "{{ list_entity == 'todo.joy' }}"
+          sequence:
+            - service: input_number.increment
+              target: { entity_id: input_number.completed_joy_today }
+        - conditions: "{{ list_entity == 'todo.lizzie' }}"
+          sequence:
+            - service: input_number.increment
+              target: { entity_id: input_number.completed_lizzie_today }
+        - conditions: "{{ list_entity == 'todo.toby' }}"
+          sequence:
+            - service: input_number.increment
+              target: { entity_id: input_number.completed_toby_today }
+- alias: To-do - Decrement completed counter (on uncomplete)
+  id: todo_decrement_completed_on_uncomplete
+  mode: parallel
+  trigger:
+    - platform: event
+      event_type: call_service
+      event_data:
+        domain: todo
+        service: update_item
+  variables:
+    svc: "{{ trigger.event.data.service_data }}"
+    list_entity: "{{ (svc.entity_id | default([])) | first | default('') }}"
+    status: "{{ svc.status | default('') }}"
+  condition:
+    - condition: template
+      value_template: "{{ status == 'needs_action' }}"
+    - condition: template
+      value_template: >
+        {{ list_entity in [
+           'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
+        ] }}
+  action:
+    - choose:
+        - conditions: "{{ list_entity == 'todo.family' }}"
+          sequence:
+            - service: input_number.decrement
+              target: { entity_id: input_number.completed_family_today }
+        - conditions: "{{ list_entity == 'todo.anthony' }}"
+          sequence:
+            - service: input_number.decrement
+              target: { entity_id: input_number.completed_anthony_today }
+        - conditions: "{{ list_entity == 'todo.joy' }}"
+          sequence:
+            - service: input_number.decrement
+              target: { entity_id: input_number.completed_joy_today }
+        - conditions: "{{ list_entity == 'todo.lizzie' }}"
+          sequence:
+            - service: input_number.decrement
+              target: { entity_id: input_number.completed_lizzie_today }
+        - conditions: "{{ list_entity == 'todo.toby' }}"
+          sequence:
+            - service: input_number.decrement
+              target: { entity_id: input_number.completed_toby_today }
+- alias: To-do - Reset completed counters at midnight
+  id: todo_reset_completed_counters_midnight
+  mode: single
   trigger:
     - platform: time
-      at: "07:00:00"
+      at: "00:00:00"
   action:
-    - service: todo.clear_completed_items
+    - service: input_number.set_value
       target:
         entity_id:
-          - todo.lizzie_chores
-          - todo.toby_chores
-          - todo.family_chores
-    - service: todo.add_item
-      target: { entity_id: todo.lizzie_chores }
-      data: { item: "Teeth" }
-    - service: todo.add_item
-      target: { entity_id: todo.lizzie_chores }
-      data: { item: "Reading (10 min)" }
-    - service: todo.add_item
-      target: { entity_id: todo.toby_chores }
-      data: { item: "Teeth" }
-    - service: todo.add_item
-      target: { entity_id: todo.toby_chores }
-      data: { item: "Tidy toys" }
-- alias: Mark standard chores completed at 06:59
-  id: chores_mark_complete_0659
-  trigger:
-    - platform: time
-      at: "06:59:00"
-  action:
-    - service: todo.update_item
-      target: { entity_id: todo.lizzie_chores }
-      data: { item: "Teeth", status: "completed" }
-    - service: todo.update_item
-      target: { entity_id: todo.lizzie_chores }
-      data: { item: "Reading (10 min)", status: "completed" }
-    - service: todo.update_item
-      target: { entity_id: todo.toby_chores }
-      data: { item: "Teeth", status: "completed" }
-    - service: todo.update_item
-      target: { entity_id: todo.toby_chores }
-      data: { item: "Tidy toys", status: "completed" }
+          - input_number.completed_family_today
+          - input_number.completed_anthony_today
+          - input_number.completed_joy_today
+          - input_number.completed_lizzie_today
+          - input_number.completed_toby_today
+      data:
+        value: 0

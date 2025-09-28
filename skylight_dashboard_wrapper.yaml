@@ -1,4 +1,63 @@
 title: Family Board
+
+# ========= REUSABLE BUTTON-CARD TEMPLATES =========
+button_card_templates:
+  progress_chip:
+    variables:
+      # Required for each use:
+      completed: input_number.completed_family_today  # helper entity id (string)
+      title: 'List'                                   # caption text
+      # Optional:
+      bar_color: "var(--primary-color)"               # bar color
+    show_icon: false
+    show_state: false
+    show_label: true
+    tap_action:
+      action: more-info
+    custom_fields:
+      bar: >
+        [[[
+          // Read "completed today" from helper
+          const compId = variables.completed;
+          const completedEnt = compId ? states[compId] : null;
+          const completed = Number(completedEnt?.state ?? 0);
+
+          // Outstanding now = state of the bound To-do entity
+          const outstanding = Number(entity?.state ?? 0);
+
+          const total = completed + outstanding;
+          const pct = total > 0 ? Math.min(100, Math.round(100 * completed / total)) : 0;
+
+          const color = variables.bar_color || 'var(--primary-color)';
+          const title = variables.title || (entity?.attributes?.friendly_name ?? 'List');
+
+          const aria = `${title}: ${completed} completed, ${outstanding} outstanding (${pct}%)`;
+
+          return `
+            <style>
+              .pbar { height: 8px; border-radius: 6px; background: var(--divider-color);
+                      overflow: hidden; position: relative; margin: 4px 0 2px; }
+              .pbar .fill { height: 100%; background: ${color}; border-radius: 6px 0 0 6px;
+                            transition: width .35s ease; }
+              .cap { font-size: 12px; opacity: .8; margin-top: 2px; }
+            </style>
+            <div class="pbar" role="img" aria-label="${aria}">
+              <div class="fill" style="width:${pct}%"></div>
+            </div>
+            <div class="cap">${title} • ${completed}/${total} today</div>
+          `;
+        ]]]
+    styles:
+      card:
+        - padding: 8px 10px
+        - border-radius: 12px
+        - box-shadow: none
+        - background: var(--card-background-color)
+      custom_fields:
+        bar:
+          - width: 100%
+
+# ========= VIEWS =========
 views:
   - title: Family
     path: family
@@ -6,7 +65,7 @@ views:
     badges: []
     cards:
 
-      # ======= PAGE LAYOUT WITH SIDEBAR + MAIN =======
+      # ======== PAGE LAYOUT (SIDEBAR + MAIN) ========
       - type: custom:bootstrap-grid-card
         class: container-fluid g-0
         cards:
@@ -14,7 +73,7 @@ views:
             class: row g-3 align-items-stretch
             cards:
 
-              # ---- LEFT: YOUR EXISTING SIDEBAR ----
+              # ---- LEFT: YOUR SIDEBAR (keep your existing file) ----
               - !include sidebar_menu.yaml
 
               # ---- RIGHT: MAIN COLUMN ----
@@ -22,7 +81,7 @@ views:
                 class: col-10
                 cards:
 
-                  # ======= TOP BAR (Clock + Outstanding counts + Calendar view switch) =======
+                  # ======== TOP BAR ========
                   - type: custom:bootstrap-grid-card
                     class: container-fluid g-0
                     cards:
@@ -30,7 +89,7 @@ views:
                         class: row g-2 align-items-center
                         cards:
 
-                          # Clock
+                          # ---- Clock ----
                           - type: custom:digital-clock
                             class: col-4
                             timeFormat:
@@ -53,37 +112,57 @@ views:
                                 .first-line { font-size: 160% !important; font-weight: 600; }
                                 .second-line { opacity: .85; }
 
-                          # Outstanding counts (state = # incomplete)
+                          # ---- Progress chips per person/list ----
                           - type: horizontal-stack
                             class: col-5
                             cards:
-                              - type: button
-                                entity: todo.family
-                                name: Family
-                                show_icon: false
-                                show_state: true
-                              - type: button
-                                entity: todo.anthony
-                                name: Anthony
-                                show_icon: false
-                                show_state: true
-                              - type: button
-                                entity: todo.joy
-                                name: Joy
-                                show_icon: false
-                                show_state: true
-                              - type: button
-                                entity: todo.lizzie
-                                name: Lizzie
-                                show_icon: false
-                                show_state: true
-                              - type: button
-                                entity: todo.toby
-                                name: Toby
-                                show_icon: false
-                                show_state: true
 
-                          # Calendar view selector (only shown when Calendar section is active)
+                              # FAMILY
+                              - type: custom:button-card
+                                template: progress_chip
+                                entity: todo.family
+                                variables:
+                                  completed: input_number.completed_family_today
+                                  title: Family
+                                  bar_color: "var(--family-color-family)"
+
+                              # ANTHONY
+                              - type: custom:button-card
+                                template: progress_chip
+                                entity: todo.anthony
+                                variables:
+                                  completed: input_number.completed_anthony_today
+                                  title: Anthony
+                                  bar_color: "var(--family-color-anthony)"
+
+                              # JOY
+                              - type: custom:button-card
+                                template: progress_chip
+                                entity: todo.joy
+                                variables:
+                                  completed: input_number.completed_joy_today
+                                  title: Joy
+                                  bar_color: "var(--family-color-joy)"
+
+                              # LIZZIE
+                              - type: custom:button-card
+                                template: progress_chip
+                                entity: todo.lizzie
+                                variables:
+                                  completed: input_number.completed_lizzie_today
+                                  title: Lizzie
+                                  bar_color: "var(--family-color-lizzie)"
+
+                              # TOBY
+                              - type: custom:button-card
+                                template: progress_chip
+                                entity: todo.toby
+                                variables:
+                                  completed: input_number.completed_toby_today
+                                  title: Toby
+                                  bar_color: "var(--family-color-toby)"
+
+                          # ---- Calendar view selector (only on Calendar section) ----
                           - type: conditional
                             class: col-3
                             conditions:
@@ -104,9 +183,9 @@ views:
                                     margin: 0;
                                   }
 
-                  # ======= MAIN CONTENT: CONDITIONAL BY SECTION =======
+                  # ======== MAIN CONTENT BY SECTION ========
 
-                  # --- Calendar section ---
+                  # ---- CALENDAR SECTION ----
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -115,7 +194,7 @@ views:
                       type: vertical-stack
                       cards:
 
-                        # DAY View (hour-by-hour)
+                        # Day (time grid)
                         - type: conditional
                           conditions:
                             - entity: input_select.calendar_view
@@ -136,7 +215,7 @@ views:
                               style: |
                                 ha-card { background: none; border: 0; box-shadow: none; }
 
-                        # WEEK View (rolling 5 days from today)
+                        # Week (rolling 5 days from today)
                         - type: conditional
                           conditions:
                             - entity: input_select.calendar_view
@@ -161,7 +240,7 @@ views:
                               style: |
                                 ha-card { background: none; border: 0; box-shadow: none; }
 
-                        # MONTH View (classic month grid)
+                        # Month (classic grid)
                         - type: conditional
                           conditions:
                             - entity: input_select.calendar_view
@@ -176,7 +255,7 @@ views:
                               style: |
                                 ha-card { background: none; border: 0; box-shadow: none; }
 
-                  # --- Chores section ---
+                  # ---- CHORES SECTION ----
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -194,7 +273,7 @@ views:
                           entity: todo.family
                           title: Family
 
-                  # --- Lists section (generic lists; adjust projects as needed) ---
+                  # ---- LISTS SECTION (generic lists; adjust as you prefer) ----
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -209,7 +288,7 @@ views:
                           entity: todo.joy
                           title: Joy List
 
-                  # --- Photos section (placeholder - gallery card can replace) ---
+                  # ---- PHOTOS SECTION ----
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -217,11 +296,12 @@ views:
                     card:
                       type: markdown
                       content: >
-                        📷 **Photos** - place images in `/media/photos` and we'll wire
-                        in a gallery view next. (You chose local storage, so no iCloud sync.)
+                        📷 **Photos** — Drop images under `/media/photos` and we’ll plug in a
+                        gallery view (or a simple grid) next.
 
-                  # ======= GLOBAL FLOATING FAB (placeholder; to be wired per section) =======
-                  # --- FAB: Calendar (context-aware) ---
+                  # ======== CONTEXT-AWARE FABs ========
+
+                  # FAB: Calendar
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -262,8 +342,6 @@ views:
                                   - type: divider
                                   - entity: input_datetime.event_start
                                     name: Start
-                                    # Lovelace "entities" card honors with_time for input_datetime
-                                    # (leave out if your version no longer requires it)
                                   - entity: input_datetime.event_end
                                     name: End
                                   - entity: input_boolean.event_all_day
@@ -275,7 +353,7 @@ views:
                                   action: call-service
                                   service: script.fab_add_calendar_event
 
-                  # --- FAB: Chores (context-aware) ---
+                  # FAB: Chores
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
@@ -320,7 +398,7 @@ views:
                                   action: call-service
                                   service: script.fab_add_todo_item
 
-                  # --- FAB: Lists (context-aware) ---
+                  # FAB: Lists
                   - type: conditional
                     conditions:
                       - entity: input_select.family_section
