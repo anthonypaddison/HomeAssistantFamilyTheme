@@ -14,12 +14,12 @@ cards:
 
       # Some builds expect "options:", others "fullcalendar:". Keep both.
       options:
-        initialView: timeGridDay           # Hourly grid
-        nowIndicator: true                 # Moving "you-are-here" line
-        slotDuration: "00:30:00"           # 30‑min increments (use "01:00:00" for hourly)
-        slotMinTime: "06:00:00"            # Earliest row shown
-        slotMaxTime: "22:00:00"            # Latest row shown
-        scrollTime: "08:00:00"             # Where to scroll to on load
+        initialView: timeGridDay             # Single day with hour column
+        nowIndicator: true                   # Moving "you-are-here" line
+        slotDuration: "00:30:00"             # 30-min rows (use "01:00:00" for hourly)
+        slotMinTime: "06:00:00"              # Earliest hour shown
+        slotMaxTime: "22:00:00"              # Latest hour shown
+        scrollTime: "08:00:00"               # Where to scroll to on load
         allDaySlot: true
         headerToolbar:
           left: 'prev,next today'
@@ -52,90 +52,64 @@ cards:
           /* Keep a sensible min height for the grid */
           .fc { min-height: 560px; }
 
-  # WEEK
+  # WEEK (5-day hourly time‑grid via FullCalendar)
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
         state: Week
     card:
-      type: custom:week-planner-card
-      title: ''
-      days: 5
-      startingDay: today
-      noCardBackground: true
-      eventBackground: var(--family-cal-event-bg)
-      compact: true
-      showLegend: true
-      legendToggle: true
-      showNavigation: true
-      hideDaysWithoutEvents: false
-      columns:
-        extraLarge: 5
-        large: 5
-        medium: 5
-        small: 2
-        extraSmall: 1
-      calendars:
+      type: custom:fullcalendar-card
+      entities:
         - entity: calendar.family
-          name: ''
-          icon: 'mdi:home-heart'
-          color: var(--family-color-family)
-          hideInLegend: true
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-a'
-          color: var(--family-color-anthony)
-          filter: "(?i)(^Anthony:\\[A\\])"
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-j'
-          color: var(--family-color-joy)
-          filter: "(?i)(^Joy:\\[J\\])"
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-l'
-          color: var(--family-color-lizzie)
-          filter: "(?i)(^Lizzie:\\[L\\])"
-        - entity: calendar.family
-          name: ''
-          icon: 'mdi:alpha-t'
-          color: var(--family-color-toby)
-          filter: "(?i)(^Toby:\\[T\\])"
+          eventColor: var(--family-color-family)
+
+      # Use a custom 5-day TimeGrid view starting from today
+      options:
+        initialView: timeGridFiveDay
+        nowIndicator: true
+        slotDuration: "00:30:00"
+        slotMinTime: "06:00:00"
+        slotMaxTime: "22:00:00"
+        scrollTime: "08:00:00"
+        allDaySlot: true
+        headerToolbar:
+          left: 'prev,next today'
+          center: 'title'
+          right: ''
+        locale: "en-gb"
+        views:
+          timeGridFiveDay:
+            type: timeGrid
+            duration: { days: 5 }
+
+      fullcalendar:
+        initialView: timeGridFiveDay
+        nowIndicator: true
+        slotDuration: "00:30:00"
+        slotMinTime: "06:00:00"
+        slotMaxTime: "22:00:00"
+        scrollTime: "08:00:00"
+        allDaySlot: true
+        headerToolbar:
+          left: 'prev,next today'
+          center: 'title'
+          right: ''
+        locale: "en-gb"
+        views:
+          timeGridFiveDay:
+            type: timeGrid
+            duration: { days: 5 }
+
       card_mod:
         style: |
-          ha-card .legend {
-            display: flex !important;
-            justify-content: flex-end !important;
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-            margin-right: 6px !important;
+          ha-card {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
           }
-          ha-card .legend .calendar .color {
-            width: 14px !important;
-            height: 14px !important;
-            border-radius: 50% !important;
-          }
-          .header .legend ul li.hasToggle {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 28px !important;
-            height: 28px !important;
-            border-radius: 50% !important;
-            background-color: var(--legend-calendar-color) !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 0px !important;
-            list-style: none !important;
-            padding: 3px !important;
-          }
-          .header .legend ul li ha-icon {
-            color: white !important;
-            --mdc-icon-size: 50px !important;
-            margin: 3px !important;
-          }
+          .fc { min-height: 560px; }
 
-  # MONTH
+  # MONTH (rolling 30 days, no times) — keep week-planner-card
   - type: conditional
     conditions:
       - entity: input_select.calendar_view
@@ -295,3 +269,4 @@ cards:
                       color: var(--primary-background-color);
                       box-shadow: 0 8px 18px rgba(0,0,0,.18);
                     }
+                    ha-card .icon { --mdc-icon-size: 28px; }
