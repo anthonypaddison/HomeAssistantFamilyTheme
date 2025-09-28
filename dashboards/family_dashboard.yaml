@@ -1,0 +1,192 @@
+title: Family
+button_card_templates:
+  sidebar_item:
+    show_label: true
+    show_state: false
+    styles:
+      card:
+        - border-radius: 12px
+        - padding: 10px
+        - margin: 6px
+        - background: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? 'var(--primary-color)' : 'var(--card-background-color)';
+            ]]]
+        - color: var(--primary-text-color)
+      name: [justify-self: start, font-weight: 600]
+      label:
+        - justify-self: end
+        - font-weight: 700
+        - background: rgba(0,0,0,0.15)
+        - padding: 2px 8px
+        - border-radius: 999px
+
+views:
+  - title: Family
+    icon: mdi:home-heart
+    type: panel
+    cards:
+      - type: custom:mod-card
+        card_mod:
+          style: |
+            ha-card { background: transparent; border: none; }
+        card:
+          type: grid
+          columns: 2
+          square: false
+          cards:
+            # LEFT: Sidebar
+            - !include /config/dashboards/includes/sidebar_menu.yaml
+
+            # RIGHT: Top chips + Content + FAB
+            - type: vertical-stack
+              cards:
+
+                # --- Top chips (Mushroom) ---
+                - type: custom:mushroom-chips-card
+                  alignment: end
+                  chips:
+                    # Calendar view "chip" (double tap cycles Day → 5-Day → Month)
+                    - type: template
+                      icon: mdi:calendar
+                      content: >
+                        {{ states('input_select.calendar_view') }} view
+                      double_tap_action:
+                        action: call-service
+                        service: input_select.select_next
+                        target: { entity_id: input_select.calendar_view }
+
+                    # Outstanding counts (state of todo.* = incomplete count)
+                    - type: template
+                      icon: mdi:account-group
+                      content: >
+                        {{ states('todo.family') }} Family
+                      style: |
+                        ha-card { background: #36B37E; color: white; }
+                    - type: template
+                      icon: mdi:account
+                      content: >
+                        {{ states('todo.anthony') }} Anthony
+                      style: |
+                        ha-card { background: #7E57C2; color: white; }
+                    - type: template
+                      icon: mdi:account
+                      content: >
+                        {{ states('todo.joy') }} Joy
+                      style: |
+                        ha-card { background: #F4B400; color: black; }
+                    - type: template
+                      icon: mdi:account
+                      content: >
+                        {{ states('todo.lizzie') }} Lizzie
+                      style: |
+                        ha-card { background: #EC407A; color: white; }
+                    - type: template
+                      icon: mdi:account
+                      content: >
+                        {{ states('todo.toby') }} Toby
+                      style: |
+                        ha-card { background: #42A5F5; color: white; }
+
+                # --- Main content by section ---
+                - type: custom:state-switch
+                  entity: input_select.family_section
+                  default: Calendar
+                  states:
+
+                    Calendar:
+                      type: vertical-stack
+                      cards:
+                        - type: custom:state-switch
+                          entity: input_select.calendar_view
+                          default: 5-Day
+                          states:
+                            Day:
+                              type: calendar
+                              initial_view: dayGridDay
+                              entities:
+                                - calendar.family
+                                - calendar.anthony
+                                - calendar.joy
+                                - calendar.lizzie
+                                - calendar.toby
+
+                            "5-Day":
+                              type: custom:week-planner-card
+                              title: "Next 5 days"
+                              days: 5
+                              startingDay: today
+                              calendars:
+                                - entity: calendar.family
+                                - entity: calendar.anthony
+                                - entity: calendar.joy
+                                - entity: calendar.lizzie
+                                - entity: calendar.toby
+                              compact: false
+
+                            Month:
+                              type: calendar
+                              initial_view: dayGridMonth
+                              entities:
+                                - calendar.family
+                                - calendar.anthony
+                                - calendar.joy
+                                - calendar.lizzie
+                                - calendar.toby
+
+                    Chores:
+                      type: grid
+                      columns: 2
+                      square: false
+                      cards:
+                        - type: todo-list
+                          entity: todo.family
+                          title: "Family Chores"
+                          display_order: duedate_asc
+                          card_mod: { style: "ha-card { border-top: 4px solid #36B37E; }" }
+                        - type: todo-list
+                          entity: todo.anthony
+                          title: "Anthony"
+                          card_mod: { style: "ha-card { border-top: 4px solid #7E57C2; }" }
+                        - type: todo-list
+                          entity: todo.joy
+                          title: "Joy"
+                          card_mod: { style: "ha-card { border-top: 4px solid #F4B400; }" }
+                        - type: todo-list
+                          entity: todo.lizzie
+                          title: "Lizzie"
+                          card_mod: { style: "ha-card { border-top: 4px solid #EC407A; }" }
+                        - type: todo-list
+                          entity: todo.toby
+                          title: "Toby"
+                          card_mod: { style: "ha-card { border-top: 4px solid #42A5F5; }" }
+
+                    Lists:
+                      type: vertical-stack
+                      cards:
+                        - type: todo-list
+                          entity: todo.lists      # <-- CHANGE to the Todoist project for your lists
+                          title: "Family Lists (Packing, Shopping, Routines)"
+                          display_order: alpha_asc
+
+                    Photos:
+                      type: vertical-stack
+                      cards:
+                        - type: picture-entity
+                          entity: camera.family_album  # <-- CHANGE if your Local Photos camera differs
+                          show_name: false
+                          show_state: false
+                          card_mod:
+                            style: |
+                              ha-card { border-radius: 16px; overflow: hidden; }
+
+                # --- Floating + button (context aware) ---
+                - type: custom:fab-card
+                  icon: mdi:plus
+                  button_color: var(--accent-color)
+                  icon_color: white
+                  left: false
+                  action:
+                    action: call-service
+                    service: script.family_add_item

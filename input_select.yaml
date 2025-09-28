@@ -1,19 +1,9 @@
 family_section:
-  name: Section
+  name: Family Section
   options: [Calendar, Chores, Photos, Lists]
   initial: Calendar
 
 calendar_view:
   name: Calendar View
-  options: [Day, Week, Month]
-  initial: Week
-
-calendar_target:
-  name: Calendar Target
-  options: [Family, Anthony, Joy, Lizzie, Toby]
-  initial: Family
-
-active_todo_list:
-  name: Active To-do List
-  options: [Family, Anthony, Joy, Lizzie, Toby]
-  initial: Family
+  options: [Day, 5-Day, Month]
+  initial: 5-Day

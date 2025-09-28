@@ -1,117 +1,30 @@
-# ===== FAB → Add Calendar Event =====
-fab_add_calendar_event:
-  alias: FAB • Add Calendar Event
-  mode: single
-  sequence:
-    - variables:
-        target_sel: "{{ states('input_select.calendar_target') | trim }}"
-        title: "{{ states('input_text.event_title') | trim }}"
-        desc: "{{ states('input_text.event_description') | trim }}"
-        all_day: "{{ is_state('input_boolean.event_all_day','on') }}"
-        s_dt: "{{ states('input_datetime.event_start') }}"
-        e_dt: "{{ states('input_datetime.event_end') }}"
-        cal_map:
-          Family: calendar.family
-          Anthony: calendar.anthony
-          Joy: calendar.joy
-          Lizzie: calendar.lizzie
-          Toby: calendar.toby
-        cal_entity: "{{ cal_map.get(target_sel, 'calendar.family') }}"
-        start_iso: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}"
-        end_iso: >-
-          {% set s = as_datetime(s_dt) | as_local %}
-          {% set e = as_datetime(e_dt) | as_local %}
-          {% if e <= s %}
-            {{ (s + timedelta(minutes=60)).strftime('%Y-%m-%dT%H:%M:%S') }}
-          {% else %}
-            {{ e.strftime('%Y-%m-%dT%H:%M:%S') }}
-          {% endif %}
-        start_date_str: "{{ as_datetime(s_dt) | as_local | timestamp_custom('%Y-%m-%d') }}"
-        end_date_all_day: >-
-          {% set sd = (as_datetime(s_dt) | as_local).date() %}
-          {% set ed = (as_datetime(e_dt) | as_local).date() %}
-          {% if ed <= sd %}
-            {{ (sd + timedelta(days=1)) }}
-          {% else %}
-            {{ (ed + timedelta(days=1)) }}
-          {% endif %}
-
-    - condition: template
-      value_template: "{{ title != '' }}"
-
-    - choose:
-        - conditions: "{{ all_day | bool }}"
-          sequence:
-            - service: calendar.create_event
-              target: { entity_id: "{{ cal_entity }}" }
-              data:
-                summary: "{{ title }}"
-                description: "{{ desc }}"
-                start_date: "{{ start_date_str }}"
-                end_date: "{{ end_date_all_day }}"
-      default:
-        - service: calendar.create_event
-          target: { entity_id: "{{ cal_entity }}" }
-          data:
-            summary: "{{ title }}"
-            description: "{{ desc }}"
-            start_date_time: "{{ start_iso }}"
-            end_date_time: "{{ end_iso }}"
-
-    - service: browser_mod.notification
-      data: { message: "Saved “{{ title }}” to {{ target_sel }}", duration: 2500 }
-
-    - variables: { _now: "{{ now() | as_local }}" }
-    - service: input_datetime.set_datetime
-      target: { entity_id: input_datetime.event_start }
-      data: { datetime: "{{ _now.timestamp_custom('%Y-%m-%d %H:%M:%S') }}" }
-    - service: input_datetime.set_datetime
-      target: { entity_id: input_datetime.event_end }
-      data: { datetime: "{{ (_now + timedelta(minutes=60)).timestamp_custom('%Y-%m-%d %H:%M:%S') }}" }
-    - service: input_text.set_value
-      target: { entity_id: input_text.event_title }
-      data: { value: "" }
-    - service: input_text.set_value
-      target: { entity_id: input_text.event_description }
-      data: { value: "" }
-    - service: input_boolean.turn_off
-      target: { entity_id: input_boolean.event_all_day }
-    - service: browser_mod.close_popup
-
-
-# ===== FAB → Add To‑do Item =====
-fab_add_todo_item:
-  alias: FAB • Add To‑do Item
-  mode: single
-  sequence:
-    - variables:
-        list_sel: "{{ states('input_select.active_todo_list') | trim }}"
-        item: "{{ states('input_text.new_todo_item') | trim }}"
-        desc: "{{ states('input_text.new_todo_description') | trim }}"
-        todo_map:
-          Family: todo.family
-          Anthony: todo.anthony
-          Joy: todo.joy
-          Lizzie: todo.lizzie
-          Toby: todo.toby
-        todo_entity: "{{ todo_map.get(list_sel, 'todo.family') }}"
-
-    - condition: template
-      value_template: "{{ item != '' }}"
-
-    - service: todo.add_item
-      target: { entity_id: "{{ todo_entity }}" }
-      data:
-        item: "{{ item }}"
-        description: "{{ desc }}"
-
-    - service: browser_mod.notification
-      data: { message: "Added “{{ item }}” to {{ list_sel }}", duration: 2000 }
-
-    - service: input_text.set_value
-      target: { entity_id: input_text.new_todo_item }
-      data: { value: "" }
-    - service: input_text.set_value
-      target: { entity_id: input_text.new_todo_description }
-      data: { value: "" }
-    - service: browser_mod.close_popup
+family_add_item:
+    alias: "Family: Add item based on active section"
+    mode: single
+    sequence:
+      - variables:
+          section: "{{ states('input_select.family_section') }}"
+      - choose:
+          - conditions: "{{ section == 'Chores' }}"
+            sequence:
+              - action: todo.add_item
+                target:
+                  entity_id: todo.family
+                data:
+                  item: "New chore"
+          - conditions: "{{ section == 'Lists' }}"
+            sequence:
+              - action: todo.add_item
+                target:
+                  entity_id: todo.lists     # <-- CHANGE to your Lists project entity if different
+                data:
+                  item: "New list item"
+          - conditions: "{{ section == 'Calendar' }}"
+            sequence:
+              - action: calendar.create_event
+                target:
+                  entity_id: calendar.family
+                data:
+                  summary: "New event"
+                  start_date_time: "{{ now().strftime('%Y-%m-%dT%H:%M:%S') }}"
+                  end_date_time: "{{ (now() + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%S') }}"

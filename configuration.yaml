@@ -1,25 +1,20 @@
 # Loads default set of integrations. Do not remove.
 default_config:
 
+# Ensure card-mod loads as a frontend module (needed for sticky sidebar stylings)
 frontend:
-  themes: !include themes.yaml
   extra_module_url:
-    - /local/sidebarHandler.js?v={{ now().timestamp() | int }}
-    - /local/dashHandler.js?v={{ now().timestamp() | int }}
-    - /local/calendarHandler.js?v={{ now().timestamp() | int }}
+    - /hacsfiles/lovelace-card-mod/card-mod.js
 
+# Expose dashboard as YAML
 lovelace:
-  resources:
-    - url: https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600&display=swap
-      type: css
   dashboards:
     family-dashboard:
       mode: yaml
-      filename: skylight_dashboard_wrapper.yaml
-      title: Panogu Family
+      title: Family
       icon: mdi:home-heart
       show_in_sidebar: true
-      require_admin: false
+      filename: dashboards/family_dashboard.yaml
 
 automation: !include automations.yaml
 script: !include scripts.yaml
