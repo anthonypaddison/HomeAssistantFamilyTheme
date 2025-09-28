@@ -6,7 +6,6 @@ button_card_templates:
     styles:
       card:
         - border-radius: 12px
-        - width: 10%
         - padding: 10px
         - margin: 6px
         - background: >
