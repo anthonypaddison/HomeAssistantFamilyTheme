@@ -229,7 +229,7 @@ cards:
             flex: 0 0 100% !important;            /* header stays on its own row */
           }
           .container > .day {
-            flex: 1 1 260px !important;           /* min width per day; grows evenly */
+            flex: 1 1 200px !important;           /* min width per day; grows evenly */
             max-inline-size: 360px !important;    /* cap so they don’t get too wide */
           }
 
