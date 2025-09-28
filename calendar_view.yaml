@@ -82,8 +82,8 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
+            --mdc-icon-size: 30px !important;
           }
-
 
   # WEEK
   - type: conditional
@@ -166,6 +166,7 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
+            --mdc-icon-size: 30px !important;
           }
 
   # MONTH
@@ -249,7 +250,9 @@ cards:
           }
           .container .legend ul li ha-icon {
             color: white !important;
+            --mdc-icon-size: 30px !important;
           }
+
   # Add Calendar Event (popup) - visible on Calendar section
   - type: button
     icon: mdi:plus
