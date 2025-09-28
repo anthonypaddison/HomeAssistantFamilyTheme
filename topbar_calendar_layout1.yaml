@@ -39,35 +39,9 @@ cards:
                 .second-line { font-size: 90% !important; color: var(--family-cal-header-color); }
 
       # 3) Tiny weather (edit entity if needed)
-      - type: custom:button-card
+      - type: custom:simple-weather-card
         class: col-2
-        entity: weather.home
-        name: ' '
-        show_state: false
-        show_label: true
-        label: >
-          [[[
-            const w = states['weather.home'];
-            if (!w) return '-';
-            const t = (w.attributes && w.attributes.temperature !== undefined) ? `${w.attributes.temperature}°` : '';
-            const c = w.state ? w.state.replace('_',' ') : '';
-            return `${t} ${c}`;
-          ]]]
-        icon: mdi:weather-partly-cloudy
-        styles:
-          card:
-            - border-radius: 12px
-            - box-shadow: none
-            - padding: 6px 10px
-            - background: var(--card-background-color)
-            - justify-content: center
-            - min-height: 44px
-          icon:
-            - width: 20px
-            - color: var(--secondary-text-color)
-          label:
-            - font-size: 0.95rem
-            - color: var(--primary-text-color)
+        entity: weather.smhi
 
       # 4) Legend (display-only)
       - type: markdown

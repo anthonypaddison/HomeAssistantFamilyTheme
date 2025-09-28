@@ -80,8 +80,7 @@ cards:
             font-size: 14px !important;
             list-style: none !important;
           }
-
-          .container .legend ul li.icon {
+          .container .legend ul li ha-icon {
             color: white !important;
           }
 
@@ -165,6 +164,9 @@ cards:
             font-size: 14px !important;
             list-style: none !important;
           }
+          .container .legend ul li ha-icon {
+            color: white !important;
+          }
 
   # MONTH
   - type: conditional
@@ -244,6 +246,9 @@ cards:
             font-weight: bold !important;
             font-size: 14px !important;
             list-style: none !important;
+          }
+          .container .legend ul li ha-icon {
+            color: white !important;
           }
   # Add Calendar Event (popup) - visible on Calendar section
   - type: button
