@@ -6,20 +6,20 @@ views:
     path: family
     type: custom:grid-layout
     layout:
-      # 10% fixed sidebar + flexible main
-      grid-template-columns: 10% 1fr
-      grid-template-rows: auto 1fr
-      grid-template-areas: |
-        "sidebar chips"
-        "sidebar main"
+      # # 10% fixed sidebar + flexible main
+      # grid-template-columns: 10% 1fr
+      # grid-template-rows: auto 1fr
+      # grid-template-areas: |
+      #   "sidebar chips"
+      #   "sidebar main"
 
-      # Stack on small screens (sidebar collapses; chips then main)
-      mediaquery:
-        "(max-width: 900px)":
-          grid-template-columns: 1fr
-          grid-template-areas: |
-            "chips"
-            "main"
+      # # Stack on small screens (sidebar collapses; chips then main)
+      # mediaquery:
+      #   "(max-width: 900px)":
+      #     grid-template-columns: 1fr
+      #     grid-template-areas: |
+      #       "chips"
+      #       "main"
 
     cards:
       # =========================
@@ -129,74 +129,74 @@ views:
                 state: Calendar
             card: !include /config/dashboards/includes/calendar_5day.yaml
 
-      #     # --- Chores (multiple lists) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Chores
-      #       card:
-      #         type: vertical-stack
-      #         cards:
-      #           - type: todo-list
-      #             entity: todo.family
-      #             title: Family
-      #           - type: todo-list
-      #             entity: todo.anthony
-      #             title: Anthony
-      #           - type: todo-list
-      #             entity: todo.joy
-      #             title: Joy
-      #           - type: todo-list
-      #             entity: todo.lizzie
-      #             title: Lizzie
-      #           - type: todo-list
-      #             entity: todo.toby
-      #             title: Toby
+          # --- Chores (multiple lists) ---
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Chores
+            card:
+              type: vertical-stack
+              cards:
+                - type: todo-list
+                  entity: todo.family
+                  title: Family
+                - type: todo-list
+                  entity: todo.anthony
+                  title: Anthony
+                - type: todo-list
+                  entity: todo.joy
+                  title: Joy
+                - type: todo-list
+                  entity: todo.lizzie
+                  title: Lizzie
+                - type: todo-list
+                  entity: todo.toby
+                  title: Toby
 
-      #     # --- Photos (browse your configured media/photos) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Photos
-      #       card:
-      #         type: media-browser
+          # --- Photos (browse your configured media/photos) ---
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Photos
+            card:
+              type: media-browser
 
-      #     # --- Lists (generic list) ---
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Lists
-      #       card:
-      #         type: todo-list
-      #         entity: todo.lists
-      #         title: Lists
+          # --- Lists (generic list) ---
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Lists
+            card:
+              type: todo-list
+              entity: todo.lists
+              title: Lists
 
-      # # =========================
-      # # 4) FAB (context-aware popup)
-      # # =========================
-      # - type: custom:mod-card
-      #   view_layout: { grid-area: main }
-      #   card_mod:
-      #     style: |
-      #       ha-card {
-      #         position: fixed;
-      #         right: 24px;
-      #         bottom: 24px;
-      #         width: 56px;
-      #         height: 56px;
-      #         border-radius: 28px;
-      #         box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-      #         background: var(--primary-color);
-      #         color: white;
-      #         z-index: 1000;
-      #       }
-      #   card:
-      #     type: button
-      #     icon: mdi:plus
-      #     name: Add
-      #     show_name: false
-      #     tap_action:
-      #       action: call-service
-      #       service: script.family_fab_open
-      #       data:
-      #         browser_id: THIS   # Browser Mod will replace THIS with current browser at call time
+      # =========================
+      # 4) FAB (context-aware popup)
+      # =========================
+      - type: custom:mod-card
+        view_layout: { grid-area: main }
+        card_mod:
+          style: |
+            ha-card {
+              position: fixed;
+              right: 24px;
+              bottom: 24px;
+              width: 56px;
+              height: 56px;
+              border-radius: 28px;
+              box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+              background: var(--primary-color);
+              color: white;
+              z-index: 1000;
+            }
+        card:
+          type: button
+          icon: mdi:plus
+          name: Add
+          show_name: false
+          tap_action:
+            action: call-service
+            service: script.family_fab_open
+            data:
+              browser_id: THIS   # Browser Mod will replace THIS with current browser at call time
