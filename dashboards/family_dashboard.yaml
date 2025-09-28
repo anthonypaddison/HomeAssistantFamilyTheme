@@ -207,14 +207,14 @@ views:
         card_mod:
           style: |
             ha-card {
-              position: fixed;
-              right: 24px;
-              bottom: 24px;
-              width: 56px;
-              height: 56px;
-              border-radius: 28px;
-              box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-              background: var(--primary-color);
-              color: white;
-              z-index: 1000;
+              position: fixed !important;
+              right: 24px !important;
+              bottom: 24px !important;
+              width: 56px !important;
+              height: 56px !important;
+              border-radius: 28px !important;
+              box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
+              background: var(--primary-color) !important;
+              color: white !important;
+              z-index: 1000 !important;
             }
