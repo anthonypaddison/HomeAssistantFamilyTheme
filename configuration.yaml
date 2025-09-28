@@ -4,8 +4,6 @@ default_config:
 # Ensure card-mod loads as a frontend module (needed for sticky sidebar stylings)
 frontend:
   themes: !include themes.yaml
-  extra_module_url:
-    - /hacsfiles/lovelace-card-mod/card-mod.js
 
 # Expose dashboard as YAML
 lovelace:
@@ -21,4 +19,5 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 
 input_select: !include input_select.yaml
+input_number: !include input_number.yaml
 template: !include template.yaml
