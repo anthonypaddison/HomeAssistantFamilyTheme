@@ -1,36 +1,30 @@
-# -----------------------------------------------------------------------------
-# FAB -> Conditional Popup (Calendar / Chores / Lists)
-# Uses Browser Mod popup with ha-form schema (no helpers required).
-# IMPORTANT: we pass browser_id so popup opens only on current browser. [6](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/services.md)
-# -----------------------------------------------------------------------------
-
 family_fab_open:
   alias: "Family: FAB open popup per active section"
   mode: parallel
   fields:
     browser_id:
-      description: Browser Mod ID (use THIS via a browser call)
+      description: Browser Mod ID (use THIS via browser call)
       example: THIS
   sequence:
     - variables:
         section: "{{ states('input_select.family_section') | default('Calendar') }}"
+
     - choose:
-        # --- Calendar "Create Event" form -------------------------------------
+
+        # ---- Calendar "Create Event" form ----
         - conditions: "{{ section == 'Calendar' }}"
           sequence:
-            - action: browser_mod.popup
+            - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add calendar event"
                 initial_style: wide
                 content:
-                  # Form fields; data is passed to right_button_action. [7](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/popups.md)
                   - name: summary
                     label: Title
                     selector: { text: null }
                   - name: start_date_time
                     label: Start
-                    # Home Assistant selector dtype datetime is accepted by Browser Mod.
                     selector: { datetime: null }
                   - name: end_date_time
                     label: End
@@ -49,15 +43,14 @@ family_fab_open:
                           - calendar.toby
                 right_button: "Create"
                 right_button_action:
-                  # Route through a script to map form data to calendar.create_event
-                  action: script.popup_create_calendar_event
+                  service: script.popup_create_calendar_event
                 left_button: "Cancel"
                 dismissable: true
 
-        # --- Chores "Add to-do" form ------------------------------------------
+        # ---- Chores "Add to-do" form ----
         - conditions: "{{ section == 'Chores' }}"
           sequence:
-            - action: browser_mod.popup
+            - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add chore"
@@ -80,14 +73,14 @@ family_fab_open:
                           - todo.toby
                 right_button: "Add"
                 right_button_action:
-                  action: script.popup_add_todo
+                  service: script.popup_add_todo
                 left_button: "Cancel"
                 dismissable: true
 
-        # --- Lists "Add generic list item" form -------------------------------
+        # ---- Lists "Add item" form ----
         - conditions: "{{ section == 'Lists' }}"
           sequence:
-            - action: browser_mod.popup
+            - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add list item"
@@ -111,14 +104,14 @@ family_fab_open:
                           - todo.toby
                 right_button: "Add"
                 right_button_action:
-                  action: script.popup_add_todo
+                  service: script.popup_add_todo
                 left_button: "Cancel"
                 dismissable: true
 
-        # --- Photos: hint only (no form) --------------------------------------
+        # ---- Photos: hint-only popup ----
         - conditions: "{{ section == 'Photos' }}"
           sequence:
-            - action: browser_mod.popup
+            - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Photos"
@@ -137,7 +130,7 @@ popup_create_calendar_event:
     end_date_time: { description: "End", example: "2025-09-28T14:00:00" }
     calendar: { description: "calendar.entity_id", example: "calendar.family" }
   sequence:
-    - action: calendar.create_event
+    - service: calendar.create_event
       target:
         entity_id: "{{ calendar }}"
       data:
@@ -152,7 +145,7 @@ popup_add_todo:
     item: { description: "Item text", example: "Buy milk" }
     list_entity: { description: "todo.entity_id", example: "todo.family" }
   sequence:
-    - action: todo.add_item
+    - service: todo.add_item
       target:
         entity_id: "{{ list_entity }}"
       data:

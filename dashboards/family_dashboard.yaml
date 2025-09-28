@@ -200,10 +200,11 @@ views:
         name: Add
         show_name: false
         tap_action:
-          action: call-service
-          service: script.family_fab_open
-          data:
-            browser_id: THIS
+          action: fire-dom-event
+          browser_mod:
+            service: script.family_fab_open
+            data:
+              browser_id: THIS
         card_mod:
           style: |
             ha-card {

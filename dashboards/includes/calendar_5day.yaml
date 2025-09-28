@@ -19,45 +19,76 @@ calendars:
   - entity: calendar.toby
     color: var(--cal-color-toby)
 noCardBackground: false
+
 card_mod:
-  # We style the interior to show a 1-hour grid and make it scroll
-  # (Week Planner provides multi-day columns; we add the visual hour grid in CSS). [1](https://github.com/FamousWolf/week-planner-card)
+  # Adds a left-hand time rail and keeps your hour stripes.
+  # Week Planner Card supports card-mod styling; docs list .days/.event classes for CSS. [1]
   style: |
-    /* Max height + vertical scroll for the calendar body */
+    :host {
+      /* ======= TUNABLES ======= */
+      --hour-height: 64px;        /* pixels per hour (match your stripes) */
+      --time-rail-width: 56px;    /* width of time gutter on the left */
+      --time-rail-left-pad: 10px; /* inner padding before label text */
+      --time-rail-top:  48px;     /* push labels down below day headers */
+      --time-rail-size: 12px;
+      --time-rail-color: var(--secondary-text-color);
+      /* ======================== */
+    }
+
+    /* Make the card scrollable (your existing behaviour) */
     ha-card {
       max-height: calc(100vh - 220px);
       overflow: auto;
     }
 
-    /* Hour grid overlay (each "hour" ≈ 64px high; adjust if you prefer) */
+    /* The calendar's multi-day body area */
     ha-card .days {
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 63px,
-        rgba(0,0,0,0.06) 64px
-      );
-    }
+      /* Create space for the time rail on the left */
+      position: relative;
+      padding-left: var(--time-rail-width);
 
-    /* Subtle 30-min tick (optional) */
-    ha-card .days {
+      /* Hour & half-hour stripes (match to --hour-height) */
       background-image:
+        /* 30-min tick (lighter) */
         repeating-linear-gradient(
           to bottom,
           transparent 0px,
-          transparent 31px,
-          rgba(0,0,0,0.03) 32px
+          transparent calc(var(--hour-height) / 2 - 1px),
+          rgba(0,0,0,0.03) calc(var(--hour-height) / 2)
         ),
+        /* 60-min tick (darker) */
         repeating-linear-gradient(
           to bottom,
           transparent 0px,
-          transparent 63px,
-          rgba(0,0,0,0.06) 64px
+          transparent calc(var(--hour-height) - 1px),
+          rgba(0,0,0,0.06) var(--hour-height)
         );
     }
 
-    /* Tighten day header and add weight */
+    /* Left-hand time labels (appear even with no events) */
+    ha-card .days::before {
+      /* Change this block if you want different hours (e.g., 00:00–23:00) */
+      content:
+        "06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00";
+      white-space: pre;
+      position: absolute;
+      left: var(--time-rail-left-pad);
+      top: var(--time-rail-top);
+      line-height: var(--hour-height);
+      font-size: var(--time-rail-size);
+      color: var(--time-rail-color);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Optional: make day headers a touch bolder */
     .day .header {
       font-weight: 700;
       color: var(--primary-text-color);
+    }
+
+    /* Optional: hide the time rail on small screens */
+    @media (max-width: 900px) {
+      ha-card .days { padding-left: 12px; }
+      ha-card .days::before { display: none; }
     }
