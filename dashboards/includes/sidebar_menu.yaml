@@ -23,7 +23,7 @@ card:
       icon: mdi:calendar
       variables:
         section: Calendar
-        badge: '[[[ return states["input_number.events_today"]?.state || "0"; ]]]'
+        badge_entity: input_number.events_today
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -36,7 +36,7 @@ card:
       icon: mdi:brush
       variables:
         section: Chores
-        badge: '[[[ return states["sensor.chores_incomplete_total"]?.state || "0"; ]]]'
+        badge_entity: sensor.chores_incomplete_total
       tap_action:
         action: call-service
         service: input_select.select_option

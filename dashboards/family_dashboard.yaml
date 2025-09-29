@@ -1,4 +1,3 @@
-
 title: Family Board
 theme: FamilyBoard
 
@@ -43,6 +42,7 @@ button_card_templates:
         ]]]
 
   # Sidebar icon-only button (GLOBAL) — used by sidebar_menu.yaml
+  # Pass: variables.section, and optionally variables.badge_entity (entity_id to display as numeric badge)
   sb_icon_only:
     show_name: false          # icon-only
     show_label: false
@@ -51,7 +51,7 @@ button_card_templates:
       card:
         - border-radius: 0
         - box-shadow: none
-        - width: 100px
+        - width: 100%
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
@@ -65,10 +65,16 @@ button_card_templates:
         - padding: 6px
         - margin: 0 0 6px 0
       icon:
-        - width: 100px
+        - width: 28px
     custom_fields:
       badge: >
-        [[[ return variables.badge || ''; ]]]
+        [[[
+          const eid = variables.badge_entity;    // e.g. input_number.events_today
+          if (!eid) return '';
+          const val = states[eid]?.state;
+          if (val === undefined || val === null || val === '0') return ''; // hide if 0/empty
+          return String(val);
+        ]]]
     styles_custom_fields:
       badge:
         - position: absolute
