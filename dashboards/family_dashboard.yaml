@@ -65,7 +65,7 @@ button_card_templates:
         - padding: 6px
         - margin: 0 0 6px 0
       icon:
-        - width: 28px
+        - width: 100px
     custom_fields:
       badge: >
         [[[ return variables.badge || ''; ]]]
