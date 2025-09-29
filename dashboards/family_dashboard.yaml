@@ -7,14 +7,15 @@ button_card_templates:
     styles:
       card:
         - border-radius: 12px
-        - padding: 10px
-        - margin: 6px
+        - padding: 5px
+        - margin: 3px
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
               return active ? 'var(--primary-color)' : 'var(--card-background-color)';
             ]]]
         - color: var(--primary-text-color)
+        - width: 100%
       name: [justify-self: start, font-weight: 600]
       label:
         - justify-self: end
@@ -28,6 +29,7 @@ views:
     path: family
     type: custom:grid-layout
     layout:
+      padding: 0px
       # 10% fixed sidebar + flexible main
       grid-template-columns: 10% 1fr
       grid-template-rows: auto 1fr
