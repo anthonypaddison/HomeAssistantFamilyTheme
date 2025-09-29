@@ -1,4 +1,29 @@
 FamilyBoard:
+  # --- Your palette (names reflect your list) ---
+  palette-mint:     "#B9FBC0"
+  palette-aqua:     "#98F5E1"
+  palette-cyan:     "#8EECF5"
+  palette-sky:      "#90DBF4"
+  palette-bluegrey: "#A3C4F3"   # we'll use as the "bluish grey" base
+  palette-lilac:    "#CFBAF0"
+  palette-rose:     "#FFCFD2"
+  palette-vanilla:  "#FBF8CC"
+
+  # --- Dashboard accents mapped for consistency ---
+  # Primary accent = family green for emphasis across HA
+  primary-color: var(--palette-mint)
+  accent-color:  var(--palette-lilac)
+
+  # --- Sidebar tokens (inactive/active backgrounds & icon colors) ---
+  sb-inactive-bg: var(--palette-bluegrey)
+  sb-inactive-icon: "#0F172A"     # deep slate text/icon
+  sb-active-bg:    var(--primary-color)
+  sb-active-icon:  "#0F172A"
+
+  # --- FAB colours per section ---
+  fab-color-calendar: var(--palette-mint)   # green
+  fab-color-chores:   var(--palette-lilac)  # purple
+  fab-color-default:  var(--primary-color)
   # --- REQUIRED by card-mod: theme name must equal card-mod-theme ---
   # Ref: card-mod theme docs. [1](https://github.com/thomasloven/lovelace-card-mod/blob/master/README-themes.md)
   card-mod-theme: FamilyBoard

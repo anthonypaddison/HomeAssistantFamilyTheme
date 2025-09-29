@@ -28,3 +28,9 @@ completed_toby_today:
   max: 999
   step: 1
   mode: box
+events_today:
+  name: Calendar Events Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box

@@ -4,3 +4,12 @@
       state: >
         {% set days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] %}
         {{ days[now().weekday()] }}
+- sensor:
+  - name: "chores_incomplete_total"
+    unique_id: chores_incomplete_total
+    state: >
+      {{ states('todo.family')  |int(0)
+       + states('todo.anthony')|int(0)
+       + states('todo.joy')    |int(0)
+       + states('todo.lizzie') |int(0)
+       + states('todo.toby')   |int(0) }}

@@ -76,16 +76,17 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - label: Family
-                            value: todo.family
-                          - label: Anthony
-                            value: todo.anthony
-                          - label: Joy
-                            value: todo.joy
-                          - label: Lizzie
-                            value: todo.lizzie
-                          - label: Toby
-                            value: todo.toby
+                          - { label: Family,  value: todo.family }
+                          - { label: Anthony, value: todo.anthony }
+                          - { label: Joy,     value: todo.joy }
+                          - { label: Lizzie,  value: todo.lizzie }
+                          - { label: Toby,    value: todo.toby }
+                  - name: tags
+                    label: Tags (optional, e.g. #morning #kitchen)
+                    selector: { text: null }
+                  - name: due_today
+                    label: Due today
+                    selector: { boolean: null }
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
@@ -168,15 +169,22 @@ popup_create_calendar_event:
         start_date_time: "{{ start_dt.isoformat() }}"
         end_date_time: "{{ end_dt.isoformat() }}"
 
+
 popup_add_todo:
   alias: "Popup: add to-do (from ha-form)"
   mode: queued
   fields:
-    item: { description: "Item text", example: "Buy milk" }
-    list_entity: { description: "todo.entity_id", example: "todo.family" }
+    item: {}
+    list_entity: {}
+    tags: {}
+    due_today: {}
   sequence:
+    - variables:
+        desc: "{{ (tags | default('')) }}"
+        due: "{{ now().date().isoformat() if due_today else none }}"
     - service: todo.add_item
-      target:
-        entity_id: "{{ list_entity }}"
+      target: { entity_id: "{{ list_entity }}" }
       data:
         item: "{{ item }}"
+        description: "{{ desc if desc else none }}"
+        due_date: "{{ due if due else none }}"

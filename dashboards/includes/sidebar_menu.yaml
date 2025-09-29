@@ -9,20 +9,33 @@ card_mod:
       margin: 0 !important;
       border-radius: 0 !important;
       border: none !important;
+      box-shadow: none !important;        /* no shadow anywhere in the sidebar */
       height: calc(100vh - var(--header-height)) !important;
       position: sticky;
       top: 0;
       padding: 8px 6px 12px;
+      padding-left: 0 !important;         /* no padding on the left */
     }
 card:
   type: vertical-stack
   cards:
+    # -- A tiny helper template for consistent icon-only tiles --
+    - type: custom:button-card
+      template: sidebar_item
+      name: _template_holder_
+      styles: { card: [ display: none ] }  # hide; only defines template below
+      variables: {}
+
     # --- Calendar ---
     - type: custom:button-card
       template: sidebar_item
-      variables: { section: Calendar }
-      name: Calendar
       icon: mdi:calendar
+      variables: { section: Calendar }
+      custom_fields:
+        badge: >
+          [[[
+            return states['input_number.events_today']?.state || '0';
+          ]]]
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -32,11 +45,13 @@ card:
     # --- Chores ---
     - type: custom:button-card
       template: sidebar_item
-      variables: { section: Chores }
-      name: Chores
       icon: mdi:brush
-      label: >
-        [[[ return states['todo.family'] ? states['todo.family'].state : '' ]]]
+      variables: { section: Chores }
+      custom_fields:
+        badge: >
+          [[[
+            return states['sensor.chores_incomplete_total']?.state || '0';
+          ]]]
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -46,9 +61,8 @@ card:
     # --- Photos ---
     - type: custom:button-card
       template: sidebar_item
-      variables: { section: Photos }
-      name: Photos
       icon: mdi:image-multiple
+      variables: { section: Photos }
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -58,13 +72,54 @@ card:
     # --- Lists ---
     - type: custom:button-card
       template: sidebar_item
-      variables: { section: Lists }
-      name: Lists
       icon: mdi:format-list-bulleted
-      label: >
-        [[[ return states['todo.lists'] ? states['todo.lists'].state : '' ]]]  # <-- change to your Lists project entity
+      variables: { section: Lists }
       tap_action:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
         service_data: { option: Lists }
+
+button_card_templates:
+  sidebar_item:
+    show_name: false           # icon-only as requested
+    show_label: false
+    show_state: false
+    aspect_ratio: 1/1
+    styles:
+      card:
+        - border-radius: 0
+        - box-shadow: none
+        - width: 100%
+        - background: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? 'var(--sb-active-bg)' : 'var(--sb-inactive-bg)';
+            ]]]
+        - color: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? 'var(--sb-active-icon)' : 'var(--sb-inactive-icon)';
+            ]]]
+        - padding: 6px
+        - margin: 0 0 6px 0
+      icon:
+        - width: 28px
+        - color: inherit
+    custom_fields:
+      badge: >
+        [[[ return ''; ]]]
+    styles_custom_fields:
+      badge:
+        - position: absolute
+        - right: 6px
+        - top: 6px
+        - background: rgba(0,0,0,0.15)
+        - color: #000
+        - min-width: 22px
+        - height: 22px
+        - line-height: 22px
+        - text-align: center
+        - border-radius: 11px
+        - font-weight: 700
+        - font-size: 12px

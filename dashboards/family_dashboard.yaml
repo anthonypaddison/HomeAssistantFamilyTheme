@@ -59,84 +59,101 @@ views:
         card:
           type: horizontal-stack
           cards:
-            # Section chips (quick filters)
-            # - type: custom:button-card
-            #   name: Calendar
-            #   icon: mdi:calendar
-            #   tap_action:
-            #     action: call-service
-            #     service: input_select.select_option
-            #     target: { entity_id: input_select.family_section }
-            #     service_data: { option: Calendar }
-            #   styles:
-            #     card: [padding: 6px 10px, border-radius: 16px]
-
-            # - type: custom:button-card
-            #   name: Chores
-            #   icon: mdi:brush
-            #   tap_action:
-            #     action: call-service
-            #     service: input_select.select_option
-            #     target: { entity_id: input_select.family_section }
-            #     service_data: { option: Chores }
-            #   styles:
-            #     card: [padding: 6px 10px, border-radius: 16px]
-
-            # - type: custom:button-card
-            #   name: Photos
-            #   icon: mdi:image-multiple
-            #   tap_action:
-            #     action: call-service
-            #     service: input_select.select_option
-            #     target: { entity_id: input_select.family_section }
-            #     service_data: { option: Photos }
-            #   styles:
-            #     card: [padding: 6px 10px, border-radius: 16px]
-
-            # - type: custom:button-card
-            #   name: Lists
-            #   icon: mdi:format-list-bulleted
-            #   tap_action:
-            #     action: call-service
-            #     service: input_select.select_option
-            #     target: { entity_id: input_select.family_section }
-            #     service_data: { option: Lists }
-            #   styles:
-            #     card: [padding: 6px 10px, border-radius: 16px]
-
-            # Current section indicator
-            # - type: custom:button-card
-            #   icon: mdi:chevron-right
-            #   name: '[[[ return states["input_select.family_section"]?.state || "Calendar" ]]]'
-            #   styles:
-            #     card: [padding: 6px 10px, border-radius: 20px, background: 'rgba(0,0,0,0.04)']
-            #     name: [font-weight: 700]
-
-            # Quick stats chips (today’s completed counts)
+            # Family
             - type: custom:button-card
               icon: mdi:account-group
-              name: 'Family [[[ return states["input_number.completed_family_today"]?.state ?? "0" ]]]'
-              styles: { card: [padding: 6px 10px, border-radius: 16px] }
+              name: Family
+              variables:
+                done:    '[[[ return Number(states["input_number.completed_family_today"]?.state||0); ]]]'
+                remain:  '[[[ return Number(states["todo.family"]?.state||0); ]]]'
+                color:   'var(--palette-mint)'
+              template: progress_chip
 
+            # Anthony
             - type: custom:button-card
-              icon: mdi:account
-              name: 'Anthony [[[ return states["input_number.completed_anthony_today"]?.state ?? "0" ]]]'
-              styles: { card: [padding: 6px 10px, border-radius: 16px] }
+              icon: mdi:laptop
+              name: Anthony
+              variables:
+                done:    '[[[ return Number(states["input_number.completed_anthony_today"]?.state||0); ]]]'
+                remain:  '[[[ return Number(states["todo.anthony"]?.state||0); ]]]'
+                color:   'var(--palette-lilac)'
+              template: progress_chip
 
+            # Joy
             - type: custom:button-card
-              icon: mdi:account
-              name: 'Joy [[[ return states["input_number.completed_joy_today"]?.state ?? "0" ]]]'
-              styles: { card: [padding: 6px 10px, border-radius: 16px] }
+              icon: mdi:book-open-variant
+              name: Joy
+              variables:
+                done:    '[[[ return Number(states["input_number.completed_joy_today"]?.state||0); ]]]'
+                remain:  '[[[ return Number(states["todo.joy"]?.state||0); ]]]'
+                color:   'var(--palette-vanilla)'
+              template: progress_chip
 
+            # Lizzie
             - type: custom:button-card
-              icon: mdi:account
-              name: 'Lizzie [[[ return states["input_number.completed_lizzie_today"]?.state ?? "0" ]]]'
-              styles: { card: [padding: 6px 10px, border-radius: 16px] }
+              icon: mdi:teddy-bear
+              name: Lizzie
+              variables:
+                done:    '[[[ return Number(states["input_number.completed_lizzie_today"]?.state||0); ]]]'
+                remain:  '[[[ return Number(states["todo.lizzie"]?.state||0); ]]]'
+                color:   'var(--palette-rose)'
+              template: progress_chip
 
+            # Toby
             - type: custom:button-card
-              icon: mdi:account
-              name: 'Toby [[[ return states["input_number.completed_toby_today"]?.state ?? "0" ]]]'
-              styles: { card: [padding: 6px 10px, border-radius: 16px] }
+              icon: mdi:soccer
+              name: Toby
+              variables:
+                done:    '[[[ return Number(states["input_number.completed_toby_today"]?.state||0); ]]]'
+                remain:  '[[[ return Number(states["todo.toby"]?.state||0); ]]]'
+                color:   'var(--palette-sky)'
+              template: progress_chip
+
+          button_card_templates:
+            progress_chip:
+              show_state: false
+              styles:
+                card:
+                  - padding: 8px 12px
+                  - border-radius: 16px
+                  - min-width: 120px
+                grid:
+                  - grid-template-areas: '"i n" "bar bar"'
+                  - grid-template-columns: 28px 1fr
+                  - grid-template-rows: auto auto
+                name:
+                  - justify-self: start
+                  - font-weight: 700
+                icon:
+                  - color: "[[[ return variables.color; ]]]"
+                  - width: 22px
+              custom_fields:
+                bar: >
+                  [[[
+                    const done   = Number(variables.done  || 0);
+                    const remain = Number(variables.remain|| 0);
+                    const total  = Math.max(1, done + remain);
+                    const pct    = Math.min(100, Math.round((done/total)*100));
+                    const label  = `${done}/${total}`;
+                    return `
+                      <div style="
+                        margin-top:6px;height:8px;border-radius:4px;
+                        background: rgba(0,0,0,0.1); position:relative;">
+                        <div style="
+                          position:absolute;left:0;top:0;height:8px;
+                          width:${pct}%;
+                          background:${getComputedStyle(document.documentElement)
+                              .getPropertyValue('--primary-text-color')};
+                          opacity:0.15;border-radius:4px;"></div>
+                        <div style="
+                          position:absolute;left:0;top:0;height:8px;
+                          width:${pct}%; background:${variables.color};
+                          border-radius:4px;"></div>
+                        <div style="
+                          position:absolute;right:6px;top:-16px;
+                          font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
+                      </div>`;
+                  ]]]
 
       # =========================
       # 3) MAIN AREA (conditional)
@@ -152,6 +169,7 @@ views:
             card: !include /config/dashboards/includes/calendar_5day.yaml
 
           # --- Chores (multiple lists) ---
+          # --- CHORES ---
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -159,18 +177,54 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: todo-list
-                  entity: todo.anthony
-                  title: Anthony
-                - type: todo-list
-                  entity: todo.joy
-                  title: Joy
-                - type: todo-list
-                  entity: todo.lizzie
-                  title: Lizzie
-                - type: todo-list
-                  entity: todo.toby
-                  title: Toby
+                # Adults row (3 columns)
+                - type: grid
+                  columns: 3
+                  square: false
+                  cards:
+                    - type: todo-list
+                      entity: todo.anthony
+                      title: Anthony
+                      hide_completed: true
+                      item_tap_action: toggle
+                      card_mod:
+                        style: |
+                          ha-card { max-height: 44vh; overflow: auto; }
+
+                    - type: todo-list
+                      entity: todo.joy
+                      title: Joy
+                      hide_completed: true
+                      item_tap_action: toggle
+                      card_mod:
+                        style: |
+                          ha-card { max-height: 44vh; overflow: auto; }
+
+                    - type: todo-list
+                      entity: todo.family
+                      title: Family
+                      hide_completed: true
+                      item_tap_action: toggle
+                      card_mod:
+                        style: |
+                          ha-card { max-height: 44vh; overflow: auto; }
+
+                # Kids row (2 columns, keep completed visible for easy undo)
+                - type: grid
+                  columns: 2
+                  square: false
+                  cards:
+                    - type: todo-list
+                      entity: todo.lizzie
+                      title: Lizzie
+                      hide_completed: false        # don't hide to allow easy undo
+                      item_tap_action: toggle
+
+                    - type: todo-list
+                      entity: todo.toby
+                      title: Toby
+                      hide_completed: false
+                      item_tap_action: toggle
 
           # --- Photos (browse your configured media/photos) ---
           - type: conditional
@@ -202,8 +256,7 @@ views:
           action: fire-dom-event
           browser_mod:
             service: script.family_fab_open
-            data:
-              browser_id: THIS
+            data: { browser_id: THIS }
         card_mod:
           style: |
             ha-card {
@@ -213,8 +266,16 @@ views:
               width: 56px !important;
               height: 56px !important;
               border-radius: 28px !important;
-              box-shadow: 0 6px 18px rgba(0,0,0,0.18) !important;
-              background: var(--primary-color) !important;
-              color: white !important;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
+              color: #000 !important;
               z-index: 1000 !important;
+              background: [[[
+                const s = states['input_select.family_section']?.state || 'Calendar';
+                if (s === 'Calendar') return getComputedStyle(document.documentElement)
+                  .getPropertyValue('--fab-color-calendar');
+                if (s === 'Chores')   return getComputedStyle(document.documentElement)
+                  .getPropertyValue('--fab-color-chores');
+                return getComputedStyle(document.documentElement)
+                  .getPropertyValue('--fab-color-default');
+              ]]];
             }

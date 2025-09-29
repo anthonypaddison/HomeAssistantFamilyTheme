@@ -1,3 +1,9 @@
+- alias: UI - Set FamilyBoard theme at startup
+  trigger: { platform: homeassistant, event: start }
+  action:
+    - service: frontend.set_theme
+      data: { name: FamilyBoard }
+
 - alias: To-do - Increment completed counter (on complete)
   id: todo_increment_completed_on_complete
   mode: parallel
@@ -102,3 +108,39 @@
           - input_number.completed_toby_today
       data:
         value: 0
+
+- alias: Calendar - Count today's events (all family calendars)
+  id: calendar_count_events_today
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/15"              # refresh every 15 min
+    - platform: time
+      at: "00:01:00"              # reset near midnight
+  action:
+    - variables:
+        start: "{{ today_at().isoformat() }}"
+        end:   "{{ (today_at() + timedelta(days=1)).isoformat() }}"
+    - service: calendar.get_events
+      target:
+        entity_id:
+          - calendar.family
+          - calendar.anthony
+          - calendar.joy
+          - calendar.lizzie
+          - calendar.toby
+      data:
+        start_date_time: "{{ start }}"
+        end_date_time:   "{{ end }}"
+      response_variable: agenda
+    - service: input_number.set_value
+      target: { entity_id: input_number.events_today }
+      data:
+        value: >-
+          {{
+            (agenda['calendar.family'].events   | count) +
+            (agenda['calendar.anthony'].events  | count) +
+            (agenda['calendar.joy'].events      | count) +
+            (agenda['calendar.lizzie'].events   | count) +
+            (agenda['calendar.toby'].events     | count)
+          }}
