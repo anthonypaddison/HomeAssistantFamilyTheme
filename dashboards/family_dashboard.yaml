@@ -1,50 +1,64 @@
 title: Family Board
 theme: FamilyBoard
+
+# ---------- Button-card templates ----------
 button_card_templates:
-  sidebar_item:
-    show_label: true
+  # Progress chip: shows done vs total (done + remaining incomplete)
+  # - variables.todo:  entity_id of the todo list (e.g. todo.anthony)
+  # - variables.completed: entity_id of input_number for "completed today"
+  # - variables.color: CSS color token (e.g. var(--palette-lilac))
+  progress_chip:
+    show_name: true
     show_state: false
     styles:
       card:
-        - border-radius: 12px
-        - padding: 5px
-        - margin: 3px
-        - background: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? 'var(--primary-color)' : 'var(--card-background-color)';
-            ]]]
-        - color: var(--primary-text-color)
-        - width: 100%
-      name: [justify-self: start, font-weight: 600]
-      label:
-        - justify-self: end
+        - padding: 8px 12px
+        - border-radius: 16px
+        - min-width: 120px
+      grid:
+        - grid-template-areas: '"i n" "bar bar"'
+        - grid-template-columns: 28px 1fr
+        - grid-template-rows: auto auto
+      name:
+        - justify-self: start
         - font-weight: 700
-        - background: rgba(0,0,0,0.15)
-        - padding: 2px 8px
-        - border-radius: 999px
+      icon:
+        - width: 22px
+        - color: '[[[ return variables.color || "var(--primary-color)"; ]]]'
+    custom_fields:
+      bar: >
+        [[[
+          const done   = Number(states[variables.completed]?.state || 0);
+          const remain = Number(states[variables.todo]?.state || 0);
+          const total  = Math.max(1, done + remain);
+          const pct    = Math.min(100, Math.round((done/total)*100));
+          const label  = `${done}/${total}`;
+          return `
+            <div style="margin-top:6px;height:8px;border-radius:4px;background:rgba(0,0,0,0.1);position:relative;">
+              <div style="position:absolute;left:0;top:0;height:8px;width:${pct}%;background:${getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color')};opacity:.15;border-radius:4px;"></div>
+              <div style="position:absolute;left:0;top:0;height:8px;width:${pct}%;background:${variables.color || 'var(--primary-color)'};border-radius:4px;"></div>
+              <div style="position:absolute;right:6px;top:-16px;font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
+            </div>`;
+        ]]]
 
+# ---------- View ----------
 views:
   - title: Family
     path: family
     type: custom:grid-layout
     layout:
       padding: 0px
-      # 10% fixed sidebar + flexible main
       grid-template-columns: 10% 1fr
       grid-template-rows: auto 1fr
       grid-template-areas: |
         "sidebar chips"
         "sidebar main"
-
-      # Stack on small screens (sidebar collapses; chips then main)
       mediaquery:
         "(max-width: 900px)":
           grid-template-columns: 1fr
           grid-template-areas: |
             "chips"
             "main"
-
     cards:
       # =========================
       # 1) SIDEBAR (sticky)
@@ -61,102 +75,56 @@ views:
           cards:
             # Family
             - type: custom:button-card
+              template: progress_chip
               icon: mdi:account-group
               name: Family
               variables:
-                done:    '[[[ return Number(states["input_number.completed_family_today"]?.state||0); ]]]'
-                remain:  '[[[ return Number(states["todo.family"]?.state||0); ]]]'
-                color:   'var(--palette-mint)'
-              template: progress_chip
+                todo: todo.family
+                completed: input_number.completed_family_today
+                color: var(--palette-mint)
 
-            # Anthony
+            # Anthony (code/computer)
             - type: custom:button-card
+              template: progress_chip
               icon: mdi:laptop
               name: Anthony
               variables:
-                done:    '[[[ return Number(states["input_number.completed_anthony_today"]?.state||0); ]]]'
-                remain:  '[[[ return Number(states["todo.anthony"]?.state||0); ]]]'
-                color:   'var(--palette-lilac)'
-              template: progress_chip
+                todo: todo.anthony
+                completed: input_number.completed_anthony_today
+                color: var(--palette-lilac)
 
-            # Joy
+            # Joy (book)
             - type: custom:button-card
+              template: progress_chip
               icon: mdi:book-open-variant
               name: Joy
               variables:
-                done:    '[[[ return Number(states["input_number.completed_joy_today"]?.state||0); ]]]'
-                remain:  '[[[ return Number(states["todo.joy"]?.state||0); ]]]'
-                color:   'var(--palette-vanilla)'
-              template: progress_chip
+                todo: todo.joy
+                completed: input_number.completed_joy_today
+                color: var(--palette-vanilla)
 
-            # Lizzie
+            # Lizzie (teddy)
             - type: custom:button-card
+              template: progress_chip
               icon: mdi:teddy-bear
               name: Lizzie
               variables:
-                done:    '[[[ return Number(states["input_number.completed_lizzie_today"]?.state||0); ]]]'
-                remain:  '[[[ return Number(states["todo.lizzie"]?.state||0); ]]]'
-                color:   'var(--palette-rose)'
-              template: progress_chip
+                todo: todo.lizzie
+                completed: input_number.completed_lizzie_today
+                color: var(--palette-rose)
 
-            # Toby
+            # Toby (football)
             - type: custom:button-card
+              template: progress_chip
               icon: mdi:soccer
               name: Toby
               variables:
-                done:    '[[[ return Number(states["input_number.completed_toby_today"]?.state||0); ]]]'
-                remain:  '[[[ return Number(states["todo.toby"]?.state||0); ]]]'
-                color:   'var(--palette-sky)'
-              template: progress_chip
-
-          button_card_templates:
-            progress_chip:
-              show_state: false
-              styles:
-                card:
-                  - padding: 8px 12px
-                  - border-radius: 16px
-                  - min-width: 120px
-                grid:
-                  - grid-template-areas: '"i n" "bar bar"'
-                  - grid-template-columns: 28px 1fr
-                  - grid-template-rows: auto auto
-                name:
-                  - justify-self: start
-                  - font-weight: 700
-                icon:
-                  - color: "[[[ return variables.color; ]]]"
-                  - width: 22px
-              custom_fields:
-                bar: >
-                  [[[
-                    const done   = Number(variables.done  || 0);
-                    const remain = Number(variables.remain|| 0);
-                    const total  = Math.max(1, done + remain);
-                    const pct    = Math.min(100, Math.round((done/total)*100));
-                    const label  = `${done}/${total}`;
-                    return `
-                      <div style="
-                        margin-top:6px;height:8px;border-radius:4px;
-                        background: rgba(0,0,0,0.1); position:relative;">
-                        <div style="
-                          position:absolute;left:0;top:0;height:8px;
-                          width:${pct}%;
-                          background:${getComputedStyle(document.documentElement)
-                              .getPropertyValue('--primary-text-color')};
-                          opacity:0.15;border-radius:4px;"></div>
-                        <div style="
-                          position:absolute;left:0;top:0;height:8px;
-                          width:${pct}%; background:${variables.color};
-                          border-radius:4px;"></div>
-                        <div style="
-                          position:absolute;right:6px;top:-16px;
-                          font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
-                      </div>`;
-                  ]]]
+                todo: todo.toby
+                completed: input_number.completed_toby_today
+                color: var(--palette-sky)
 
       # =========================
-      # 3) MAIN AREA (conditional)
+      # 3) MAIN AREA (conditional views)
       # =========================
       - type: vertical-stack
         view_layout: { grid-area: main }
@@ -168,8 +136,7 @@ views:
                 state: Calendar
             card: !include /config/dashboards/includes/calendar_5day.yaml
 
-          # --- Chores (multiple lists) ---
-          # --- CHORES ---
+          # --- Chores: adults (3 columns) + kids (2 columns) ---
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -177,7 +144,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                # Adults row (3 columns)
+                # Adults row (scrollable lists, quick toggle, hide completed)
                 - type: grid
                   columns: 3
                   square: false
@@ -209,7 +176,7 @@ views:
                         style: |
                           ha-card { max-height: 44vh; overflow: auto; }
 
-                # Kids row (2 columns, keep completed visible for easy undo)
+                # Kids row (keep completed visible for easy undo)
                 - type: grid
                   columns: 2
                   square: false
@@ -217,7 +184,7 @@ views:
                     - type: todo-list
                       entity: todo.lizzie
                       title: Lizzie
-                      hide_completed: false        # don't hide to allow easy undo
+                      hide_completed: false
                       item_tap_action: toggle
 
                     - type: todo-list
@@ -226,7 +193,7 @@ views:
                       hide_completed: false
                       item_tap_action: toggle
 
-          # --- Photos (browse your configured media/photos) ---
+          # --- Photos ---
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -234,7 +201,7 @@ views:
             card:
               type: media-browser
 
-          # --- Lists (generic list) ---
+          # --- Lists ---
           - type: conditional
             conditions:
               - entity: input_select.family_section

@@ -1,41 +1,29 @@
-
 type: custom:mod-card
-view_layout:
-  grid-area: sidebar
+view_layout: { grid-area: sidebar }
 card_mod:
   style: |
     ha-card {
-      background: var(--app-header-background-color) !important;
+      background: var(--palette-bluegrey) !important; /* bluish grey background */
       margin: 0 !important;
       border-radius: 0 !important;
       border: none !important;
-      box-shadow: none !important;        /* no shadow anywhere in the sidebar */
+      box-shadow: none !important;                    /* no shadow anywhere */
       height: calc(100vh - var(--header-height)) !important;
       position: sticky;
       top: 0;
       padding: 8px 6px 12px;
-      padding-left: 0 !important;         /* no padding on the left */
+      padding-left: 0 !important;                     /* no left padding */
     }
 card:
   type: vertical-stack
   cards:
-    # -- A tiny helper template for consistent icon-only tiles --
-    - type: custom:button-card
-      template: sidebar_item
-      name: _template_holder_
-      styles: { card: [ display: none ] }  # hide; only defines template below
-      variables: {}
-
     # --- Calendar ---
     - type: custom:button-card
-      template: sidebar_item
+      template: sb_icon_only
       icon: mdi:calendar
-      variables: { section: Calendar }
-      custom_fields:
-        badge: >
-          [[[
-            return states['input_number.events_today']?.state || '0';
-          ]]]
+      variables:
+        section: Calendar
+        badge: '[[[ return states["input_number.events_today"]?.state || "0"; ]]]'
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -44,14 +32,11 @@ card:
 
     # --- Chores ---
     - type: custom:button-card
-      template: sidebar_item
+      template: sb_icon_only
       icon: mdi:brush
-      variables: { section: Chores }
-      custom_fields:
-        badge: >
-          [[[
-            return states['sensor.chores_incomplete_total']?.state || '0';
-          ]]]
+      variables:
+        section: Chores
+        badge: '[[[ return states["sensor.chores_incomplete_total"]?.state || "0"; ]]]'
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -60,7 +45,7 @@ card:
 
     # --- Photos ---
     - type: custom:button-card
-      template: sidebar_item
+      template: sb_icon_only
       icon: mdi:image-multiple
       variables: { section: Photos }
       tap_action:
@@ -71,7 +56,7 @@ card:
 
     # --- Lists ---
     - type: custom:button-card
-      template: sidebar_item
+      template: sb_icon_only
       icon: mdi:format-list-bulleted
       variables: { section: Lists }
       tap_action:
@@ -81,10 +66,9 @@ card:
         service_data: { option: Lists }
 
 button_card_templates:
-  sidebar_item:
-    show_name: false           # icon-only as requested
+  sb_icon_only:
+    show_name: false          # icon-only
     show_label: false
-    show_state: false
     aspect_ratio: 1/1
     styles:
       card:
@@ -94,21 +78,20 @@ button_card_templates:
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              return active ? 'var(--sb-active-bg)' : 'var(--sb-inactive-bg)';
+              return active ? 'var(--primary-color)' : 'var(--palette-bluegrey)';
             ]]]
         - color: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              return active ? 'var(--sb-active-icon)' : 'var(--sb-inactive-icon)';
+              return active ? '#0F172A' : '#0F172A';
             ]]]
         - padding: 6px
         - margin: 0 0 6px 0
       icon:
         - width: 28px
-        - color: inherit
     custom_fields:
       badge: >
-        [[[ return ''; ]]]
+        [[[ return variables.badge || ''; ]]]
     styles_custom_fields:
       badge:
         - position: absolute
