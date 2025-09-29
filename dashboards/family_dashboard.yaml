@@ -1,7 +1,8 @@
+
 title: Family Board
 theme: FamilyBoard
 
-# ---------- Button-card templates ----------
+# ---------- Button-card templates (GLOBAL) ----------
 button_card_templates:
   # Progress chip: shows done vs total (done + remaining incomplete)
   # - variables.todo:  entity_id of the todo list (e.g. todo.anthony)
@@ -40,6 +41,48 @@ button_card_templates:
               <div style="position:absolute;right:6px;top:-16px;font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
             </div>`;
         ]]]
+
+  # Sidebar icon-only button (GLOBAL) — used by sidebar_menu.yaml
+  sb_icon_only:
+    show_name: false          # icon-only
+    show_label: false
+    aspect_ratio: 1/1
+    styles:
+      card:
+        - border-radius: 0
+        - box-shadow: none
+        - width: 100%
+        - background: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? 'var(--primary-color)' : 'var(--palette-bluegrey)';
+            ]]]
+        - color: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? '#0F172A' : '#0F172A';
+            ]]]
+        - padding: 6px
+        - margin: 0 0 6px 0
+      icon:
+        - width: 28px
+    custom_fields:
+      badge: >
+        [[[ return variables.badge || ''; ]]]
+    styles_custom_fields:
+      badge:
+        - position: absolute
+        - right: 6px
+        - top: 6px
+        - background: rgba(0,0,0,0.15)
+        - color: #000
+        - min-width: 22px
+        - height: 22px
+        - line-height: 22px
+        - text-align: center
+        - border-radius: 11px
+        - font-weight: 700
+        - font-size: 12px
 
 # ---------- View ----------
 views:

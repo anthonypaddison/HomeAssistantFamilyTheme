@@ -47,7 +47,8 @@ card:
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:image-multiple
-      variables: { section: Photos }
+      variables:
+        section: Photos
       tap_action:
         action: call-service
         service: input_select.select_option
@@ -58,51 +59,10 @@ card:
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:format-list-bulleted
-      variables: { section: Lists }
+      variables:
+        section: Lists
       tap_action:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
         service_data: { option: Lists }
-
-button_card_templates:
-  sb_icon_only:
-    show_name: false          # icon-only
-    show_label: false
-    aspect_ratio: 1/1
-    styles:
-      card:
-        - border-radius: 0
-        - box-shadow: none
-        - width: 100%
-        - background: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? 'var(--primary-color)' : 'var(--palette-bluegrey)';
-            ]]]
-        - color: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#0F172A' : '#0F172A';
-            ]]]
-        - padding: 6px
-        - margin: 0 0 6px 0
-      icon:
-        - width: 28px
-    custom_fields:
-      badge: >
-        [[[ return variables.badge || ''; ]]]
-    styles_custom_fields:
-      badge:
-        - position: absolute
-        - right: 6px
-        - top: 6px
-        - background: rgba(0,0,0,0.15)
-        - color: #000
-        - min-width: 22px
-        - height: 22px
-        - line-height: 22px
-        - text-align: center
-        - border-radius: 11px
-        - font-weight: 700
-        - font-size: 12px
