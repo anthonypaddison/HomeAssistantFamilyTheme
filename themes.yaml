@@ -339,3 +339,23 @@ FamilyBoard:
     .mdc-list-item--selected ha-icon {
       color: var(--sidebar-selected-icon-color) !important;
     }
+
+  card-mod-view-yaml: |
+      /* Hit custom:grid-layout's shadow root and nuke its default margins */
+      grid-layout$:
+        #root {
+          margin: 0 !important;
+          padding: 0 !important;
+          gap: 0 !important;        /* if the component uses gap */
+        }
+        #root > * {
+          margin: 0 !important;     /* safety for any child wrappers */
+        }
+
+      /* Safety: some setups wrap via layout-card */
+      layout-card$:
+        #root {
+          margin: 0 !important;
+          padding: 0 !important;
+          gap: 0 !important;
+        }
