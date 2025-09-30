@@ -52,6 +52,7 @@ button_card_templates:
         - border-radius: 0
         - box-shadow: none
         - width: 100%
+        - height: 100px
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
