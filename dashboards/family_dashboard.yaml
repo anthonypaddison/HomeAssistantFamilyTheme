@@ -179,6 +179,7 @@ views:
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
+              color: #FFFFFF !important;
             }
         card:
           type: horizontal-stack
