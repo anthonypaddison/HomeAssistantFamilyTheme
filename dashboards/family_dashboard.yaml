@@ -235,7 +235,22 @@ views:
             triggers_update:
               - sensor.time
               - calendar.routine
-
+          styles:
+            grid:
+              - grid-template-areas: '"l r"'
+              - grid-template-columns: 1fr auto
+              - align-items: center
+              - column-gap: 12px
+            custom_fields:
+              left:
+                - grid-area: l
+              right:
+                - grid-area: r
+                - justify-self: end
+                - text-align: right
+                - white-space: nowrap
+                - overflow: hidden
+                - text-overflow: ellipsis
       # =========================
       # 2) CHIPS ROW (top)
       # =========================
@@ -391,38 +406,33 @@ views:
               entity: todo.family
               title: Lists
 
-      # =========================
-      # 4) FAB (context-aware popup)
-      # =========================
-      - type: button
-        view_layout: { grid-area: main }
-        icon: mdi:plus
-        name: Add
-        show_name: false
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: script.family_fab_open
-            data: { browser_id: THIS }
-        card_mod:
-          style: |
-            ha-card {
-              position: fixed !important;
-              right: 24px !important;
-              bottom: 24px !important;
-              width: 56px !important;
-              height: 56px !important;
-              border-radius: 28px !important;
-              box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
-              color: #000 !important;
-              z-index: 1000 !important;
-              background: [[[
-                const s = states['input_select.family_section']?.state || 'Calendar';
-                if (s === 'Calendar') return getComputedStyle(document.documentElement)
-                  .getPropertyValue('--fab-color-calendar');
-                if (s === 'Chores')   return getComputedStyle(document.documentElement)
-                  .getPropertyValue('--fab-color-chores');
-                return getComputedStyle(document.documentElement)
-                  .getPropertyValue('--fab-color-default');
-              ]]];
-            }
+          # --- FAB (context-aware popup) ---
+          - type: custom:button-card
+            view_layout: { grid-area: main }
+            icon: mdi:plus
+            show_name: false
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                service: script.family_fab_open
+                data:
+                  browser_id: this
+            card_mod:
+              style: |
+                ha-card {
+                  position: fixed !important;
+                  right: 24px !important;
+                  bottom: 24px !important;
+                  width: 56px !important;
+                  height: 56px !important;
+                  border-radius: 28px !important;
+                  box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
+                  color: #000 !important;
+                  z-index: 1000 !important;
+                  background: [[[
+                    const s = states['input_select.family_section']?.state ?? 'Calendar';
+                    if (s === 'Calendar') return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-calendar');
+                    if (s === 'Chores') return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-chores');
+                    return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-default');
+                  ]]];
+                }
