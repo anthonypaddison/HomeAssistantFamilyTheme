@@ -52,12 +52,12 @@ FamilyBoard:
   # Backgrounds
   # Use lovelace-background for full-view background where supported. [2](https://material3-themes-manual.amoebelabs.com/using/how-to-use-material3-themes/)
   family-surface:              "#FFFFFF"
-  family-background:           "#F6F8FB"
+  family-background:           "#FFFFFF"
   lovelace-background:         var(--family-background)
   card-background-color:       var(--family-surface)
 
   # Dividers / borders / scrollbars
-  divider-color:               "#E6EAF1"
+  divider-color:               "#FFFFFF"
   scrollbar-thumb-color:       "rgba(15, 23, 42, 0.25)"
   scrollbar-track-color:       "transparent"
 
@@ -88,7 +88,7 @@ FamilyBoard:
   # CARD & CONTAINER SHAPES
   # =========================
   # These HA theme vars control global card borders/shadows. [3](https://community.home-assistant.io/t/2022-11-card-borders/485102)
-  # ha-card-border-radius: "16px"
+  ha-card-border-radius: "0px"
   ha-card-border-width:  "0px"
   ha-card-box-shadow: "none"
   # ha-badge-border-radius: "14px"

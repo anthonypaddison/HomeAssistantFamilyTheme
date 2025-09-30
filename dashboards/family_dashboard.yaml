@@ -53,7 +53,7 @@ button_card_templates:
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              return active ? 'var(--primary-color)' : 'var(--palette-bluegrey)';
+              return active ? '#FFFFFF' : 'var(--palette-bluegrey)';
             ]]]
         - color: >
             [[[
