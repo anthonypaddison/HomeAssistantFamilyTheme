@@ -165,10 +165,10 @@ views:
       - !include /config/dashboards/includes/sidebar_menu.yaml
 
       # =========================
-      # 2) CHIPS ROW (top)
+      # 2) Heading ROW (top)
       # =========================
       - type: custom:mod-card
-        view_layout: { grid-area: chips }
+        view_layout: { grid-area: heading }
         card_mod:
           style: |
             ha-card {
@@ -181,59 +181,25 @@ views:
           type: horizontal-stack
           cards:
             # Family
-            - type: custom:button-card
-              template: progress_chip
-              icon: mdi:account-group
-              name: Family
-              variables:
-                todo: todo.family
-                completed: input_number.completed_family_today
-                color: var(--palette-mint)
+            - type: markdown
+              content: |
+                ## Family Board
+              style: |
+                ha-card {
+                  box-shadow: none !important;
+                  background: transparent !important;
+                  color: var(--primary-text-color) !important;
+                  font-weight: 700 !important;
+                  font-size: 24px !important;
+                  line-height: 28px !important;
+                  padding: 0 !important;
+                }
 
-            # Anthony (code/computer)
-            - type: custom:button-card
-              template: progress_chip
-              icon: mdi:laptop
-              name: Anthony
-              variables:
-                todo: todo.anthony
-                completed: input_number.completed_anthony_today
-                color: var(--palette-lilac)
-
-            # Joy (book)
-            - type: custom:button-card
-              template: progress_chip
-              icon: mdi:book-open-variant
-              name: Joy
-              variables:
-                todo: todo.joy
-                completed: input_number.completed_joy_today
-                color: var(--palette-vanilla)
-
-            # Lizzie (teddy)
-            - type: custom:button-card
-              template: progress_chip
-              icon: mdi:teddy-bear
-              name: Lizzie
-              variables:
-                todo: todo.lizzie
-                completed: input_number.completed_lizzie_today
-                color: var(--palette-rose)
-
-            # Toby (football)
-            - type: custom:button-card
-              template: progress_chip
-              icon: mdi:soccer
-              name: Toby
-              variables:
-                todo: todo.toby
-                completed: input_number.completed_toby_today
-                color: var(--palette-sky)
       # =========================
       # 2) CHIPS ROW (top)
       # =========================
       - type: custom:mod-card
-        view_layout: { grid-area: heading }
+        view_layout: { grid-area: chips }
         card_mod:
           style: |
             ha-card {
