@@ -37,7 +37,7 @@ button_card_templates:
             <div style="z-index: 1000;margin-top:6px;height:16px;border-radius:4px;background:rgba(0,0,0,0.1);position:relative;">
               <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:${getComputedStyle(document.documentElement).getPropertyValue('--primary-text-color')};opacity:.15;border-radius:4px;"></div>
               <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:${variables.color || 'var(--primary-color)'};border-radius:4px;"></div>
-              <div style="font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
+              <div style="margin:2px;font-size:12px;font-weight:700;color:var(--secondary-text-color);">${label}</div>
             </div>`;
         ]]]
 
