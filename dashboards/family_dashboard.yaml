@@ -16,7 +16,6 @@ button_card_templates:
             [[[
               return variables.color ? variables.color : 'var(--primary-color)';
             ]]]
-        - color: #FFFFFF
         - padding: 8px 12px
         - border-radius: 16px
         - min-width: 120px
@@ -27,10 +26,8 @@ button_card_templates:
       name:
         - justify-self: start
         - font-weight: 700
-        - color: #FFFFFF
       icon:
         - width: 22px
-        - color: #FFFFFF
     custom_fields:
       bar: >
         [[[
@@ -178,7 +175,7 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-sky) !important;
+              background: var(--palette-rose) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
