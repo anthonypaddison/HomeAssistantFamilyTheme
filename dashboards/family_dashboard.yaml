@@ -175,116 +175,123 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-rose) !important;
+              background: var(--palette-sky) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
-              color: #FFFFFF !important;
             }
         card:
           type: horizontal-stack
-          card_mod:
-            style: |
-              /* Push left & right to the edges */
-              #root {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-                color: #FFFFFF !important;
-
-              }
-              /* Prevent the two inner cards from stretching */
-              #root > * {
-                flex: 0 0 auto;
-                color: #FFFFFF !important;
-              }
           cards:
-            # LEFT: Panogu Family (DATE - TIME)
-            - type: custom:button-card
-              name: Panogu Family
-              show_label: true
-              show_state: false
-              label: |
+          - type: custom:button-card
+            show_icon: false
+            show_name: false
+            show_state: false
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - padding: 0
+            custom_fields:
+              left: |
                 [[[
                   const d = new Date();
-                  const date = d.toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                  const time = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-                  return `${date} - ${time}`;
+                  const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                  const time = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+                  return `
+                    <div class="left">
+                      <div class="title" style="font-weight:800;font-size:18px;color:var(--primary-text-color)">Panogu Family</div>
+                      <div class="sub" style="margin-top:2px;color:var(--primary-text-color)">${date} • ${time}</div>
+                    </div>
+                  `;
                 ]]]
-              styles:
-                card:
-                  - background: transparent
-                  - box-shadow: none
-                  - padding: 0
-                  - border-radius: 0
-                  - color: #FFFFFF
-                name:
-                  - font-weight: 800
-                  - font-size: 18px
-                  - color: #FFFFFF
-                label:
-                  - margin-top: 2px
-                  - color: #FFFFFF
-              triggers_update:
-                - sensor.time
+              right: |
+                [[[
+                  const e = states['calendar.routine'];
+                  if (!e) return 'Routine calendar not found';
+                  const a = e.attributes || {};
+                  const title = a.message || 'No upcoming events';
+                  if (!a.start_time) return title; // no upcoming -> show fallback
 
-      # RIGHT: Next upcoming from calendar.routine
-      - type: custom:button-card
-        entity: calendar.routine
-        show_name: false
-        show_label: true
-        show_icon: true
-        icon: mdi:calendar-clock
-        label: |
-          [[[
-            const a = entity?.attributes || {};
-            const title = a.message || 'No upcoming routine';
-            if (!a.start_time) return title;
+                  const start = new Date(a.start_time);
+                  const end   = a.end_time ? new Date(a.end_time) : null;
+                  const now   = new Date();
 
-            const start = new Date(a.start_time);
-            const end = a.end_time ? new Date(a.end_time) : null;
-            const now = new Date();
+                  const timeFmt = { hour: '2-digit', minute: '2-digit' };
+                  const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
+                  const sameDay = start.toDateString() === now.toDateString();
 
-            const timeFmt = { hour: '2-digit', minute: '2-digit' };
-            const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
-            const sameDay = start.toDateString() === now.toDateString();
+                  const inProgress = e.state === 'on' && start <= now && (!end || now < end);
+                  let when;
+                  if (inProgress) {
+                    when = `Now • ${start.toLocaleTimeString([], timeFmt)}${end ? '–' + end.toLocaleTimeString([], timeFmt) : ''}`;
+                  } else {
+                    when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' • ' + start.toLocaleTimeString([], timeFmt);
+                  }
 
-            let when;
-            const inProgress = entity.state === 'on' && start <= now && (!end || now < end);
-            if (inProgress) {
-              when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
-            } else {
-              when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
-            }
+                  const offset = a.offset_reached ? ' ⏱' : '';
+                  return `<span style="font-weight:600;color:var(--primary-text-color)">${title} — ${when}${offset}</span>`;
+                ]]]
+            triggers_update:
+              - sensor.time
+              - calendar.routine
 
-            // Optional offset cue
-            const offset = a.offset_reached ? ' ⏱' : '';
-            return `${title} - ${when}${offset}`;
-          ]]]
-        styles:
-          card:
-            - background: transparent
-            - box-shadow: none
-            - padding: 0
-            - border-radius: 0
-            - width: fit-content
-          grid:
-            - grid-template-areas: '"i l"'
-            - grid-template-columns: auto 1fr
-            - grid-template-rows: auto
-            - align-items: center
-          icon:
-            - color: var(--primary-text-color)
-            - margin-right: 6px
-          label:
-            - font-weight: 600
-            - color: var(--primary-text-color)
-            - text-align: right
-        tap_action:
-          action: more-info
-        triggers_update:
-          - calendar.routine
+          # RIGHT: Next upcoming from calendar.routine
+          - type: custom:button-card
+            entity: calendar.routine
+            show_name: false
+            show_label: true
+            show_icon: true
+            icon: mdi:calendar-clock
+            label: |
+              [[[
+                const a = entity?.attributes || {};
+                const title = a.message || 'No upcoming routine';
+                if (!a.start_time) return title;
+
+                const start = new Date(a.start_time);
+                const end = a.end_time ? new Date(a.end_time) : null;
+                const now = new Date();
+
+                const timeFmt = { hour: '2-digit', minute: '2-digit' };
+                const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
+                const sameDay = start.toDateString() === now.toDateString();
+
+                let when;
+                const inProgress = entity.state === 'on' && start <= now && (!end || now < end);
+                if (inProgress) {
+                  when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
+                } else {
+                  when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
+                }
+
+                // Optional offset cue
+                const offset = a.offset_reached ? ' ⏱' : '';
+                return `${title} - ${when}${offset}`;
+              ]]]
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - padding: 0
+                - border-radius: 0
+                - width: fit-content
+              grid:
+                - grid-template-areas: '"i l"'
+                - grid-template-columns: auto 1fr
+                - grid-template-rows: auto
+                - align-items: center
+              icon:
+                - color: var(--primary-text-color)
+                - margin-right: 6px
+              label:
+                - font-weight: 600
+                - color: var(--primary-text-color)
+                - text-align: right
+            tap_action:
+              action: more-info
+            triggers_update:
+              - calendar.routine
 
       # =========================
       # 2) CHIPS ROW (top)
