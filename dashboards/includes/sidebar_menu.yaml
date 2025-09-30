@@ -33,7 +33,7 @@ card:
     # --- Chores ---
     - type: custom:button-card
       template: sb_icon_only
-      icon: mdi:brush
+      icon: mdi:broom
       variables:
         section: Chores
         badge_entity: sensor.chores_incomplete_total
