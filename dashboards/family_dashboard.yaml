@@ -191,10 +191,12 @@ views:
                 justify-content: space-between;
                 align-items: center;
                 gap: 12px;
+                color: #FFFFFF !important;
               }
               /* Prevent the two inner cards from stretching */
               #root > * {
                 flex: 0 0 auto;
+                color: #FFFFFF !important;
               }
           cards:
             # LEFT: Panogu Family (DATE - TIME)
