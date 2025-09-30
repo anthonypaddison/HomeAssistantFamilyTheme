@@ -293,7 +293,7 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-mint) !important;
+              background: var(--palette-rose) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
@@ -309,7 +309,7 @@ views:
               variables:
                 todo: todo.family
                 completed: input_number.completed_family_today
-                color: var(--palette-mint)
+                color: var(--family-color-family)
 
             # Anthony (code/computer)
             - type: custom:button-card
@@ -319,7 +319,7 @@ views:
               variables:
                 todo: todo.anthony
                 completed: input_number.completed_anthony_today
-                color: var(--palette-lilac)
+                color: var(--family-color-anthony)
 
             # Joy (book)
             - type: custom:button-card
@@ -329,7 +329,7 @@ views:
               variables:
                 todo: todo.joy
                 completed: input_number.completed_joy_today
-                color: var(--palette-vanilla)
+                color: var(--family-color-joy)
 
             # Lizzie (teddy)
             - type: custom:button-card
@@ -339,7 +339,7 @@ views:
               variables:
                 todo: todo.lizzie
                 completed: input_number.completed_lizzie_today
-                color: var(--palette-rose)
+                color: var(--family-color-lizzie)
 
             # Toby (football)
             - type: custom:button-card
@@ -349,7 +349,7 @@ views:
               variables:
                 todo: todo.toby
                 completed: input_number.completed_toby_today
-                color: var(--palette-sky)
+                color: var(--family-color-toby)
 
       # =========================
       # 3) MAIN AREA (conditional views)
