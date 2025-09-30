@@ -218,10 +218,10 @@ views:
                 name:
                   - font-weight: 800
                   - font-size: 18px
-                  - color: var(--primary-text-color)
+                  - color: #FFFFFF
                 label:
                   - margin-top: 2px
-                  - color: var(--primary-text-color)
+                  - color: #FFFFFF
               tap_action: none
               hold_action: none
               double_tap_action: none
