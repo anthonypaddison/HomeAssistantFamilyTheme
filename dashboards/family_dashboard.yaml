@@ -12,6 +12,10 @@ button_card_templates:
     show_state: false
     styles:
       card:
+        - background: >
+            [[[
+              return variables.color ? variables.color : 'var(--primary-color)';
+            ]]]
         - padding: 8px 12px
         - border-radius: 16px
         - min-width: 120px
