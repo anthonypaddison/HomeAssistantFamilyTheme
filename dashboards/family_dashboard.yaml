@@ -52,7 +52,7 @@ button_card_templates:
         - height: 100px
         - padding: 6px
         - margin: 0
-        - margin-bottom: 40px
+        - margin-bottom: 55px
         - background: transparent
       grid:
         - grid-template-areas: '"i c"'
