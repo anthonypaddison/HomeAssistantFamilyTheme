@@ -65,8 +65,8 @@ button_card_templates:
         - align-items: center
       icon:
         # Centered both ways; size can be tuned if needed
-        - width: 36px
-        - height: 36px
+        - width: 50px
+        - height: 50px
         - justify-self: center
         - align-self: center
         - color: >
