@@ -82,10 +82,11 @@ button_card_templates:
           - font-weight: 700
           - font-size: 14px
           - line-height: 1
-          - min-width: 1.5em
+          - width: 1.5em
           - text-align: center
           - background: var(--palette-lilac)
-          - padding: 2px 6px
+          - padding: 6px
+          - height: 1.5em
           - border-radius: 50%
           - border: 2px solid var(--palette-lilac)
           - color: >
