@@ -293,7 +293,7 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-sky) !important;
+              background: var(--palette-mint) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
