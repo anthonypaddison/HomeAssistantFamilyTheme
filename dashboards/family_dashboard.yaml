@@ -30,7 +30,7 @@ button_card_templates:
         [[[
           const done   = Number(states[variables.completed]?.state || 0);
           const remain = Number(states[variables.todo]?.state || 0);
-          const total  = Math.max(1, done + remain);
+          const total  = Math.max(0, done + remain);
           const pct    = Math.min(100, Math.round((done/total)*100));
           const label  = `${done}/${total}`;
           return `
