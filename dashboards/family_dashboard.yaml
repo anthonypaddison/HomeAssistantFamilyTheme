@@ -108,12 +108,18 @@ views:
   - title: Family
     path: family
     type: custom:grid-layout
+    styles: |
+      :host {
+        margin: 0px !important;
+        --layout-margin: 0px !important;
+        layout-margin: 0px !important;
+      }
     layout:
       padding: 0px
       grid-template-columns: 100px 1fr
       grid-template-rows: auto 1fr
       grid-template-areas: |
-        "chips chips"
+        "sidebar chips"
         "sidebar main"
       gap: 0px
       column-gap: 0px
