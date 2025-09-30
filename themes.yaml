@@ -42,8 +42,6 @@ FamilyBoard:
   # CORE THEME COLOURS (LIGHT)
   # =========================
   # Primary is used for accents, toggles, buttons, selection, etc.
-  primary-color:               var(--family-color-family)
-  accent-color:                var(--family-color-anthony)
   error-color:                 "#E53935"
 
   # Text colours
@@ -144,6 +142,8 @@ FamilyBoard:
   # 1) Root / header / scrollbars
   card-mod-root: |
     :host {
+      margin: 0 !important;
+      --layout-margin: 0px !important;
       --mdc-theme-primary: var(--primary-color);
     }
     app-header, .toolbar {
