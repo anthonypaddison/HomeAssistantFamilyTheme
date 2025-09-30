@@ -99,10 +99,10 @@ button_card_templates:
       count: >
         [[[
           const eid = variables.badge_entity;
-          if (!eid) return 0;
-          const raw = states[eid]?.state ?? 0;
+          if (!eid) return null;
+          const raw = states[eid]?.state ?? null;
           const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
-          if (!val || val === '0') return 0;
+          if (!val || val === '0') return null;
           return val;
         ]]]
 
