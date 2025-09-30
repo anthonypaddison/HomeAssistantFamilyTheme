@@ -74,14 +74,13 @@ button_card_templates:
           ]]]
     custom_fields:
       count:
-        # 🚫 Hide when 0/empty
-        - display: >
-            [[[
-              const eid = variables.badge_entity;
-              if (!eid) return 'none';
-              const n = Number(states[eid]?.state ?? 0);
-              return n > 0 ? 'inline-flex' : 'none';
-            ]]]
+        # - display: >
+        #     [[[
+        #       const eid = variables.badge_entity;
+        #       if (!eid) return 'none';
+        #       const n = Number(states[eid]?.state ?? 0);
+        #       return n > 0 ? 'inline-flex' : 'none';
+        #     ]]]
         - align-self: center
         - justify-self: end
         - font-weight: 700
