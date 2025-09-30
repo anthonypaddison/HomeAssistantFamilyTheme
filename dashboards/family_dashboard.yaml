@@ -81,14 +81,17 @@ button_card_templates:
           - justify-self: end
           - font-weight: 700
           - font-size: 14px
-          - line-height: 1
           - width: 1.5em
           - text-align: center
-          - background: var(--palette-lilac)
-          - padding: 6px
+          - background: var(--palette-rose)
           - height: 1.5em
           - border-radius: 50%
-          - border: 2px solid var(--palette-lilac)
+          - border: >
+              [[[
+                const active = states['input_select.family_section']?.state === variables.section;
+                // Keep count legible in both states
+                return active ? '1px solid #0F172A' : '1px solid var(--state-icon-color)';
+              ]]]
           - color: >
               [[[
                 const active = states['input_select.family_section']?.state === variables.section;
