@@ -23,4 +23,7 @@ input_number: !include input_number.yaml
 template: !include template.yaml
 
 
-sensor: !include sensor.yaml
+sensor:
+  - platform: time_date
+      display_options:
+        - 'time'
