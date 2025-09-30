@@ -132,7 +132,7 @@ FamilyBoard:
   cal-color-joy:      var(--family-color-joy)
   cal-color-lizzie:   var(--family-color-lizzie)
   cal-color-toby:     var(--family-color-toby)
-
+  layout-margin:      0px
   # =========================
   # CARD-MOD GLOBAL STYLING
   # =========================
