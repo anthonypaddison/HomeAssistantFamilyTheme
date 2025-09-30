@@ -41,6 +41,30 @@ button_card_templates:
             </div>`;
         ]]]
 
+  family_icon:
+    show_name: false
+    show_label: false
+    styles:
+      card:
+        - border-radius: 0px
+        - box-shadow: none
+        - width: 100px
+        - height: 100px
+        - padding: 6px
+        - margin: 0
+        - background: transparent
+      grid:
+        - grid-template-areas: '"i c"'
+        - grid-template-columns: 1fr auto
+        - grid-template-rows: 1fr
+        - align-items: center
+      icon:
+        - width: 60px
+        - height: 60px
+        - justify-self: center
+        - align-self: center
+        - color: #FFFFFF
+
   sb_icon_only:
     show_name: false
     show_label: false

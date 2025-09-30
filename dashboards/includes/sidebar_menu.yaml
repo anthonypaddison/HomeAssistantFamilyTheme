@@ -18,7 +18,7 @@ card:
   type: vertical-stack
   cards:
     - type: custom:button-card
-      template: sb_icon_only
+      template: family_icon
       icon: mdi:home-heart
     # --- Calendar ---
     - type: custom:button-card
