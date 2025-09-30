@@ -11,8 +11,7 @@ card_mod:
       height: calc(100vh - var(--header-height)) !important;
       position: sticky;
       top: 0;
-      padding: 8px 6px 12px;
-      padding-left: 0 !important;
+      padding: 0 !important;
     }
 card:
   type: vertical-stack
