@@ -51,8 +51,8 @@ button_card_templates:
         - width: 100px
         - height: 100px
         - padding: 6px
-        - padding-bottom: 40px
         - margin: 0
+        - margin-bottom: 40px
         - background: transparent
       grid:
         - grid-template-areas: '"i c"'
