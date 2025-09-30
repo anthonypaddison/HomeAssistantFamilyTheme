@@ -42,81 +42,83 @@ button_card_templates:
         ]]]
 
   sb_icon_only:
-    show_name: false
-    show_label: false
-    styles:
-      card:
-        - border-radius: 0px
-        - box-shadow: none
-        - width: 100px
-        - height: 100px
-        - padding: 6px
-        - margin: 0
+  show_name: false
+  show_label: false
+  styles:
+    card:
+      - border-radius: 0px
+      - box-shadow: none
+      - width: 100px
+      - height: 100px
+      - padding: 6px
+      - margin: 0
+      - background: >
+          [[[
+            const active = states['input_select.family_section']?.state === variables.section;
+            return active ? '#FFFFFF' : 'transparent';
+          ]]]
+    grid:
+      - grid-template-areas: '"i c"'
+      - grid-template-columns: 1fr auto
+      - grid-template-rows: 1fr
+      - align-items: center
+    icon:
+      # Centered both ways; size can be tuned if needed
+      - width: 36px
+      - height: 36px
+      - justify-self: center
+      - align-self: center
+      - color: >
+          [[[
+            const active = states['input_select.family_section']?.state === variables.section;
+            // Active: blackish; Inactive: bluish-grey (theme)
+            return active ? '#0F172A' : 'var(--state-icon-color)';
+          ]]]
+    custom_fields:
+      count:
+        # 🔒 Hide badge completely when value <= 0 or missing
+        - display: >
+            [[[
+              const eid = variables.badge_entity;
+              if (!eid) return 'none';
+              const n = Number(states[eid]?.state ?? 0);
+              return n > 0 ? 'inline-flex' : 'none';
+            ]]]
+        - align-self: center
+        - justify-self: end
+        - font-weight: 700
+        - font-size: 14px
+        - line-height: 1
+        - min-width: 1.5em
+        - text-align: right
+        - padding: 2px 6px
+        - border-radius: 50%
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#FFFFFF' : 'transparent';
+              // Use a subtle tint when active; lighter/neutral when inactive
+              return active ? 'rgba(0,0,0,0.10)' : 'var(--badge-background-color, rgba(15,23,42,0.06))';
             ]]]
-      grid:
-        - grid-template-areas: '"i c"'
-        - grid-template-columns: 1fr auto
-        - grid-template-rows: 1fr
-        - align-items: center
-      icon:
-        # Centered both ways; size can be tuned if needed
-        - width: 36px
-        - height: 36px
-        - justify-self: center
-        - align-self: center
+        - border: >
+            [[[
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? '0.5px solid #FFFFFF' : '0.5px solid var(--badge-background-color, transparent)';
+            ]]]
         - color: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              // Active: blackish; Inactive: bluish-grey (uses your theme's state icon color)
               return active ? '#0F172A' : 'var(--state-icon-color)';
             ]]]
-      custom_fields:
-        count:
-          - align-self: center
-          - justify-self: end
-          - font-weight: 700
-          - font-size: 14px
-          - line-height: 1
-          - min-width: 1.5em
-          - text-align: right
-          - background: >
-              [[[
-                const active = states['input_select.family_section']?.state === variables.section;
-                const eid = variables.badge_entity;
-                if (!eid) return 'transparent';
-                return active ? 'rgba(0,0,0,0.1)' : 'var(--badge-background-color)';
-              ]]]
-          - padding: 2px 6px
-          - border-radius: 50%
-          - border: >
-              [[[
-                const active = states['input_select.family_section']?.state === variables.section;
-                const eid = variables.badge_entity;
-                if (!eid) return 'transparent';
-                return active ? '0.5px solid #FFFFFF' : '0.5px solid var(--badge-background-color)';
-              ]]]
-          - color: >
-              [[[
-                const active = states['input_select.family_section']?.state === variables.section;
-                const eid = variables.badge_entity;
-                if (!eid) return 'transparent';
-                return active ? '#0F172A' : 'var(--state-icon-color)';
-              ]]]
-    custom_fields:
-      count: >
-        [[[
-          const eid = variables.badge_entity;
-          if (!eid) return '';
-          const raw = states[eid]?.state ?? '';
-          const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
-          if (!val || val === '0') return '';
-          return val;
-        ]]]
-
+  custom_fields:
+    count: >
+      [[[
+        const eid = variables.badge_entity;
+        if (!eid) return '';
+        const raw = states[eid]?.state ?? '';
+        const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
+        if (!val || val === '0') return '';
+        return val;
+      ]]]
 
 # ---------- View ----------
 views:
