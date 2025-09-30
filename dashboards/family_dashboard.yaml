@@ -217,6 +217,7 @@ views:
                   - box-shadow: none
                   - padding: 0
                   - border-radius: 0
+                  - color: #FFFFFF
                 name:
                   - font-weight: 800
                   - font-size: 18px
