@@ -22,8 +22,4 @@ input_select: !include input_select.yaml
 input_number: !include input_number.yaml
 template: !include template.yaml
 
-
-sensor:
-  - platform: time_date
-      display_options:
-        - 'time'
+sensor: !include sensor.yaml
