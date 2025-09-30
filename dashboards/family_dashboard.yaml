@@ -179,7 +179,7 @@ views:
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
-              color: #fff !important;  # <-- force white text globally
+              color: #000000 !important;  # <-- force white text globally
             }
         card:
           type: horizontal-stack
