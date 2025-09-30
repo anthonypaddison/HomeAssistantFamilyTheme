@@ -15,7 +15,7 @@ FamilyBoard:
   accent-color:  var(--palette-lilac)
 
   # --- Sidebar tokens (inactive/active backgrounds & icon colors) ---
-  sb-inactive-bg: var(--palette-bluegrey)
+  sb-inactive-bg: var(--palette-lilac)
   sb-inactive-icon: "#0F172A"     # deep slate text/icon
   sb-active-bg:    var(--primary-color)
   sb-active-icon:  "#0F172A"
@@ -138,73 +138,6 @@ FamilyBoard:
   # These apply CSS globally without touching each card's YAML.
   # Ref: card-mod readme + theme support announcement. [5](https://github.com/thomasloven/lovelace-card-mod)[6](https://community.home-assistant.io/t/card-mod-super-charge-your-themes/212176)
 
-  # 1) Root / header / scrollbars
-  card-mod-root: |
-    :host {
-      --mdc-theme-primary: var(--primary-color);
-    }
-    app-header, .toolbar {
-      box-shadow: 0 1px 0 0 var(--divider-color);
-    }
-    ::-webkit-scrollbar {
-      width: 10px; height: 10px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb-color);
-      # border-radius: 8px;
-      border: 2px solid transparent;
-      background-clip: padding-box;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--scrollbar-track-color);
-    }
-
-  # 2) View background & card spacing
-  card-mod-view: |
-    /* View container (whole page inside Lovelace) */
-    hui-view {
-      # padding: 12px !important;
-      margin: 0 !important;
-    }
-    /* Tighter grid spacing without killing readability */
-    :host {
-      --grid-card-gap: 5px;
-      margin: 0 !important;
-    }
-
-  # 3) HA cards baseline cosmetics
-  card-mod-card: |
-    ha-card {
-      # border-radius: var(--ha-card-border-radius);
-      box-shadow: var(--ha-card-box-shadow);
-      border: var(--ha-card-border-width) solid var(--divider-color);
-      color: var(--primary-text-color);
-      background: var(--card-background-color);
-    }
-    ha-card .card-header {
-      font-weight: 700;
-      color: var(--primary-text-color);
-      letter-spacing: -0.2px;
-    }
-
-  # 4) Entities rows (hover affordance)
-  card-mod-row: |
-    .mdc-list-item__primary-text {
-      color: var(--primary-text-color);
-    }
-    :host(:hover) .mdc-list-item__primary-text {
-      color: var(--primary-text-color);
-    }
-
-  # 5) Sidebar (HA's left rail-not your custom sticky stack)
-  card-mod-sidebar: |
-    :host {
-      margin: 0 !important;
-      --sidebar-background-color: var(--family-surface);
-      --sidebar-selected-icon-color: var(--primary-color);
-      --sidebar-icon-color: var(--secondary-text-color);
-    }
-
   # =========================
   # OPTIONAL: TILE / CONTROL RADIUS ALIGNMENT
   # =========================
@@ -214,3 +147,197 @@ FamilyBoard:
   control-slider-border-radius: var(--ha-card-border-radius)
   control-select-border-radius: var(--ha-card-border-radius)
   control-number-buttons-border-radius: var(--ha-card-border-radius)
+
+  ############################################################################
+  # PALETTE (edit these first; reuse them below with var(--your-token))
+  ############################################################################
+  success-color:              "#2E7D32"
+  warning-color:              "#F2A900"
+  info-color:                 "#0288D1"
+
+  # Backgrounds & surfaces
+  primary-background-color:   "#0B0D12"   # behind everything (some dialogs, etc.)  # [common vars] cite turn4search58
+  secondary-background-color: "#171A21"   # list/dropdowns bg                        # [common vars] cite turn4search59
+
+  # Text & iconography
+  disabled-text-color:       "#6B7683"                                               # [common vars] cite turn4search58
+
+  ###########################################################################
+  # HEADER & SIDEBAR (official shell)
+  ###########################################################################
+  app-header-selection-bar-color: "var(--primary-color)"                          # selected tab indicator (2025+ friendly)   # [community notes] cite turn4search72
+
+  ###########################################################################
+  # TYPOGRAPHY (2025.5+ tokens + MDC fallbacks)
+  ###########################################################################
+  # Newer tokens (HA 2025.5+) - use these to unify type scale + weights.      # [2025.5 thread] cite turn4search72
+  ha-font-family-body:    "Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+  ha-font-family-heading: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+  ha-font-family-code:    "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace"
+  ha-font-size-2xs: "10px"
+  ha-font-size-xs:  "12px"
+  ha-font-size-s:   "13px"
+  ha-font-size-m:   "14px"
+  ha-font-size-l:   "16px"
+  ha-font-size-xl:  "18px"
+  ha-font-size-2xl: "22px"
+  ha-font-size-3xl: "26px"
+  ha-font-size-4xl: "32px"
+  ha-font-weight-light:  "300"
+  ha-font-weight-normal: "400"
+  ha-font-weight-medium: "500"
+  ha-font-weight-bold:   "700"
+
+  # Legacy MDC fallbacks used across components and dialogs                  # [how to find vars] cite turn4search64
+  mdc-theme-primary:          "var(--primary-color)"
+  mdc-icon-size:              "24px"       # some icon hosts read this         # [common vars] cite turn4search58
+
+  ###########################################################################
+  # CARDS: shape, borders, shadows, headers
+  ###########################################################################
+  ha-card-header-color:  "var(--primary-text-color)"                            # [common vars] cite turn4search58
+
+  ###########################################################################
+  # BADGES (top-of-view badges etc.)
+  ###########################################################################
+  ha-label-badge-size: "2.2em"   # diameter                                     # [common vars] cite turn4search58
+
+  ###########################################################################
+  # CONTROLS (sliders, switches, inputs, dialogs)
+  ###########################################################################
+  # These are common MDC tokens/components HA relies on.                       # [how to find vars] cite turn4search64
+  slider-color:                "var(--primary-color)"      # slider active      # [common vars] cite turn4search58
+  mdc-dialog-scroll-divider-color: "var(--divider-color)"  # dialog header line # [common vars] cite turn4search58
+  # Feature radius knobs (tiles, etc.) - widely used by HA now:
+
+  ###########################################################################
+  # LAYOUT & SPACING (kill whitespace once, globally)
+  ###########################################################################
+  # Core view gaps
+  grid-card-gap: "0px"                                        # HA grid views
+  # Masonry views (default): use this to zero card spacing:
+  # (We’ll also enforce in card-mod-view below)
+  # --masonry-view-card-margin is set via card-mod-view.
+
+  ############################################################################
+  # STATE COLORS (optional: override by domain/device_class/state)
+  # See docs; most users do not need these unless you want custom palettes.
+  ############################################################################
+  # Example patterns (most-specific to least-specific in selection order):     # [HA docs: state-* pattern] cite turn4search68
+  # state-light-on-color:    "#FFD166"
+  # state-light-off-color:   "#6B7683"
+  # state-binary_sensor-motion-on-color:   "#F93822"
+  # state-binary_sensor-(active|inactive)-color: ...
+  # state-(active|inactive)-color: ...
+
+  ###########################################################################
+  # ---------- CARD-MOD THEME HOOKS (GLOBAL CSS) ----------
+  # These let you apply CSS from your theme to the HA shell, views, cards,
+  # rows, badges, dialogs, and the sidebar (including Shadow DOM traversal).
+  # Keep these here so you never have to put CSS in a card again.
+  ###########################################################################
+
+  # 1) ROOT: header, global scrollbars, truly-global tweaks
+  card-mod-root: |
+    :host {
+      --mdc-theme-primary: var(--primary-color);  /* global MDC primary */
+    }
+    app-header, .toolbar {
+      background: var(--app-header-background-color);
+      color: var(--app-header-text-color);
+      box-shadow: 0 1px 0 0 var(--divider-color);
+    }
+    /* Optional: scrollbar theme */
+    ::-webkit-scrollbar        { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb  {
+      background: var(--scrollbar-thumb-color);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-track  { background: transparent; }
+
+  # 1b) ROOT-YAML: Shadow DOM traversal examples from root
+  # Use $ to step into web component shadow roots.
+  card-mod-root-yaml: |
+    # Example: widen dialogs globally (ha-dialog is shadowed)
+    ha-dialog$: |
+      .mdc-dialog .mdc-dialog__surface { width: min(96vw, 1200px) !important; }
+      .mdc-dialog .mdc-dialog__content { width: 100% !important; }
+
+    # Example: (2025+) some tabs use Shoelace <sl-tab>; you can target it:
+    # ha-tabs$ sl-tab[aria-selected="true"] { color: var(--primary-color); }
+
+  # 2) VIEW: zero margins/paddings/gaps across engines + layout-card quirks
+  card-mod-view: |
+    :host {
+      --grid-card-gap: 5px;
+      margin: 0 !important;
+    }
+    hui-view {
+      margin: 0 !important;
+      --masonry-view-card-margin: 0px !important;   /* kill card margin */
+      --grid-card-gap: var(--grid-card-gap, 0px);
+    }
+    /* layout-card containers (#root > *) often add margins: remove them */
+    #root, .layout, .grid, .horizontal, .vertical { margin: 0 !important; gap: 0 !important; }
+    #root > * { margin: 0 !important; }
+    /* If you STILL see 4px edges in nested grid layouts, uncomment this “nudge” */
+    /* #root { margin: -4px !important; } */
+    /* (Known layout-card behavior; negative margins are a common workaround.) */
+
+  # 3) CARDS: baseline cosmetics for all ha-card instances globally
+  card-mod-card: |
+    ha-card {
+      background: var(--card-background-color);
+      color: var(--primary-text-color);
+      border: var(--ha-card-border-width) solid var(--divider-color);
+      box-shadow: var(--ha-card-box-shadow);
+    }
+    ha-card .card-header {
+      font-weight: var(--ha-font-weight-bold, 700);
+      font-size: var(--ha-font-size-l, 16px);
+      letter-spacing: -0.2px;
+    }
+
+  # 4) ROWS (Entities rows)
+  card-mod-row: |
+    .mdc-list-item__primary-text { color: var(--primary-text-color); }
+    :host(:hover) .mdc-list-item__primary-text { color: var(--primary-text-color); }
+  # 5) BADGES (top-of-view)
+  card-mod-badge: |
+    .label-badge { filter: none; }
+
+  # 6) ELEMENT (generic hook for picture-elements etc.)
+  card-mod-element: |
+    :host { /* add generic element overrides here if needed */ }
+
+  # 7) MORE-INFO DIALOGS (content & surfaces)
+  card-mod-more-info: |
+    .mdc-dialog .mdc-dialog__surface {
+      background: var(--card-background-color);
+      color: var(--primary-text-color);
+      border-radius: 12px;
+    }
+
+  # 7b) MORE-INFO via Shadow DOM traversal
+  card-mod-more-info-yaml: |
+    ha-dialog$: |
+      .mdc-dialog .mdc-dialog__title { font-weight: var(--ha-font-weight-bold, 700); }
+
+  # 8) SIDEBAR (official left rail; active item -> white bg, bluish-grey icon)
+  card-mod-sidebar: |
+    :host {
+      --sidebar-background-color: var(--sidebar-background-color);
+      --sidebar-icon-color:       var(--sidebar-icon-color);
+      --sidebar-selected-icon-color: var(--sidebar-selected-icon-color);
+      --sidebar-selected-text-color: var(--sidebar-selected-text-color);
+    }
+    .menu .iron-selected, .menu .selected, .mdc-list-item--selected {
+      background: #FFFFFF !important;
+      color: var(--sidebar-selected-text-color) !important;
+    }
+    .menu .iron-selected ha-icon,
+    .menu .selected ha-icon,
+    .mdc-list-item--selected ha-icon {
+      color: var(--sidebar-selected-icon-color) !important;
+    }
