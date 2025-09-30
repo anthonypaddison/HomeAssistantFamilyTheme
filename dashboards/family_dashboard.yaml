@@ -42,95 +42,69 @@ button_card_templates:
         ]]]
 
   sb_icon_only:
-  show_name: false
-  show_label: false
-  styles:
-    card:
-      - border-radius: 0px
-      - box-shadow: none
-      - width: 100px
-      - height: 100px
-      - padding: 6px
-      - margin: 0
-      - background: >
-          [[[
-            const active = states['input_select.family_section']?.state === variables.section;
-            return active ? '#FFFFFF' : 'transparent';
-          ]]]
-    grid:
-      # (Optional) Collapse the count column entirely when there's no positive count
-      - grid-template-areas: >
-          [[[
-            const eid = variables.badge_entity;
-            const raw = eid ? states[eid]?.state : null;
-            const n = Number(raw);
-            const show = Number.isFinite(n) && n > 0;
-            return show ? '"i c"' : '"i"';
-          ]]]
-      - grid-template-columns: >
-          [[[
-            const eid = variables.badge_entity;
-            const raw = eid ? states[eid]?.state : null;
-            const n = Number(raw);
-            const show = Number.isFinite(n) && n > 0;
-            return show ? '1fr auto' : '1fr';
-          ]]]
-      - grid-template-rows: 1fr
-      - align-items: center
-    icon:
-      - width: 36px
-      - height: 36px
-      - justify-self: center
-      - align-self: center
-      - color: >
-          [[[
-            const active = states['input_select.family_section']?.state === variables.section;
-            return active ? '#0F172A' : 'var(--state-icon-color)';
-          ]]]
-    custom_fields:
-      count:
-        # Hide completely when not a positive number
-        - display: >
+    show_name: false
+    show_label: false
+    # Layout: icon (i) + count (c) on a single row
+    styles:
+      card:
+        - border-radius: 0px
+        - box-shadow: none
+        - width: 100px
+        - height: 100px
+        - padding: 6px
+        - margin: 0
+        - background: >
             [[[
-              const eid = variables.badge_entity;
-              const raw = eid ? states[eid]?.state : null;
-              const n = Number(raw);
-              return Number.isFinite(n) && n > 0 ? 'inline-grid' : 'none';
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? '#FFFFFF' : 'transparent';
             ]]]
+      grid:
+        - grid-template-areas: '"i c"'
+        - grid-template-columns: 1fr auto
+        - grid-template-rows: 1fr
+        - align-items: center
+      icon:
+        # Centered both ways; size can be tuned if needed
+        - width: 36px
+        - height: 36px
+        - justify-self: center
         - align-self: center
-        - justify-self: end
-        - font-weight: 700
-        - font-size: 14px
-        - line-height: 1
-        - min-width: 1.5em
-        - text-align: center
-        - background: var(--palette-lilac)
-        - padding: 2px 6px
-        - border-radius: 50%
-        - border: 2px solid var(--palette-lilac)
         - color: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
+              // Active: blackish; Inactive: bluish-grey (uses your theme's state icon color)
               return active ? '#0F172A' : 'var(--state-icon-color)';
             ]]]
-  custom_fields:
-    count: >
-      [[[
-        const eid = variables.badge_entity;
-        if (!eid) return null;
-        const raw = states[eid]?.state;
-
-        // Treat '', null, undefined, 'unknown', 'unavailable' as empty/zero
-        if (raw == null) return null;
-        const cleaned = String(raw).trim().toLowerCase();
-        if (!cleaned || cleaned === 'unknown' || cleaned === 'unavailable') return null;
-
-        const n = Number(cleaned);
-        // Only show if it's a finite number > 0
-        if (!Number.isFinite(n) || n <= 0) return null;
-
-        return String(n);
-      ]]]
+      custom_fields:
+        count:
+          - align-self: center
+          - justify-self: end
+          - font-weight: 700
+          - font-size: 14px
+          - line-height: 1
+          - width: 1.5em
+          - text-align: center
+          - background: var(--palette-lilac)
+          - padding: 6px
+          - height: 1.5em
+          - border-radius: 50%
+          - border: 2px solid var(--palette-lilac)
+          - color: >
+              [[[
+                const active = states['input_select.family_section']?.state === variables.section;
+                // Keep count legible in both states
+                return active ? '#0F172A' : 'var(--state-icon-color)';
+              ]]]
+    custom_fields:
+      count: >
+        [[[
+          const eid = variables.badge_entity;
+          if (!eid) return 0;
+          const raw = states[eid]?.state ?? 0;
+          const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
+          if (!val || val === '0') return 0;
+          return val;
+        ]]]
 
 
 # ---------- View ----------
