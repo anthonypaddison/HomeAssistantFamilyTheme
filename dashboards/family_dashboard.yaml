@@ -205,65 +205,35 @@ views:
                     </div>
                   `;
                 ]]]
+              right: |
+                [[[
+                  const e = states['calendar.routine'];
+                  if (!e) return 'Routine calendar not found';
+                  const a = e.attributes || {};
+                  const title = a.message || 'No upcoming events';
+                  if (!a.start_time) return title; // no upcoming -> show fallback
+
+                  const start = new Date(a.start_time);
+                  const end   = a.end_time ? new Date(a.end_time) : null;
+                  const now   = new Date();
+
+                  const timeFmt = { hour: '2-digit', minute: '2-digit' };
+                  const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
+                  const sameDay = start.toDateString() === now.toDateString();
+
+                  const inProgress = e.state === 'on' && start <= now && (!end || now < end);
+                  let when;
+                  if (inProgress) {
+                    when = `Now • ${start.toLocaleTimeString([], timeFmt)}${end ? '–' + end.toLocaleTimeString([], timeFmt) : ''}`;
+                  } else {
+                    when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' • ' + start.toLocaleTimeString([], timeFmt);
+                  }
+
+                  const offset = a.offset_reached ? ' ⏱' : '';
+                  return `<span style="font-weight:600;color:var(--primary-text-color)">${title} — ${when}${offset}</span>`;
+                ]]]
             triggers_update:
               - sensor.time
-              - calendar.routine
-
-          # RIGHT: Next upcoming from calendar.routine
-          - type: custom:button-card
-            entity: calendar.routine
-            show_name: false
-            show_label: true
-            show_icon: true
-            icon: mdi:calendar-clock
-            label: |
-              [[[
-                const a = entity?.attributes || {};
-                const title = a.message || 'No upcoming routine';
-                if (!a.start_time) return title;
-
-                const start = new Date(a.start_time);
-                const end = a.end_time ? new Date(a.end_time) : null;
-                const now = new Date();
-
-                const timeFmt = { hour: '2-digit', minute: '2-digit' };
-                const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
-                const sameDay = start.toDateString() === now.toDateString();
-
-                let when;
-                const inProgress = entity.state === 'on' && start <= now && (!end || now < end);
-                if (inProgress) {
-                  when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
-                } else {
-                  when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
-                }
-
-                // Optional offset cue
-                const offset = a.offset_reached ? ' ⏱' : '';
-                return `${title} - ${when}${offset}`;
-              ]]]
-            styles:
-              card:
-                - background: transparent
-                - box-shadow: none
-                - padding: 0
-                - border-radius: 0
-                - width: fit-content
-              grid:
-                - grid-template-areas: '"i l"'
-                - grid-template-columns: auto 1fr
-                - grid-template-rows: auto
-                - align-items: center
-              icon:
-                - color: var(--primary-text-color)
-                - margin-right: 6px
-              label:
-                - font-weight: 600
-                - color: var(--primary-text-color)
-                - text-align: right
-            tap_action:
-              action: more-info
-            triggers_update:
               - calendar.routine
 
       # =========================
