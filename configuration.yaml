@@ -21,3 +21,6 @@ script: !include scripts.yaml
 input_select: !include input_select.yaml
 input_number: !include input_number.yaml
 template: !include template.yaml
+
+
+sensor: !include sensor.yaml

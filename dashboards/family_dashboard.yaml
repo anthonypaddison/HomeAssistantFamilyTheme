@@ -165,35 +165,122 @@ views:
       - !include /config/dashboards/includes/sidebar_menu.yaml
 
       # =========================
-      # 2) Heading ROW (top)
-      # =========================
-      - type: custom:mod-card
-        view_layout: { grid-area: heading }
-        card_mod:
-          style: |
-            ha-card {
-              background: var(--palette-sky) !important;
-              border-radius: 0 !important;
-              margin: 0 !important;
-              padding: 8px 12px !important;
+# 2) Heading ROW (top)
+# =========================
+- type: custom:mod-card
+  view_layout: { grid-area: heading }
+  card_mod:
+    style: |
+      ha-card {
+        background: var(--palette-sky) !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 8px 12px !important;
+      }
+  card:
+    type: horizontal-stack
+    card_mod:
+      style: |
+        /* Push left & right to the edges */
+        #root {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+        }
+        /* Prevent the two inner cards from stretching */
+        #root > * {
+          flex: 0 0 auto;
+        }
+    cards:
+      # LEFT: Panogu Family (DATE - TIME)
+      - type: custom:button-card
+        name: Panogu Family
+        show_label: true
+        show_state: false
+        label: |
+          [[[
+            const d = new Date();
+            const date = d.toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+            const time = d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+            return `${date} - ${time}`;
+          ]]]
+        styles:
+          card:
+            - background: transparent
+            - box-shadow: none
+            - padding: 0
+            - border-radius: 0
+          name:
+            - font-weight: 800
+            - font-size: 18px
+            - color: var(--primary-text-color)
+          label:
+            - margin-top: 2px
+            - color: var(--primary-text-color)
+        tap_action: none
+        hold_action: none
+        double_tap_action: none
+        # Minute updates (needs sensor.time)
+        triggers_update:
+          - sensor.time
+
+      # RIGHT: Next upcoming from calendar.routine
+      - type: custom:button-card
+        entity: calendar.routine
+        show_name: false
+        show_label: true
+        show_icon: true
+        icon: mdi:calendar-clock
+        label: |
+          [[[
+            const a = entity?.attributes || {};
+            const title = a.message || 'No upcoming routine';
+            if (!a.start_time) return title;
+
+            const start = new Date(a.start_time);
+            const end = a.end_time ? new Date(a.end_time) : null;
+            const now = new Date();
+
+            const timeFmt = { hour: '2-digit', minute: '2-digit' };
+            const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
+            const sameDay = start.toDateString() === now.toDateString();
+
+            let when;
+            const inProgress = entity.state === 'on' && start <= now && (!end || now < end);
+            if (inProgress) {
+              when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
+            } else {
+              when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
             }
-        card:
-          type: horizontal-stack
-          cards:
-            # Family
-            - type: markdown
-              content: |
-                ## Family Board
-              style: |
-                ha-card {
-                  box-shadow: none !important;
-                  background: transparent !important;
-                  color: var(--primary-text-color) !important;
-                  font-weight: 700 !important;
-                  font-size: 24px !important;
-                  line-height: 28px !important;
-                  padding: 0 !important;
-                }
+
+            // Optional offset cue
+            const offset = a.offset_reached ? ' ⏱' : '';
+            return `${title} - ${when}${offset}`;
+          ]]]
+        styles:
+          card:
+            - background: transparent
+            - box-shadow: none
+            - padding: 0
+            - border-radius: 0
+            - width: fit-content
+          grid:
+            - grid-template-areas: '"i l"'
+            - grid-template-columns: auto 1fr
+            - grid-template-rows: auto
+            - align-items: center
+          icon:
+            - color: var(--primary-text-color)
+            - margin-right: 6px
+          label:
+            - font-weight: 600
+            - color: var(--primary-text-color)
+            - text-align: right
+        tap_action:
+          action: more-info
+        triggers_update:
+          - calendar.routine
 
       # =========================
       # 2) CHIPS ROW (top)
