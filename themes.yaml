@@ -207,7 +207,7 @@ FamilyBoard:
   slider-color:                "var(--primary-color)"      # slider active      # [common vars] cite turn4search58
   mdc-dialog-scroll-divider-color: "var(--divider-color)"  # dialog header line # [common vars] cite turn4search58
   # Feature radius knobs (tiles, etc.) - widely used by HA now:
-
+  layout-margin: 0px !important;
   ###########################################################################
   # LAYOUT & SPACING (kill whitespace once, globally)
   ###########################################################################
@@ -239,6 +239,8 @@ FamilyBoard:
   card-mod-root: |
     :host {
       --mdc-theme-primary: var(--primary-color);  /* global MDC primary */
+      layout-margin: 0px !important;
+      --layout-margin: 0px !important;
     }
     app-header, .toolbar {
       background: var(--app-header-background-color);
@@ -270,6 +272,8 @@ FamilyBoard:
     :host {
       --grid-card-gap: 5px;
       margin: 0 !important;
+      layout-margin: 0px !important;
+      --layout-margin: 0px !important;
     }
     hui-view {
       margin: 0 !important;
@@ -279,6 +283,11 @@ FamilyBoard:
     /* layout-card containers (#root > *) often add margins: remove them */
     #root, .layout, .grid, .horizontal, .vertical { margin: 0 !important; gap: 0 !important; }
     #root > * { margin: 0 !important; }
+    #root > * {
+      margin: 0 !important;
+      --layout-margin: 0px !important;
+      layout-margin: 0px !important;
+    }
     /* If you STILL see 4px edges in nested grid layouts, uncomment this “nudge” */
     /* #root { margin: -4px !important; } */
     /* (Known layout-card behavior; negative margins are a common workaround.) */
@@ -339,23 +348,3 @@ FamilyBoard:
     .mdc-list-item--selected ha-icon {
       color: var(--sidebar-selected-icon-color) !important;
     }
-
-  card-mod-view-yaml: |
-      /* Hit custom:grid-layout's shadow root and nuke its default margins */
-      grid-layout$:
-        #root {
-          margin: 0 !important;
-          padding: 0 !important;
-          gap: 0 !important;        /* if the component uses gap */
-        }
-        #root > * {
-          margin: 0 !important;     /* safety for any child wrappers */
-        }
-
-      /* Safety: some setups wrap via layout-card */
-      layout-card$:
-        #root {
-          margin: 0 !important;
-          padding: 0 !important;
-          gap: 0 !important;
-        }
