@@ -26,6 +26,7 @@ button_card_templates:
       name:
         - justify-self: start
         - font-weight: 700
+        - color: #FFFFFF
       icon:
         - width: 22px
         - color: #FFFFFF
