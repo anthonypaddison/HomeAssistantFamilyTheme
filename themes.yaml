@@ -154,7 +154,7 @@ FamilyBoard:
     }
     ::-webkit-scrollbar-thumb {
       background: var(--scrollbar-thumb-color);
-      border-radius: 8px;
+      # border-radius: 8px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
