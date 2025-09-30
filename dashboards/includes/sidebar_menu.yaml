@@ -23,7 +23,7 @@ card:
       icon: mdi:calendar
       styles:
         card:
-          - width: 100%
+          # - width: 100%
       variables:
         section: Calendar
         badge_entity: input_number.events_today
