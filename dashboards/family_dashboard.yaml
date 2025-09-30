@@ -16,6 +16,7 @@ button_card_templates:
             [[[
               return variables.color ? variables.color : 'var(--primary-color)';
             ]]]
+        - color: #FFFFFF
         - padding: 8px 12px
         - border-radius: 16px
         - min-width: 120px
