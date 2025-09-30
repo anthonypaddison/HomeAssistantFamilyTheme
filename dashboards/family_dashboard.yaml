@@ -41,12 +41,9 @@ button_card_templates:
             </div>`;
         ]]]
 
-  # Sidebar icon-only button (GLOBAL) — used by sidebar_menu.yaml
-  # Pass: variables.section, and optionally variables.badge_entity (entity_id to display as numeric badge)
   sb_icon_only:
-    show_name: false          # icon-only
+    show_name: false
     show_label: false
-    aspect_ratio: 1/1
     styles:
       card:
         - border-radius: 0
@@ -65,26 +62,23 @@ button_card_templates:
             ]]]
         - padding: 6px
         - margin: 0 0 6px 0
-      icon:
-        - width: 28px
     custom_fields:
       badge: >
         [[[
-          const eid = variables.badge_entity;    // e.g. input_number.events_today
+          const eid = variables.badge_entity;
           if (!eid) return '';
           const val = states[eid]?.state;
-          if (val === undefined || val === null || val === '0') return ''; // hide if 0/empty
+          if (val === undefined || val === null || val === '0') return '';
           return String(val);
         ]]]
     styles_custom_fields:
       badge:
-        - position: absolute
         - right: 6px
         - top: 6px
         - background: rgba(0,0,0,0.15)
         - color: #000
-        - min-width: 22px
-        - height: 22px
+        - min-width: 50px
+        - height: 50px
         - line-height: 22px
         - text-align: center
         - border-radius: 11px
