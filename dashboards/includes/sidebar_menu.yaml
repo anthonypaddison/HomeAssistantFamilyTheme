@@ -3,7 +3,7 @@ view_layout: { grid-area: sidebar }
 card_mod:
   style: |
     ha-card {
-      background: var(--palette-bluegrey) !important; /* bluish grey background */
+      background: var(--palette-lilac) !important;
       margin: 0 !important;
       border-radius: 0 !important;
       border: none !important;

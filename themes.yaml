@@ -62,9 +62,9 @@ FamilyBoard:
   scrollbar-track-color:       "transparent"
 
   # Header / sidebar
-  app-header-background-color: var(--family-surface)
+  app-header-background-color: var(--palette-lilac)
   app-header-text-color:       var(--primary-text-color)
-  sidebar-background-color:    var(--family-surface)
+  sidebar-background-color:    var(--palette-lilac)
   sidebar-icon-color:          var(--secondary-text-color)
   sidebar-text-color:          var(--primary-text-color)
   sidebar-selected-icon-color: var(--primary-color)
