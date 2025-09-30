@@ -120,7 +120,7 @@ views:
       grid-template-columns: 100px 1fr
       grid-template-rows: auto 1fr
       grid-template-areas: |
-        "heading heading"
+        "sidebar heading"
         "sidebar chips"
         "sidebar main"
       gap: 0px
