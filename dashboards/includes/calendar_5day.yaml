@@ -39,41 +39,41 @@ card_mod:
     }
 
     /* Prevent whole-card scroll; we will scroll inside the calendar grid only */
-    ha-card {
-      overflow: hidden;
-    }
+    # ha-card {
+    #   overflow: hidden;
+    # }
 
-    /* CALENDAR GRID SCROLLER + HOUR STRIPES */
-    ha-card .days {
-      position: relative;
-      padding-left: var(--rail-width); /* room for the left time rail */
-      display: flex;
-      flex-wrap: nowrap;               /* keep all 5 on one row */
-      gap: var(--ha-gutter, 0);
+    # /* CALENDAR GRID SCROLLER + HOUR STRIPES */
+    # ha-card .days {
+    #   position: relative;
+    #   padding-left: var(--rail-width); /* room for the left time rail */
+    #   display: flex;
+    #   flex-wrap: nowrap;               /* keep all 5 on one row */
+    #   gap: var(--ha-gutter, 0);
 
-      /* Make ONLY the grid scroll vertically */
-      max-height: calc(100vh - 220px); /* adjust to your dashboard */
-      overflow-y: auto;
-      overflow-x: hidden;
-      overscroll-behavior: contain;
-      scrollbar-gutter: stable both-edges;
+    #   /* Make ONLY the grid scroll vertically */
+    #   max-height: calc(100vh - 220px); /* adjust to your dashboard */
+    #   overflow-y: auto;
+    #   overflow-x: hidden;
+    #   overscroll-behavior: contain;
+    #   scrollbar-gutter: stable both-edges;
 
-      /* Hour stripes (30m + 60m) */
-      background-image:
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0px,
-          transparent calc(var(--hour-height) / 2 - 1px),
-          rgba(0,0,0,0.04) calc(var(--hour-height) / 2)
-        ),
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0px,
-          transparent calc(var(--hour-height) - 1px),
-          rgba(0,0,0,0.08) var(--hour-height)
-        );
-      background-clip: padding-box;
-    }
+    #   /* Hour stripes (30m + 60m) */
+    #   background-image:
+    #     repeating-linear-gradient(
+    #       to bottom,
+    #       transparent 0px,
+    #       transparent calc(var(--hour-height) / 2 - 1px),
+    #       rgba(0,0,0,0.04) calc(var(--hour-height) / 2)
+    #     ),
+    #     repeating-linear-gradient(
+    #       to bottom,
+    #       transparent 0px,
+    #       transparent calc(var(--hour-height) - 1px),
+    #       rgba(0,0,0,0.08) var(--hour-height)
+    #     );
+    #   background-clip: padding-box;
+    # }
 
     /* Equal-width columns that shrink vs. wrapping */
     ha-card .day {
