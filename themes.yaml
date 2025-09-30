@@ -288,8 +288,9 @@ FamilyBoard:
       --layout-margin: 0px !important;
       layout-margin: 0px !important;
     }
+    #root { margin: -4px !important; }
     /* If you STILL see 4px edges in nested grid layouts, uncomment this “nudge” */
-    /* #root { margin: -4px !important; } */
+
     /* (Known layout-card behavior; negative margins are a common workaround.) */
 
   # 3) CARDS: baseline cosmetics for all ha-card instances globally

@@ -108,14 +108,6 @@ views:
   - title: Family
     path: family
     type: custom:grid-layout
-    styles: |
-      #root, .layout, .grid, .horizontal, .vertical,
-      #root > *,
-      :host {
-        margin: 0px !important;
-        --layout-margin: 0px !important;
-        layout-margin: 0px !important;
-      }
     layout:
       padding: 0px
       grid-template-columns: 100px 1fr
