@@ -4,7 +4,7 @@ FamilyBoard:
   palette-aqua:     "#98F5E1"
   palette-cyan:     "#8EECF5"
   palette-sky:      "#90DBF4"
-  palette-bluegrey: "#A3C4F3"   # we'll use as the "bluish grey" base
+  palette-bluegrey: "#A3C4F3"
   palette-lilac:    "#CFBAF0"
   palette-rose:     "#FFCFD2"
   palette-vanilla:  "#FBF8CC"
@@ -16,13 +16,13 @@ FamilyBoard:
 
   # --- Sidebar tokens (inactive/active backgrounds & icon colors) ---
   sb-inactive-bg: var(--palette-lilac)
-  sb-inactive-icon: "#0F172A"     # deep slate text/icon
+  sb-inactive-icon: "#0F172A"
   sb-active-bg:    var(--primary-color)
   sb-active-icon:  "#0F172A"
 
   # --- FAB colours per section ---
-  fab-color-calendar: var(--palette-mint)   # green
-  fab-color-chores:   var(--palette-lilac)  # purple
+  fab-color-calendar: var(--palette-mint)
+  fab-color-chores:   var(--palette-lilac)
   fab-color-default:  var(--primary-color)
   # --- REQUIRED by card-mod: theme name must equal card-mod-theme ---
   # Ref: card-mod theme docs. [1](https://github.com/thomasloven/lovelace-card-mod/blob/master/README-themes.md)
@@ -45,8 +45,8 @@ FamilyBoard:
   error-color:                 "#E53935"
 
   # Text colours
-  primary-text-color:          "#0F172A"     # slate-900-ish
-  secondary-text-color:        "#475569"     # slate-600-ish
+  primary-text-color:          "#0F172A"
+  secondary-text-color:        "#475569"
   text-primary-color:          var(--primary-text-color)
 
   # Backgrounds
@@ -91,12 +91,11 @@ FamilyBoard:
   ha-card-border-radius: "0px"
   ha-card-border-width:  "0px"
   ha-card-box-shadow: "none"
-  # ha-badge-border-radius: "14px"
 
   # =========================
   # ICONS / STATES
   # =========================
-  state-icon-color:            "#64748B"   # slate-500-ish
+  state-icon-color:            "#64748B"
   state-icon-active-color:     var(--primary-color)
   state-icon-unavailable-color: "#CBD5E1"
 
@@ -119,7 +118,6 @@ FamilyBoard:
   mush-card-secondary-color:    var(--secondary-text-color)
 
   mush-chip-height:             36px
-  # mush-chip-border-radius:      18px
   mush-chip-padding:            0 0.6em
   mush-chip-spacing:            8px
 

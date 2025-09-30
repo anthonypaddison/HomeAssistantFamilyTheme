@@ -44,49 +44,64 @@ button_card_templates:
   sb_icon_only:
     show_name: false
     show_label: false
+    # Layout: icon (i) + count (c) on a single row
     styles:
       card:
         - border-radius: 0px
         - box-shadow: none
         - width: 100px
         - height: 100px
-        - background: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#FFFFFF' : 'var(--palette-bluegrey)';
-            ]]]
-        - color: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#0F172A' : '#0F172A';
-            ]]]
         - padding: 6px
         - margin: 0
+        - background: >
+            [[[ 
+              const active = states['input_select.family_section']?.state === variables.section;
+              return active ? '#FFFFFF' : 'transparent';
+            ]]]
+      grid:
+        - grid-template-areas: '"i c"'
+        - grid-template-columns: 1fr auto
+        - grid-template-rows: 1fr
+        - align-items: center
       icon:
-        - width: 100px
+        # Centered both ways; size can be tuned if needed
+        - width: 36px
+        - height: 36px
+        - justify-self: center
+        - align-self: center
+        - color: >
+            [[[ 
+              const active = states['input_select.family_section']?.state === variables.section;
+              // Active: blackish; Inactive: bluish-grey (uses your theme's state icon color)
+              return active ? '#0F172A' : 'var(--state-icon-color)';
+            ]]]
+      custom_fields:
+        count:
+          - align-self: center
+          - justify-self: end
+          - font-weight: 700
+          - font-size: 14px
+          - line-height: 1
+          - min-width: 1.5em
+          - text-align: right
+          - color: >
+              [[[ 
+                const active = states['input_select.family_section']?.state === variables.section;
+                // Keep count legible in both states
+                return active ? '#0F172A' : 'var(--state-icon-color)';
+              ]]]
+    # Inline count value (hide when 0/empty)
     custom_fields:
-      badge: >
+      count: >
         [[[
-          const eid = variables.badge_entity;    // e.g. input_number.events_today
+          const eid = variables.badge_entity; 
           if (!eid) return '';
-          const val = states[eid]?.state;
-          if (val === undefined || val === null || val === '0') return ''; // hide if 0/empty
-          return String(val);
+          const raw = states[eid]?.state ?? '';
+          const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
+          if (!val || val === '0') return '';
+          return val;
         ]]]
-    styles_custom_fields:
-      badge:
-        - position: absolute
-        - right: 6px
-        - top: 6px
-        - background: rgba(0,0,0,0.15)
-        - color: #000
-        - min-width: 50px
-        - height: 50px
-        - line-height: 50px
-        - text-align: center
-        - border-radius: 0px
-        - font-weight: 700
-        - font-size: 50px
+
 
 # ---------- View ----------
 views:
@@ -95,17 +110,21 @@ views:
     type: custom:grid-layout
     layout:
       padding: 0px
-      grid-template-columns: 10% 1fr
+      grid-template-columns: 100px 1fr
       grid-template-rows: auto 1fr
       grid-template-areas: |
-        "sidebar chips"
+        "chips chips"
         "sidebar main"
-      mediaquery:
-        "(max-width: 900px)":
-          grid-template-columns: 1fr
-          grid-template-areas: |
-            "chips"
-            "main"
+      gap: 0px
+      column-gap: 0px
+      row-gap: 0px
+    mediaquery:
+      "(max-width: 900px)":
+        grid-template-columns: 1fr
+        grid-template-areas: |
+          "chips"
+          "main"
+
     cards:
       # =========================
       # 1) SIDEBAR (sticky)
@@ -117,6 +136,14 @@ views:
       # =========================
       - type: custom:mod-card
         view_layout: { grid-area: chips }
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--palette-sky) !important;
+              border-radius: 0 !important;
+              margin: 0 !important;
+              padding: 8px 12px !important;
+            }
         card:
           type: horizontal-stack
           cards:
