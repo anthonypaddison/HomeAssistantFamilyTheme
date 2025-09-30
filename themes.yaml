@@ -132,7 +132,6 @@ FamilyBoard:
   cal-color-joy:      var(--family-color-joy)
   cal-color-lizzie:   var(--family-color-lizzie)
   cal-color-toby:     var(--family-color-toby)
-  layout-margin:      0px
   # =========================
   # CARD-MOD GLOBAL STYLING
   # =========================
@@ -142,8 +141,6 @@ FamilyBoard:
   # 1) Root / header / scrollbars
   card-mod-root: |
     :host {
-      margin: 0 !important;
-      --layout-margin: 0px !important;
       --mdc-theme-primary: var(--primary-color);
     }
     app-header, .toolbar {
@@ -167,10 +164,12 @@ FamilyBoard:
     /* View container (whole page inside Lovelace) */
     hui-view {
       # padding: 12px !important;
+      margin: 0 !important;
     }
     /* Tighter grid spacing without killing readability */
     :host {
-      --grid-card-gap: 10px;
+      --grid-card-gap: 5px;
+      margin: 0 !important;
     }
 
   # 3) HA cards baseline cosmetics
@@ -200,6 +199,7 @@ FamilyBoard:
   # 5) Sidebar (HA's left rail-not your custom sticky stack)
   card-mod-sidebar: |
     :host {
+      margin: 0 !important;
       --sidebar-background-color: var(--family-surface);
       --sidebar-selected-icon-color: var(--primary-color);
       --sidebar-icon-color: var(--secondary-text-color);
