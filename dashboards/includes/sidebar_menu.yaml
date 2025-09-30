@@ -12,14 +12,15 @@ card_mod:
       position: sticky;
       top: 0;
       padding: 0 !important;
-      # padding-top: 90px !important;
     }
 card:
   type: vertical-stack
   cards:
+    # --- Family Icon ---
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
+
     # --- Calendar ---
     - type: custom:button-card
       template: sb_icon_only
