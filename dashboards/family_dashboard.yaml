@@ -192,6 +192,7 @@ views:
                 align-items: center;
                 gap: 12px;
                 color: #FFFFFF !important;
+
               }
               /* Prevent the two inner cards from stretching */
               #root > * {
@@ -225,9 +226,6 @@ views:
                 label:
                   - margin-top: 2px
                   - color: #FFFFFF
-              tap_action: none
-              hold_action: none
-              double_tap_action: none
               triggers_update:
                 - sensor.time
 
