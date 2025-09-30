@@ -179,78 +179,83 @@ views:
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
+              color: #fff !important;  # <-- force white text globally
             }
         card:
           type: horizontal-stack
           cards:
-          - type: custom:button-card
-            show_icon: false
-            show_name: false
-            show_state: false
-            styles:
-              card:
-                - background: transparent
-                - box-shadow: none
-                - padding: 0
-            custom_fields:
-              left: |
-                [[[
-                  const d = new Date();
-                  const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                  const time = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-                  return `
-                    <div class="left">
-                      <div class="title" style="font-weight:800;font-size:18px;color:var(--primary-text-color)">Panogu Family</div>
-                      <div class="sub" style="margin-top:2px;color:var(--primary-text-color)">${date} • ${time}</div>
-                    </div>
-                  `;
-                ]]]
-              right: |
-                [[[
-                  const e = states['calendar.routine'];
-                  if (!e) return 'Routine calendar not found';
-                  const a = e.attributes || {};
-                  const title = a.message || 'No upcoming events';
-                  if (!a.start_time) return title; // no upcoming -> show fallback
+            - type: custom:button-card
+              show_icon: false
+              show_name: false
+              show_state: false
+              styles:
+                card:
+                  - background: transparent
+                  - box-shadow: none
+                  - padding: 0
+                  - color: #fff !important  # <-- force white text in button-card
+                grid:
+                  - grid-template-areas: '"left right"'
+                  - grid-template-columns: 1fr auto
+                  - align-items: center
+                  - column-gap: 12px
+                custom_fields:
+                  left:
+                    - grid-area: left
+                    - justify-self: start
+                    - align-self: center
+                    - color: #fff !important
+                  right:
+                    - grid-area: right
+                    - justify-self: end
+                    - text-align: right
+                    - white-space: nowrap
+                    - overflow: hidden
+                    - text-overflow: ellipsis
+                    - color: #fff !important
+              custom_fields:
+                left: |
+                  [[[
+                    const d = new Date();
+                    const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                    const time = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+                    return `
+                      <div class="left">
+                        <div class="title" style="font-weight:800;font-size:18px;color:#fff">Panogu Family</div>
+                        <div class="sub" style="margin-top:2px;color:#fff">${date} • ${time}</div>
+                      </div>
+                    `;
+                  ]]]
+                right: |
+                  [[[
+                    const e = states['calendar.routine'];
+                    if (!e) return '<span style="color:#fff">Routine calendar not found</span>';
+                    const a = e.attributes || {};
+                    const title = a.message || 'No upcoming events';
+                    if (!a.start_time) return `<span style="color:#fff">${title}</span>`;
 
-                  const start = new Date(a.start_time);
-                  const end   = a.end_time ? new Date(a.end_time) : null;
-                  const now   = new Date();
+                    const start = new Date(a.start_time);
+                    const end   = a.end_time ? new Date(a.end_time) : null;
+                    const now   = new Date();
 
-                  const timeFmt = { hour: '2-digit', minute: '2-digit' };
-                  const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
-                  const sameDay = start.toDateString() === now.toDateString();
+                    const timeFmt = { hour: '2-digit', minute: '2-digit' };
+                    const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
+                    const sameDay = start.toDateString() === now.toDateString();
 
-                  const inProgress = e.state === 'on' && start <= now && (!end || now < end);
-                  let when;
-                  if (inProgress) {
-                    when = `Now • ${start.toLocaleTimeString([], timeFmt)}${end ? '–' + end.toLocaleTimeString([], timeFmt) : ''}`;
-                  } else {
-                    when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' • ' + start.toLocaleTimeString([], timeFmt);
-                  }
+                    const inProgress = e.state === 'on' && start <= now && (!end || now < end);
+                    let when;
+                    if (inProgress) {
+                      when = `Now • ${start.toLocaleTimeString([], timeFmt)}${end ? '–' + end.toLocaleTimeString([], timeFmt) : ''}`;
+                    } else {
+                      when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' • ' + start.toLocaleTimeString([], timeFmt);
+                    }
 
-                  const offset = a.offset_reached ? ' ⏱' : '';
-                  return `<span style="font-weight:600;color:var(--primary-text-color)">${title} — ${when}${offset}</span>`;
-                ]]]
-            triggers_update:
-              - sensor.time
-              - calendar.routine
-          styles:
-            grid:
-              - grid-template-areas: '"l r"'
-              - grid-template-columns: 1fr auto
-              - align-items: center
-              - column-gap: 12px
-            custom_fields:
-              left:
-                - grid-area: l
-              right:
-                - grid-area: r
-                - justify-self: end
-                - text-align: right
-                - white-space: nowrap
-                - overflow: hidden
-                - text-overflow: ellipsis
+                    const offset = a.offset_reached ? ' ⏱' : '';
+                    return `<span style="font-weight:600;color:#fff">${title} — ${when}${offset}</span>`;
+                  ]]]
+              triggers_update:
+                - sensor.time
+                - calendar.routine
       # =========================
       # 2) CHIPS ROW (top)
       # =========================
