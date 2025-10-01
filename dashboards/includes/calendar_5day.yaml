@@ -21,7 +21,7 @@ calendars:
 noCardBackground: false
 card_mod:
   style:
-    $: |                     # ✅ pierce the card's shadow DOM
+    $: |
       :host {
         --hour-height: 64px;
         --rail-width: 56px;
@@ -33,28 +33,42 @@ card_mod:
         --sticky-gap: 4px;
         --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
       }
-      /* Make room for the rail */
+
+      /* Make room for the left time rail */
       .days {
         position: relative;
-        padding-left: var(--rail-width);      # ✅ no '#' pseudo-comment
+        padding-left: var(--rail-width);
+        overflow: visible;             /* ensure ::before isn't clipped */
       }
-      /* Sticky header/all-day rows (adjust if your card uses different classnames) */
+
+      /* Column visuals */
+      .day {
+        background: #F8FAFC;           /* light-light grey */
+      }
+
+      /* Sticky header (date/day) per column */
       .day .header {
-        position: sticky; top: 0; z-index: 3;
+        position: sticky;
+        top: 0;
+        z-index: 4;
         height: var(--day-header-h);
         display: flex; align-items: center;
         background: var(--card-background-color);
+        font-weight: 700;
       }
+
+      /* All-day row (even if empty) */
       .day .all-day, .day .allday {
         position: sticky;
         top: calc(var(--day-header-h) + var(--sticky-gap));
-        z-index: 2;
+        z-index: 3;
         height: var(--allday-row-h);
         display: flex; align-items: center;
-        background: var(--card-background-color);
+        background: #EEF2F7;           /* slightly darker grey for contrast */
         border-bottom: 1px solid var(--divider-color);
       }
-      /* The time rail itself */
+
+      /* Left time rail (00:00 → 23:00) */
       .days::before {
         content:
           "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
@@ -68,5 +82,5 @@ card_mod:
         font-size: var(--rail-fsize);
         color: var(--rail-color);
         pointer-events: none;
-        z-index: 1;
+        z-index: 5;
       }

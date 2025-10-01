@@ -34,3 +34,34 @@ events_today:
   max: 200
   step: 1
   mode: box
+
+outstanding_family_today:
+  name: Outstanding Family Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_anthony_today:
+  name: Outstanding Anthony Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_joy_today:
+  name: Outstanding Joy Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_lizzie_today:
+  name: Outstanding Lizzie Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_toby_today:
+  name: Outstanding Toby Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box

@@ -111,7 +111,7 @@ FamilyBoard:
   # --- Card-mod view: zero margins/paddings/gaps across engines + layout-card quirks ---
   card-mod-view: |
     :host {
-      --grid-card-gap: 0px;
+      --grid-card-gap: 0px !important;
       margin: 0 !important;
       layout-margin: 0px !important;
       --layout-margin: 0px !important;
@@ -119,7 +119,7 @@ FamilyBoard:
     hui-view {
       margin: 0 !important;
       --masonry-view-card-margin: 0px !important;
-      --grid-card-gap: var(--grid-card-gap, 0px);
+      --grid-card-gap: var(--grid-card-gap, 0px) !important;
     }
     #root, .layout, .grid, .horizontal, .vertical {
       margin: 0 !important;
@@ -131,9 +131,17 @@ FamilyBoard:
       layout-margin: 0 !important;
     }
     #root {
-      margin: 0 !important;  # Remove negative margin
+      margin: 0 !important;
     }
 
+  card-mod-root-yaml: |
+    hui-root$ hui-view$ :host {
+      padding: 0 !important;
+    }
+    hui-root$ hui-view$ #view {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
   # --- Card-mod root: header, global scrollbars, truly-global tweaks ---
   card-mod-root: |
     :host {

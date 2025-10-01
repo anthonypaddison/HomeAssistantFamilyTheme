@@ -147,3 +147,66 @@
             (agenda['calendar.lizzie'].events   | count) +
             (agenda['calendar.toby'].events     | count)
           }}
+
+- alias: To-do - Count outstanding due TODAY (all lists)
+  id: todo_count_outstanding_due_today
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+    - platform: time
+      at: "00:02:00"
+  variables:
+    today: "{{ now().date().isoformat() }}"
+  action:
+    - service: todo.get_items
+      target:
+        entity_id:
+          - todo.family
+          - todo.anthony
+          - todo.joy
+          - todo.lizzie
+          - todo.toby
+      data:
+        status: needs_action
+      response_variable: lists
+    # Family
+    - service: input_number.set_value
+      target: { entity_id: input_number.outstanding_family_today }
+      data:
+        value: >-
+          {% set items = (lists['todo.family'].items | list) %}
+          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
+           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+    # Anthony
+    - service: input_number.set_value
+      target: { entity_id: input_number.outstanding_anthony_today }
+      data:
+        value: >-
+          {% set items = (lists['todo.anthony'].items | list) %}
+          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
+           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+    # Joy
+    - service: input_number.set_value
+      target: { entity_id: input_number.outstanding_joy_today }
+      data:
+        value: >-
+          {% set items = (lists['todo.joy'].items | list) %}
+          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
+           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+    # Lizzie
+    - service: input_number.set_value
+      target: { entity_id: input_number.outstanding_lizzie_today }
+      data:
+        value: >-
+          {% set items = (lists['todo.lizzie'].items | list) %}
+          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
+           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+    # Toby
+    - service: input_number.set_value
+      target: { entity_id: input_number.outstanding_toby_today }
+      data:
+        value: >-
+          {% set items = (lists['todo.toby'].items | list) %}
+          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
+           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}

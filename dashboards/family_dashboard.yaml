@@ -7,6 +7,31 @@ button_card_templates:
   # - variables.todo:  entity_id of the todo list (e.g. todo.anthony)
   # - variables.completed: entity_id of input_number for "completed today"
   # - variables.color: CSS color token (e.g. var(--palette-lilac))
+  todo_due_today_chip:
+    show_name: true
+    show_state: false
+    styles:
+      card:
+        - background: '[[[ return variables.color || "var(--primary-color)"; ]]]'
+        - padding: 8px 12px
+        - border-radius: 16px
+        - min-width: 120px
+      name:
+        - font-weight: 800
+        - color: '#0F172A'
+      custom_fields:
+        count:
+          - font-size: 18px
+          - font-weight: 800
+          - color: '#0F172A'
+    custom_fields:
+      count: >
+        [[[
+          const eid = variables.count_entity;
+          const v = eid ? states[eid]?.state : null;
+          return v && v !== 'unknown' && v !== 'unavailable' ? v : '0';
+        ]]]
+
   progress_chip:
     show_name: true
     show_state: false
@@ -80,7 +105,6 @@ button_card_templates:
   sb_icon_only:
     show_name: false
     show_label: false
-    # Layout: icon (i) + count (c) on a single row
     styles:
       card:
         - border-radius: 0px
@@ -92,15 +116,10 @@ button_card_templates:
         - background: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#FFFFFF' : 'transparent';
+              return active ? '#FFFFFF'
+                             : getComputedStyle(document.documentElement).getPropertyValue('--app-header-background-color');
             ]]]
-      grid:
-        - grid-template-areas: '"i c"'
-        - grid-template-columns: 1fr auto
-        - grid-template-rows: 1fr
-        - align-items: center
       icon:
-        # Centered both ways; size can be tuned if needed
         - width: 50px
         - height: 50px
         - justify-self: center
@@ -108,32 +127,23 @@ button_card_templates:
         - color: >
             [[[
               const active = states['input_select.family_section']?.state === variables.section;
-              // Active: blackish; Inactive: bluish-grey (uses your theme's state icon color)
-              return active ? '#0F172A' : 'var(--state-icon-color)';
+              const lilac = getComputedStyle(document.documentElement).getPropertyValue('--app-header-background-color').trim() || '#CFBAF0';
+              return active ? lilac : '#FFFFFF';
             ]]]
       custom_fields:
         count:
+          - display: grid
+          - place-items: center
           - align-self: center
           - justify-self: end
-          - font-weight: 700
+          - width: 1.6em
+          - height: 1.6em
+          - font-weight: 800
           - font-size: 14px
-          - width: 1.5em
-          - text-align: center
-          - background: var(--palette-rose)
-          - height: 1.5em
-          - border-radius: 50%
-          - border: >
-              [[[
-                const active = states['input_select.family_section']?.state === variables.section;
-                // Keep count legible in both states
-                return active ? '1px solid #0F172A' : '1px solid var(--state-icon-color)';
-              ]]]
-          - color: >
-              [[[
-                const active = states['input_select.family_section']?.state === variables.section;
-                // Keep count legible in both states
-                return active ? '#0F172A' : 'var(--state-icon-color)';
-              ]]]
+          - background: var(--family-color-family)
+          - color: #FFFFFF
+          - border: 2px solid #FFFFFF
+          - border-radius: 999px
     custom_fields:
       count: >
         [[[
@@ -141,10 +151,9 @@ button_card_templates:
           if (!eid) return null;
           const raw = states[eid]?.state ?? null;
           const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
-          if (!val || val === '0') return null;
+          if (!val || val === '0' || val === 'unknown' || val === 'unavailable') return null;
           return val;
         ]]]
-
 
 # ---------- View ----------
 views:
@@ -220,46 +229,37 @@ views:
                     - white-space: nowrap
                     - overflow: hidden
                     - text-overflow: ellipsis
-                    - color: #000000 !important
+                    - color: #000000
               custom_fields:
-                left: |
+                left: >
                   [[[
                     const d = new Date();
                     const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
                     const time = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-                    return `
-                      <div class="left">
-                        <div class="title" style="font-weight:800;font-size:18px;color:#fff">Panogu Family</div>
-                        <div class="sub" style="margin-top:2px;color:#fff">${date} • ${time}</div>
-                      </div>
-                    `;
+                    return `Panogu Family - ${date} - ${time}`;
                   ]]]
-                right: |
+                right: >
                   [[[
                     const e = states['calendar.routine'];
-                    if (!e) return '<span style="color:#fff">Routine calendar not found</span>';
+                    if (!e) return 'Routine calendar not found';
                     const a = e.attributes || {};
                     const title = a.message || 'No upcoming events';
-                    if (!a.start_time) return `<span style="color:#fff">${title}</span>`;
-
+                    if (!a.start_time) return `${title}`;
                     const start = new Date(a.start_time);
-                    const end   = a.end_time ? new Date(a.end_time) : null;
-                    const now   = new Date();
-
+                    const end = a.end_time ? new Date(a.end_time) : null;
+                    const now = new Date();
                     const timeFmt = { hour: '2-digit', minute: '2-digit' };
                     const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
                     const sameDay = start.toDateString() === now.toDateString();
-
                     const inProgress = e.state === 'on' && start <= now && (!end || now < end);
                     let when;
                     if (inProgress) {
-                      when = `Now • ${start.toLocaleTimeString([], timeFmt)}${end ? '–' + end.toLocaleTimeString([], timeFmt) : ''}`;
+                      when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
                     } else {
-                      when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' • ' + start.toLocaleTimeString([], timeFmt);
+                      when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
                     }
-
                     const offset = a.offset_reached ? ' ⏱' : '';
-                    return `<span style="font-weight:600;color:#fff">${title} — ${when}${offset}</span>`;
+                    return `<strong>${title}</strong> - <strong>${when}${offset}</strong>`;
                   ]]]
               triggers_update:
                 - sensor.time
@@ -269,67 +269,46 @@ views:
       # =========================
       - type: custom:mod-card
         view_layout: { grid-area: chips }
-        card_mod:
-          style: |
-            ha-card {
-              background: var(--palette-rose) !important;
-              border-radius: 0 !important;
-              margin: 0 !important;
-              padding: 8px 12px !important;
-              color: #FFFFFF !important;
-            }
+        card_mod: { style: "ha-card { background: var(--palette-rose) !important; border-radius: 0 !important; margin: 0 !important; padding: 8px 12px !important; }" }
         card:
           type: horizontal-stack
           cards:
-            # Family
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:account-group
               name: Family
               variables:
-                todo: todo.family
-                completed: input_number.completed_family_today
                 color: var(--family-color-family)
-
-            # Anthony (code/computer)
+                count_entity: input_number.outstanding_family_today
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:laptop
               name: Anthony
               variables:
-                todo: todo.anthony
-                completed: input_number.completed_anthony_today
                 color: var(--family-color-anthony)
-
-            # Joy (book)
+                count_entity: input_number.outstanding_anthony_today
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:book-open-variant
               name: Joy
               variables:
-                todo: todo.joy
-                completed: input_number.completed_joy_today
                 color: var(--family-color-joy)
-
-            # Lizzie (teddy)
+                count_entity: input_number.outstanding_joy_today
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:teddy-bear
               name: Lizzie
               variables:
-                todo: todo.lizzie
-                completed: input_number.completed_lizzie_today
                 color: var(--family-color-lizzie)
-
-            # Toby (football)
+                count_entity: input_number.outstanding_lizzie_today
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:soccer
               name: Toby
               variables:
-                todo: todo.toby
-                completed: input_number.completed_toby_today
                 color: var(--family-color-toby)
+                count_entity: input_number.outstanding_toby_today
+
 
       # =========================
       # 3) MAIN AREA (conditional views)
@@ -365,6 +344,11 @@ views:
                       card_mod:
                         style: |
                           ha-card { max-height: 44vh; overflow: auto; }
+                          /* Hide add controls inside the list; FAB will handle adding */
+                          ha-card $ ha-todo-list mwc-textfield,
+                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                            display: none !important;
+                          }
 
                     - type: todo-list
                       entity: todo.joy
@@ -374,6 +358,11 @@ views:
                       card_mod:
                         style: |
                           ha-card { max-height: 44vh; overflow: auto; }
+                          /* Hide add controls inside the list; FAB will handle adding */
+                          ha-card $ ha-todo-list mwc-textfield,
+                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                            display: none !important;
+                          }
 
                     - type: todo-list
                       entity: todo.family
@@ -383,6 +372,11 @@ views:
                       card_mod:
                         style: |
                           ha-card { max-height: 44vh; overflow: auto; }
+                          /* Hide add controls inside the list; FAB will handle adding */
+                          ha-card $ ha-todo-list mwc-textfield,
+                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                            display: none !important;
+                          }
 
                 # Kids row (keep completed visible for easy undo)
                 - type: grid
@@ -394,13 +388,25 @@ views:
                       title: Lizzie
                       hide_completed: false
                       item_tap_action: toggle
-
+                      card_mod:
+                        style: |
+                          /* Hide add controls inside the list; FAB will handle adding */
+                          ha-card $ ha-todo-list mwc-textfield,
+                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                            display: none !important;
+                          }
                     - type: todo-list
                       entity: todo.toby
                       title: Toby
                       hide_completed: false
                       item_tap_action: toggle
-
+                      card_mod:
+                        style: |
+                          /* Hide add controls inside the list; FAB will handle adding */
+                          ha-card $ ha-todo-list mwc-textfield,
+                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                            display: none !important;
+                          }
           # --- Photos ---
           - type: conditional
             conditions:
