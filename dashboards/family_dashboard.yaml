@@ -281,7 +281,7 @@ views:
           type: horizontal-stack
           cards:
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: progress_chip
               icon: mdi:account-group
               name: Family
               variables:
@@ -291,7 +291,7 @@ views:
                 color: var(--family-color-family)
 
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: progress_chip
               icon: mdi:laptop
               name: Anthony
               variables:
@@ -301,7 +301,7 @@ views:
                 color: var(--family-color-anthony)
 
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: progress_chip
               icon: mdi:book-open-variant
               name: Joy
               variables:
@@ -311,7 +311,7 @@ views:
                 color: var(--family-color-joy)
 
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: progress_chip
               icon: mdi:teddy-bear
               name: Lizzie
               variables:
@@ -321,7 +321,7 @@ views:
                 color: var(--family-color-lizzie)
 
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: progress_chip
               icon: mdi:soccer
               name: Toby
               variables:
