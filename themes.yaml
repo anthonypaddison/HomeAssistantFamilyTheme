@@ -159,11 +159,11 @@ FamilyBoard:
       layout-margin: 0px !important;
       --layout-margin: 0px !important;
     }
-    app-header, .toolbar {
-      background: var(--app-header-background-color);
-      color: var(--app-header-text-color);
-      box-shadow: 0 1px 0 0 var(--divider-color);
-    }
+    # app-header, .toolbar {
+    #   background: var(--app-header-background-color);
+    #   color: var(--app-header-text-color);
+    #   box-shadow: 0 1px 0 0 var(--divider-color);
+    # }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-thumb {
       background: var(--scrollbar-thumb-color);
