@@ -12,10 +12,8 @@ button_card_templates:
     show_state: false
     styles:
       card:
-        - background: >
-            [[[
-              return variables.color ? variables.color : 'var(--primary-color)';
-            ]]]
+        - background: >-
+            [[[ return variables.color || 'var(--primary-color)'; ]]]
         - padding: 8px 12px
         - border-radius: 16px
         - min-width: 120px
@@ -28,20 +26,30 @@ button_card_templates:
         - font-weight: 700
       icon:
         - width: 22px
+      custom_fields:
+        bar:
+          - width: 100%
+          - margin-top: 6px
     custom_fields:
       bar: >
         [[[
-          const done   = Number(states[variables.completed]?.state || 0);
-          const remain = Number(states[variables.todo]?.state || 0);
-          const total  = Math.max(0, done + remain);
-          const pct    = Math.min(100, Math.round((done/total)*100));
-          const label  = `${done}/${total}`;
+          // Coerce states safely
+          const toNumber = (v) => Number.isFinite(+v) ? +v : 0;
+          const done    = toNumber(states[variables.completed]?.state);
+          const remain  = toNumber(states[variables.todo]?.state);
+          const total   = Math.max(0, done + remain);
+          const pct     = total ? Math.min(100, Math.round((done/total)*100)) : 0;
+
+          const track = 'height:6px;border-radius:3px;background:rgba(0,0,0,.15);position:relative;overflow:hidden;';
+          const fill  = `position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);`;
+          const label = `position:absolute;right:0;top:-16px;font-size:12px;font-weight:700;`;
+
           return `
-            <div style="margin-top:6px;height:16px;border-radius:4px;background:rgba(0,0,0,0.1);position:relative;">
-              <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:#FFFFFF;;opacity:.15;border-radius:4px;"></div>
-              <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:${variables.color || 'var(--primary-color)'};border-radius:4px;"></div>
-              <div style="margin:2px;font-size:12px;font-weight:700;color:#FFFFFF;">${label}</div>
-            </div>`;
+            <div style="${track}">
+              <div style="${fill}"></div>
+            </div>
+            <div style="${label}">${done}/${total}</div>
+          `;
         ]]]
 
   family_icon:
