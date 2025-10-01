@@ -413,7 +413,9 @@ views:
               - entity: input_select.family_section
                 state: Photos
             card:
-              type: media-browser
+              type: iframe
+              url: /media-browser
+              aspect_ratio: 160%
 
           # --- Lists ---
           - type: conditional
@@ -425,7 +427,64 @@ views:
               entity: todo.family
               title: Lists
 
-          # --- FAB (context-aware popup) ---
+          # --- Toby view ---
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Toby
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:button-card
+                  icon: mdi:star-four-points-outline
+                  name: 'Next up'
+                  show_icon: true
+                  show_state: true
+                  state_display: '[[[ return states["sensor.next_up_toby"]?.state || "All done!"; ]]]'
+                  styles:
+                    card:
+                      - background: 'rgba(66,165,245,0.15)'
+                      - border: 1px solid rgba(66,165,245,0.35)
+                      - padding: 10px
+                      - border-radius: 10px
+                - type: todo-list
+                  entity: todo.toby
+                  hide_completed: false
+                  card_mod:
+                    style: |
+                      ha-textfield, mwc-textfield, .add, .add-item, .actions { display: none !important; }
+                      /* show newest at bottom: often good for kids reading order */
+                      ul { display: flex; flex-direction: column; }
+
+          # --- Lizzie view ---
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Lizzie
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:button-card
+                  icon: mdi:star-four-points-outline
+                  name: 'Next up'
+                  show_icon: true
+                  show_state: true
+                  state_display: '[[[ return states["sensor.next_up_lizzie"]?.state || "All done!"; ]]]'
+                  styles:
+                    card:
+                      - background: 'rgba(236,64,122,0.15)'
+                      - border: 1px solid rgba(236,64,122,0.35)
+                      - padding: 10px
+                      - border-radius: 10px
+                - type: todo-list
+                  entity: todo.lizzie
+                  hide_completed: false
+                  card_mod:
+                    style: |
+                      ha-textfield, mwc-textfield, .add, .add-item, .actions { display: none !important; }
+                      ul { display: flex; flex-direction: column; }
+
+
           # --- FAB (context-aware popup) ---
           - type: custom:button-card
             icon: mdi:plus

@@ -210,3 +210,48 @@
           {% set items = (lists['todo.toby'].items | list) %}
           {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
            + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+
+
+- alias: To-do - Compute "next up" for kids
+  id: todo_next_up_kids
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+    - platform: state
+      entity_id:
+        - todo.toby
+        - todo.lizzie
+  action:
+    - service: todo.get_items
+      target:
+        entity_id:
+          - todo.toby
+          - todo.lizzie
+      data:
+        status: needs_action
+      response_variable: lists
+    - variables:
+        pick_next: >
+          {% macro next(list) -%}
+          {%- set items = lists[list].items | list -%}
+          {%- set today = now().date().isoformat() -%}
+          {# prefer items due today, else earliest with a due, else first #}
+          {%- set today_items = items | selectattr('due','defined')
+                                     | selectattr('due','match', today ~ '.*') | list -%}
+          {%- if today_items|count > 0 -%}
+            {{ today_items[0].summary }}
+          {%- else -%}
+            {%- set with_due = items | selectattr('due','defined')
+                                     | sort(attribute='due') | list -%}
+            {%- if with_due|count > 0 -%}
+              {{ with_due[0].summary }}
+            {%- else -%}
+              {{ items[0].summary if items|count > 0 else '' }}
+            {%- endif -%}
+          {%- endif -%}
+          {%- endmacro -%}
+    - event: set_var
+      event_data:
+        next_toby: "{{ pick_next('todo.toby') }}"
+        next_lizzie: "{{ pick_next('todo.lizzie') }}"

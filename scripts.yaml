@@ -84,6 +84,21 @@ family_fab_open:
                   - name: tags
                     label: Tags (optional, e.g. #morning #kitchen)
                     selector: { text: null }
+                  - name: icon
+                    label: Icon
+                    selector:
+                      select:
+                        mode: dropdown
+                        options:
+                          - { label: "None", value: "" }
+                          - { label: "🧹 Cleaning", value: "🧹" }
+                          - { label: "🧺 Laundry", value: "🧺" }
+                          - { label: "🗑️ Rubbish", value: "🗑️" }
+                          - { label: "🧽 Wipe", value: "🧽" }
+                          - { label: "🧒 Kids", value: "🧒" }
+                  - name: due_date
+                    label: Due date
+                    selector: { date: null }
                   - name: due_today
                     label: Due today
                     selector: { boolean: null }
@@ -178,13 +193,20 @@ popup_add_todo:
     list_entity: {}
     tags: {}
     due_today: {}
+    icon: {}
+    due_date: {}
   sequence:
     - variables:
+        prefix: "{{ icon if icon else '' }}"
         desc: "{{ (tags | default('')) }}"
-        due: "{{ now().date().isoformat() if due_today else none }}"
+        due: >
+          {{ now().date().isoformat() if due_today else (due_date if due_date else none) }}
+        title: >
+          {{ (prefix ~ ' ' if prefix else '') ~ item }}
     - service: todo.add_item
       target: { entity_id: "{{ list_entity }}" }
       data:
-        item: "{{ item }}"
+        item: "{{ title }}"
         description: "{{ desc if desc else none }}"
         due_date: "{{ due if due else none }}"
+

@@ -13,6 +13,8 @@ card_mod:
       top: 0;
       padding: 0 !important;
     }
+    ha-card .card-content { display: flex; flex-direction: column; height: 100%; }
+
 card:
   type: vertical-stack
   cards:
@@ -70,3 +72,28 @@ card:
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
         service_data: { option: Lists }
+
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:robot-happy-outline
+      variables:
+        section: Toby
+      styles:
+        card:
+          - margin-top: auto   # pushes this and following items to bottom
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        service_data: { option: Toby }
+
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:unicorn-variant
+      variables:
+        section: Lizzie
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        service_data: { option: Lizzie }

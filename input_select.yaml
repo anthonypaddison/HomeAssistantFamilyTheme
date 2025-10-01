@@ -1,6 +1,6 @@
 family_section:
   name: Family Section
-  options: [Calendar, Chores, Photos, Lists]
+  options: [Calendar, Chores, Photos, Lists, Toby, Lizzie]
   initial: Calendar
 
 calendar_view:

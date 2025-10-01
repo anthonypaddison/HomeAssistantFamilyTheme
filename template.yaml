@@ -13,3 +13,16 @@
        + states('todo.joy')    |int(0)
        + states('todo.lizzie') |int(0)
        + states('todo.toby')   |int(0) }}
+- sensor:
+  - name: "next_up_toby"
+    unique_id: next_up_toby
+    state: "{{ trigger.event.data.next_toby if trigger is defined and trigger.event.event_type == 'set_var' else states('sensor.next_up_toby') }}"
+    trigger:
+      - platform: event
+        event_type: set_var
+  - name: "next_up_lizzie"
+    unique_id: next_up_lizzie
+    state: "{{ trigger.event.data.next_lizzie if trigger is defined and trigger.event.event_type == 'set_var' else states('sensor.next_up_lizzie') }}"
+    trigger:
+      - platform: event
+        event_type: set_var
