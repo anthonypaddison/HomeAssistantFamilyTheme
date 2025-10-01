@@ -330,7 +330,9 @@ FamilyBoard:
   # 7b) MORE-INFO via Shadow DOM traversal
   card-mod-more-info-yaml: |
     ha-dialog$: |
-      .mdc-dialog .mdc-dialog__title { font-weight: var(--ha-font-weight-bold, 700); }
+            div.mdc-dialog div.mdc-dialog__scrim {
+              backdrop-filter: blur(8px);   /* example */
+            }
 
   # 8) SIDEBAR (official left rail; active item -> white bg, bluish-grey icon)
   card-mod-sidebar: |
