@@ -179,7 +179,7 @@ views:
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
-              color: #fff !important;  # <-- force white text globally
+              color: #000000 !important;
             }
         card:
           type: horizontal-stack
@@ -193,7 +193,7 @@ views:
                   - background: transparent
                   - box-shadow: none
                   - padding: 0
-                  - color: #fff !important  # <-- force white text in button-card
+                  - color: #000000 !important
                 grid:
                   - grid-template-areas: '"left right"'
                   - grid-template-columns: 1fr auto
@@ -204,7 +204,7 @@ views:
                     - grid-area: left
                     - justify-self: start
                     - align-self: center
-                    - color: #fff !important
+                    - color: #000000 !important
                   right:
                     - grid-area: right
                     - justify-self: end
@@ -212,7 +212,7 @@ views:
                     - white-space: nowrap
                     - overflow: hidden
                     - text-overflow: ellipsis
-                    - color: #fff !important
+                    - color: #000000 !important
               custom_fields:
                 left: |
                   [[[
