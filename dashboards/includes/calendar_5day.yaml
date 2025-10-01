@@ -1,12 +1,16 @@
 type: custom:week-planner-card
 days: 5
 startingDay: today
-columns:
-  extraLarge: 5
-  large: 5
-  medium: 5
-  small: 5          # force 5 columns on small
-  extraSmall: 5     # force 5 columns on extra-small
+noCardBackground: false
+compact: true
+locale: en-GB
+
+# Show: Thu 13 (HTML allowed); we keep "today" showing weekday (texts.today = '')
+dayFormat: >-
+  '<span class="dow">ccc</span> <span class="dnum">dd</span>'
+texts:
+  today: ''   # never replace with the word "Today"
+
 calendars:
   - entity: calendar.family
     color: var(--cal-color-family)
@@ -18,69 +22,60 @@ calendars:
     color: var(--cal-color-lizzie)
   - entity: calendar.toby
     color: var(--cal-color-toby)
-noCardBackground: false
+
 card_mod:
-  style:
-    $: |
-      :host {
-        --hour-height: 64px;
-        --rail-width: 56px;
-        --rail-pad-left: 10px;
-        --rail-fsize: 12px;
-        --rail-color: var(--secondary-text-color);
-        --day-header-h: 40px;
-        --allday-row-h: 32px;
-        --sticky-gap: 4px;
-        --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
-      }
+  style: |
+    /* FORCE 5 equal-width columns on one row at every width */
+    .days {
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr) !important;
+      gap: var(--ha-gutter, 8px);
+      justify-items: stretch;
+      align-items: start;
+    }
 
-      /* Make room for the left time rail */
-      .days {
-        position: relative;
-        padding-left: var(--rail-width);
-        overflow: visible;             /* ensure ::before isn't clipped */
-      }
+    /* Column base */
+    .day {
+      position: relative;
+      background: #F8FAFC;  /* very light grey */
+      padding-left: 56px;   /* room for time rail */
+      overflow: visible;
+      min-height: 520px;
+    }
 
-      /* Column visuals */
-      .day {
-        background: #F8FAFC;           /* light-light grey */
-      }
+    /* Header row */
+    .day .header {
+      position: sticky; top: 0; z-index: 3;
+      height: 40px; display: flex; align-items: center; gap: 6px;
+      background: var(--card-background-color);
+      color: var(--primary-text-color);
+      font-weight: 700; font-size: 16px; /* same size for day + date */
+    }
+    .day .header .dow { font-weight: 700; }
+    .day.today .header .dnum {
+      background: var(--palette-rose);
+      color: #FFFFFF;
+      border-radius: 999px;
+      padding: 2px 8px; line-height: 1.2;
+    }
 
-      /* Sticky header (date/day) per column */
-      .day .header {
-        position: sticky;
-        top: 0;
-        z-index: 4;
-        height: var(--day-header-h);
-        display: flex; align-items: center;
-        background: var(--card-background-color);
-        font-weight: 700;
-      }
+    /* All-day band (even if empty) */
+    .day .allday, .day .all-day, .event.fullday {
+      position: sticky; top: 40px; z-index: 2;
+      min-height: 32px; display: flex; align-items: center;
+      background: #EEF2F7;                  /* light grey band */
+      border-bottom: 1px solid var(--divider-color);
+    }
 
-      /* All-day row (even if empty) */
-      .day .all-day, .day .allday {
-        position: sticky;
-        top: calc(var(--day-header-h) + var(--sticky-gap));
-        z-index: 3;
-        height: var(--allday-row-h);
-        display: flex; align-items: center;
-        background: #EEF2F7;           /* slightly darker grey for contrast */
-        border-bottom: 1px solid var(--divider-color);
-      }
-
-      /* Left time rail (00:00 → 23:00) */
-      .days::before {
-        content:
-          "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
-        white-space: pre;
-        position: absolute;
-        left: 0;
-        top: var(--rail-top);
-        width: calc(var(--rail-width) - 4px);
-        padding-left: var(--rail-pad-left);
-        line-height: var(--hour-height);
-        font-size: var(--rail-fsize);
-        color: var(--rail-color);
-        pointer-events: none;
-        z-index: 5;
-      }
+    /* Left time rail (per column) - 00..23 */
+    .day::before {
+      content:
+        "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
+      white-space: pre;
+      position: absolute; left: 0;
+      top: calc(40px + 32px + 4px);  /* header + all-day + small gap */
+      width: 52px; padding-left: 8px; text-align: left;
+      line-height: 64px; font-size: 12px;
+      color: var(--secondary-text-color);
+      pointer-events: none; z-index: 1;
+    }
