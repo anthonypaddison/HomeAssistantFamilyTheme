@@ -20,125 +20,53 @@ calendars:
     color: var(--cal-color-toby)
 noCardBackground: false
 card_mod:
-  style: |
-    :host {
-      /* TUNE HERE */
-      --hour-height:   64px;         /* px per hour; match the card’s grid */
-      --rail-width:    56px;         /* left gutter width */
-      --rail-pad-left: 10px;         /* inner padding for time labels */
-      --rail-fsize:    12px;
-      --rail-color:    var(--secondary-text-color);
-
-      /* Sticky sections: set these to your visual heights */
-      --day-header-h:  40px;         /* height of date/day header per column */
-      --allday-row-h:  32px;         /* height of all-day row per column */
-      --sticky-gap:     4px;         /* spacing between header and all-day rows */
-
-      /* Where the hour rail begins (just below the sticky bits) */
-      --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
-    }
-
-    /* Prevent whole-card scroll; we will scroll inside the calendar grid only */
-    # ha-card {
-    #   overflow: hidden;
-    # }
-
-    # /* CALENDAR GRID SCROLLER + HOUR STRIPES */
-    # ha-card .days {
-    #   position: relative;
-    #   padding-left: var(--rail-width); /* room for the left time rail */
-    #   display: flex;
-    #   flex-wrap: nowrap;               /* keep all 5 on one row */
-    #   gap: var(--ha-gutter, 0);
-
-    #   /* Make ONLY the grid scroll vertically */
-    #   max-height: calc(100vh - 220px); /* adjust to your dashboard */
-    #   overflow-y: auto;
-    #   overflow-x: hidden;
-    #   overscroll-behavior: contain;
-    #   scrollbar-gutter: stable both-edges;
-
-    #   /* Hour stripes (30m + 60m) */
-    #   background-image:
-    #     repeating-linear-gradient(
-    #       to bottom,
-    #       transparent 0px,
-    #       transparent calc(var(--hour-height) / 2 - 1px),
-    #       rgba(0,0,0,0.04) calc(var(--hour-height) / 2)
-    #     ),
-    #     repeating-linear-gradient(
-    #       to bottom,
-    #       transparent 0px,
-    #       transparent calc(var(--hour-height) - 1px),
-    #       rgba(0,0,0,0.08) var(--hour-height)
-    #     );
-    #   background-clip: padding-box;
-    # }
-
-    /* Equal-width columns that shrink vs. wrapping */
-    ha-card .day {
-      flex: 1 1 0;
-      min-width: 0;
-      /* If your card uses an absolutely-positioned hours grid, this helps ensure
-         events begin below the sticky header & all-day rows: */
-    }
-    /* If the card exposes a distinct hours/events container, nudge it down: */
-    ha-card .day .events,
-    ha-card .day .hours,
-    ha-card .day .grid,
-    ha-card .day .timeline {
-      margin-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
-    }
-
-    /* Sticky DATE/Day header per column */
-    ha-card .day .header {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      height: var(--day-header-h);
-      display: flex;
-      align-items: center;
-      background: var(--card-background-color);
-      font-weight: 700;
-      color: var(--primary-text-color);
-    }
-
-    /* Sticky ALL-DAY row per column (covers “allday” or “all-day”) */
-    ha-card .day .all-day,
-    ha-card .day .allday {
-      position: sticky;
-      top: calc(var(--day-header-h) + var(--sticky-gap));
-      z-index: 2;
-      height: var(--allday-row-h);
-      display: flex;
-      align-items: center;
-      background: var(--card-background-color);
-      border-bottom: 1px solid var(--divider-color);
-    }
-
-    /* LEFT TIME RAIL — full-day labels 00:00 → 23:00, scrolls with hours */
-    ha-card .days::before {
-      content:
-        "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
-      white-space: pre;
-      position: absolute;              /* inside the scroll area so it scrolls */
-      left: 0;
-      top: var(--rail-top);            /* start below sticky header + all-day */
-      width: calc(var(--rail-width) - 4px);
-      padding-left: var(--rail-pad-left);
-      text-align: left;
-      line-height: var(--hour-height);
-      font-size: var(--rail-fsize);
-      color: var(--rail-color);
-      pointer-events: none;
-      z-index: 1;                      /* under sticky rows, over background */
-    }
-
-    /* Fallback: if the card enforces grid layout, hard-pin 5 columns */
-    @supports (grid-template-columns: repeat(5, 1fr)) {
-      ha-card .days[style*="display: grid"],
-      ha-card .days.display-grid {
-        grid-template-columns: repeat(5, 1fr) !important;
-        grid-auto-flow: column !important;
+  style:
+    $: |                     # ✅ pierce the card's shadow DOM
+      :host {
+        --hour-height: 64px;
+        --rail-width: 56px;
+        --rail-pad-left: 10px;
+        --rail-fsize: 12px;
+        --rail-color: var(--secondary-text-color);
+        --day-header-h: 40px;
+        --allday-row-h: 32px;
+        --sticky-gap: 4px;
+        --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
       }
-    }
+      /* Make room for the rail */
+      .days {
+        position: relative;
+        padding-left: var(--rail-width);      # ✅ no '#' pseudo-comment
+      }
+      /* Sticky header/all-day rows (adjust if your card uses different classnames) */
+      .day .header {
+        position: sticky; top: 0; z-index: 3;
+        height: var(--day-header-h);
+        display: flex; align-items: center;
+        background: var(--card-background-color);
+      }
+      .day .all-day, .day .allday {
+        position: sticky;
+        top: calc(var(--day-header-h) + var(--sticky-gap));
+        z-index: 2;
+        height: var(--allday-row-h);
+        display: flex; align-items: center;
+        background: var(--card-background-color);
+        border-bottom: 1px solid var(--divider-color);
+      }
+      /* The time rail itself */
+      .days::before {
+        content:
+          "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
+        white-space: pre;
+        position: absolute;
+        left: 0;
+        top: var(--rail-top);
+        width: calc(var(--rail-width) - 4px);
+        padding-left: var(--rail-pad-left);
+        line-height: var(--hour-height);
+        font-size: var(--rail-fsize);
+        color: var(--rail-color);
+        pointer-events: none;
+        z-index: 1;
+      }

@@ -154,7 +154,7 @@ views:
     layout:
       padding: 0px
       grid-template-columns: 100px 1fr
-      grid-template-rows: auto 1fr
+      grid-template-rows: auto auto 1fr
       grid-template-areas: |
         "sidebar heading"
         "sidebar chips"
@@ -420,31 +420,38 @@ views:
               title: Lists
 
           # --- FAB (context-aware popup) ---
+          # --- FAB (context-aware popup) ---
           - type: custom:button-card
             icon: mdi:plus
             show_name: false
+            show_icon: true
             tap_action:
-              action: fire-dom-event
-              browser_mod:
-                service: script.family_fab_open
-                data:
-                  browser_id: THIS
-            card_mod:
-              style: |
-                ha-card {
-                  position: fixed !important;
-                  right: 24px !important;
-                  bottom: 24px !important;
-                  width: 56px !important;
-                  height: 56px !important;
-                  border-radius: 28px !important;
-                  box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
-                  color: #000 !important;
-                  z-index: 1000 !important;
-                  background: [[[
-                    const s = states['input_select.family_section']?.state ?? 'Calendar';
-                    if (s === 'Calendar') return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-calendar');
-                    if (s === 'Chores') return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-chores');
-                    return getComputedStyle(document.documentElement).getPropertyValue('--fab-color-default');
-                  ]]];
-                }
+              action: call-service
+              service: script.family_fab_open
+              service_data:
+                browser_id: THIS
+            styles:
+              card:
+                - position: fixed
+                - right: 24px
+                - bottom: 24px
+                - width: 56px
+                - height: 56px
+                - border-radius: 28px
+                - box-shadow: 0 8px 24px rgba(0,0,0,0.22)
+                - padding: 0
+                - z-index: 1000
+                - background: >
+                    [[[
+                      const s = states['input_select.family_section']?.state ?? 'Calendar';
+                      const root = getComputedStyle(document.documentElement);
+                      const pick = (n, fallback) => root.getPropertyValue(n) || fallback;
+                      const map = {
+                        Calendar: pick('--fab-color-calendar', 'var(--primary-color)'),
+                        Chores:   pick('--fab-color-chores',   'var(--primary-color)'),
+                      };
+                      return map[s] || pick('--fab-color-default', 'var(--primary-color)');
+                    ]]]
+              icon:
+                - width: 28px
+                - height: 28px
