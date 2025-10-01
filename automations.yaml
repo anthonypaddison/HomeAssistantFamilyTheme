@@ -28,10 +28,13 @@
         ] }}
   action:
     - choose:
-        - conditions: "{{ list_entity == 'todo.family' }}"
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.family' }}"
           sequence:
             - service: input_number.increment
-              target: { entity_id: input_number.completed_family_today }
+              target:
+                entity_id: input_number.completed_family_today
         - conditions: "{{ list_entity == 'todo.anthony' }}"
           sequence:
             - service: input_number.increment
