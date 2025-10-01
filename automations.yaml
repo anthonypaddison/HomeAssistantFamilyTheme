@@ -255,3 +255,76 @@
       event_data:
         next_toby: "{{ pick_next('todo.toby') }}"
         next_lizzie: "{{ pick_next('todo.lizzie') }}"
+
+- alias: To-do - Count COMPLETED with due today (per list)
+  id: todo_count_completed_due_today
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+    - platform: time
+      at: "00:03:00"
+  action:
+    - service: todo.get_items
+      target:
+        entity_id:
+          - todo.family
+          - todo.anthony
+          - todo.joy
+          - todo.lizzie
+          - todo.toby
+      data:
+        status: completed
+      response_variable: lists
+    - variables:
+        today: "{{ now().date().isoformat() }}"
+        cnt: >
+          {% macro cnt(eid) -%}
+          {{ lists[eid].items
+             | selectattr('due','defined')
+             | selectattr('due','match', today ~ '.*')
+             | list | count }}
+          {%- endmacro -%}
+    - service: input_number.set_value
+      target: { entity_id: input_number.completed_due_today_family }
+      data: { value: "{{ cnt('todo.family')|int }}" }
+    - service: input_number.set_value
+      target: { entity_id: input_number.completed_due_today_anthony }
+      data: { value: "{{ cnt('todo.anthony')|int }}" }
+    - service: input_number.set_value
+      target: { entity_id: input_number.completed_due_today_joy }
+      data: { value: "{{ cnt('todo.joy')|int }}" }
+    - service: input_number.set_value
+      target: { entity_id: input_number.completed_due_today_lizzie }
+      data: { value: "{{ cnt('todo.lizzie')|int }}" }
+    - service: input_number.set_value
+      target: { entity_id: input_number.completed_due_today_toby }
+      data: { value: "{{ cnt('todo.toby')|int }}" }
+
+- alias: To-do - Build "shopping" markdown from Family list
+  id: todo_build_shopping_md
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+    - platform: state
+      entity_id: todo.family
+  action:
+    - service: todo.get_items
+      target: { entity_id: todo.family }
+      data: { status: needs_action }
+      response_variable: fam
+    - variables:
+        items: "{{ fam['todo.family'].items | list }}"
+        filtered: >
+          {{ items | selectattr('description','defined')
+                   | selectattr('description','search','(?i)#shopping')
+                   | map(attribute='summary') | list }}
+        md: >-
+          {% if filtered|count == 0 %}_No shopping items._{% else %}
+          **Shopping**
+          {% for t in filtered %}- {{ t }}
+          {% endfor %}{% endif %}
+    - service: input_text.set_value
+      target: { entity_id: input_text.shopping_md }
+      data: { value: "{{ md }}" }

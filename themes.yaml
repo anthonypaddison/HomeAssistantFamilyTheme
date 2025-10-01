@@ -113,11 +113,21 @@ FamilyBoard:
     :host {
       --grid-card-gap: 0px !important;
       margin: 0 !important;
+      --mdc-theme-primary: var(--primary-color);
       layout-margin: 0px !important;
       --layout-margin: 0px !important;
+      --grid-card-gap: 0px !important;
+    }
+    hui-view #view, hui-masonry-view, hui-grid-layout, .content, #columns, .column {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    app-header, .toolbar {
+      display: none !important;
     }
     hui-view {
       margin: 0 !important;
+      padding: 0 !important;
       --masonry-view-card-margin: 0px !important;
       --grid-card-gap: var(--grid-card-gap, 0px) !important;
     }

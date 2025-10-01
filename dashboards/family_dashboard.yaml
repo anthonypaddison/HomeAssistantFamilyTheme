@@ -136,14 +136,16 @@ button_card_templates:
           - place-items: center
           - align-self: center
           - justify-self: end
-          - width: 1.6em
-          - height: 1.6em
           - font-weight: 800
           - font-size: 14px
+          - min-width: 1.6em
+          - height: 1.6em
           - background: var(--family-color-family)
-          - color: #FFFFFF
-          - border: 2px solid #FFFFFF
+          - color: "#FFFFFF"
+          - border: 1px solid #FFFFFF
           - border-radius: 999px
+          - line-height: 1  
+
     custom_fields:
       count: >
         [[[
@@ -212,58 +214,63 @@ views:
                   - padding: 0
                   - color: #000000 !important
                 grid:
-                  - grid-template-areas: '"left right"'
-                  - grid-template-columns: 1fr auto
+                  - grid-template-areas: '"left center right"'
+                  - grid-template-columns: 1fr auto 1fr
                   - align-items: center
                   - column-gap: 12px
                 custom_fields:
-                  left:
-                    - grid-area: left
-                    - justify-self: start
-                    - align-self: center
-                    - color: #000000 !important
-                  right:
-                    - grid-area: right
-                    - justify-self: end
-                    - text-align: right
-                    - white-space: nowrap
-                    - overflow: hidden
-                    - text-overflow: ellipsis
-                    - color: #000000
-              custom_fields:
-                left: >
-                  [[[
-                    const d = new Date();
-                    const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                    const time = d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-                    return `Panogu Family - ${date} - ${time}`;
-                  ]]]
-                right: >
-                  [[[
-                    const e = states['calendar.routine'];
-                    if (!e) return 'Routine calendar not found';
-                    const a = e.attributes || {};
-                    const title = a.message || 'No upcoming events';
-                    if (!a.start_time) return `${title}`;
-                    const start = new Date(a.start_time);
-                    const end = a.end_time ? new Date(a.end_time) : null;
-                    const now = new Date();
-                    const timeFmt = { hour: '2-digit', minute: '2-digit' };
-                    const dateFmt = { weekday: 'short', month: 'short', day: 'numeric' };
-                    const sameDay = start.toDateString() === now.toDateString();
-                    const inProgress = e.state === 'on' && start <= now && (!end || now < end);
-                    let when;
-                    if (inProgress) {
-                      when = `Now - ${start.toLocaleTimeString([], timeFmt)}${end ? '-' + end.toLocaleTimeString([], timeFmt) : ''}`;
-                    } else {
-                      when = (sameDay ? 'Today' : start.toLocaleDateString([], dateFmt)) + ' - ' + start.toLocaleTimeString([], timeFmt);
-                    }
-                    const offset = a.offset_reached ? ' ⏱' : '';
-                    return `<strong>${title}</strong> - <strong>${when}${offset}</strong>`;
-                  ]]]
-              triggers_update:
-                - sensor.time
-                - calendar.routine
+                  left: |
+                    [[[
+                      const d = new Date();
+                      const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                      return `Panogu Family - ${date}`;
+                    ]]]
+                  center: |
+                    [[[
+                      const d = new Date();
+                      return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+                    ]]]
+                  right: |
+                    [[[
+                      const e = states['calendar.routine'];
+                      if (!e) return 'Routine calendar not found';
+                      const a = e.attributes ?? {};
+                      const title = a.message ?? 'No upcoming events';
+                      if (!a.start_time) return `${title}`;
+                      const start = new Date(a.start_time);
+                      const end = a.end_time ? new Date(a.end_time) : null;
+                      const now = new Date();
+                      const tf = { hour: '2-digit', minute: '2-digit' };
+                      const df = { weekday: 'short', month: 'short', day: 'numeric' };
+                      const same = start.toDateString() === now.toDateString();
+                      const inProg = e.state === 'on' && start <= now && (!end || now < end);
+                      const when = inProg
+                        ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                        : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+                      return `<strong>${title}</strong> - <strong>${when}</strong>`;
+                    ]]]
+                styles:
+                  custom_fields:
+                    left:
+                      - grid-area: left
+                      - justify-self: start
+                      - font-weight: 700
+                    center:
+                      - grid-area: center
+                      - justify-self: center
+                      - font-weight: 700
+                      - font-size: 22px
+                    right:
+                      - grid-area: right
+                      - justify-self: end
+                      - text-align: right
+                      - white-space: nowrap
+                      - overflow: hidden
+                      - text-overflow: ellipsis
+                      - font-weight: 700
+                triggers_update:
+                  - sensor.time
+                  - calendar.routine
       # =========================
       # 2) CHIPS ROW (top)
       # =========================
@@ -278,37 +285,50 @@ views:
               icon: mdi:account-group
               name: Family
               variables:
+                todo: todo.family                     # kept for legacy state, not used in pct now
+                completed: input_number.completed_due_today_family
+                badge_entity: input_number.outstanding_family_today
                 color: var(--family-color-family)
-                count_entity: input_number.outstanding_family_today
+
             - type: custom:button-card
               template: todo_due_today_chip
               icon: mdi:laptop
               name: Anthony
               variables:
+                todo: todo.anthony
+                completed: input_number.completed_due_today_anthony
+                badge_entity: input_number.outstanding_anthony_today
                 color: var(--family-color-anthony)
-                count_entity: input_number.outstanding_anthony_today
+
             - type: custom:button-card
               template: todo_due_today_chip
               icon: mdi:book-open-variant
               name: Joy
               variables:
+                todo: todo.joy
+                completed: input_number.completed_due_today_joy
+                badge_entity: input_number.outstanding_joy_today
                 color: var(--family-color-joy)
-                count_entity: input_number.outstanding_joy_today
+
             - type: custom:button-card
               template: todo_due_today_chip
               icon: mdi:teddy-bear
               name: Lizzie
               variables:
+                todo: todo.lizzie
+                completed: input_number.completed_due_today_lizzie
+                badge_entity: input_number.outstanding_lizzie_today
                 color: var(--family-color-lizzie)
-                count_entity: input_number.outstanding_lizzie_today
+
             - type: custom:button-card
               template: todo_due_today_chip
               icon: mdi:soccer
               name: Toby
               variables:
+                todo: todo.toby
+                completed: input_number.completed_due_today_toby
+                badge_entity: input_number.outstanding_toby_today
                 color: var(--family-color-toby)
-                count_entity: input_number.outstanding_toby_today
-
 
       # =========================
       # 3) MAIN AREA (conditional views)
@@ -339,42 +359,99 @@ views:
                     - type: todo-list
                       entity: todo.anthony
                       title: Anthony
-                      hide_completed: true
                       item_tap_action: toggle
+                      hide_completed: false
                       card_mod:
                         style: |
-                          ha-card { max-height: 44vh; overflow: auto; }
-                          /* Hide add controls inside the list; FAB will handle adding */
-                          ha-card $ ha-todo-list mwc-textfield,
-                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                          /* Tighter item rows */
+                          li { min-height: 34px !important; }
+
+                          /* Bigger circular checkbox with light grey unchecked, green checked */
+                          mwc-checkbox {
+                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
+                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
+                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
+                            border-radius: 50% !important;
+                            transform: scale(1.6);                       /* double size-ish */
+                            margin-right: 8px;
+                          }
+
+                          /* Subtle fade when completed list renders */
+                          .completed, .completed * { opacity: 0.85; }
+
+                          /* Hide per-list add UI completely (works on HA core todo-list card) */
+                          ha-todo-list [slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] {
                             display: none !important;
                           }
 
                     - type: todo-list
                       entity: todo.joy
                       title: Joy
-                      hide_completed: true
                       item_tap_action: toggle
+                      hide_completed: false
                       card_mod:
                         style: |
-                          ha-card { max-height: 44vh; overflow: auto; }
-                          /* Hide add controls inside the list; FAB will handle adding */
-                          ha-card $ ha-todo-list mwc-textfield,
-                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                          /* Tighter item rows */
+                          li { min-height: 34px !important; }
+
+                          /* Bigger circular checkbox with light grey unchecked, green checked */
+                          mwc-checkbox {
+                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
+                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
+                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
+                            border-radius: 50% !important;
+                            transform: scale(1.6);                       /* double size-ish */
+                            margin-right: 8px;
+                          }
+
+                          /* Subtle fade when completed list renders */
+                          .completed, .completed * { opacity: 0.85; }
+
+                          /* Hide per-list add UI completely (works on HA core todo-list card) */
+                          ha-todo-list [slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] {
                             display: none !important;
                           }
 
                     - type: todo-list
                       entity: todo.family
                       title: Family
-                      hide_completed: true
                       item_tap_action: toggle
+                      hide_completed: false
                       card_mod:
                         style: |
-                          ha-card { max-height: 44vh; overflow: auto; }
-                          /* Hide add controls inside the list; FAB will handle adding */
-                          ha-card $ ha-todo-list mwc-textfield,
-                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                          /* Tighter item rows */
+                          li { min-height: 34px !important; }
+
+                          /* Bigger circular checkbox with light grey unchecked, green checked */
+                          mwc-checkbox {
+                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
+                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
+                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
+                            border-radius: 50% !important;
+                            transform: scale(1.6);                       /* double size-ish */
+                            margin-right: 8px;
+                          }
+
+                          /* Subtle fade when completed list renders */
+                          .completed, .completed * { opacity: 0.85; }
+
+                          /* Hide per-list add UI completely (works on HA core todo-list card) */
+                          ha-todo-list [slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] {
                             display: none !important;
                           }
 
@@ -386,27 +463,69 @@ views:
                     - type: todo-list
                       entity: todo.lizzie
                       title: Lizzie
-                      hide_completed: false
                       item_tap_action: toggle
+                      hide_completed: false
                       card_mod:
                         style: |
-                          /* Hide add controls inside the list; FAB will handle adding */
-                          ha-card $ ha-todo-list mwc-textfield,
-                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                          /* Tighter item rows */
+                          li { min-height: 34px !important; }
+
+                          /* Bigger circular checkbox with light grey unchecked, green checked */
+                          mwc-checkbox {
+                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
+                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
+                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
+                            border-radius: 50% !important;
+                            transform: scale(1.6);                       /* double size-ish */
+                            margin-right: 8px;
+                          }
+
+                          /* Subtle fade when completed list renders */
+                          .completed, .completed * { opacity: 0.85; }
+
+                          /* Hide per-list add UI completely (works on HA core todo-list card) */
+                          ha-todo-list [slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] {
                             display: none !important;
                           }
+
                     - type: todo-list
                       entity: todo.toby
                       title: Toby
-                      hide_completed: false
                       item_tap_action: toggle
+                      hide_completed: false
                       card_mod:
                         style: |
-                          /* Hide add controls inside the list; FAB will handle adding */
-                          ha-card $ ha-todo-list mwc-textfield,
-                          ha-card $ ha-todo-list ha-icon-button[slot="add"] {
+                          /* Tighter item rows */
+                          li { min-height: 34px !important; }
+
+                          /* Bigger circular checkbox with light grey unchecked, green checked */
+                          mwc-checkbox {
+                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
+                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
+                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
+                            border-radius: 50% !important;
+                            transform: scale(1.6);                       /* double size-ish */
+                            margin-right: 8px;
+                          }
+
+                          /* Subtle fade when completed list renders */
+                          .completed, .completed * { opacity: 0.85; }
+
+                          /* Hide per-list add UI completely (works on HA core todo-list card) */
+                          ha-todo-list [slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] {
                             display: none !important;
                           }
+
           # --- Photos ---
           - type: conditional
             conditions:
@@ -419,13 +538,11 @@ views:
 
           # --- Lists ---
           - type: conditional
-            conditions:
-              - entity: input_select.family_section
-                state: Lists
+            conditions: [{ entity: input_select.family_section, state: Lists }]
             card:
-              type: todo-list
-              entity: todo.family
-              title: Lists
+              type: markdown
+              content: |
+                {{ states('input_text.shopping_md') }}
 
           # --- Toby view ---
           - type: conditional

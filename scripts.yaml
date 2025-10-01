@@ -8,9 +8,7 @@ family_fab_open:
   sequence:
     - variables:
         section: "{{ states('input_select.family_section') | default('Calendar') }}"
-
     - choose:
-
         # ---- Calendar "Create Event" form ----
         - conditions: "{{ section == 'Calendar' }}"
           sequence:

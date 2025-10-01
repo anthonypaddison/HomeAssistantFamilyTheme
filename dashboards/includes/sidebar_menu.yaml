@@ -22,6 +22,18 @@ card:
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
+      tap_action:
+        action: call-service
+        service: browser_mod.javascript
+        data:
+          code: |
+            // Toggle the official HA sidebar
+            (function(){
+              if (document.querySelector('home-assistant')) {
+                document.querySelector('home-assistant')
+                  .dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
+              }
+            })();
 
     # --- Calendar ---
     - type: custom:button-card
