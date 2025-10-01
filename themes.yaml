@@ -319,13 +319,13 @@ FamilyBoard:
   card-mod-element: |
     :host { /* add generic element overrides here if needed */ }
 
-  # 7) MORE-INFO DIALOGS (content & surfaces)
-  card-mod-more-info: |
-    .mdc-dialog .mdc-dialog__surface {
-      background: var(--card-background-color);
-      color: var(--primary-text-color);
-      border-radius: 12px;
-    }
+  # # 7) MORE-INFO DIALOGS (content & surfaces)
+  # card-mod-more-info: |
+  #   .mdc-dialog .mdc-dialog__surface {
+  #     background: var(--card-background-color);
+  #     color: var(--primary-text-color);
+  #     border-radius: 12px;
+  #   }
 
   # 7b) MORE-INFO via Shadow DOM traversal
   card-mod-more-info-yaml: |
