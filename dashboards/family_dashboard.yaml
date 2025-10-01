@@ -413,7 +413,6 @@ views:
 
           # --- FAB (context-aware popup) ---
           - type: custom:button-card
-            view_layout: { grid-area: main }
             icon: mdi:plus
             show_name: false
             tap_action:
@@ -421,7 +420,7 @@ views:
               browser_mod:
                 service: script.family_fab_open
                 data:
-                  browser_id: this
+                  browser_id: THIS
             card_mod:
               style: |
                 ha-card {
