@@ -9,49 +9,35 @@ card_mod:
       border: none !important;
       box-shadow: none !important;
       height: calc(100vh - var(--header-height)) !important;
-      position: sticky; top: 0;
+      position: sticky;
+      top: 0;
       padding: 0 !important;
-      display: flex; flex-direction: column;
     }
+    ha-card .card-content { display: flex; flex-direction: column; height: 100%; }
 card:
   type: vertical-stack
   cards:
-
-    # Family logo/header at the very top
+    # --- Family Icon (top) ---
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
-      show_name: false
-      show_label: false
-      styles:
-        card:
-          - background: transparent
-          - box-shadow: none
-          - border-radius: 0
-          - width: 100%
-          - height: auto
-          - padding: 10% 0 6%
-        icon:
-          - color: "#FFFFFF"
-          - width: 48px
-          - height: 48px
+      tap_action:
+        action: call-service
+        service: browser_mod.javascript
+        data:
+          code: |
+            (function(){
+              const root = document.querySelector('home-assistant');
+              if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
+            })();
 
-    # Spacer so the top of the first button aligns with the bottom of chips row
-    - type: custom:button-card
-      show_icon: false
-      show_name: false
-      styles:
-        card:
-          - background: transparent
-          - box-shadow: none
-          - height: var(--top-rows-height, 112px)   # <== keep in sync with header+chips
-          - padding: 0
-          - margin: 0
-
-    # Calendar
+    # --- Calendar ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:calendar
+      styles:
+        card:
+          - margin-top: 104px   # aligns top of this icon with bottom of header+chips row (tweak as needed)
       variables:
         section: Calendar
         badge_entity: input_number.events_today
@@ -59,9 +45,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Calendar }
+        service_data: { option: Calendar }
 
-    # Chores
+    # --- Chores ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:broom
@@ -72,9 +58,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Chores }
+        service_data: { option: Chores }
 
-    # Photos
+    # --- Photos ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:image-multiple
@@ -84,9 +70,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Photos }
+        service_data: { option: Photos }
 
-    # Lists
+    # --- Lists ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:format-list-bulleted
@@ -96,39 +82,31 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Lists }
+        service_data: { option: Lists }
 
-    # Push the kids to the bottom
-    - type: custom:button-card
-      show_icon: false
-      show_name: false
-      styles:
-        card:
-          - background: transparent
-          - box-shadow: none
-          - padding: 0
-          - margin: 0
-          - height: 0
-          - flex-grow: 1   # spacer to push following items down
-
-    # Toby
+    # --- Toby (bottom cluster) ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:robot-happy-outline
-      variables: { section: Toby }
+      variables:
+        section: Toby
+      styles:
+        card:
+          - margin-top: auto
       tap_action:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Toby }
+        service_data: { option: Toby }
 
-    # Lizzie
+    # --- Lizzie ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:unicorn-variant
-      variables: { section: Lizzie }
+      variables:
+        section: Lizzie
       tap_action:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        data: { option: Lizzie }
+        service_data: { option: Lizzie }

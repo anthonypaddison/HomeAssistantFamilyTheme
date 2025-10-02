@@ -5,7 +5,7 @@ family_section:
 
 calendar_view:
   name: Calendar View
-  options: [5-Day, Month]
+  options: [Day, 5-Day, Month]
   initial: 5-Day
 
 person_focus:
