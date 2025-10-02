@@ -1,32 +1,36 @@
-- alias: UI - Set FamilyBoard theme at startup
-  trigger: { platform: homeassistant, event: start }
-  action:
-    - service: frontend.set_theme
-      data: { name: FamilyBoard }
+# =========================
+# AUTOMATIONS (drop-in)
+# =========================
 
-- alias: To-do - Increment completed counter (on complete)
+# -------------------------------------------------
+# To-do - Increment completed counter (on complete)
+# -------------------------------------------------
+- alias: "To-do - Increment completed counter (on complete)"
   id: todo_increment_completed_on_complete
   mode: parallel
-  trigger:
-    - platform: event
+
+  triggers:
+    - trigger: event
       event_type: call_service
       event_data:
         domain: todo
         service: update_item
+
   variables:
     svc: "{{ trigger.event.data.service_data }}"
-    # entity_id in call_service is a list; get first element
     list_entity: "{{ (svc.entity_id | default([])) | first | default('') }}"
     status: "{{ svc.status | default('') }}"
-  condition:
+
+  conditions:
     - condition: template
       value_template: "{{ status == 'completed' }}"
     - condition: template
-      value_template: >
+      value_template: >-
         {{ list_entity in [
-           'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
+          'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
         ] }}
-  action:
+
+  actions:
     - choose:
         - conditions:
             - condition: template
@@ -35,72 +39,123 @@
             - service: input_number.increment
               target:
                 entity_id: input_number.completed_family_today
-        - conditions: "{{ list_entity == 'todo.anthony' }}"
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.anthony' }}"
           sequence:
             - service: input_number.increment
-              target: { entity_id: input_number.completed_anthony_today }
-        - conditions: "{{ list_entity == 'todo.joy' }}"
+              target:
+                entity_id: input_number.completed_anthony_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.joy' }}"
           sequence:
             - service: input_number.increment
-              target: { entity_id: input_number.completed_joy_today }
-        - conditions: "{{ list_entity == 'todo.lizzie' }}"
+              target:
+                entity_id: input_number.completed_joy_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.lizzie' }}"
           sequence:
             - service: input_number.increment
-              target: { entity_id: input_number.completed_lizzie_today }
-        - conditions: "{{ list_entity == 'todo.toby' }}"
+              target:
+                entity_id: input_number.completed_lizzie_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.toby' }}"
           sequence:
             - service: input_number.increment
-              target: { entity_id: input_number.completed_toby_today }
-- alias: To-do - Decrement completed counter (on uncomplete)
+              target:
+                entity_id: input_number.completed_toby_today
+
+
+# ---------------------------------------------------
+# To-do - Decrement completed counter (on uncomplete)
+# ---------------------------------------------------
+- alias: "To-do - Decrement completed counter (on uncomplete)"
   id: todo_decrement_completed_on_uncomplete
   mode: parallel
-  trigger:
-    - platform: event
+
+  triggers:
+    - trigger: event
       event_type: call_service
       event_data:
         domain: todo
         service: update_item
+
   variables:
     svc: "{{ trigger.event.data.service_data }}"
     list_entity: "{{ (svc.entity_id | default([])) | first | default('') }}"
     status: "{{ svc.status | default('') }}"
-  condition:
+
+  conditions:
     - condition: template
       value_template: "{{ status == 'needs_action' }}"
     - condition: template
-      value_template: >
+      value_template: >-
         {{ list_entity in [
-           'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
+          'todo.family','todo.anthony','todo.joy','todo.lizzie','todo.toby'
         ] }}
-  action:
+
+  actions:
     - choose:
-        - conditions: "{{ list_entity == 'todo.family' }}"
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.family' }}"
           sequence:
             - service: input_number.decrement
-              target: { entity_id: input_number.completed_family_today }
-        - conditions: "{{ list_entity == 'todo.anthony' }}"
+              target:
+                entity_id: input_number.completed_family_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.anthony' }}"
           sequence:
             - service: input_number.decrement
-              target: { entity_id: input_number.completed_anthony_today }
-        - conditions: "{{ list_entity == 'todo.joy' }}"
+              target:
+                entity_id: input_number.completed_anthony_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.joy' }}"
           sequence:
             - service: input_number.decrement
-              target: { entity_id: input_number.completed_joy_today }
-        - conditions: "{{ list_entity == 'todo.lizzie' }}"
+              target:
+                entity_id: input_number.completed_joy_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.lizzie' }}"
           sequence:
             - service: input_number.decrement
-              target: { entity_id: input_number.completed_lizzie_today }
-        - conditions: "{{ list_entity == 'todo.toby' }}"
+              target:
+                entity_id: input_number.completed_lizzie_today
+
+        - conditions:
+            - condition: template
+              value_template: "{{ list_entity == 'todo.toby' }}"
           sequence:
             - service: input_number.decrement
-              target: { entity_id: input_number.completed_toby_today }
-- alias: To-do - Reset completed counters at midnight
+              target:
+                entity_id: input_number.completed_toby_today
+
+
+# ------------------------------------------------------
+# To-do - Reset completed counters at midnight (00:00:00)
+# ------------------------------------------------------
+- alias: "To-do - Reset completed counters at midnight"
   id: todo_reset_completed_counters_midnight
   mode: single
-  trigger:
-    - platform: time
+
+  triggers:
+    - trigger: time
       at: "00:00:00"
-  action:
+
+  actions:
     - service: input_number.set_value
       target:
         entity_id:
@@ -112,18 +167,25 @@
       data:
         value: 0
 
-- alias: Calendar - Count today's events (all family calendars)
+
+# ---------------------------------------------------------
+# Calendar - Count today's events (all family calendars)
+# ---------------------------------------------------------
+- alias: "Calendar - Count today's events (all family calendars)"
   id: calendar_count_events_today
   mode: single
-  trigger:
-    - platform: time_pattern
-      minutes: "/15"              # refresh every 15 min
-    - platform: time
-      at: "00:01:00"              # reset near midnight
-  action:
+
+  triggers:
+    - trigger: time_pattern
+      minutes: "/15"
+    - trigger: time
+      at: "00:01:00"
+
+  actions:
     - variables:
         start: "{{ today_at().isoformat() }}"
-        end:   "{{ (today_at() + timedelta(days=1)).isoformat() }}"
+        end: "{{ (today_at() + timedelta(days=1)).isoformat() }}"
+
     - service: calendar.get_events
       target:
         entity_id:
@@ -134,31 +196,40 @@
           - calendar.toby
       data:
         start_date_time: "{{ start }}"
-        end_date_time:   "{{ end }}"
+        end_date_time: "{{ end }}"
       response_variable: agenda
+
     - service: input_number.set_value
-      target: { entity_id: input_number.events_today }
+      target:
+        entity_id: input_number.events_today
       data:
         value: >-
           {{
-            (agenda['calendar.family'].events   | count) +
-            (agenda['calendar.anthony'].events  | count) +
-            (agenda['calendar.joy'].events      | count) +
-            (agenda['calendar.lizzie'].events   | count) +
-            (agenda['calendar.toby'].events     | count)
+            (agenda['calendar.family'].events | count)
+            + (agenda['calendar.anthony'].events | count)
+            + (agenda['calendar.joy'].events | count)
+            + (agenda['calendar.lizzie'].events | count)
+            + (agenda['calendar.toby'].events | count)
           }}
 
-- alias: To-do - Count outstanding due TODAY (all lists)
+
+# ---------------------------------------------------------
+# To-do - Count outstanding due TODAY (all lists)
+# ---------------------------------------------------------
+- alias: "To-do - Count outstanding due TODAY (all lists)"
   id: todo_count_outstanding_due_today
   mode: single
-  trigger:
-    - platform: time_pattern
+
+  triggers:
+    - trigger: time_pattern
       minutes: "/5"
-    - platform: time
+    - trigger: time
       at: "00:02:00"
+
   variables:
     today: "{{ now().date().isoformat() }}"
-  action:
+
+  actions:
     - service: todo.get_items
       target:
         entity_id:
@@ -170,59 +241,104 @@
       data:
         status: needs_action
       response_variable: lists
+
     # Family
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_family_today }
       data:
         value: >-
           {% set items = (lists['todo.family'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items | selectattr('due', 'defined')
+                   | selectattr('due', 'search', today)
+                   | list | count)
+            +
+            (items | selectattr('due_date', 'defined')
+                   | selectattr('due_date', 'eq', today)
+                   | list | count)
+          }}
+
     # Anthony
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_anthony_today }
       data:
         value: >-
           {% set items = (lists['todo.anthony'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items | selectattr('due', 'defined')
+                   | selectattr('due', 'search', today)
+                   | list | count)
+            +
+            (items | selectattr('due_date', 'defined')
+                   | selectattr('due_date', 'eq', today)
+                   | list | count)
+          }}
+
     # Joy
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_joy_today }
       data:
         value: >-
           {% set items = (lists['todo.joy'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items | selectattr('due', 'defined')
+                   | selectattr('due', 'search', today)
+                   | list | count)
+            +
+            (items | selectattr('due_date', 'defined')
+                   | selectattr('due_date', 'eq', today)
+                   | list | count)
+          }}
+
     # Lizzie
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_lizzie_today }
       data:
         value: >-
           {% set items = (lists['todo.lizzie'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items | selectattr('due', 'defined')
+                   | selectattr('due', 'search', today)
+                   | list | count)
+            +
+            (items | selectattr('due_date', 'defined')
+                   | selectattr('due_date', 'eq', today)
+                   | list | count)
+          }}
+
     # Toby
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_toby_today }
       data:
         value: >-
           {% set items = (lists['todo.toby'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date', 'defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items | selectattr('due', 'defined')
+                   | selectattr('due', 'search', today)
+                   | list | count)
+            +
+            (items | selectattr('due_date', 'defined')
+                   | selectattr('due_date', 'eq', today)
+                   | list | count)
+          }}
 
 
-- alias: To-do - Compute "next up" for kids
+# --------------------------------------------
+# To-do - Compute "next up" for kids (Toby/Lizzie)
+# --------------------------------------------
+- alias: "To-do - Compute 'next up' for kids"
   id: todo_next_up_kids
   mode: single
-  trigger:
-    - platform: time_pattern
+
+  triggers:
+    - trigger: time_pattern
       minutes: "/5"
-    - platform: state
+    - trigger: state
       entity_id:
         - todo.toby
         - todo.lizzie
-  action:
+
+  actions:
     - service: todo.get_items
       target:
         entity_id:
@@ -231,40 +347,52 @@
       data:
         status: needs_action
       response_variable: lists
+
     - variables:
-        pick_next: >
+        pick_next: >-
           {% macro next(list) -%}
           {%- set items = lists[list].items | list -%}
           {%- set today = now().date().isoformat() -%}
           {# prefer items due today, else earliest with a due, else first #}
-          {%- set today_items = items | selectattr('due','defined')
-                                     | selectattr('due','match', today ~ '.*') | list -%}
-          {%- if today_items|count > 0 -%}
+          {%- set today_items = items
+              | selectattr('due','defined')
+              | selectattr('due','match', today ~ '.*')
+              | list -%}
+          {%- if today_items | count > 0 -%}
             {{ today_items[0].summary }}
           {%- else -%}
-            {%- set with_due = items | selectattr('due','defined')
-                                     | sort(attribute='due') | list -%}
-            {%- if with_due|count > 0 -%}
+            {%- set with_due = items
+                | selectattr('due','defined')
+                | sort(attribute='due')
+                | list -%}
+            {%- if with_due | count > 0 -%}
               {{ with_due[0].summary }}
             {%- else -%}
-              {{ items[0].summary if items|count > 0 else '' }}
+              {{ items[0].summary if items | count > 0 else '' }}
             {%- endif -%}
           {%- endif -%}
           {%- endmacro -%}
+
     - event: set_var
       event_data:
         next_toby: "{{ pick_next('todo.toby') }}"
         next_lizzie: "{{ pick_next('todo.lizzie') }}"
 
-- alias: To-do - Count COMPLETED with due today (per list)
+
+# -------------------------------------------------
+# To-do - Count COMPLETED with due today (per list)
+# -------------------------------------------------
+- alias: "To-do - Count COMPLETED with due today"
   id: todo_count_completed_due_today
   mode: single
-  trigger:
-    - platform: time_pattern
+
+  triggers:
+    - trigger: time_pattern
       minutes: "/5"
-    - platform: time
+    - trigger: time
       at: "00:03:00"
-  action:
+
+  actions:
     - service: todo.get_items
       target:
         entity_id:
@@ -276,55 +404,80 @@
       data:
         status: completed
       response_variable: lists
+
     - variables:
         today: "{{ now().date().isoformat() }}"
-        cnt: >
+        cnt: >-
           {% macro cnt(eid) -%}
-          {{ lists[eid].items
-             | selectattr('due','defined')
-             | selectattr('due','match', today ~ '.*')
-             | list | count }}
-          {%- endmacro -%}
+            {{ lists[eid].items
+               | selectattr('due','defined')
+               | selectattr('due','match', today ~ '.*')
+               | list
+               | count }}
+          {%- endmacro %}
+
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_family }
-      data: { value: "{{ cnt('todo.family')|int }}" }
+      data: { value: "{{ cnt('todo.family') | int }}" }
+
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_anthony }
-      data: { value: "{{ cnt('todo.anthony')|int }}" }
+      data: { value: "{{ cnt('todo.anthony') | int }}" }
+
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_joy }
-      data: { value: "{{ cnt('todo.joy')|int }}" }
+      data: { value: "{{ cnt('todo.joy') | int }}" }
+
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_lizzie }
-      data: { value: "{{ cnt('todo.lizzie')|int }}" }
+      data: { value: "{{ cnt('todo.lizzie') | int }}" }
+
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_toby }
-      data: { value: "{{ cnt('todo.toby')|int }}" }
+      data: { value: "{{ cnt('todo.toby') | int }}" }
 
-- alias: To-do - Build "shopping" markdown from Family list
+
+# -------------------------------------------------------
+# To-do - Build "shopping" markdown from Family list
+# -------------------------------------------------------
+- alias: "To-do - Build 'shopping' markdown from Family list"
   id: todo_build_shopping_md
   mode: single
-  trigger:
-    - platform: time_pattern
+
+  triggers:
+    - trigger: time_pattern
       minutes: "/5"
-    - platform: state
+    - trigger: state
       entity_id: todo.family
-  action:
+
+  actions:
     - service: todo.get_items
-      target: { entity_id: todo.family }
-      data: { status: needs_action }
+      target:
+        entity_id: todo.family
+      data:
+        status: needs_action
       response_variable: fam
+
     - variables:
         items: "{{ fam['todo.family'].items | list }}"
-        filtered: >
-          {{ items | selectattr('description','defined')
-                   | selectattr('description','search','(?i)#shopping')
-                   | map(attribute='summary') | list }}
+        filtered: >-
+          {{ items
+             | selectattr('description','defined')
+             | selectattr('description','search','(?i)#shopping')
+             | map(attribute='summary')
+             | list }}
         md: >-
-          {% if filtered|count == 0 %}_No shopping items._{% else %}
-          **Shopping**
-          {% for t in filtered %}- {{ t }}
-          {% endfor %}{% endif %}
+          {% if filtered | count == 0 -%}
+            _No shopping items._
+          {%- else -%}
+            **Shopping**
+            {% for t in filtered -%}
+            - {{ t }}
+            {% endfor -%}
+          {%- endif %}
+
     - service: input_text.set_value
-      target: { entity_id: input_text.shopping_md }
-      data: { value: "{{ md }}" }
+      target:
+        entity_id: input_text.shopping_md
+      data:
+        value: "{{ md }}"

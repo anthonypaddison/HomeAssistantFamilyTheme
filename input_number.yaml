@@ -68,27 +68,27 @@ outstanding_toby_today:
 
 completed_due_today_family:
   name: Completed Due Today Family
-  min: 0;
-  max: 999;
-  step: 1;
+  min: 0
+  max: 999
+  step: 1
   mode: box
 completed_due_today_anthony:
   name: Completed Due Today Anthony
-  min: 0;
-  max: 999;
-  step: 1;
+  min: 0
+  max: 999
+  step: 1
   mode: box
 completed_due_today_joy:
   name: Completed Due Today Joy
-  min: 0;
-  max: 999;
-  step: 1;
+  min: 0
+  max: 999
+  step: 1
   mode: box
 completed_due_today_lizzie:
   name: Completed Due Today Lizzie
-  min: 0;
-  max: 999;
-  step: 1;
+  min: 0
+  max: 999
+  step: 1
   mode: box
 completed_due_today_toby:
   name: Completed Due Today Toby

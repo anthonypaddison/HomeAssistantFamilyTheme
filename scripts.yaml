@@ -16,7 +16,7 @@ family_fab_open:
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add calendar event"
-                initial_style: wide
+                size: wide
                 content:
                   - name: summary
                     label: Title
@@ -62,7 +62,7 @@ family_fab_open:
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add chore"
-                initial_style: normal
+                size: wide
                 content:
                   - name: item
                     label: Chore
@@ -113,7 +113,7 @@ family_fab_open:
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add list item"
-                initial_style: normal
+                size: wide
                 content:
                   - name: item
                     label: Item

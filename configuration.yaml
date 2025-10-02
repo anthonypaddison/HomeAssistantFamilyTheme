@@ -7,6 +7,14 @@ frontend:
     - /hacsfiles/lovelace-card-mod/card-mod.js
 
 lovelace:
+  mode: yaml
+  resources:
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url: /hacsfiles/week-planner-card/week-planner-card.js
+      type: module
   dashboards:
     family-dashboard:
       mode: yaml
