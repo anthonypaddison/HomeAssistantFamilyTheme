@@ -1,25 +1,9 @@
 type: vertical-stack
 view_layout: { grid-area: sidebar }
-card_mod:
-  style: |
-    /* Make the sidebar card act like a sticky column and fill the viewport below HA header */
-    ha-card {
-      background: transparent;   /* items themselves carry the header background */
-      margin: 0 !important;
-      border-radius: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-      height: calc(100vh - var(--header-height)) !important;
-      position: sticky;
-      top: 0;
-      padding: 0 !important;
-    }
-    /* Remove default stack spacing so items butt up neatly */
-    ha-card .card-content > * { margin: 0 !important; }
 
 cards:
 
-  # --- Family Icon (top) — toggles HA main sidebar
+  # Family Icon (top) — toggles HA main sidebar
   - type: custom:button-card
     template: family_icon
     icon: mdi:home-heart
@@ -33,7 +17,7 @@ cards:
             if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
           })();
 
-  # --- Calendar (align with bottom of header + chips row)
+  # Calendar (starts after heading + chips)
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:calendar
@@ -49,7 +33,7 @@ cards:
       target: { entity_id: input_select.family_section }
       data: { option: Calendar }
 
-  # --- Chores (badge = total incomplete across lists)
+  # Chores (badge = total incomplete across lists)
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:broom
@@ -62,7 +46,7 @@ cards:
       target: { entity_id: input_select.family_section }
       data: { option: Chores }
 
-  # --- Photos
+  # Photos
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:image-multiple
@@ -74,7 +58,7 @@ cards:
       target: { entity_id: input_select.family_section }
       data: { option: Photos }
 
-  # --- Lists
+  # Lists
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:format-list-bulleted
@@ -86,22 +70,19 @@ cards:
       target: { entity_id: input_select.family_section }
       data: { option: Lists }
 
-  # --- Toby (bottom cluster)
+  # Toby
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:robot-happy-outline
     variables:
       section: Toby
-    styles:
-      card:
-        - margin-top: auto
     tap_action:
       action: call-service
       service: input_select.select_option
       target: { entity_id: input_select.family_section }
       data: { option: Toby }
 
-  # --- Lizzie
+  # Lizzie
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:unicorn-variant
