@@ -92,3 +92,7 @@ completed_due_today_lizzie:
   mode: box
 completed_due_today_toby:
   name: Completed Due Today Toby
+  min: 0
+  max: 999
+  step: 1
+  mode: box

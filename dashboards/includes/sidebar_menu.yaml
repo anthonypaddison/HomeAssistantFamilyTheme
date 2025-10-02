@@ -8,17 +8,16 @@ card_mod:
       border-radius: 0 !important;
       border: none !important;
       box-shadow: none !important;
-      height: calc(100vh - var(--header-height)) !important;  # now defined
+      height: calc(100vh - var(--header-height)) !important;
       position: sticky;
       top: 0;
       padding: 0 !important;
     }
     ha-card .card-content { display: flex; flex-direction: column; height: 100%; }
-
 card:
   type: vertical-stack
   cards:
-    # --- Family Icon ---
+    # --- Family Icon (top) ---
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
@@ -27,18 +26,18 @@ card:
         service: browser_mod.javascript
         data:
           code: |
-            // Toggle the official HA sidebar
             (function(){
-              if (document.querySelector('home-assistant')) {
-                document.querySelector('home-assistant')
-                  .dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
-              }
+              const root = document.querySelector('home-assistant');
+              if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
             })();
 
     # --- Calendar ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:calendar
+      styles:
+        card:
+          - margin-top: 104px   # aligns top of this icon with bottom of header+chips row (tweak as needed)
       variables:
         section: Calendar
         badge_entity: input_number.events_today
@@ -85,6 +84,7 @@ card:
         target: { entity_id: input_select.family_section }
         service_data: { option: Lists }
 
+    # --- Toby (bottom cluster) ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:robot-happy-outline
@@ -92,13 +92,14 @@ card:
         section: Toby
       styles:
         card:
-          - margin-top: auto   # pushes this and following items to bottom
+          - margin-top: auto
       tap_action:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
         service_data: { option: Toby }
 
+    # --- Lizzie ---
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:unicorn-variant

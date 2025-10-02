@@ -5,8 +5,8 @@ columns:
   extraLarge: 5
   large: 5
   medium: 5
-  small: 5          # force 5 columns on small
-  extraSmall: 5     # force 5 columns on extra-small
+  small: 5
+  extraSmall: 5
 calendars:
   - entity: calendar.family
     color: var(--cal-color-family)
@@ -34,16 +34,25 @@ card_mod:
         --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
       }
 
-      /* Make room for the left time rail */
+      /* Make the card itself fill the remaining screen height */
+      ha-card {
+        height: calc(100vh - var(--header-height)); /* main view area handles its own top offsets */
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Overall layout: we make the days area scroll if overflowing */
       .days {
         position: relative;
         padding-left: var(--rail-width);
-        overflow: visible;             /* ensure ::before isn't clipped */
+        overflow: auto; /* scroll timeline */
+        flex: 1 1 auto; /* take remaining height */
+        background: #F8FAFC;
       }
 
       /* Column visuals */
       .day {
-        background: #F8FAFC;           /* light-light grey */
+        background: #F8FAFC;
       }
 
       /* Sticky header (date/day) per column */
@@ -52,10 +61,17 @@ card_mod:
         top: 0;
         z-index: 4;
         height: var(--day-header-h);
-        display: flex; align-items: center;
+        display: flex; align-items: center; justify-content: center;
+        gap: 6px;
         background: var(--card-background-color);
-        font-weight: 700;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: none;
       }
+
+      /* Format header to look like "Thu 2" (short day + number) */
+      .day .header .weekday { font-weight: 800; }
+      .day .header .date    { font-weight: 800; }
 
       /* All-day row (even if empty) */
       .day .all-day, .day .allday {
@@ -64,11 +80,11 @@ card_mod:
         z-index: 3;
         height: var(--allday-row-h);
         display: flex; align-items: center;
-        background: #EEF2F7;           /* slightly darker grey for contrast */
+        background: #EEF2F7;
         border-bottom: 1px solid var(--divider-color);
       }
 
-      /* Left time rail (00:00 → 23:00) */
+      /* Left time rail (00:00 -> 23:00) */
       .days::before {
         content:
           "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
@@ -83,4 +99,21 @@ card_mod:
         color: var(--rail-color);
         pointer-events: none;
         z-index: 5;
+        text-align: left;
+      }
+
+      /* "Today" highlight: first column when startingDay=today */
+      .day:first-child .header {
+        position: sticky;
+        top: 0;
+        z-index: 6;
+        background: var(--card-background-color);
+      }
+      .day:first-child .header::after {
+        content: "";
+        width: 26px; height: 26px;
+        border-radius: 999px;
+        border: 3px solid var(--palette-rose);
+        position: absolute;
+        inset: 7px auto auto auto;
       }
