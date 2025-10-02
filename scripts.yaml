@@ -9,7 +9,8 @@ family_fab_open:
     - variables:
         section: "{{ states('input_select.family_section') | default('Calendar') }}"
     - choose:
-        # ---- Calendar "Create Event" form ----
+
+        # ---- Calendar “Create Event” form ----
         - conditions: "{{ section == 'Calendar' }}"
           sequence:
             - service: browser_mod.popup
@@ -21,17 +22,14 @@ family_fab_open:
                   - name: summary
                     label: Title
                     selector: { text: null }
-
                   - name: start_date_time
                     label: Start
                     default: "{{ now().replace(second=0, microsecond=0).isoformat() }}"
                     selector: { datetime: null }
-
                   - name: end_date_time
                     label: End
                     default: "{{ (now() + timedelta(hours=1)).replace(second=0, microsecond=0).isoformat() }}"
                     selector: { datetime: null }
-
                   - name: calendar
                     label: Calendar
                     default: calendar.family
@@ -39,30 +37,27 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - label: Family
-                            value: calendar.family
-                          - label: Anthony
-                            value: calendar.anthony
-                          - label: Joy
-                            value: calendar.joy
-                          - label: Lizzie
-                            value: calendar.lizzie
-                          - label: Toby
-                            value: calendar.toby
+                          - { label: Family,  value: calendar.family }
+                          - { label: Anthony, value: calendar.anthony }
+                          - { label: Joy,     value: calendar.joy }
+                          - { label: Lizzie,  value: calendar.lizzie }
+                          - { label: Toby,    value: calendar.toby }
                 right_button: "Create"
                 right_button_action:
                   service: script.popup_create_calendar_event
+                  data:
+                    browser_id: THIS
                 left_button: "Cancel"
                 dismissable: true
 
-        # ---- Chores "Add to-do" form ----
+        # ---- Chores “Add to-do” form ----
         - conditions: "{{ section == 'Chores' }}"
           sequence:
             - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add chore"
-                size: wide
+                size: normal
                 content:
                   - name: item
                     label: Chore
@@ -80,7 +75,7 @@ family_fab_open:
                           - { label: Lizzie,  value: todo.lizzie }
                           - { label: Toby,    value: todo.toby }
                   - name: tags
-                    label: Tags (optional, e.g. #morning #kitchen)
+                    label: "Tags (optional, e.g. #morning #kitchen)"
                     selector: { text: null }
                   - name: icon
                     label: Icon
@@ -90,10 +85,10 @@ family_fab_open:
                         options:
                           - { label: "None", value: "" }
                           - { label: "🧹 Cleaning", value: "🧹" }
-                          - { label: "🧺 Laundry", value: "🧺" }
-                          - { label: "🗑️ Rubbish", value: "🗑️" }
-                          - { label: "🧽 Wipe", value: "🧽" }
-                          - { label: "🧒 Kids", value: "🧒" }
+                          - { label: "🧺 Laundry",  value: "🧺" }
+                          - { label: "🗑️ Rubbish",  value: "🗑️" }
+                          - { label: "🧽 Wipe",     value: "🧽" }
+                          - { label: "🧒 Kids",     value: "🧒" }
                   - name: due_date
                     label: Due date
                     selector: { date: null }
@@ -103,41 +98,40 @@ family_fab_open:
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
+                  data:
+                    browser_id: THIS
                 left_button: "Cancel"
                 dismissable: true
 
-        # ---- Lists "Add item" form ----
+        # ---- Lists “Add item” form ----
         - conditions: "{{ section == 'Lists' }}"
           sequence:
             - service: browser_mod.popup
               data:
                 browser_id: "{{ browser_id }}"
                 title: "Add list item"
-                size: wide
+                size: normal
                 content:
                   - name: item
                     label: Item
                     selector: { text: null }
                   - name: list_entity
-                    label: List (Todoist project)
+                    label: "List (Todoist project)"
                     default: todo.family
                     selector:
                       select:
                         mode: dropdown
                         options:
-                          - label: Family
-                            value: todo.family
-                          - label: Anthony
-                            value: todo.anthony
-                          - label: Joy
-                            value: todo.joy
-                          - label: Lizzie
-                            value: todo.lizzie
-                          - label: Toby
-                            value: todo.toby
+                          - { label: Family,  value: todo.family }
+                          - { label: Anthony, value: todo.anthony }
+                          - { label: Joy,     value: todo.joy }
+                          - { label: Lizzie,  value: todo.lizzie }
+                          - { label: Toby,    value: todo.toby }
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
+                  data:
+                    browser_id: THIS
                 left_button: "Cancel"
                 dismissable: true
 
@@ -153,11 +147,17 @@ family_fab_open:
                   content: >
                     Drop images into your configured album folder for the *Local Photos* integration.
                 right_button: "Close"
+                dismissable: true
+
+# ------------------------------------------------------------
+# Popup helpers (now with browser_id + success toast)
+# ------------------------------------------------------------
 
 popup_create_calendar_event:
   alias: "Popup: create calendar event (from ha-form)"
   mode: queued
   fields:
+    browser_id: {}
     summary: {}
     start_date_time: {}
     end_date_time: {}
@@ -181,12 +181,16 @@ popup_create_calendar_event:
         summary: "{{ summary }}"
         start_date_time: "{{ start_dt.isoformat() }}"
         end_date_time: "{{ end_dt.isoformat() }}"
-
+    - service: browser_mod.toast
+      data:
+        browser_id: "{{ browser_id }}"
+        message: "Event created ✅"
 
 popup_add_todo:
   alias: "Popup: add to-do (from ha-form)"
   mode: queued
   fields:
+    browser_id: {}
     item: {}
     list_entity: {}
     tags: {}
@@ -197,9 +201,9 @@ popup_add_todo:
     - variables:
         prefix: "{{ icon if icon else '' }}"
         desc: "{{ (tags | default('')) }}"
-        due: >
+        due: >-
           {{ now().date().isoformat() if due_today else (due_date if due_date else none) }}
-        title: >
+        title: >-
           {{ (prefix ~ ' ' if prefix else '') ~ item }}
     - service: todo.add_item
       target: { entity_id: "{{ list_entity }}" }
@@ -207,4 +211,6 @@ popup_add_todo:
         item: "{{ title }}"
         description: "{{ desc if desc else none }}"
         due_date: "{{ due if due else none }}"
-
+    - service: browser_mod.toast
+      data:
+        browser_id: "{{ browser_id }}"
