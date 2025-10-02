@@ -32,81 +32,16 @@ button_card_templates:
           return v && v !== 'unknown' && v !== 'unavailable' ? v : '0';
         ]]]
 
-  # progress_chip:
-  #   show_name: true
-  #   show_state: false
-  #   styles:
-  #     card:
-  #       - background: >-
-  #           [[[ return variables.color || 'var(--primary-color)'; ]]]
-  #       - padding: 8px 12px
-  #       - border-radius: 16px
-  #       - min-width: 120px
-  #     grid:
-  #       - grid-template-areas: '"i n" "bar bar"'
-  #       - grid-template-columns: 28px 1fr
-  #       - grid-template-rows: auto auto
-  #     name:
-  #       - justify-self: start
-  #       - font-weight: 700
-  #     icon:
-  #       - width: 22px
-  #     custom_fields:
-  #       bar:
-  #         - width: 100%
-  #         - margin-top: 6px
-  #   custom_fields:
-  #     bar: >
-  #       [[[
-  #         // Coerce states safely
-  #         const toNumber = (v) => Number.isFinite(+v) ? +v : 0;
-  #         const done    = toNumber(states[variables.completed]?.state);
-  #         const remain  = toNumber(states[variables.todo]?.state);
-  #         const total   = Math.max(0, done + remain);
-  #         const pct     = total ? Math.min(100, Math.round((done/total)*100)) : 0;
-
-  #         const track = 'height:6px;border-radius:3px;background:rgba(0,0,0,.15);position:relative;overflow:hidden;';
-  #         const fill  = `position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);`;
-  #         const label = `position:absolute;right:0;top:-16px;font-size:12px;font-weight:700;`;
-
-  #         return `
-  #           <div style="${track}">
-  #             <div style="${fill}"></div>
-  #           </div>
-  #           <div style="${label}">${done}/${total}</div>
-  #         `;
-  #       ]]]
   progress_chip:
     show_name: true
     show_state: false
     styles:
       card:
-        card_mod:
-          style: |
-            :host {
-              /* Fixed height, rounded edges */
-              height: 40px;
-              border-radius: 20px;
-              box-shadow: none;
-              padding: 0 12px;
-              margin: 0;
-              background: >
-                  [[[
-                    const active = states['input_select.family_section']?.state === variables.section;
-                    return active ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)';
-                  ]]];
-            }
-            /* Push left & right to the edges */
-            #root {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              gap: 12px;
-            }
-            /* Prevent the two inner cards from stretching */
-            #root > * {
-              flex: 0 0 auto;
-            }
+        - background: >-
+            [[[ return variables.color || 'var(--primary-color)'; ]]]
+        - padding: 8px 12px
+        - border-radius: 16px
+        - min-width: 120px
       grid:
         - grid-template-areas: '"i n" "bar bar"'
         - grid-template-columns: 28px 1fr
@@ -114,24 +49,32 @@ button_card_templates:
       name:
         - justify-self: start
         - font-weight: 700
-        - color: #FFFFFF
       icon:
         - width: 22px
-        - color: #FFFFFF
+      custom_fields:
+        bar:
+          - width: 100%
+          - margin-top: 6px
     custom_fields:
       bar: >
         [[[
-          const done   = Number(states[variables.completed]?.state || 0);
-          const remain = Number(states[variables.todo]?.state || 0);
-          const total  = Math.max(0, done + remain);
-          const pct    = Math.min(100, Math.round((done/total)*100));
-          const label  = `${done}/${total}`;
+          // Coerce states safely
+          const toNumber = (v) => Number.isFinite(+v) ? +v : 0;
+          const done    = toNumber(states[variables.completed]?.state);
+          const remain  = toNumber(states[variables.todo]?.state);
+          const total   = Math.max(0, done + remain);
+          const pct     = total ? Math.min(100, Math.round((done/total)*100)) : 0;
+
+          const track = 'height:6px;border-radius:3px;background:rgba(0,0,0,.15);position:relative;overflow:hidden;';
+          const fill  = `position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);`;
+          const label = `position:absolute;right:0;top:-16px;font-size:12px;font-weight:700;`;
+
           return `
-            <div style="margin-top:6px;height:16px;border-radius:4px;background:rgba(0,0,0,0.1);position:relative;">
-              <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:#FFFFFF;;opacity:.15;border-radius:4px;"></div>
-              <div style="position:absolute;left:0;top:0;height:16px;width:${pct}%;background:${variables.color || 'var(--primary-color)'};border-radius:4px;"></div>
-              <div style="margin:2px;font-size:12px;font-weight:700;color:#FFFFFF;">${label}</div>
-            </div>`;
+            <div style="${track}">
+              <div style="${fill}"></div>
+            </div>
+            <div style="${label}">${done}/${total}</div>
+          `;
         ]]]
 
   family_icon:
@@ -338,7 +281,7 @@ views:
           type: horizontal-stack
           cards:
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:account-group
               name: Family
               variables:
@@ -348,7 +291,7 @@ views:
                 color: var(--family-color-family)
 
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:laptop
               name: Anthony
               variables:
@@ -358,7 +301,7 @@ views:
                 color: var(--family-color-anthony)
 
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:book-open-variant
               name: Joy
               variables:
@@ -368,7 +311,7 @@ views:
                 color: var(--family-color-joy)
 
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:teddy-bear
               name: Lizzie
               variables:
@@ -378,7 +321,7 @@ views:
                 color: var(--family-color-lizzie)
 
             - type: custom:button-card
-              template: progress_chip
+              template: todo_due_today_chip
               icon: mdi:soccer
               name: Toby
               variables:
