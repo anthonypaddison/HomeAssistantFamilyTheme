@@ -31,51 +31,50 @@ button_card_templates:
   #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
   #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
   sb_icon_only:
-  variables:
-    section: ""
-    badge_entity: ""
-  show_name: false
-  show_icon: true
-  custom_fields:
-    badge: >
-      [[[
-        const e = variables.badge_entity ? states[variables.badge_entity] : null;
-        const n = e ? Number(e.state || 0) : 0;
-        return n > 0 ? `${n}` : '';
-      ]]]
-  styles:
-    card:
-      - width: 100%
-      - height: 64px
-      - border-radius: 0
-      - box-shadow: none
-      - background: var(--app-header-background-color)
-      - color: #FFFFFF
-      - display: grid
-      - place-items: center
-      - position: relative
-      - padding: 0
-      - overflow: visible
-    icon:
-      - width: 28px
-      - height: 28px
-      - color: #FFFFFF
+    variables:
+      section: ""
+      badge_entity: ""
+    show_name: false
+    show_icon: true
     custom_fields:
-      badge:
-        - position: absolute
-        - top: 8px
-        - right: 8px
-        - min-width: 20px
-        - height: 20px
-        - border-radius: 10px
-        - background: var(--palette-rose)
-        - color: #0F172A
-        - font-weight: 900
-        - font-size: 12px
-        - display: flex
-        - align-items: center
-        - justify-content: center
-
+      badge: >
+        [[[
+          const e = variables.badge_entity ? states[variables.badge_entity] : null;
+          const n = e ? Number(e.state || 0) : 0;
+          return n > 0 ? `${n}` : '';
+        ]]]
+    styles:
+      card:
+        - width: 100%
+        - height: 64px
+        - border-radius: 0
+        - box-shadow: none
+        - background: var(--app-header-background-color)
+        - color: #FFFFFF
+        - display: grid
+        - place-items: center
+        - position: relative
+        - padding: 0
+        - overflow: visible
+      icon:
+        - width: 28px
+        - height: 28px
+        - color: #FFFFFF
+      custom_fields:
+        badge:
+          - position: absolute
+          - top: 8px
+          - right: 8px
+          - min-width: 20px
+          - height: 20px
+          - border-radius: 10px
+          - background: var(--palette-rose)
+          - color: #0F172A
+          - font-weight: 900
+          - font-size: 12px
+          - display: flex
+          - align-items: center
+          - justify-content: center
 
   # --- Compact progress chip for "Due today": name+icon on one row + tiny progress bar
   # variables:
