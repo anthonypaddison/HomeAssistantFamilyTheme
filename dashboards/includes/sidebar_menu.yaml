@@ -17,7 +17,8 @@ card_mod:
 card:
   type: vertical-stack
   cards:
-    # --- Family Icon (top) ---
+
+    # --- Family Icon (top) - toggles HA main sidebar
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
@@ -31,13 +32,13 @@ card:
               if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
             })();
 
-    # --- Calendar ---
+    # --- Calendar (align with bottom of header + chips row)
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:calendar
       styles:
         card:
-          - margin-top: 104px   # aligns top of this icon with bottom of header+chips row (tweak as needed)
+          - margin-top: "calc(var(--family-heading-height) + var(--family-chips-height))"
       variables:
         section: Calendar
         badge_entity: input_number.events_today
@@ -45,9 +46,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Calendar }
+        data: { option: Calendar }
 
-    # --- Chores ---
+    # --- Chores (badge = total incomplete across lists)
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:broom
@@ -58,9 +59,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Chores }
+        data: { option: Chores }
 
-    # --- Photos ---
+    # --- Photos
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:image-multiple
@@ -70,9 +71,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Photos }
+        data: { option: Photos }
 
-    # --- Lists ---
+    # --- Lists
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:format-list-bulleted
@@ -82,9 +83,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Lists }
+        data: { option: Lists }
 
-    # --- Toby (bottom cluster) ---
+    # --- Toby (bottom cluster)
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:robot-happy-outline
@@ -97,9 +98,9 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Toby }
+        data: { option: Toby }
 
-    # --- Lizzie ---
+    # --- Lizzie
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:unicorn-variant
@@ -109,4 +110,4 @@ card:
         action: call-service
         service: input_select.select_option
         target: { entity_id: input_select.family_section }
-        service_data: { option: Lizzie }
+        data: { option: Lizzie }

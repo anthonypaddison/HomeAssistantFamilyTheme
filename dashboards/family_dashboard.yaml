@@ -4,57 +4,136 @@ theme: FamilyBoard
 # ====== Button-card templates (local to this dashboard) ======
 button_card_templates:
 
-  # Compact progress chip for "Due today" with name+icon on one line
-  # Variables:
-  #   - variables.completed: entity_id of input_number.completed_due_today_*  (done today)
-  #   - variables.outstanding: entity_id of input_number.outstanding_*_today  (remaining due today)
-  #   - variables.color: CSS color token (e.g., var(--family-color-anthony))
-  #   - variables.icon: mdi:*
-  #   - variables.name: "Anthony"
+  # --- Family icon (square tile top of sidebar)
+  family_icon:
+    show_name: false
+    show_icon: true
+    styles:
+      card:
+        - width: 56px
+        - height: 56px
+        - border-radius: 12px
+        - box-shadow: none
+        - background: var(--sb-inactive-bg)
+        - color: var(--sb-inactive-icon)
+        - display: grid
+        - place-items: center
+        - position: relative
+        - padding: 0
+      icon:
+        - width: 28px
+        - height: 28px
+
+  # --- Sidebar icon-only with floating badge (no shrink)
+  # variables:
+  #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
+  #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
+  sb_icon_only:
+    variables:
+      section: ""
+      badge_entity: ""
+    show_name: false
+    show_icon: true
+    custom_fields:
+      badge: >
+        [[[
+          const e = variables.badge_entity ? states[variables.badge_entity] : null;
+          const n = e ? Number(e.state || 0) : 0;
+          return n > 0 ? `${n}` : '';
+        ]]]
+    styles:
+      card:
+        - width: 56px
+        - height: 56px
+        - border-radius: 12px
+        - box-shadow: none
+        - background: var(--sb-inactive-bg)
+        - color: var(--sb-inactive-icon)
+        - display: grid
+        - place-items: center
+        - position: relative
+        - padding: 0
+        - transition: transform .05s ease
+      icon:
+        - width: 28px
+        - height: 28px
+      custom_fields:
+        badge:
+          - position: absolute
+          - top: -6px
+          - right: -6px
+          - min-width: 20px
+          - height: 20px
+          - border-radius: 10px
+          - background: white
+          - color: #0F172A
+          - font-weight: 800
+          - font-size: 12px
+          - display: flex
+          - align-items: center
+          - justify-content: center
+          - border: 2px solid var(--divider-color)
+    state:
+      - operator: template
+        value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
+        styles:
+          card:
+            - background: var(--sb-active-bg)
+            - color: var(--sb-active-icon)
+
+  # --- Compact progress chip for "Due today": name+icon on one row + tiny progress bar
+  # variables:
+  #   name, icon, color, completed (input_number.*), outstanding (input_number.*)
   due_today_progress_chip:
     show_icon: true
     show_name: true
     show_state: false
     tap_action:
-      action: none   # set per-instance
+      action: none
+    variables:
+      name: ""
+      icon: mdi:checkbox-marked-circle
+      color: var(--primary-color)
+      completed: ""
+      outstanding: ""
     styles:
       card:
         - padding: 6px 10px
         - border-radius: 14px
-        - background: "[[[ return variables.color || 'var(--primary-color)'; ]]]"
-        - min-height: 44px
+        - background: '[[[ return variables.color || "var(--primary-color)"; ]]]'
+        - min-height: 36px
         - box-shadow: none
       grid:
         - grid-template-areas: "'i n v' 'bar bar bar'"
-        - grid-template-columns: 24px auto auto
-        - grid-template-rows: auto 6px
+        - grid-template-columns: 20px auto auto
+        - grid-template-rows: auto 4px
         - column-gap: 8px
       img_cell:
         - align-self: center
         - justify-self: start
       icon:
-        - width: 20px
-        - height: 20px
-        - color: "#0F172A"
+        - width: 18px
+        - height: 18px
+        - color: '#0F172A'
       name:
         - align-self: center
         - justify-self: start
-        - font-weight: "800"
-        - color: "#0F172A"
-        - font-size: 14px
-        - line-height: 18px
+        - font-weight: '800'
+        - color: '#0F172A'
+        - font-size: 13px
+        - line-height: 16px
       custom_fields:
         v:
           - align-self: center
           - justify-self: end
           - font-size: 12px
           - font-weight: 800
-          - color: "#0F172A"
+          - color: '#0F172A'
         bar:
           - width: 100%
-          - height: 6px
-          - border-radius: 3px
-          - background: "rgba(0,0,0,.15)"
+          - height: 4px
+          - border-radius: 2px
+          - background: 'rgba(0,0,0,.15)'
           - position: relative
           - overflow: hidden
     custom_fields:
@@ -71,7 +150,7 @@ button_card_templates:
           const rem  = Number(states[variables.outstanding]?.state || 0);
           const total = Math.max(0, done + rem);
           const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
-          return `<div style="position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);"></div>`;
+          return `<div style="position:absolute;inset:0;background:rgba(255,255,255,.85);transform-origin:left;transform:scaleX(${pct/100});"></div>`;
         ]]]
 
 # ====== VIEWS ======
@@ -85,7 +164,7 @@ views:
     type: custom:grid-layout
     layout:
       padding: 0px
-      grid-template-columns: 6% 1fr        # Sidebar to 6% as requested
+      grid-template-columns: 6% 1fr          # Sidebar at ~6% as requested
       grid-template-rows: auto auto 1fr
       grid-template-areas: |
         "sidebar heading"
@@ -98,16 +177,16 @@ views:
         "(max-width: 900px)":
           grid-template-columns: 1fr
           grid-template-areas: |
-            "heading"     # make sure heading still shows on small screens
+            "heading"
             "chips"
             "main"
 
     cards:
 
-      # 1) SIDEBAR (sticky)
+      # 1) SIDEBAR (sticky, provided as include)
       - !include /config/dashboards/includes/sidebar_menu.yaml
 
-      # 2) HEADING ROW (top)
+      # 2) HEADING ROW
       - type: custom:mod-card
         view_layout: { grid-area: heading }
         card_mod:
@@ -118,7 +197,7 @@ views:
               margin: 0 !important;
               padding: 8px 12px !important;
               color: #000000 !important;
-              min-height: 56px;     /* fixed for alignment math */
+              min-height: 56px;     /* matches --family-heading-height */
               display: flex; align-items: center;
             }
         card:
@@ -137,39 +216,6 @@ views:
               - grid-template-columns: 1fr auto 1fr
               - align-items: center
               - column-gap: 12px
-          custom_fields:
-            left: |
-              [[[
-                const d = new Date();
-                const date = d.toLocaleDateString('en-GB',
-                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                return `Panogu Family - ${date}`;
-              ]]]
-            center: |
-              [[[
-                const d = new Date();
-                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-              ]]]
-            right: |
-              [[[
-                const e = states['calendar.routine'];
-                if (!e) return 'Routine calendar not found';
-                const a = e.attributes ?? {};
-                const title = a.message ?? 'No upcoming events';
-                if (!a.start_time) return `${title}`;
-                const start = new Date(a.start_time);
-                const end = a.end_time ? new Date(a.end_time) : null;
-                const now = new Date();
-                const tf = { hour: '2-digit', minute: '2-digit' };
-                const df = { weekday: 'short', month: 'short', day: 'numeric' };
-                const same = start.toDateString() === now.toDateString();
-                const inProg = e.state === 'on' && start <= now && (!end || now < end);
-                const when = inProg 
-                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
-                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
-                return `${title} - ${when}`;
-              ]]]
-          styles:
             custom_fields:
               left:
                 - justify-self: start
@@ -185,20 +231,53 @@ views:
                 - overflow: hidden
                 - text-overflow: ellipsis
                 - font-weight: 700
+          custom_fields:
+            left: >
+              [[[
+                const d = new Date();
+                const date = d.toLocaleDateString('en-GB',
+                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                return `Panogu Family - ${date}`;
+              ]]]
+            center: >
+              [[[
+                const d = new Date();
+                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+              ]]]
+            right: >
+              [[[
+                const e = states['calendar.routine'];
+                if (!e) return 'Routine calendar not found';
+                const a = e.attributes ?? {};
+                const title = a.message ?? 'No upcoming events';
+                if (!a.start_time) return `${title}`;
+                const start = new Date(a.start_time);
+                const end   = a.end_time ? new Date(a.end_time) : null;
+                const now   = new Date();
+                const tf = { hour: '2-digit', minute: '2-digit' };
+                const df = { weekday: 'short', month: 'short', day: 'numeric' };
+                const same = start.toDateString() === now.toDateString();
+                const inProg = e.state === 'on' && start <= now && (!end || now < end);
+                const when = inProg
+                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+                return `${title} - ${when}`;
+              ]]]
           triggers_update:
             - sensor.time
             - calendar.routine
 
-      # 3) CHIPS ROW (progress chips, tap -> person detail view)
+      # 3) CHIPS ROW (shorter height, progress bar, name+icon one row)
       - type: custom:mod-card
         view_layout: { grid-area: chips }
         card_mod:
           style: |
             ha-card {
               background: var(--palette-rose) !important;
-              border-radius: 0 !important; margin: 0 !important;
+              border-radius: 0 !important;
+              margin: 0 !important;
               padding: 6px 12px !important;
-              min-height: 56px;
+              min-height: 56px;  /* matches --family-chips-height */
               display: flex; align-items: center;
             }
         card:
@@ -217,9 +296,8 @@ views:
               tap_action:
                 action: call-service
                 service: script.open_person_view
-                data:
-                  browser_id: THIS
-                  person: Family
+                data: { browser_id: THIS, person: Family }
+
             - type: custom:button-card
               template: due_today_progress_chip
               icon: mdi:laptop
@@ -234,6 +312,7 @@ views:
                 action: call-service
                 service: script.open_person_view
                 data: { browser_id: THIS, person: Anthony }
+
             - type: custom:button-card
               template: due_today_progress_chip
               icon: mdi:book-open-variant
@@ -248,6 +327,7 @@ views:
                 action: call-service
                 service: script.open_person_view
                 data: { browser_id: THIS, person: Joy }
+
             - type: custom:button-card
               template: due_today_progress_chip
               icon: mdi:teddy-bear
@@ -262,6 +342,7 @@ views:
                 action: call-service
                 service: script.open_person_view
                 data: { browser_id: THIS, person: Lizzie }
+
             - type: custom:button-card
               template: due_today_progress_chip
               icon: mdi:soccer
@@ -277,12 +358,12 @@ views:
                 service: script.open_person_view
                 data: { browser_id: THIS, person: Toby }
 
-      # 4) MAIN AREA (conditional views)
+      # 4) MAIN AREA (conditional sections)
       - type: vertical-stack
         view_layout: { grid-area: main }
         cards:
 
-          # ---- Calendar ----
+          # ---- Calendar
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -290,8 +371,7 @@ views:
             card:
               type: vertical-stack
               cards:
-
-                # View toggle inside Calendar section
+                # Toggle (Day / 5-Day / Month)
                 - type: horizontal-stack
                   cards:
                     - type: button
@@ -340,7 +420,7 @@ views:
                       state: Month
                   card: !include /config/dashboards/includes/calendar_month.yaml
 
-          # ---- Chores: Adults row (compact, titles colored + icons like chips) ----
+          # ---- Chores (Adults compact + Kids chips-like; no Add item areas)
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -348,12 +428,12 @@ views:
             card:
               type: vertical-stack
               cards:
-
                 # Adults (3)
                 - type: grid
                   columns: 3
                   square: false
                   cards:
+
                     # Anthony
                     - type: vertical-stack
                       cards:
@@ -361,7 +441,7 @@ views:
                           icon: mdi:laptop
                           name: "Anthony"
                           styles:
-                            card:
+                            card: &header_card
                               - background: transparent
                               - box-shadow: none
                               - padding: 4px 0 0
@@ -382,7 +462,7 @@ views:
                             style: |
                               /* compact rows */
                               li { min-height: 28px !important; }
-                              /* large circular checkbox look */
+                              /* big round checkbox style */
                               mwc-checkbox {
                                 --mdc-checkbox-unchecked-color: #CBD5E1;
                                 --mdc-checkbox-checked-color: var(--family-color-family);
@@ -392,9 +472,11 @@ views:
                                 margin-right: 8px;
                               }
                               /* hide add UI */
-                              ha-todo-list [slot="add"],
-                              ha-todo-list .add, ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list[slot="add"],
+                              ha-todo-list .add,
+                              ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield,
+                              ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
                     # Joy
@@ -404,10 +486,7 @@ views:
                           icon: mdi:book-open-variant
                           name: "Joy"
                           styles:
-                            card: &header_card
-                              - background: transparent
-                              - box-shadow: none
-                              - padding: 4px 0 0
+                            card: *header_card
                             name:
                               - color: var(--family-color-joy)
                               - font-weight: 800
@@ -432,9 +511,11 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list [slot="add"],
-                              ha-todo-list .add, ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list[slot="add"],
+                              ha-todo-list .add,
+                              ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield,
+                              ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
                     # Family
@@ -469,16 +550,19 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list [slot="add"],
-                              ha-todo-list .add, ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list[slot="add"],
+                              ha-todo-list .add,
+                              ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield,
+                              ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                # Kids (2) - list styled like selectable "chips"; "Next up" small at bottom; no extra plus
+                # Kids (2) - chip-like rows, Next up at bottom, no extra plus
                 - type: grid
                   columns: 2
                   square: false
                   cards:
+
                     # Lizzie
                     - type: vertical-stack
                       cards:
@@ -490,8 +574,7 @@ views:
                               /* chip-like items */
                               ul { display: flex; flex-direction: column; gap: 8px; }
                               li {
-                                min-height: 34px !important;
-                                border-radius: 18px;
+                                min-height: 34px !important; border-radius: 18px;
                                 background: rgba(236,64,122,0.12);
                                 border: 1px solid rgba(236,64,122,0.30);
                                 padding: 2px 10px !important;
@@ -505,9 +588,11 @@ views:
                                 margin-right: 8px;
                               }
                               /* hide add UI */
-                              ha-todo-list [slot="add"],
-                              ha-todo-list .add, ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list[slot="add"],
+                              ha-todo-list .add,
+                              ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield,
+                              ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
@@ -535,8 +620,7 @@ views:
                             style: |
                               ul { display: flex; flex-direction: column; gap: 8px; }
                               li {
-                                min-height: 34px !important;
-                                border-radius: 18px;
+                                min-height: 34px !important; border-radius: 18px;
                                 background: rgba(66,165,245,0.12);
                                 border: 1px solid rgba(66,165,245,0.30);
                                 padding: 2px 10px !important;
@@ -549,9 +633,11 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list [slot="add"],
-                              ha-todo-list .add, ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list[slot="add"],
+                              ha-todo-list .add,
+                              ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield,
+                              ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
@@ -569,7 +655,7 @@ views:
                             icon:
                               - color: rgba(66,165,245,1)
 
-          # ---- Photos ----
+          # ---- Photos
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -579,7 +665,7 @@ views:
               url: /media-browser
               aspect_ratio: 160%
 
-          # ---- Lists ----
+          # ---- Lists (Shopping markdown with safe fallback)
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -587,11 +673,9 @@ views:
             card:
               type: markdown
               content: >
-                {{ states('input_text.shopping_md')
-                   if states('input_text.shopping_md') not in ['unknown','unavailable',''] 
-                   else '_No shopping items._' }}
+                {{ states('input_text.shopping_md') if states('input_text.shopping_md') not in ['unknown','unavailable',''] else '_No shopping items._' }}
 
-          # ---- Toby (standalone view) ----
+          # ---- Toby standalone (same style as kids)
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -599,7 +683,6 @@ views:
             card:
               type: vertical-stack
               cards:
-                # content is the same as in Kids section (already above), reusing for consistency
                 - type: todo-list
                   entity: todo.toby
                   hide_completed: false
@@ -607,8 +690,7 @@ views:
                     style: |
                       ul { display: flex; flex-direction: column; gap: 8px; }
                       li {
-                        min-height: 34px !important;
-                        border-radius: 18px;
+                        min-height: 34px !important; border-radius: 18px;
                         background: rgba(66,165,245,0.12);
                         border: 1px solid rgba(66,165,245,0.30);
                         padding: 2px 10px !important;
@@ -621,9 +703,11 @@ views:
                         transform: scale(1.4);
                         margin-right: 8px;
                       }
-                      ha-todo-list [slot="add"],
-                      ha-todo-list .add, ha-todo-list .add-item,
-                      ha-todo-list mwc-textfield, ha-todo-list #add,
+                      ha-todo-list[slot="add"],
+                      ha-todo-list .add,
+                      ha-todo-list .add-item,
+                      ha-todo-list mwc-textfield,
+                      ha-todo-list #add,
                       ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                 - type: custom:button-card
                   icon: mdi:star-four-points-outline
@@ -641,7 +725,7 @@ views:
                     icon:
                       - color: rgba(66,165,245,1)
 
-          # ---- Lizzie (standalone view) ----
+          # ---- Lizzie standalone (same style as kids)
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -656,8 +740,7 @@ views:
                     style: |
                       ul { display: flex; flex-direction: column; gap: 8px; }
                       li {
-                        min-height: 34px !important;
-                        border-radius: 18px;
+                        min-height: 34px !important; border-radius: 18px;
                         background: rgba(236,64,122,0.12);
                         border: 1px solid rgba(236,64,122,0.30);
                         padding: 2px 10px !important;
@@ -670,9 +753,11 @@ views:
                         transform: scale(1.4);
                         margin-right: 8px;
                       }
-                      ha-todo-list [slot="add"],
-                      ha-todo-list .add, ha-todo-list .add-item,
-                      ha-todo-list mwc-textfield, ha-todo-list #add,
+                      ha-todo-list[slot="add"],
+                      ha-todo-list .add,
+                      ha-todo-list .add-item,
+                      ha-todo-list mwc-textfield,
+                      ha-todo-list #add,
                       ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                 - type: custom:button-card
                   icon: mdi:star-four-points-outline
@@ -690,7 +775,7 @@ views:
                     icon:
                       - color: rgba(236,64,122,1)
 
-      # 5) Floating FAB (context-aware popup)
+      # 5) Floating FAB (context-aware add; script provided in scripts.yaml)
       - type: custom:button-card
         icon: mdi:plus
         show_name: false
@@ -710,13 +795,15 @@ views:
             - box-shadow: 0 8px 24px rgba(0,0,0,0.22)
             - padding: 0
             - z-index: 1000
-            - background: >-
+            - background: >
                 [[[
                   const s = states['input_select.family_section']?.state ?? 'Calendar';
                   const root = getComputedStyle(document.documentElement);
                   const pick = (n,f) => root.getPropertyValue(n) || f;
-                  const map = { Calendar: pick('--fab-color-calendar','var(--primary-color)'),
-                                Chores:   pick('--fab-color-chores','var(--primary-color)') };
+                  const map = {
+                    Calendar: pick('--fab-color-calendar','var(--primary-color)'),
+                    Chores:   pick('--fab-color-chores','var(--primary-color)')
+                  };
                   return map[s] || pick('--fab-color-default','var(--primary-color)');
                 ]]]
           icon:
@@ -733,10 +820,7 @@ views:
       - type: custom:mod-card
         card_mod:
           style: |
-            ha-card {
-              background: var(--card-background-color);
-              border-radius: 0; padding: 12px;
-            }
+            ha-card { background: var(--card-background-color); border-radius: 0; padding: 12px; }
         card:
           type: vertical-stack
           cards:
@@ -748,15 +832,19 @@ views:
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Family } ]
               card: { type: todo-list, entity: todo.family, hide_completed: false }
+
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Anthony } ]
               card: { type: todo-list, entity: todo.anthony, hide_completed: false }
+
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Joy } ]
               card: { type: todo-list, entity: todo.joy, hide_completed: false }
+
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Lizzie } ]
               card: { type: todo-list, entity: todo.lizzie, hide_completed: false }
+
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Toby } ]
               card: { type: todo-list, entity: todo.toby, hide_completed: false }
