@@ -10,76 +10,72 @@ button_card_templates:
     show_icon: true
     styles:
       card:
-        - width: 56px
-        - height: 56px
-        - border-radius: 12px
+        - width: 100%
+        - height: 64px
+        - border-radius: 0
         - box-shadow: none
-        - background: var(--sb-inactive-bg)
-        - color: var(--sb-inactive-icon)
+        - background: var(--app-header-background-color)
+        - color: #FFFFFF
         - display: grid
         - place-items: center
         - position: relative
         - padding: 0
+        - overflow: visible
       icon:
         - width: 28px
         - height: 28px
+        - color: #FFFFFF
 
   # --- Sidebar icon-only with floating badge (no shrink)
   # variables:
   #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
   #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
   sb_icon_only:
-    variables:
-      section: ""
-      badge_entity: ""
-    show_name: false
-    show_icon: true
+  variables:
+    section: ""
+    badge_entity: ""
+  show_name: false
+  show_icon: true
+  custom_fields:
+    badge: >
+      [[[
+        const e = variables.badge_entity ? states[variables.badge_entity] : null;
+        const n = e ? Number(e.state || 0) : 0;
+        return n > 0 ? `${n}` : '';
+      ]]]
+  styles:
+    card:
+      - width: 100%
+      - height: 64px
+      - border-radius: 0
+      - box-shadow: none
+      - background: var(--app-header-background-color)
+      - color: #FFFFFF
+      - display: grid
+      - place-items: center
+      - position: relative
+      - padding: 0
+      - overflow: visible
+    icon:
+      - width: 28px
+      - height: 28px
+      - color: #FFFFFF
     custom_fields:
-      badge: >
-        [[[
-          const e = variables.badge_entity ? states[variables.badge_entity] : null;
-          const n = e ? Number(e.state || 0) : 0;
-          return n > 0 ? `${n}` : '';
-        ]]]
-    styles:
-      card:
-        - width: 56px
-        - height: 56px
-        - border-radius: 12px
-        - box-shadow: none
-        - background: var(--sb-inactive-bg)
-        - color: var(--sb-inactive-icon)
-        - display: grid
-        - place-items: center
-        - position: relative
-        - padding: 0
-        - transition: transform .05s ease
-      icon:
-        - width: 28px
-        - height: 28px
-      custom_fields:
-        badge:
-          - position: absolute
-          - top: -6px
-          - right: -6px
-          - min-width: 20px
-          - height: 20px
-          - border-radius: 10px
-          - background: white
-          - color: #0F172A
-          - font-weight: 800
-          - font-size: 12px
-          - display: flex
-          - align-items: center
-          - justify-content: center
-          - border: 2px solid var(--divider-color)
-    state:
-      - operator: template
-        value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
-        styles:
-          card:
-            - background: var(--sb-active-bg)
-            - color: var(--sb-active-icon)
+      badge:
+        - position: absolute
+        - top: 8px
+        - right: 8px
+        - min-width: 20px
+        - height: 20px
+        - border-radius: 10px
+        - background: var(--palette-rose)
+        - color: #0F172A
+        - font-weight: 900
+        - font-size: 12px
+        - display: flex
+        - align-items: center
+        - justify-content: center
+
 
   # --- Compact progress chip for "Due today": name+icon on one row + tiny progress bar
   # variables:
@@ -192,12 +188,14 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-rose) !important;
+              box-sizing: border-box;
+              width: 100%;
+              background: var(--app-header-background-color) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 8px 12px !important;
-              color: #000000 !important;
-              min-height: 56px;     /* matches --family-heading-height */
+              color: #FFFFFF !important;
+              min-height: var(--family-heading-height, 56px);
               display: flex; align-items: center;
             }
         card:
@@ -273,19 +271,22 @@ views:
         card_mod:
           style: |
             ha-card {
-              background: var(--palette-rose) !important;
+              box-sizing: border-box;
+              width: 100%;
+              background: var(--app-header-background-color) !important;
               border-radius: 0 !important;
               margin: 0 !important;
               padding: 6px 12px !important;
-              min-height: 56px;  /* matches --family-chips-height */
+              min-height: var(--family-chips-height, 56px);
               display: flex; align-items: center;
             }
         card:
-          type: horizontal-stack
+          type: grid
+          columns: 5
+          square: false
           cards:
             - type: custom:button-card
               template: due_today_progress_chip
-              icon: mdi:account-group
               variables:
                 name: Family
                 icon: mdi:account-group
@@ -293,14 +294,10 @@ views:
                 completed: input_number.completed_due_today_family
                 outstanding: input_number.outstanding_family_today
               name: Family
-              tap_action:
-                action: call-service
-                service: script.open_person_view
-                data: { browser_id: THIS, person: Family }
+              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Family } }
 
             - type: custom:button-card
               template: due_today_progress_chip
-              icon: mdi:laptop
               variables:
                 name: Anthony
                 icon: mdi:laptop
@@ -308,14 +305,10 @@ views:
                 completed: input_number.completed_due_today_anthony
                 outstanding: input_number.outstanding_anthony_today
               name: Anthony
-              tap_action:
-                action: call-service
-                service: script.open_person_view
-                data: { browser_id: THIS, person: Anthony }
+              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Anthony } }
 
             - type: custom:button-card
               template: due_today_progress_chip
-              icon: mdi:book-open-variant
               variables:
                 name: Joy
                 icon: mdi:book-open-variant
@@ -323,14 +316,10 @@ views:
                 completed: input_number.completed_due_today_joy
                 outstanding: input_number.outstanding_joy_today
               name: Joy
-              tap_action:
-                action: call-service
-                service: script.open_person_view
-                data: { browser_id: THIS, person: Joy }
+              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Joy } }
 
             - type: custom:button-card
               template: due_today_progress_chip
-              icon: mdi:teddy-bear
               variables:
                 name: Lizzie
                 icon: mdi:teddy-bear
@@ -338,14 +327,10 @@ views:
                 completed: input_number.completed_due_today_lizzie
                 outstanding: input_number.outstanding_lizzie_today
               name: Lizzie
-              tap_action:
-                action: call-service
-                service: script.open_person_view
-                data: { browser_id: THIS, person: Lizzie }
+              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Lizzie } }
 
             - type: custom:button-card
               template: due_today_progress_chip
-              icon: mdi:soccer
               variables:
                 name: Toby
                 icon: mdi:soccer
@@ -353,10 +338,7 @@ views:
                 completed: input_number.completed_due_today_toby
                 outstanding: input_number.outstanding_toby_today
               name: Toby
-              tap_action:
-                action: call-service
-                service: script.open_person_view
-                data: { browser_id: THIS, person: Toby }
+              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Toby } }
 
       # 4) MAIN AREA (conditional sections)
       - type: vertical-stack
@@ -372,33 +354,38 @@ views:
               type: vertical-stack
               cards:
                 # Toggle (Day / 5-Day / Month)
-                - type: horizontal-stack
-                  cards:
-                    - type: button
-                      name: Day
-                      icon: mdi:calendar-today
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        target: { entity_id: input_select.calendar_view }
-                        data: { option: Day }
-                    - type: button
-                      name: 5-Day
-                      icon: mdi:calendar-range
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        target: { entity_id: input_select.calendar_view }
-                        data: { option: 5-Day }
-                    - type: button
-                      name: Month
-                      icon: mdi:calendar-month
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        target: { entity_id: input_select.calendar_view }
-                        data: { option: Month }
-
+                - type: custom:mod-card
+                  card_mod:
+                    style: |
+                      ha-card { background: transparent; box-shadow: none; padding: 0; }
+                      .card-content { display: flex; justify-content: flex-end; gap: 8px; }
+                  card:
+                    type: horizontal-stack
+                    cards:
+                      - type: custom:button-card
+                        name: Day
+                        icon: mdi:calendar-today
+                        tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Day } }
+                        styles:
+                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          name: [ font-size: 12px, font-weight: 700 ]
+                          icon: [ width: 16px, height: 16px ]
+                      - type: custom:button-card
+                        name: 5-Day
+                        icon: mdi:calendar-range
+                        tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: 5-Day } }
+                        styles:
+                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          name: [ font-size: 12px, font-weight: 700 ]
+                          icon: [ width: 16px, height: 16px ]
+                      - type: custom:button-card
+                        name: Month
+                        icon: mdi:calendar-month
+                        tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Month } }
+                        styles:
+                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          name: [ font-size: 12px, font-weight: 700 ]
+                          icon: [ width: 16px, height: 16px ]
                 # Day
                 - type: conditional
                   conditions:
@@ -471,14 +458,13 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              /* hide add UI */
-                              ha-todo-list[slot="add"],
-                              ha-todo-list .add,
-                              ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield,
-                              ha-todo-list #add,
-                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
-
+                              /* --- NEW: reliably hide Add UI inside ha-todo-list's shadow root --- */
+                              ha-todo-list$ .add,
+                              ha-todo-list$ .add-item,
+                              ha-todo-list$ mwc-textfield,
+                              ha-todo-list$ ha-textfield,
+                              ha-todo-list$ #add,
+                              ha-todo-list$ ha-icon-button[slot="add"] { display: none !important; }
                     # Joy
                     - type: vertical-stack
                       cards:
@@ -511,12 +497,13 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list[slot="add"],
-                              ha-todo-list .add,
-                              ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield,
-                              ha-todo-list #add,
-                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                              /* --- NEW: reliably hide Add UI inside ha-todo-list's shadow root --- */
+                              ha-todo-list$ .add,
+                              ha-todo-list$ .add-item,
+                              ha-todo-list$ mwc-textfield,
+                              ha-todo-list$ ha-textfield,
+                              ha-todo-list$ #add,
+                              ha-todo-list$ ha-icon-button[slot="add"] { display: none !important; }
 
                     # Family
                     - type: vertical-stack
@@ -550,12 +537,13 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list[slot="add"],
-                              ha-todo-list .add,
-                              ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield,
-                              ha-todo-list #add,
-                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                              /* --- NEW: reliably hide Add UI inside ha-todo-list's shadow root --- */
+                              ha-todo-list$ .add,
+                              ha-todo-list$ .add-item,
+                              ha-todo-list$ mwc-textfield,
+                              ha-todo-list$ ha-textfield,
+                              ha-todo-list$ #add,
+                              ha-todo-list$ ha-icon-button[slot="add"] { display: none !important; }
 
                 # Kids (2) - chip-like rows, Next up at bottom, no extra plus
                 - type: grid
@@ -587,13 +575,13 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              /* hide add UI */
-                              ha-todo-list[slot="add"],
-                              ha-todo-list .add,
-                              ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield,
-                              ha-todo-list #add,
-                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                              /* --- NEW: reliably hide Add UI inside ha-todo-list's shadow root --- */
+                              ha-todo-list$ .add,
+                              ha-todo-list$ .add-item,
+                              ha-todo-list$ mwc-textfield,
+                              ha-todo-list$ ha-textfield,
+                              ha-todo-list$ #add,
+                              ha-todo-list$ ha-icon-button[slot="add"] { display: none !important; }
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
                           name: >
@@ -633,12 +621,13 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              ha-todo-list[slot="add"],
-                              ha-todo-list .add,
-                              ha-todo-list .add-item,
-                              ha-todo-list mwc-textfield,
-                              ha-todo-list #add,
-                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                              /* --- NEW: reliably hide Add UI inside ha-todo-list's shadow root --- */
+                              ha-todo-list$ .add,
+                              ha-todo-list$ .add-item,
+                              ha-todo-list$ mwc-textfield,
+                              ha-todo-list$ ha-textfield,
+                              ha-todo-list$ #add,
+                              ha-todo-list$ ha-icon-button[slot="add"] { display: none !important; }
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
                           name: >

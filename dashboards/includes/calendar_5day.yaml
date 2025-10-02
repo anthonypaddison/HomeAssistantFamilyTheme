@@ -1,119 +1,95 @@
-type: custom:week-planner-card
-days: 5
-startingDay: today
-columns:
-  extraLarge: 5
-  large: 5
-  medium: 5
-  small: 5
-  extraSmall: 5
-calendars:
-  - entity: calendar.family
-    color: var(--cal-color-family)
-  - entity: calendar.anthony
-    color: var(--cal-color-anthony)
-  - entity: calendar.joy
-    color: var(--cal-color-joy)
-  - entity: calendar.lizzie
-    color: var(--cal-color-lizzie)
-  - entity: calendar.toby
-    color: var(--cal-color-toby)
-noCardBackground: false
-card_mod:
-  style:
-    $: |
-      :host {
-        --hour-height: 64px;
-        --rail-width: 56px;
-        --rail-pad-left: 10px;
-        --rail-fsize: 12px;
-        --rail-color: var(--secondary-text-color);
-        --day-header-h: 40px;
-        --allday-row-h: 32px;
-        --sticky-gap: 4px;
-        --rail-top: calc(var(--day-header-h) + var(--sticky-gap) + var(--allday-row-h));
-      }
+type: vertical-stack
+cards:
 
-      /* Make the card itself fill the remaining screen height */
-      ha-card {
-        height: calc(100vh - var(--header-height)); /* main view area handles its own top offsets */
-        display: flex;
-        flex-direction: column;
-      }
+  # Overlay header row with exact format "Thu 2" ... "Mon 7"
+  - type: custom:button-card
+    show_icon: false
+    show_state: false
+    styles:
+      card:
+        - background: transparent
+        - box-shadow: none
+        - padding: 0 8px 4px 64px   # left padding ~= rail width
+      grid:
+        - grid-template-columns: repeat(5, 1fr)
+      custom_fields:
+        d1: [ justify-self: center, font-weight: 800 ]
+        d2: [ justify-self: center, font-weight: 800 ]
+        d3: [ justify-self: center, font-weight: 800 ]
+        d4: [ justify-self: center, font-weight: 800 ]
+        d5: [ justify-self: center, font-weight: 800 ]
+    custom_fields:
+      d1: >
+        [[[
+          const d=new Date(); const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
+      d2: >
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+1);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
+      d3: >
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+2);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
+      d4: >
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+3);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
+      d5: >
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+4);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
 
-      /* Overall layout: we make the days area scroll if overflowing */
-      .days {
-        position: relative;
-        padding-left: var(--rail-width);
-        overflow: auto; /* scroll timeline */
-        flex: 1 1 auto; /* take remaining height */
-        background: #F8FAFC;
-      }
-
-      /* Column visuals */
-      .day {
-        background: #F8FAFC;
-      }
-
-      /* Sticky header (date/day) per column */
-      .day .header {
-        position: sticky;
-        top: 0;
-        z-index: 4;
-        height: var(--day-header-h);
-        display: flex; align-items: center; justify-content: center;
-        gap: 6px;
-        background: var(--card-background-color);
-        font-weight: 800;
-        font-size: 14px;
-        text-transform: none;
-      }
-
-      /* Format header to look like "Thu 2" (short day + number) */
-      .day .header .weekday { font-weight: 800; }
-      .day .header .date    { font-weight: 800; }
-
-      /* All-day row (even if empty) */
-      .day .all-day, .day .allday {
-        position: sticky;
-        top: calc(var(--day-header-h) + var(--sticky-gap));
-        z-index: 3;
-        height: var(--allday-row-h);
-        display: flex; align-items: center;
-        background: #EEF2F7;
-        border-bottom: 1px solid var(--divider-color);
-      }
-
-      /* Left time rail (00:00 -> 23:00) */
-      .days::before {
-        content:
-          "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
-        white-space: pre;
-        position: absolute;
-        left: 0;
-        top: var(--rail-top);
-        width: calc(var(--rail-width) - 4px);
-        padding-left: var(--rail-pad-left);
-        line-height: var(--hour-height);
-        font-size: var(--rail-fsize);
-        color: var(--rail-color);
-        pointer-events: none;
-        z-index: 5;
-        text-align: left;
-      }
-
-      /* "Today" highlight: first column when startingDay=today */
-      .day:first-child .header {
-        position: sticky;
-        top: 0;
-        z-index: 6;
-        background: var(--card-background-color);
-      }
-      .day:first-child .header::after {
-        content: "";
-        width: 26px; height: 26px;
-        border-radius: 999px;
-        border: 3px solid var(--palette-rose);
-        position: absolute;
-        inset: 7px auto auto auto;
-      }
+  # The planner itself (headers hidden; today ring kept via overlay)
+  - type: custom:week-planner-card
+    days: 5
+    startingDay: today
+    columns: { extraLarge: 5, large: 5, medium: 5, small: 5, extraSmall: 5 }
+    calendars:
+      - entity: calendar.family   , color: var(--cal-color-family)
+      - entity: calendar.anthony , color: var(--cal-color-anthony)
+      - entity: calendar.joy     , color: var(--cal-color-joy)
+      - entity: calendar.lizzie  , color: var(--cal-color-lizzie)
+      - entity: calendar.toby    , color: var(--cal-color-toby)
+    noCardBackground: false
+    card_mod:
+      style:
+        $: |
+          :host {
+            --hour-height: 64px;
+            --rail-width: 56px;
+            --rail-pad-left: 10px;
+            --rail-fsize: 12px;
+            --rail-color: var(--secondary-text-color);
+            --day-header-h: 0px;      /* hide internally */
+            --allday-row-h: 32px;
+            --sticky-gap: 4px;
+            --rail-top: calc(0px + var(--sticky-gap) + var(--allday-row-h));
+          }
+          ha-card {
+            height: calc(100vh - var(--header-height));
+            display: flex; flex-direction: column;
+          }
+          .days { position: relative; padding-left: var(--rail-width); overflow: auto; flex: 1 1 auto; background: #F8FAFC; }
+          .day  { background: #F8FAFC; }
+          /* hide built-in headers so overlay row is the only header */
+          .day .header { display: none !important; }
+          /* All-day row (sticky + grey) */
+          .day .all-day, .day .allday {
+            position: sticky; top: var(--sticky-gap); z-index: 3;
+            height: var(--allday-row-h); display:flex; align-items:center;
+            background: #EEF2F7; border-bottom: 1px solid var(--divider-color);
+          }
+          /* Left time rail (00:00 -> 23:00) */
+          .days::before {
+            content:
+            "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
+            white-space: pre; position: absolute; left: 0; top: var(--rail-top);
+            width: calc(var(--rail-width) - 4px); padding-left: var(--rail-pad-left);
+            line-height: var(--hour-height); font-size: var(--rail-fsize);
+            color: var(--rail-color); pointer-events: none; z-index: 5; text-align: left;
+          }

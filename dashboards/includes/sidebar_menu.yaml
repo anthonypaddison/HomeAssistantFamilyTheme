@@ -38,7 +38,7 @@ card:
       icon: mdi:calendar
       styles:
         card:
-          - margin-top: "calc(var(--family-heading-height) + var(--family-chips-height))"
+          - margin-top: "calc(var(--family-heading-height,56px) + var(--family-chips-height,56px))"
       variables:
         section: Calendar
         badge_entity: input_number.events_today

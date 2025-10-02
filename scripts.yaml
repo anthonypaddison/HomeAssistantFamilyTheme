@@ -157,7 +157,6 @@ family_fab_open:
                 right_button: "Close"
                 dismissable: true
 
-
 # -------------------------------------------------------------------
 # Popup helpers
 # -------------------------------------------------------------------
@@ -165,11 +164,11 @@ popup_create_calendar_event:
   alias: "Popup: create calendar event (from ha-form)"
   mode: queued
   fields:
-    browser_id: {}
-    summary: {}
+    browser_id:      {}
+    summary:         {}
     start_date_time: {}
-    end_date_time: {}
-    calendar: {}
+    end_date_time:   {}
+    calendar:        {}
   sequence:
     - variables:
         start_dt: >-
@@ -198,13 +197,13 @@ popup_add_todo:
   alias: "Popup: add to-do (from ha-form)"
   mode: queued
   fields:
-    browser_id: {}
-    item: {}
+    browser_id:  {}
+    item:        {}
     list_entity: {}
-    tags: {}
-    due_today: {}
-    icon: {}
-    due_date: {}
+    tags:        {}
+    due_today:   {}
+    icon:        {}
+    due_date:    {}
   sequence:
     - variables:
         prefix: "{{ icon if icon else '' }}"
@@ -232,7 +231,7 @@ open_person_view:
   mode: queued
   fields:
     browser_id: {}
-    person: {}
+    person:     {}
   sequence:
     - service: input_select.select_option
       target:
