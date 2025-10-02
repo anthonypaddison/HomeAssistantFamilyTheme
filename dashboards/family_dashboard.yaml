@@ -1,170 +1,91 @@
-title: Family Board
+title: Family
 theme: FamilyBoard
 
-# ---------- Button-card templates (GLOBAL) ----------
+# ====== Button-card templates (local to this dashboard) ======
 button_card_templates:
-  # Progress chip: shows done vs total (done + remaining incomplete)
-  # - variables.todo:  entity_id of the todo list (e.g. todo.anthony)
-  # - variables.completed: entity_id of input_number for "completed today"
-  # - variables.color: CSS color token (e.g. var(--palette-lilac))
-  todo_due_today_chip:
-    show_name: true
-    show_state: false
-    styles:
-      card:
-        - background: '[[[ return variables.color || "var(--primary-color)"; ]]]'
-        - padding: 8px 12px
-        - border-radius: 16px
-        - min-width: 120px
-      name:
-        - font-weight: 800
-        - color: '#0F172A'
-      custom_fields:
-        count:
-          - font-size: 18px
-          - font-weight: 800
-          - color: '#0F172A'
-    custom_fields:
-      count: >
-        [[[
-          const eid = variables.count_entity;
-          const v = eid ? states[eid]?.state : null;
-          return v && v !== 'unknown' && v !== 'unavailable' ? v : '0';
-        ]]]
 
-  progress_chip:
+  # Compact progress chip for "Due today" with name+icon on one line
+  # Variables:
+  #   - variables.completed: entity_id of input_number.completed_due_today_*  (done today)
+  #   - variables.outstanding: entity_id of input_number.outstanding_*_today  (remaining due today)
+  #   - variables.color: CSS color token (e.g., var(--family-color-anthony))
+  #   - variables.icon: mdi:*
+  #   - variables.name: "Anthony"
+  due_today_progress_chip:
+    show_icon: true
     show_name: true
     show_state: false
+    tap_action:
+      action: none   # set per-instance
     styles:
       card:
-        - background: >-
-            [[[ return variables.color || 'var(--primary-color)'; ]]]
-        - padding: 8px 12px
-        - border-radius: 16px
-        - min-width: 120px
+        - padding: 6px 10px
+        - border-radius: 14px
+        - background: "[[[ return variables.color || 'var(--primary-color)'; ]]]"
+        - min-height: 44px
+        - box-shadow: none
       grid:
-        - grid-template-areas: '"i n" "bar bar"'
-        - grid-template-columns: 28px 1fr
-        - grid-template-rows: auto auto
-      name:
+        - grid-template-areas: "'i n v' 'bar bar bar'"
+        - grid-template-columns: 24px auto auto
+        - grid-template-rows: auto 6px
+        - column-gap: 8px
+      img_cell:
+        - align-self: center
         - justify-self: start
-        - font-weight: 700
       icon:
-        - width: 22px
-      custom_fields:
-        bar:
-          - width: 100%
-          - margin-top: 6px
-    custom_fields:
-      bar: >
-        [[[
-          // Coerce states safely
-          const toNumber = (v) => Number.isFinite(+v) ? +v : 0;
-          const done    = toNumber(states[variables.completed]?.state);
-          const remain  = toNumber(states[variables.todo]?.state);
-          const total   = Math.max(0, done + remain);
-          const pct     = total ? Math.min(100, Math.round((done/total)*100)) : 0;
-
-          const track = 'height:6px;border-radius:3px;background:rgba(0,0,0,.15);position:relative;overflow:hidden;';
-          const fill  = `position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);`;
-          const label = `position:absolute;right:0;top:-16px;font-size:12px;font-weight:700;`;
-
-          return `
-            <div style="${track}">
-              <div style="${fill}"></div>
-            </div>
-            <div style="${label}">${done}/${total}</div>
-          `;
-        ]]]
-
-  family_icon:
-    show_name: false
-    show_label: false
-    styles:
-      card:
-        - border-radius: 0px
-        - box-shadow: none
-        - width: 100px
-        - height: 100px
-        - padding: 6px
-        - margin: 0
-        - margin-bottom: 55px
-        - background: transparent
-      grid:
-        - grid-template-areas: '"i c"'
-        - grid-template-columns: 1fr auto
-        - grid-template-rows: 1fr
-        - align-items: center
-      icon:
-        - width: 60px
-        - height: 60px
-        - justify-self: center
+        - width: 20px
+        - height: 20px
+        - color: "#0F172A"
+      name:
         - align-self: center
-        - color: #FFFFFF
-
-  sb_icon_only:
-    show_name: false
-    show_label: false
-    styles:
-      card:
-        - border-radius: 0px
-        - box-shadow: none
-        - width: 100px
-        - height: 100px
-        - padding: 6px
-        - margin: 0
-        - background: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              return active ? '#FFFFFF'
-                             : getComputedStyle(document.documentElement).getPropertyValue('--app-header-background-color');
-            ]]]
-      icon:
-        - width: 50px
-        - height: 50px
-        - justify-self: center
-        - align-self: center
-        - color: >
-            [[[
-              const active = states['input_select.family_section']?.state === variables.section;
-              const lilac = getComputedStyle(document.documentElement).getPropertyValue('--app-header-background-color').trim() || '#CFBAF0';
-              return active ? lilac : '#FFFFFF';
-            ]]]
+        - justify-self: start
+        - font-weight: "800"
+        - color: "#0F172A"
+        - font-size: 14px
+        - line-height: 18px
       custom_fields:
-        count:
-          - display: grid
-          - place-items: center
+        v:
           - align-self: center
           - justify-self: end
+          - font-size: 12px
           - font-weight: 800
-          - font-size: 14px
-          - min-width: 1.6em
-          - height: 1.6em
-          - background: var(--family-color-family)
-          - color: "#FFFFFF"
-          - border: 1px solid #FFFFFF
-          - border-radius: 999px
-          - line-height: 1  
-
+          - color: "#0F172A"
+        bar:
+          - width: 100%
+          - height: 6px
+          - border-radius: 3px
+          - background: "rgba(0,0,0,.15)"
+          - position: relative
+          - overflow: hidden
     custom_fields:
-      count: >
+      v: >
         [[[
-          const eid = variables.badge_entity;
-          if (!eid) return null;
-          const raw = states[eid]?.state ?? null;
-          const val = Number.isFinite(+raw) ? String(+raw) : String(raw);
-          if (!val || val === '0' || val === 'unknown' || val === 'unavailable') return null;
-          return val;
+          const done = Number(states[variables.completed]?.state || 0);
+          const rem  = Number(states[variables.outstanding]?.state || 0);
+          const total = Math.max(0, done + rem);
+          return `${done}/${total}`;
+        ]]]
+      bar: >
+        [[[
+          const done = Number(states[variables.completed]?.state || 0);
+          const rem  = Number(states[variables.outstanding]?.state || 0);
+          const total = Math.max(0, done + rem);
+          const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
+          return `<div style="position:absolute;inset:0 auto 0 0;width:${pct}%;background:rgba(0,0,0,.35);"></div>`;
         ]]]
 
-# ---------- View ----------
+# ====== VIEWS ======
 views:
+
+  # =========================
+  # MAIN FAMILY VIEW
+  # =========================
   - title: Family
     path: family
     type: custom:grid-layout
     layout:
       padding: 0px
-      grid-template-columns: 100px 1fr
+      grid-template-columns: 6% 1fr        # Sidebar to 6% as requested
       grid-template-rows: auto auto 1fr
       grid-template-areas: |
         "sidebar heading"
@@ -173,22 +94,20 @@ views:
       gap: 0px
       column-gap: 0px
       row-gap: 0px
-    mediaquery:
-      "(max-width: 900px)":
-        grid-template-columns: 1fr
-        grid-template-areas: |
-          "chips"
-          "main"
+      mediaquery:
+        "(max-width: 900px)":
+          grid-template-columns: 1fr
+          grid-template-areas: |
+            "heading"     # make sure heading still shows on small screens
+            "chips"
+            "main"
 
     cards:
-      # =========================
+
       # 1) SIDEBAR (sticky)
-      # =========================
       - !include /config/dashboards/includes/sidebar_menu.yaml
 
-      # =========================
-      # 2) Heading ROW (top)
-      # =========================
+      # 2) HEADING ROW (top)
       - type: custom:mod-card
         view_layout: { grid-area: heading }
         card_mod:
@@ -199,151 +118,229 @@ views:
               margin: 0 !important;
               padding: 8px 12px !important;
               color: #000000 !important;
+              min-height: 56px;     /* fixed for alignment math */
+              display: flex; align-items: center;
+            }
+        card:
+          type: custom:button-card
+          show_icon: false
+          show_name: false
+          show_state: false
+          styles:
+            card:
+              - background: transparent
+              - box-shadow: none
+              - padding: 0
+              - color: "#000000 !important"
+            grid:
+              - grid-template-areas: "'left center right'"
+              - grid-template-columns: 1fr auto 1fr
+              - align-items: center
+              - column-gap: 12px
+          custom_fields:
+            left: |
+              [[[
+                const d = new Date();
+                const date = d.toLocaleDateString('en-GB',
+                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                return `Panogu Family - ${date}`;
+              ]]]
+            center: |
+              [[[
+                const d = new Date();
+                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+              ]]]
+            right: |
+              [[[
+                const e = states['calendar.routine'];
+                if (!e) return 'Routine calendar not found';
+                const a = e.attributes ?? {};
+                const title = a.message ?? 'No upcoming events';
+                if (!a.start_time) return `${title}`;
+                const start = new Date(a.start_time);
+                const end = a.end_time ? new Date(a.end_time) : null;
+                const now = new Date();
+                const tf = { hour: '2-digit', minute: '2-digit' };
+                const df = { weekday: 'short', month: 'short', day: 'numeric' };
+                const same = start.toDateString() === now.toDateString();
+                const inProg = e.state === 'on' && start <= now && (!end || now < end);
+                const when = inProg 
+                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+                return `${title} - ${when}`;
+              ]]]
+          styles:
+            custom_fields:
+              left:
+                - justify-self: start
+                - font-weight: 700
+              center:
+                - justify-self: center
+                - font-weight: 700
+                - font-size: 22px
+              right:
+                - justify-self: end
+                - text-align: right
+                - white-space: nowrap
+                - overflow: hidden
+                - text-overflow: ellipsis
+                - font-weight: 700
+          triggers_update:
+            - sensor.time
+            - calendar.routine
+
+      # 3) CHIPS ROW (progress chips, tap -> person detail view)
+      - type: custom:mod-card
+        view_layout: { grid-area: chips }
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--palette-rose) !important;
+              border-radius: 0 !important; margin: 0 !important;
+              padding: 6px 12px !important;
+              min-height: 56px;
+              display: flex; align-items: center;
             }
         card:
           type: horizontal-stack
           cards:
             - type: custom:button-card
-              show_icon: false
-              show_name: false
-              show_state: false
-              styles:
-                card:
-                  - background: transparent
-                  - box-shadow: none
-                  - padding: 0
-                  - color: #000000 !important
-                grid:
-                  - grid-template-areas: '"left center right"'
-                  - grid-template-columns: 1fr auto 1fr
-                  - align-items: center
-                  - column-gap: 12px
-                custom_fields:
-                  left: |
-                    [[[
-                      const d = new Date();
-                      const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                      return `Panogu Family - ${date}`;
-                    ]]]
-                  center: |
-                    [[[
-                      const d = new Date();
-                      return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-                    ]]]
-                  right: |
-                    [[[
-                      const e = states['calendar.routine'];
-                      if (!e) return 'Routine calendar not found';
-                      const a = e.attributes ?? {};
-                      const title = a.message ?? 'No upcoming events';
-                      if (!a.start_time) return `${title}`;
-                      const start = new Date(a.start_time);
-                      const end = a.end_time ? new Date(a.end_time) : null;
-                      const now = new Date();
-                      const tf = { hour: '2-digit', minute: '2-digit' };
-                      const df = { weekday: 'short', month: 'short', day: 'numeric' };
-                      const same = start.toDateString() === now.toDateString();
-                      const inProg = e.state === 'on' && start <= now && (!end || now < end);
-                      const when = inProg
-                        ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
-                        : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
-                      return `<strong>${title}</strong> - <strong>${when}</strong>`;
-                    ]]]
-                styles:
-                  custom_fields:
-                    left:
-                      - grid-area: left
-                      - justify-self: start
-                      - font-weight: 700
-                    center:
-                      - grid-area: center
-                      - justify-self: center
-                      - font-weight: 700
-                      - font-size: 22px
-                    right:
-                      - grid-area: right
-                      - justify-self: end
-                      - text-align: right
-                      - white-space: nowrap
-                      - overflow: hidden
-                      - text-overflow: ellipsis
-                      - font-weight: 700
-                triggers_update:
-                  - sensor.time
-                  - calendar.routine
-      # =========================
-      # 2) CHIPS ROW (top)
-      # =========================
-      - type: custom:mod-card
-        view_layout: { grid-area: chips }
-        card_mod: { style: "ha-card { background: var(--palette-rose) !important; border-radius: 0 !important; margin: 0 !important; padding: 8px 12px !important; }" }
-        card:
-          type: horizontal-stack
-          cards:
-            - type: custom:button-card
-              template: todo_due_today_chip
+              template: due_today_progress_chip
               icon: mdi:account-group
-              name: Family
               variables:
-                todo: todo.family                     # kept for legacy state, not used in pct now
-                completed: input_number.completed_due_today_family
-                badge_entity: input_number.outstanding_family_today
+                name: Family
+                icon: mdi:account-group
                 color: var(--family-color-family)
-
+                completed: input_number.completed_due_today_family
+                outstanding: input_number.outstanding_family_today
+              name: Family
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                data:
+                  browser_id: THIS
+                  person: Family
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: due_today_progress_chip
               icon: mdi:laptop
-              name: Anthony
               variables:
-                todo: todo.anthony
-                completed: input_number.completed_due_today_anthony
-                badge_entity: input_number.outstanding_anthony_today
+                name: Anthony
+                icon: mdi:laptop
                 color: var(--family-color-anthony)
-
+                completed: input_number.completed_due_today_anthony
+                outstanding: input_number.outstanding_anthony_today
+              name: Anthony
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                data: { browser_id: THIS, person: Anthony }
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: due_today_progress_chip
               icon: mdi:book-open-variant
-              name: Joy
               variables:
-                todo: todo.joy
-                completed: input_number.completed_due_today_joy
-                badge_entity: input_number.outstanding_joy_today
+                name: Joy
+                icon: mdi:book-open-variant
                 color: var(--family-color-joy)
-
+                completed: input_number.completed_due_today_joy
+                outstanding: input_number.outstanding_joy_today
+              name: Joy
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                data: { browser_id: THIS, person: Joy }
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: due_today_progress_chip
               icon: mdi:teddy-bear
-              name: Lizzie
               variables:
-                todo: todo.lizzie
-                completed: input_number.completed_due_today_lizzie
-                badge_entity: input_number.outstanding_lizzie_today
+                name: Lizzie
+                icon: mdi:teddy-bear
                 color: var(--family-color-lizzie)
-
+                completed: input_number.completed_due_today_lizzie
+                outstanding: input_number.outstanding_lizzie_today
+              name: Lizzie
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                data: { browser_id: THIS, person: Lizzie }
             - type: custom:button-card
-              template: todo_due_today_chip
+              template: due_today_progress_chip
               icon: mdi:soccer
-              name: Toby
               variables:
-                todo: todo.toby
-                completed: input_number.completed_due_today_toby
-                badge_entity: input_number.outstanding_toby_today
+                name: Toby
+                icon: mdi:soccer
                 color: var(--family-color-toby)
+                completed: input_number.completed_due_today_toby
+                outstanding: input_number.outstanding_toby_today
+              name: Toby
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                data: { browser_id: THIS, person: Toby }
 
-      # =========================
-      # 3) MAIN AREA (conditional views)
-      # =========================
+      # 4) MAIN AREA (conditional views)
       - type: vertical-stack
         view_layout: { grid-area: main }
         cards:
-          # --- Calendar ---
+
+          # ---- Calendar ----
           - type: conditional
             conditions:
               - entity: input_select.family_section
                 state: Calendar
-            card: !include /config/dashboards/includes/calendar_5day.yaml
+            card:
+              type: vertical-stack
+              cards:
 
-          # --- Chores: adults (3 columns) + kids (2 columns) ---
+                # View toggle inside Calendar section
+                - type: horizontal-stack
+                  cards:
+                    - type: button
+                      name: Day
+                      icon: mdi:calendar-today
+                      tap_action:
+                        action: call-service
+                        service: input_select.select_option
+                        target: { entity_id: input_select.calendar_view }
+                        data: { option: Day }
+                    - type: button
+                      name: 5-Day
+                      icon: mdi:calendar-range
+                      tap_action:
+                        action: call-service
+                        service: input_select.select_option
+                        target: { entity_id: input_select.calendar_view }
+                        data: { option: 5-Day }
+                    - type: button
+                      name: Month
+                      icon: mdi:calendar-month
+                      tap_action:
+                        action: call-service
+                        service: input_select.select_option
+                        target: { entity_id: input_select.calendar_view }
+                        data: { option: Month }
+
+                # Day
+                - type: conditional
+                  conditions:
+                    - entity: input_select.calendar_view
+                      state: Day
+                  card: !include /config/dashboards/includes/calendar_day.yaml
+
+                # 5-Day
+                - type: conditional
+                  conditions:
+                    - entity: input_select.calendar_view
+                      state: 5-Day
+                  card: !include /config/dashboards/includes/calendar_5day.yaml
+
+                # Month
+                - type: conditional
+                  conditions:
+                    - entity: input_select.calendar_view
+                      state: Month
+                  card: !include /config/dashboards/includes/calendar_month.yaml
+
+          # ---- Chores: Adults row (compact, titles colored + icons like chips) ----
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -351,182 +348,228 @@ views:
             card:
               type: vertical-stack
               cards:
-                # Adults row (scrollable lists, quick toggle, hide completed)
+
+                # Adults (3)
                 - type: grid
                   columns: 3
                   square: false
                   cards:
-                    - type: todo-list
-                      entity: todo.anthony
-                      title: Anthony
-                      item_tap_action: toggle
-                      hide_completed: false
-                      card_mod:
-                        style: |
-                          /* Tighter item rows */
-                          li { min-height: 34px !important; }
+                    # Anthony
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:button-card
+                          icon: mdi:laptop
+                          name: "Anthony"
+                          styles:
+                            card:
+                              - background: transparent
+                              - box-shadow: none
+                              - padding: 4px 0 0
+                            name:
+                              - color: var(--family-color-anthony)
+                              - font-weight: 800
+                              - font-size: 14px
+                            icon:
+                              - color: var(--family-color-anthony)
+                              - width: 18px
+                              - height: 18px
+                          show_state: false
+                          show_label: false
+                        - type: todo-list
+                          entity: todo.anthony
+                          hide_completed: false
+                          card_mod:
+                            style: |
+                              /* compact rows */
+                              li { min-height: 28px !important; }
+                              /* large circular checkbox look */
+                              mwc-checkbox {
+                                --mdc-checkbox-unchecked-color: #CBD5E1;
+                                --mdc-checkbox-checked-color: var(--family-color-family);
+                                --mdc-checkbox-mark-color: #FFFFFF;
+                                border-radius: 50% !important;
+                                transform: scale(1.4);
+                                margin-right: 8px;
+                              }
+                              /* hide add UI */
+                              ha-todo-list [slot="add"],
+                              ha-todo-list .add, ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                          /* Bigger circular checkbox with light grey unchecked, green checked */
-                          mwc-checkbox {
-                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
-                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
-                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
-                            border-radius: 50% !important;
-                            transform: scale(1.6);                       /* double size-ish */
-                            margin-right: 8px;
-                          }
+                    # Joy
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:button-card
+                          icon: mdi:book-open-variant
+                          name: "Joy"
+                          styles:
+                            card: &header_card
+                              - background: transparent
+                              - box-shadow: none
+                              - padding: 4px 0 0
+                            name:
+                              - color: var(--family-color-joy)
+                              - font-weight: 800
+                              - font-size: 14px
+                            icon:
+                              - color: var(--family-color-joy)
+                              - width: 18px
+                              - height: 18px
+                          show_state: false
+                          show_label: false
+                        - type: todo-list
+                          entity: todo.joy
+                          hide_completed: false
+                          card_mod:
+                            style: |
+                              li { min-height: 28px !important; }
+                              mwc-checkbox {
+                                --mdc-checkbox-unchecked-color: #CBD5E1;
+                                --mdc-checkbox-checked-color: var(--family-color-family);
+                                --mdc-checkbox-mark-color: #FFFFFF;
+                                border-radius: 50% !important;
+                                transform: scale(1.4);
+                                margin-right: 8px;
+                              }
+                              ha-todo-list [slot="add"],
+                              ha-todo-list .add, ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                          /* Subtle fade when completed list renders */
-                          .completed, .completed * { opacity: 0.85; }
+                    # Family
+                    - type: vertical-stack
+                      cards:
+                        - type: custom:button-card
+                          icon: mdi:account-group
+                          name: "Family"
+                          styles:
+                            card: *header_card
+                            name:
+                              - color: var(--family-color-family)
+                              - font-weight: 800
+                              - font-size: 14px
+                            icon:
+                              - color: var(--family-color-family)
+                              - width: 18px
+                              - height: 18px
+                          show_state: false
+                          show_label: false
+                        - type: todo-list
+                          entity: todo.family
+                          hide_completed: false
+                          card_mod:
+                            style: |
+                              li { min-height: 28px !important; }
+                              mwc-checkbox {
+                                --mdc-checkbox-unchecked-color: #CBD5E1;
+                                --mdc-checkbox-checked-color: var(--family-color-family);
+                                --mdc-checkbox-mark-color: #FFFFFF;
+                                border-radius: 50% !important;
+                                transform: scale(1.4);
+                                margin-right: 8px;
+                              }
+                              ha-todo-list [slot="add"],
+                              ha-todo-list .add, ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                          /* Hide per-list add UI completely (works on HA core todo-list card) */
-                          ha-todo-list [slot="add"],
-                          ha-todo-list .add,
-                          ha-todo-list .add-item,
-                          ha-todo-list mwc-textfield,
-                          ha-todo-list #add,
-                          ha-todo-list ha-icon-button[slot="add"] {
-                            display: none !important;
-                          }
-
-                    - type: todo-list
-                      entity: todo.joy
-                      title: Joy
-                      item_tap_action: toggle
-                      hide_completed: false
-                      card_mod:
-                        style: |
-                          /* Tighter item rows */
-                          li { min-height: 34px !important; }
-
-                          /* Bigger circular checkbox with light grey unchecked, green checked */
-                          mwc-checkbox {
-                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
-                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
-                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
-                            border-radius: 50% !important;
-                            transform: scale(1.6);                       /* double size-ish */
-                            margin-right: 8px;
-                          }
-
-                          /* Subtle fade when completed list renders */
-                          .completed, .completed * { opacity: 0.85; }
-
-                          /* Hide per-list add UI completely (works on HA core todo-list card) */
-                          ha-todo-list [slot="add"],
-                          ha-todo-list .add,
-                          ha-todo-list .add-item,
-                          ha-todo-list mwc-textfield,
-                          ha-todo-list #add,
-                          ha-todo-list ha-icon-button[slot="add"] {
-                            display: none !important;
-                          }
-
-                    - type: todo-list
-                      entity: todo.family
-                      title: Family
-                      item_tap_action: toggle
-                      hide_completed: false
-                      card_mod:
-                        style: |
-                          /* Tighter item rows */
-                          li { min-height: 34px !important; }
-
-                          /* Bigger circular checkbox with light grey unchecked, green checked */
-                          mwc-checkbox {
-                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
-                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
-                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
-                            border-radius: 50% !important;
-                            transform: scale(1.6);                       /* double size-ish */
-                            margin-right: 8px;
-                          }
-
-                          /* Subtle fade when completed list renders */
-                          .completed, .completed * { opacity: 0.85; }
-
-                          /* Hide per-list add UI completely (works on HA core todo-list card) */
-                          ha-todo-list [slot="add"],
-                          ha-todo-list .add,
-                          ha-todo-list .add-item,
-                          ha-todo-list mwc-textfield,
-                          ha-todo-list #add,
-                          ha-todo-list ha-icon-button[slot="add"] {
-                            display: none !important;
-                          }
-
-                # Kids row (keep completed visible for easy undo)
+                # Kids (2) - list styled like selectable "chips"; "Next up" small at bottom; no extra plus
                 - type: grid
                   columns: 2
                   square: false
                   cards:
-                    - type: todo-list
-                      entity: todo.lizzie
-                      title: Lizzie
-                      item_tap_action: toggle
-                      hide_completed: false
-                      card_mod:
-                        style: |
-                          /* Tighter item rows */
-                          li { min-height: 34px !important; }
+                    # Lizzie
+                    - type: vertical-stack
+                      cards:
+                        - type: todo-list
+                          entity: todo.lizzie
+                          hide_completed: false
+                          card_mod:
+                            style: |
+                              /* chip-like items */
+                              ul { display: flex; flex-direction: column; gap: 8px; }
+                              li {
+                                min-height: 34px !important;
+                                border-radius: 18px;
+                                background: rgba(236,64,122,0.12);
+                                border: 1px solid rgba(236,64,122,0.30);
+                                padding: 2px 10px !important;
+                              }
+                              mwc-checkbox {
+                                --mdc-checkbox-unchecked-color: #CBD5E1;
+                                --mdc-checkbox-checked-color: var(--family-color-family);
+                                --mdc-checkbox-mark-color: #FFFFFF;
+                                border-radius: 50% !important;
+                                transform: scale(1.4);
+                                margin-right: 8px;
+                              }
+                              /* hide add UI */
+                              ha-todo-list [slot="add"],
+                              ha-todo-list .add, ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                        - type: custom:button-card
+                          icon: mdi:star-four-points-outline
+                          name: >
+                            [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state || 'All done!'); ]]]
+                          show_state: false
+                          styles:
+                            card:
+                              - background: 'rgba(236,64,122,0.15)'
+                              - border: 1px solid rgba(236,64,122,0.35)
+                              - padding: 8px
+                              - border-radius: 10px
+                              - box-shadow: none
+                              - margin-top: 8px
+                            icon:
+                              - color: rgba(236,64,122,1)
 
-                          /* Bigger circular checkbox with light grey unchecked, green checked */
-                          mwc-checkbox {
-                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
-                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
-                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
-                            border-radius: 50% !important;
-                            transform: scale(1.6);                       /* double size-ish */
-                            margin-right: 8px;
-                          }
+                    # Toby
+                    - type: vertical-stack
+                      cards:
+                        - type: todo-list
+                          entity: todo.toby
+                          hide_completed: false
+                          card_mod:
+                            style: |
+                              ul { display: flex; flex-direction: column; gap: 8px; }
+                              li {
+                                min-height: 34px !important;
+                                border-radius: 18px;
+                                background: rgba(66,165,245,0.12);
+                                border: 1px solid rgba(66,165,245,0.30);
+                                padding: 2px 10px !important;
+                              }
+                              mwc-checkbox {
+                                --mdc-checkbox-unchecked-color: #CBD5E1;
+                                --mdc-checkbox-checked-color: var(--family-color-family);
+                                --mdc-checkbox-mark-color: #FFFFFF;
+                                border-radius: 50% !important;
+                                transform: scale(1.4);
+                                margin-right: 8px;
+                              }
+                              ha-todo-list [slot="add"],
+                              ha-todo-list .add, ha-todo-list .add-item,
+                              ha-todo-list mwc-textfield, ha-todo-list #add,
+                              ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                        - type: custom:button-card
+                          icon: mdi:star-four-points-outline
+                          name: >
+                            [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state || 'All done!'); ]]]
+                          show_state: false
+                          styles:
+                            card:
+                              - background: 'rgba(66,165,245,0.15)'
+                              - border: 1px solid rgba(66,165,245,0.35)
+                              - padding: 8px
+                              - border-radius: 10px
+                              - box-shadow: none
+                              - margin-top: 8px
+                            icon:
+                              - color: rgba(66,165,245,1)
 
-                          /* Subtle fade when completed list renders */
-                          .completed, .completed * { opacity: 0.85; }
-
-                          /* Hide per-list add UI completely (works on HA core todo-list card) */
-                          ha-todo-list [slot="add"],
-                          ha-todo-list .add,
-                          ha-todo-list .add-item,
-                          ha-todo-list mwc-textfield,
-                          ha-todo-list #add,
-                          ha-todo-list ha-icon-button[slot="add"] {
-                            display: none !important;
-                          }
-
-                    - type: todo-list
-                      entity: todo.toby
-                      title: Toby
-                      item_tap_action: toggle
-                      hide_completed: false
-                      card_mod:
-                        style: |
-                          /* Tighter item rows */
-                          li { min-height: 34px !important; }
-
-                          /* Bigger circular checkbox with light grey unchecked, green checked */
-                          mwc-checkbox {
-                            --mdc-checkbox-unchecked-color: #CBD5E1;     /* light grey */
-                            --mdc-checkbox-checked-color: var(--family-color-family);  /* green */
-                            --mdc-checkbox-mark-color: #FFFFFF;          /* white tick */
-                            border-radius: 50% !important;
-                            transform: scale(1.6);                       /* double size-ish */
-                            margin-right: 8px;
-                          }
-
-                          /* Subtle fade when completed list renders */
-                          .completed, .completed * { opacity: 0.85; }
-
-                          /* Hide per-list add UI completely (works on HA core todo-list card) */
-                          ha-todo-list [slot="add"],
-                          ha-todo-list .add,
-                          ha-todo-list .add-item,
-                          ha-todo-list mwc-textfield,
-                          ha-todo-list #add,
-                          ha-todo-list ha-icon-button[slot="add"] {
-                            display: none !important;
-                          }
-
-          # --- Photos ---
+          # ---- Photos ----
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -536,15 +579,19 @@ views:
               url: /media-browser
               aspect_ratio: 160%
 
-          # --- Lists ---
+          # ---- Lists ----
           - type: conditional
-            conditions: [{ entity: input_select.family_section, state: Lists }]
+            conditions:
+              - entity: input_select.family_section
+                state: Lists
             card:
               type: markdown
-              content: |
-                {{ states('input_text.shopping_md') }}
+              content: >
+                {{ states('input_text.shopping_md')
+                   if states('input_text.shopping_md') not in ['unknown','unavailable',''] 
+                   else '_No shopping items._' }}
 
-          # --- Toby view ---
+          # ---- Toby (standalone view) ----
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -552,28 +599,49 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:button-card
-                  icon: mdi:star-four-points-outline
-                  name: 'Next up'
-                  show_icon: true
-                  show_state: true
-                  state_display: '[[[ return states["sensor.next_up_toby"]?.state || "All done!"; ]]]'
-                  styles:
-                    card:
-                      - background: 'rgba(66,165,245,0.15)'
-                      - border: 1px solid rgba(66,165,245,0.35)
-                      - padding: 10px
-                      - border-radius: 10px
+                # content is the same as in Kids section (already above), reusing for consistency
                 - type: todo-list
                   entity: todo.toby
                   hide_completed: false
                   card_mod:
                     style: |
-                      ha-textfield, mwc-textfield, .add, .add-item, .actions { display: none !important; }
-                      /* show newest at bottom: often good for kids reading order */
-                      ul { display: flex; flex-direction: column; }
+                      ul { display: flex; flex-direction: column; gap: 8px; }
+                      li {
+                        min-height: 34px !important;
+                        border-radius: 18px;
+                        background: rgba(66,165,245,0.12);
+                        border: 1px solid rgba(66,165,245,0.30);
+                        padding: 2px 10px !important;
+                      }
+                      mwc-checkbox {
+                        --mdc-checkbox-unchecked-color: #CBD5E1;
+                        --mdc-checkbox-checked-color: var(--family-color-family);
+                        --mdc-checkbox-mark-color: #FFFFFF;
+                        border-radius: 50% !important;
+                        transform: scale(1.4);
+                        margin-right: 8px;
+                      }
+                      ha-todo-list [slot="add"],
+                      ha-todo-list .add, ha-todo-list .add-item,
+                      ha-todo-list mwc-textfield, ha-todo-list #add,
+                      ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                - type: custom:button-card
+                  icon: mdi:star-four-points-outline
+                  name: >
+                    [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state || 'All done!'); ]]]
+                  show_state: false
+                  styles:
+                    card:
+                      - background: 'rgba(66,165,245,0.15)'
+                      - border: 1px solid rgba(66,165,245,0.35)
+                      - padding: 8px
+                      - border-radius: 10px
+                      - box-shadow: none
+                      - margin-top: 8px
+                    icon:
+                      - color: rgba(66,165,245,1)
 
-          # --- Lizzie view ---
+          # ---- Lizzie (standalone view) ----
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -581,60 +649,114 @@ views:
             card:
               type: vertical-stack
               cards:
-                - type: custom:button-card
-                  icon: mdi:star-four-points-outline
-                  name: 'Next up'
-                  show_icon: true
-                  show_state: true
-                  state_display: '[[[ return states["sensor.next_up_lizzie"]?.state || "All done!"; ]]]'
-                  styles:
-                    card:
-                      - background: 'rgba(236,64,122,0.15)'
-                      - border: 1px solid rgba(236,64,122,0.35)
-                      - padding: 10px
-                      - border-radius: 10px
                 - type: todo-list
                   entity: todo.lizzie
                   hide_completed: false
                   card_mod:
                     style: |
-                      ha-textfield, mwc-textfield, .add, .add-item, .actions { display: none !important; }
-                      ul { display: flex; flex-direction: column; }
+                      ul { display: flex; flex-direction: column; gap: 8px; }
+                      li {
+                        min-height: 34px !important;
+                        border-radius: 18px;
+                        background: rgba(236,64,122,0.12);
+                        border: 1px solid rgba(236,64,122,0.30);
+                        padding: 2px 10px !important;
+                      }
+                      mwc-checkbox {
+                        --mdc-checkbox-unchecked-color: #CBD5E1;
+                        --mdc-checkbox-checked-color: var(--family-color-family);
+                        --mdc-checkbox-mark-color: #FFFFFF;
+                        border-radius: 50% !important;
+                        transform: scale(1.4);
+                        margin-right: 8px;
+                      }
+                      ha-todo-list [slot="add"],
+                      ha-todo-list .add, ha-todo-list .add-item,
+                      ha-todo-list mwc-textfield, ha-todo-list #add,
+                      ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                - type: custom:button-card
+                  icon: mdi:star-four-points-outline
+                  name: >
+                    [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state || 'All done!'); ]]]
+                  show_state: false
+                  styles:
+                    card:
+                      - background: 'rgba(236,64,122,0.15)'
+                      - border: 1px solid rgba(236,64,122,0.35)
+                      - padding: 8px
+                      - border-radius: 10px
+                      - box-shadow: none
+                      - margin-top: 8px
+                    icon:
+                      - color: rgba(236,64,122,1)
 
+      # 5) Floating FAB (context-aware popup)
+      - type: custom:button-card
+        icon: mdi:plus
+        show_name: false
+        show_icon: true
+        tap_action:
+          action: call-service
+          service: script.family_fab_open
+          data: { browser_id: THIS }
+        styles:
+          card:
+            - position: fixed
+            - right: 24px
+            - bottom: 24px
+            - width: 56px
+            - height: 56px
+            - border-radius: 28px
+            - box-shadow: 0 8px 24px rgba(0,0,0,0.22)
+            - padding: 0
+            - z-index: 1000
+            - background: >-
+                [[[
+                  const s = states['input_select.family_section']?.state ?? 'Calendar';
+                  const root = getComputedStyle(document.documentElement);
+                  const pick = (n,f) => root.getPropertyValue(n) || f;
+                  const map = { Calendar: pick('--fab-color-calendar','var(--primary-color)'),
+                                Chores:   pick('--fab-color-chores','var(--primary-color)') };
+                  return map[s] || pick('--fab-color-default','var(--primary-color)');
+                ]]]
+          icon:
+            - width: 28px
+            - height: 28px
 
-          # --- FAB (context-aware popup) ---
-          - type: custom:button-card
-            icon: mdi:plus
-            show_name: false
-            show_icon: true
-            tap_action:
-              action: fire-dom-event
-              browser_mod:
-                service: script.family_fab_open
-                data:
-                  browser_id: THIS
-            styles:
-              card:
-                - position: fixed
-                - right: 24px
-                - bottom: 24px
-                - width: 56px
-                - height: 56px
-                - border-radius: 28px
-                - box-shadow: 0 8px 24px rgba(0,0,0,0.22)
-                - padding: 0
-                - z-index: 1000
-                - background: >
-                    [[[
-                      const s = states['input_select.family_section']?.state ?? 'Calendar';
-                      const root = getComputedStyle(document.documentElement);
-                      const pick = (n, fallback) => root.getPropertyValue(n) || fallback;
-                      const map = {
-                        Calendar: pick('--fab-color-calendar', 'var(--primary-color)'),
-                        Chores:   pick('--fab-color-chores',   'var(--primary-color)'),
-                      };
-                      return map[s] || pick('--fab-color-default', 'var(--primary-color)');
-                    ]]]
-              icon:
-                - width: 28px
-                - height: 28px
+  # =========================
+  # INVISIBLE PERSON DETAIL VIEW (generic)
+  # =========================
+  - title: Person
+    path: person
+    visible: false
+    cards:
+      - type: custom:mod-card
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--card-background-color);
+              border-radius: 0; padding: 12px;
+            }
+        card:
+          type: vertical-stack
+          cards:
+            - type: markdown
+              content: >
+                ## {{ states('input_select.active_person') }} - To-dos
+
+            # Render the right list based on active_person
+            - type: conditional
+              conditions: [ { entity: input_select.active_person, state: Family } ]
+              card: { type: todo-list, entity: todo.family, hide_completed: false }
+            - type: conditional
+              conditions: [ { entity: input_select.active_person, state: Anthony } ]
+              card: { type: todo-list, entity: todo.anthony, hide_completed: false }
+            - type: conditional
+              conditions: [ { entity: input_select.active_person, state: Joy } ]
+              card: { type: todo-list, entity: todo.joy, hide_completed: false }
+            - type: conditional
+              conditions: [ { entity: input_select.active_person, state: Lizzie } ]
+              card: { type: todo-list, entity: todo.lizzie, hide_completed: false }
+            - type: conditional
+              conditions: [ { entity: input_select.active_person, state: Toby } ]
+              card: { type: todo-list, entity: todo.toby, hide_completed: false }
