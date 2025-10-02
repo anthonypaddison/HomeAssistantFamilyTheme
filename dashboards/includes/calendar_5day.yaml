@@ -50,11 +50,16 @@ cards:
     startingDay: today
     columns: { extraLarge: 5, large: 5, medium: 5, small: 5, extraSmall: 5 }
     calendars:
-      - entity: calendar.family   , color: var(--cal-color-family)
-      - entity: calendar.anthony , color: var(--cal-color-anthony)
-      - entity: calendar.joy     , color: var(--cal-color-joy)
-      - entity: calendar.lizzie  , color: var(--cal-color-lizzie)
-      - entity: calendar.toby    , color: var(--cal-color-toby)
+      - entity: calendar.family
+        color: var(--cal-color-family)
+      - entity: calendar.anthony
+        color: var(--cal-color-anthony)
+      - entity: calendar.joy
+        color: var(--cal-color-joy)
+      - entity: calendar.lizzie
+        color: var(--cal-color-lizzie)
+      - entity: calendar.toby
+        color: var(--cal-color-toby)
     noCardBackground: false
     card_mod:
       style:
