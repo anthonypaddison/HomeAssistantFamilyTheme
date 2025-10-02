@@ -3,8 +3,6 @@ default_config:
 
 frontend:
   themes: !include themes.yaml
-  extra_module_url:
-    - /hacsfiles/lovelace-card-mod/card-mod.js
 
 lovelace:
   mode: yaml
