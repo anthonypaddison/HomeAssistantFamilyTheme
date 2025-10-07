@@ -3,13 +3,12 @@ family_fab_open:
   mode: parallel
   fields:
     browser_id:
-      description: Browser Mod ID (use THIS from the button)
-      example: THIS
+      description: Browser Mod ID (injected from the button)
+      example: abcdef_123
   sequence:
     - variables:
         section: "{{ states('input_select.family_section') | default('Calendar') }}"
     - choose:
-
         # ---- Calendar 'Create Event' form
         - conditions:
             - condition: template
@@ -39,20 +38,20 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - { label: Family,  value: calendar.family  }
+                          - { label: Family,  value: calendar.family }
                           - { label: Anthony, value: calendar.anthony }
-                          - { label: Joy,     value: calendar.joy     }
-                          - { label: Lizzie,  value: calendar.lizzie  }
-                          - { label: Toby,    value: calendar.toby    }
+                          - { label: Joy,     value: calendar.joy }
+                          - { label: Lizzie,  value: calendar.lizzie }
+                          - { label: Toby,    value: calendar.toby }
                 right_button: "Create"
                 right_button_action:
                   service: script.popup_create_calendar_event
                   data:
-                    browser_id: THIS
+                    browser_id: "{{ browser_id }}"
                 left_button: "Cancel"
                 dismissable: true
 
-        # ---- Chores 'Add to-do' form
+        # ---- Chores 'Add to‑do' form
         - conditions:
             - condition: template
               value_template: "{{ section == 'Chores' }}"
@@ -73,11 +72,11 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - { label: Family,  value: todo.family  }
+                          - { label: Family,  value: todo.family }
                           - { label: Anthony, value: todo.anthony }
-                          - { label: Joy,     value: todo.joy     }
-                          - { label: Lizzie,  value: todo.lizzie  }
-                          - { label: Toby,    value: todo.toby    }
+                          - { label: Joy,     value: todo.joy }
+                          - { label: Lizzie,  value: todo.lizzie }
+                          - { label: Toby,    value: todo.toby }
                   - name: tags
                     label: "Tags (optional, e.g. #morning #kitchen)"
                     selector: { text: {} }
@@ -87,12 +86,12 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - { label: "None",                   value: ""             }
-                          - { label: "🧹 Cleaning",       value: "🧹"      }
-                          - { label: "🧺 Laundry",        value: "🧺"      }
-                          - { label: "🗑️ Rubbish",    value: "🗑️" }
-                          - { label: "🧽 Wipe",           value: "🧽"      }
-                          - { label: "🧒 Kids",           value: "🧒"      }
+                          - { label: "None", value: "" }
+                          - { label: "🧹 Cleaning", value: "🧹" }
+                          - { label: "🧺 Laundry",  value: "🧺" }
+                          - { label: "🗑️ Rubbish",  value: "🗑️" }
+                          - { label: "🧽 Wipe",     value: "🧽" }
+                          - { label: "🧒 Kids",     value: "🧒" }
                   - name: due_date
                     label: Due date
                     selector: { date: {} }
@@ -103,7 +102,7 @@ family_fab_open:
                 right_button_action:
                   service: script.popup_add_todo
                   data:
-                    browser_id: THIS
+                    browser_id: "{{ browser_id }}"
                 left_button: "Cancel"
                 dismissable: true
 
@@ -128,20 +127,20 @@ family_fab_open:
                       select:
                         mode: dropdown
                         options:
-                          - { label: Family,  value: todo.family  }
+                          - { label: Family,  value: todo.family }
                           - { label: Anthony, value: todo.anthony }
-                          - { label: Joy,     value: todo.joy     }
-                          - { label: Lizzie,  value: todo.lizzie  }
-                          - { label: Toby,    value: todo.toby    }
+                          - { label: Joy,     value: todo.joy }
+                          - { label: Lizzie,  value: todo.lizzie }
+                          - { label: Toby,    value: todo.toby }
                 right_button: "Add"
                 right_button_action:
                   service: script.popup_add_todo
                   data:
-                    browser_id: THIS
+                    browser_id: "{{ browser_id }}"
                 left_button: "Cancel"
                 dismissable: true
 
-        # ---- Photos: hint-only popup
+        # ---- Photos hint
         - conditions:
             - condition: template
               value_template: "{{ section == 'Photos' }}"
@@ -157,18 +156,18 @@ family_fab_open:
                 right_button: "Close"
                 dismissable: true
 
-# -------------------------------------------------------------------
+# ----------------------
 # Popup helpers
-# -------------------------------------------------------------------
+# ----------------------
 popup_create_calendar_event:
   alias: "Popup: create calendar event (from ha-form)"
   mode: queued
   fields:
-    browser_id:      {}
-    summary:         {}
+    browser_id: {}
+    summary: {}
     start_date_time: {}
-    end_date_time:   {}
-    calendar:        {}
+    end_date_time: {}
+    calendar: {}
   sequence:
     - variables:
         start_dt: >-
@@ -197,13 +196,13 @@ popup_add_todo:
   alias: "Popup: add to-do (from ha-form)"
   mode: queued
   fields:
-    browser_id:  {}
-    item:        {}
+    browser_id: {}
+    item: {}
     list_entity: {}
-    tags:        {}
-    due_today:   {}
-    icon:        {}
-    due_date:    {}
+    tags: {}
+    due_today: {}
+    icon: {}
+    due_date: {}
   sequence:
     - variables:
         prefix: "{{ icon if icon else '' }}"
@@ -223,15 +222,15 @@ popup_add_todo:
         browser_id: "{{ browser_id }}"
         message: "To-do added ✅"
 
-# -------------------------------------------------------------------
-# Navigation helper for the "invisible" person view
-# -------------------------------------------------------------------
+# ----------------------
+# Navigation helper
+# ----------------------
 open_person_view:
   alias: "Person view: open"
   mode: queued
   fields:
     browser_id: {}
-    person:     {}
+    person: {}
   sequence:
     - service: input_select.select_option
       target:
@@ -241,5 +240,4 @@ open_person_view:
     - service: browser_mod.navigate
       data:
         browser_id: "{{ browser_id }}"
-        # Adjust the path if your dashboard slug differs
         path: /family-dashboard/person

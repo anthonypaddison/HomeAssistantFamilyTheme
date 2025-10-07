@@ -3,8 +3,7 @@ theme: FamilyBoard
 
 # ====== Button-card templates (local to this dashboard) ======
 button_card_templates:
-
-  # --- Family icon (square tile top of sidebar)
+  # --- Family icon (top of sidebar)
   family_icon:
     show_name: false
     show_icon: true
@@ -12,7 +11,7 @@ button_card_templates:
       card:
         - width: 56px
         - height: 56px
-        - border-radius: 12px
+        - border-radius: 0px          # was 12px
         - box-shadow: none
         - background: var(--sb-inactive-bg)
         - color: var(--sb-inactive-icon)
@@ -24,7 +23,7 @@ button_card_templates:
         - width: 28px
         - height: 28px
 
-  # --- Sidebar icon-only with floating badge (no shrink)
+  # --- Sidebar icon-only with floating badge
   # variables:
   #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
   #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
@@ -36,7 +35,7 @@ button_card_templates:
     show_icon: true
     custom_fields:
       badge: >
-        [[[
+        [[[ 
           const e = variables.badge_entity ? states[variables.badge_entity] : null;
           const n = e ? Number(e.state || 0) : 0;
           return n > 0 ? `${n}` : '';
@@ -45,7 +44,7 @@ button_card_templates:
       card:
         - width: 56px
         - height: 56px
-        - border-radius: 12px
+        - border-radius: 0px          # was 12px
         - box-shadow: none
         - background: var(--sb-inactive-bg)
         - color: var(--sb-inactive-icon)
@@ -66,7 +65,7 @@ button_card_templates:
           - height: 20px
           - border-radius: 10px
           - background: white
-          - color: #0F172A
+          - color: '#0F172A'
           - font-weight: 800
           - font-size: 12px
           - display: flex
@@ -81,15 +80,12 @@ button_card_templates:
             - background: var(--sb-active-bg)
             - color: var(--sb-active-icon)
 
-  # --- Compact progress chip for "Due today": name+icon on one row + tiny progress bar
-  # variables:
-  #   name, icon, color, completed (input_number.*), outstanding (input_number.*)
+  # --- Compact progress chip (unchanged from yours)
   due_today_progress_chip:
     show_icon: true
     show_name: true
     show_state: false
-    tap_action:
-      action: none
+    tap_action: { action: none }
     variables:
       name: ""
       icon: mdi:checkbox-marked-circle
@@ -108,44 +104,22 @@ button_card_templates:
         - grid-template-columns: 20px auto auto
         - grid-template-rows: auto 4px
         - column-gap: 8px
-      img_cell:
-        - align-self: center
-        - justify-self: start
-      icon:
-        - width: 18px
-        - height: 18px
-        - color: '#0F172A'
-      name:
-        - align-self: center
-        - justify-self: start
-        - font-weight: '800'
-        - color: '#0F172A'
-        - font-size: 13px
-        - line-height: 16px
+      img_cell: [ align-self: center, justify-self: start ]
+      icon: [ width: 18px, height: 18px, color: '#0F172A' ]
+      name: [ align-self: center, justify-self: start, font-weight: '800', color: '#0F172A', font-size: 13px, line-height: 16px ]
       custom_fields:
-        v:
-          - align-self: center
-          - justify-self: end
-          - font-size: 12px
-          - font-weight: 800
-          - color: '#0F172A'
-        bar:
-          - width: 100%
-          - height: 4px
-          - border-radius: 2px
-          - background: 'rgba(0,0,0,.15)'
-          - position: relative
-          - overflow: hidden
+        v: [ align-self: center, justify-self: end, font-size: 12px, font-weight: 800, color: '#0F172A' ]
+        bar: [ width: 100%, height: 4px, border-radius: 2px, background: 'rgba(0,0,0,.15)', position: relative, overflow: hidden ]
     custom_fields:
       v: >
-        [[[
+        [[[ 
           const done = Number(states[variables.completed]?.state || 0);
           const rem  = Number(states[variables.outstanding]?.state || 0);
           const total = Math.max(0, done + rem);
           return `${done}/${total}`;
         ]]]
       bar: >
-        [[[
+        [[[ 
           const done = Number(states[variables.completed]?.state || 0);
           const rem  = Number(states[variables.outstanding]?.state || 0);
           const total = Math.max(0, done + rem);
@@ -155,7 +129,6 @@ button_card_templates:
 
 # ====== VIEWS ======
 views:
-
   # =========================
   # MAIN FAMILY VIEW
   # =========================
@@ -164,7 +137,7 @@ views:
     type: custom:grid-layout
     layout:
       padding: 0px
-      grid-template-columns: 6% 1fr          # Sidebar at ~6% as requested
+      grid-template-columns: 6% 1fr
       grid-template-rows: auto auto 1fr
       grid-template-areas: |
         "sidebar heading"
@@ -182,11 +155,10 @@ views:
             "main"
 
     cards:
-
-      # 1) SIDEBAR (sticky, provided as include)
+      # 1) SIDEBAR (include)
       - !include /config/dashboards/includes/sidebar_menu.yaml
 
-      # 2) HEADING ROW
+      # 2) HEADING ROW (unchanged)
       - type: custom:mod-card
         view_layout: { grid-area: heading }
         card_mod:
@@ -208,56 +180,40 @@ views:
           show_name: false
           show_state: false
           styles:
-            card:
-              - background: transparent
-              - box-shadow: none
-              - padding: 0
-              - color: "#000000 !important"
+            card: [ background: transparent, box-shadow: none, padding: 0, color: "#000000 !important" ]
             grid:
               - grid-template-areas: "'left center right'"
               - grid-template-columns: 1fr auto 1fr
               - align-items: center
               - column-gap: 12px
             custom_fields:
-              left:
-                - justify-self: start
-                - font-weight: 700
-              center:
-                - justify-self: center
-                - font-weight: 700
-                - font-size: 22px
-              right:
-                - justify-self: end
-                - text-align: right
-                - white-space: nowrap
-                - overflow: hidden
-                - text-overflow: ellipsis
-                - font-weight: 700
+              left: [ justify-self: start, font-weight: 700 ]
+              center: [ justify-self: center, font-weight: 700, font-size: 22px ]
+              right: [ justify-self: end, text-align: right, white-space: nowrap, overflow: hidden, text-overflow: ellipsis, font-weight: 700 ]
           custom_fields:
             left: >
-              [[[
+              [[[ 
                 const d = new Date();
-                const date = d.toLocaleDateString('en-GB',
-                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
                 return `Panogu Family - ${date}`;
               ]]]
             center: >
-              [[[
+              [[[ 
                 const d = new Date();
                 return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
               ]]]
             right: >
-              [[[
+              [[[ 
                 const e = states['calendar.routine'];
                 if (!e) return 'Routine calendar not found';
                 const a = e.attributes ?? {};
                 const title = a.message ?? 'No upcoming events';
                 if (!a.start_time) return `${title}`;
                 const start = new Date(a.start_time);
-                const end   = a.end_time ? new Date(a.end_time) : null;
-                const now   = new Date();
-                const tf = { hour: '2-digit', minute: '2-digit' };
-                const df = { weekday: 'short', month: 'short', day: 'numeric' };
+                const end = a.end_time ? new Date(a.end_time) : null;
+                const now = new Date();
+                const tf = { hour:'2-digit', minute:'2-digit' };
+                const df = { weekday:'short', month:'short', day:'numeric' };
                 const same = start.toDateString() === now.toDateString();
                 const inProg = e.state === 'on' && start <= now && (!end || now < end);
                 const when = inProg
@@ -269,7 +225,7 @@ views:
             - sensor.time
             - calendar.routine
 
-      # 3) CHIPS ROW (shorter height, progress bar, name+icon one row)
+      # 3) CHIPS ROW
       - type: custom:mod-card
         view_layout: { grid-area: chips }
         card_mod:
@@ -298,7 +254,12 @@ views:
                 completed: input_number.completed_due_today_family
                 outstanding: input_number.outstanding_family_today
               name: Family
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Family } }
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                service_data:
+                  browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
+                  person: Family
 
             - type: custom:button-card
               template: due_today_progress_chip
@@ -309,7 +270,12 @@ views:
                 completed: input_number.completed_due_today_anthony
                 outstanding: input_number.outstanding_anthony_today
               name: Anthony
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Anthony } }
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                service_data:
+                  browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
+                  person: Anthony
 
             - type: custom:button-card
               template: due_today_progress_chip
@@ -320,7 +286,12 @@ views:
                 completed: input_number.completed_due_today_joy
                 outstanding: input_number.outstanding_joy_today
               name: Joy
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Joy } }
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                service_data:
+                  browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
+                  person: Joy
 
             - type: custom:button-card
               template: due_today_progress_chip
@@ -331,7 +302,12 @@ views:
                 completed: input_number.completed_due_today_lizzie
                 outstanding: input_number.outstanding_lizzie_today
               name: Lizzie
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Lizzie } }
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                service_data:
+                  browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
+                  person: Lizzie
 
             - type: custom:button-card
               template: due_today_progress_chip
@@ -342,13 +318,17 @@ views:
                 completed: input_number.completed_due_today_toby
                 outstanding: input_number.outstanding_toby_today
               name: Toby
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Toby } }
+              tap_action:
+                action: call-service
+                service: script.open_person_view
+                service_data:
+                  browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
+                  person: Toby
 
       # 4) MAIN AREA (conditional sections)
       - type: vertical-stack
         view_layout: { grid-area: main }
         cards:
-
           # ---- Calendar
           - type: conditional
             conditions:
@@ -371,15 +351,15 @@ views:
                         icon: mdi:calendar-today
                         tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Day } }
                         styles:
-                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
                           name: [ font-size: 12px, font-weight: 700 ]
                           icon: [ width: 16px, height: 16px ]
                       - type: custom:button-card
                         name: 5-Day
                         icon: mdi:calendar-range
-                        tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: 5-Day } }
+                        tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: "5-Day" } }
                         styles:
-                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
                           name: [ font-size: 12px, font-weight: 700 ]
                           icon: [ width: 16px, height: 16px ]
                       - type: custom:button-card
@@ -387,9 +367,10 @@ views:
                         icon: mdi:calendar-month
                         tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Month } }
                         styles:
-                          card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+                          card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
                           name: [ font-size: 12px, font-weight: 700 ]
                           icon: [ width: 16px, height: 16px ]
+
                 # Day
                 - type: conditional
                   conditions:
@@ -401,7 +382,7 @@ views:
                 - type: conditional
                   conditions:
                     - entity: input_select.calendar_view
-                      state: 5-Day
+                      state: "5-Day"
                   card: !include /config/dashboards/includes/calendar_5day.yaml
 
                 # Month
@@ -411,21 +392,20 @@ views:
                       state: Month
                   card: !include /config/dashboards/includes/calendar_month.yaml
 
-          # ---- Chores (Adults compact + Kids chips-like; no Add item areas)
+          # ---- Chores (unchanged layout; style kept)
           - type: conditional
             conditions:
               - entity: input_select.family_section
                 state: Chores
             card:
+              # (keep your existing Chores stack exactly as in your file)
+              # -- START of your existing Chores content --
               type: vertical-stack
               cards:
-                # Adults (3)
                 - type: grid
                   columns: 3
                   square: false
                   cards:
-
-                    # Anthony
                     - type: vertical-stack
                       cards:
                         - type: custom:button-card
@@ -451,9 +431,7 @@ views:
                           hide_completed: false
                           card_mod:
                             style: |
-                              /* compact rows */
                               li { min-height: 28px !important; }
-                              /* big round checkbox style */
                               mwc-checkbox {
                                 --mdc-checkbox-unchecked-color: #CBD5E1;
                                 --mdc-checkbox-checked-color: var(--family-color-family);
@@ -462,15 +440,12 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              /* hide add UI */
                               ha-todo-list[slot="add"],
                               ha-todo-list .add,
                               ha-todo-list .add-item,
                               ha-todo-list mwc-textfield,
                               ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
-
-                    # Joy
                     - type: vertical-stack
                       cards:
                         - type: custom:button-card
@@ -508,8 +483,6 @@ views:
                               ha-todo-list mwc-textfield,
                               ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
-
-                    # Family
                     - type: vertical-stack
                       cards:
                         - type: custom:button-card
@@ -548,13 +521,10 @@ views:
                               ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                # Kids (2) - chip-like rows, Next up at bottom, no extra plus
                 - type: grid
                   columns: 2
                   square: false
                   cards:
-
-                    # Lizzie
                     - type: vertical-stack
                       cards:
                         - type: todo-list
@@ -562,7 +532,6 @@ views:
                           hide_completed: false
                           card_mod:
                             style: |
-                              /* chip-like items */
                               ul { display: flex; flex-direction: column; gap: 8px; }
                               li {
                                 min-height: 34px !important; border-radius: 18px;
@@ -578,7 +547,6 @@ views:
                                 transform: scale(1.4);
                                 margin-right: 8px;
                               }
-                              /* hide add UI */
                               ha-todo-list[slot="add"],
                               ha-todo-list .add,
                               ha-todo-list .add-item,
@@ -598,10 +566,8 @@ views:
                               - border-radius: 10px
                               - box-shadow: none
                               - margin-top: 8px
-                            icon:
-                              - color: rgba(236,64,122,1)
+                            icon: [ color: rgba(236,64,122,1) ]
 
-                    # Toby
                     - type: vertical-stack
                       cards:
                         - type: todo-list
@@ -643,8 +609,8 @@ views:
                               - border-radius: 10px
                               - box-shadow: none
                               - margin-top: 8px
-                            icon:
-                              - color: rgba(66,165,245,1)
+                            icon: [ color: rgba(66,165,245,1) ]
+              # -- END of your existing Chores content --
 
           # ---- Photos
           - type: conditional
@@ -656,7 +622,7 @@ views:
               url: /media-browser
               aspect_ratio: 160%
 
-          # ---- Lists (Shopping markdown with safe fallback)
+          # ---- Lists (Shopping markdown)
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -666,11 +632,9 @@ views:
               content: >
                 {{ states('input_text.shopping_md') if states('input_text.shopping_md') not in ['unknown','unavailable',''] else '_No shopping items._' }}
 
-          # ---- Toby standalone (same style as kids)
+          # ---- Toby standalone
           - type: conditional
-            conditions:
-              - entity: input_select.family_section
-                state: Toby
+            conditions: [ { entity: input_select.family_section, state: Toby } ]
             card:
               type: vertical-stack
               cards:
@@ -713,14 +677,11 @@ views:
                       - border-radius: 10px
                       - box-shadow: none
                       - margin-top: 8px
-                    icon:
-                      - color: rgba(66,165,245,1)
+                    icon: [ color: rgba(66,165,245,1) ]
 
-          # ---- Lizzie standalone (same style as kids)
+          # ---- Lizzie standalone
           - type: conditional
-            conditions:
-              - entity: input_select.family_section
-                state: Lizzie
+            conditions: [ { entity: input_select.family_section, state: Lizzie } ]
             card:
               type: vertical-stack
               cards:
@@ -763,10 +724,9 @@ views:
                       - border-radius: 10px
                       - box-shadow: none
                       - margin-top: 8px
-                    icon:
-                      - color: rgba(236,64,122,1)
+                    icon: [ color: rgba(236,64,122,1) ]
 
-      # 5) Floating FAB (context-aware add; script provided in scripts.yaml)
+      # 5) Floating FAB (context-aware add)
       - type: custom:button-card
         icon: mdi:plus
         show_name: false
@@ -774,7 +734,8 @@ views:
         tap_action:
           action: call-service
           service: script.family_fab_open
-          data: { browser_id: THIS }
+          service_data:
+            browser_id: '[[[ return window.browser_mod?.browserID || null; ]]]'
         styles:
           card:
             - position: fixed
@@ -785,9 +746,10 @@ views:
             - border-radius: 28px
             - box-shadow: 0 8px 24px rgba(0,0,0,0.22)
             - padding: 0
-            - z-index: 1000
+            - z-index: 2001      # ensure on top
+            - pointer-events: auto
             - background: >
-                [[[
+                [[[ 
                   const s = states['input_select.family_section']?.state ?? 'Calendar';
                   const root = getComputedStyle(document.documentElement);
                   const pick = (n,f) => root.getPropertyValue(n) || f;
@@ -797,12 +759,10 @@ views:
                   };
                   return map[s] || pick('--fab-color-default','var(--primary-color)');
                 ]]]
-          icon:
-            - width: 28px
-            - height: 28px
+          icon: [ width: 28px, height: 28px ]
 
   # =========================
-  # INVISIBLE PERSON DETAIL VIEW (generic)
+  # INVISIBLE PERSON DETAIL VIEW
   # =========================
   - title: Person
     path: person
@@ -818,24 +778,17 @@ views:
             - type: markdown
               content: >
                 ## {{ states('input_select.active_person') }} - To-dos
-
-            # Render the right list based on active_person
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Family } ]
               card: { type: todo-list, entity: todo.family, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Anthony } ]
               card: { type: todo-list, entity: todo.anthony, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Joy } ]
               card: { type: todo-list, entity: todo.joy, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Lizzie } ]
               card: { type: todo-list, entity: todo.lizzie, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Toby } ]
-              card: { type: todo-list, entity: todo.toby, hide_completed: false }
