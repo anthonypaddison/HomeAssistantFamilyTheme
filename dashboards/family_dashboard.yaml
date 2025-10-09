@@ -190,7 +190,10 @@ views:
               - column-gap: 12px
             custom_fields:
               left:  [ justify-self: start, font-weight: 700 ]
-              center:[ justify-self: center, font-weight: 700, font-size: 22px ]
+              center:
+                - justify-self: center
+                - font-weight: 700
+                - font-size: 22px
               right: [ justify-self: end, text-align: right, white-space: nowrap, overflow: hidden, text-overflow: ellipsis, font-weight: 700 ]
           custom_fields:
             left: >
