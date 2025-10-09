@@ -1,8 +1,7 @@
+
 type: vertical-stack
 view_layout: { grid-area: sidebar }
-
 cards:
-
   # Family Icon (top) — toggles HA main sidebar
   - type: custom:button-card
     template: family_icon
@@ -14,8 +13,19 @@ cards:
         code: |
           (function(){
             const root = document.querySelector('home-assistant');
-            if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
+            if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true }));
           })();
+    # NOTE: The call-service form is a *server call* and, without a target, can execute on all registered browsers.
+    # If you prefer to run it only on the *current* browser, use a Browser call instead:
+    # tap_action:
+    #   action: fire-dom-event
+    #   browser_mod:
+    #     command: javascript
+    #     code: |
+    #       (function(){
+    #         const root = document.querySelector('home-assistant');
+    #         if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true }));
+    #       })();
 
   # Calendar (starts after heading + chips)
   - type: custom:button-card
