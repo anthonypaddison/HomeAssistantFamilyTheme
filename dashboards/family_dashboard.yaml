@@ -42,37 +42,37 @@ button_card_templates:
           return n > 0 ? `${n}` : '';
         ]]]
     styles:
-      card:
-        - width: 56px
-        - height: 56px
-        - border-radius: 0px
-        - box-shadow: none
-        - background: var(--sb-inactive-bg)
-        - color: var(--sb-inactive-icon)
-        - display: grid
-        - place-items: center
-        - position: relative
-        - padding: 0
-        - transition: transform .05s ease
+      # card:
+      #   - width: 56px
+      #   - height: 56px
+      #   - border-radius: 0px
+      #   - box-shadow: none
+      #   - background: var(--sb-inactive-bg)
+      #   - color: var(--sb-inactive-icon)
+      #   - display: grid
+      #   - place-items: center
+      #   - position: relative
+      #   - padding: 0
+      #   - transition: transform .05s ease
       icon:
         - width: 28px
         - height: 28px
       custom_fields:
         badge:
-          - position: absolute
-          - top: -6px
-          - right: -6px
-          - min-width: 20px
-          - height: 20px
-          - border-radius: 10px
-          - background: white
-          - color: '#0F172A'
-          - font-weight: 800
-          - font-size: 12px
-          - display: flex
-          - align-items: center
-          - justify-content: center
-          - border: 2px solid var(--divider-color)
+          # - position: absolute
+          # - top: -6px
+          # - right: -6px
+          # - min-width: 20px
+          # - height: 20px
+          # - border-radius: 10px
+          # - background: white
+          # - color: '#0F172A'
+          # - font-weight: 800
+          # - font-size: 12px
+          # - display: flex
+          # - align-items: center
+          # - justify-content: center
+          # - border: 2px solid var(--divider-color)
     state:
       - operator: template
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
