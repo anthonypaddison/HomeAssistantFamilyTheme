@@ -14,10 +14,10 @@ FamilyBoard:
   accent-color:  var(--palette-lilac)
 
   # --- Sidebar tokens ---
-  sb-inactive-bg:    var(--palette-lilac)
-  sb-inactive-icon:  "#0F172A"
-  sb-active-bg:      var(--primary-color)
-  sb-active-icon:    "#0F172A"
+  sb-inactive-bg:     blue !important;
+  sb-inactive-icon:   green !important;
+  sb-active-bg:      red !important;
+  sb-active-icon:     yellow !important;
 
   # --- FAB colours per section ---
   fab-color-calendar: var(--palette-mint)
