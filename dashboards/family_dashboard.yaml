@@ -28,14 +28,14 @@ button_card_templates:
   #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
   #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
   sb_icon_only:
+    show_name: false
+    show_icon: true
     variables:
       section: ""
       badge_entity: ""
-    show_name: false
-    show_icon: true
     custom_fields:
       badge: >
-        [[[ 
+        [[[
           const e = variables.badge_entity ? states[variables.badge_entity] : null;
           const n = e ? Number(e.state || 0) : 0;
           return n > 0 ? `${n}` : '';
@@ -112,14 +112,14 @@ button_card_templates:
         bar: [ width: 100%, height: 4px, border-radius: 2px, background: 'rgba(0,0,0,.15)', position: relative, overflow: hidden ]
     custom_fields:
       v: >
-        [[[ 
+        [[[
           const done = Number(states[variables.completed]?.state || 0);
           const rem  = Number(states[variables.outstanding]?.state || 0);
           const total = Math.max(0, done + rem);
           return `${done}/${total}`;
         ]]]
       bar: >
-        [[[ 
+        [[[
           const done = Number(states[variables.completed]?.state || 0);
           const rem  = Number(states[variables.outstanding]?.state || 0);
           const total = Math.max(0, done + rem);
@@ -173,6 +173,7 @@ views:
               color: #FFFFFF !important;
               min-height: var(--family-heading-height, 56px);
               display: flex; align-items: center;
+              justify-content: stretch;
             }
         card:
           type: custom:button-card
@@ -192,18 +193,18 @@ views:
               right: [ justify-self: end, text-align: right, white-space: nowrap, overflow: hidden, text-overflow: ellipsis, font-weight: 700 ]
           custom_fields:
             left: >
-              [[[ 
+              [[[
                 const d = new Date();
                 const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
                 return `Panogu Family - ${date}`;
               ]]]
             center: >
-              [[[ 
+              [[[
                 const d = new Date();
                 return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
               ]]]
             right: >
-              [[[ 
+              [[[
                 const e = states['calendar.routine'];
                 if (!e) return 'Routine calendar not found';
                 const a = e.attributes ?? {};
@@ -239,6 +240,7 @@ views:
               padding: 6px 12px !important;
               min-height: var(--family-chips-height, 56px);
               display: flex; align-items: center;
+              justify-content: stretch;
             }
         card:
           type: grid
@@ -749,7 +751,7 @@ views:
             - z-index: 2001      # ensure on top
             - pointer-events: auto
             - background: >
-                [[[ 
+                [[[
                   const s = states['input_select.family_section']?.state ?? 'Calendar';
                   const root = getComputedStyle(document.documentElement);
                   const pick = (n,f) => root.getPropertyValue(n) || f;
