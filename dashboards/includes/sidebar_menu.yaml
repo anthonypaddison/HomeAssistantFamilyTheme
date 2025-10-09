@@ -21,6 +21,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:calendar
+    show_icon: true
     styles:
       card:
         - margin-top: "calc(var(--family-heading-height,56px) + var(--family-chips-height,56px))"
@@ -37,6 +38,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:broom
+    show_icon: true
     variables:
       section: Chores
       badge_entity: sensor.chores_incomplete_total
@@ -50,6 +52,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:image-multiple
+    show_icon: true
     variables:
       section: Photos
     tap_action:
@@ -62,6 +65,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:format-list-bulleted
+    show_icon: true
     variables:
       section: Lists
     tap_action:
@@ -74,6 +78,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:robot-happy-outline
+    show_icon: true
     variables:
       section: Toby
     tap_action:
@@ -86,6 +91,7 @@ cards:
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:unicorn-variant
+    show_icon: true
     variables:
       section: Lizzie
     tap_action:
