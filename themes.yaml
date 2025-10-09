@@ -183,7 +183,7 @@ FamilyBoard:
     :host { /* reserved */ }
   card-mod-sidebar: |
     :host {
-      --sidebar-background-color: var(--sidebar-background-color);
+      --sidebar-background-color: var(--palette-lilac);
       --sidebar-icon-color: var(--sidebar-icon-color);
       --sidebar-selected-icon-color: var(--sidebar-selected-icon-color);
       --sidebar-selected-text-color: var(--sidebar-selected-text-color);

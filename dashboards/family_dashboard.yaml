@@ -78,8 +78,8 @@ button_card_templates:
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
         styles:
           card:
-            - background: var(--sb-active-bg)
-            - color: var(--sb-active-icon)
+            # - background: var(--sb-active-bg)
+            # - color: var(--sb-active-icon)
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
