@@ -1,65 +1,67 @@
-
 FamilyBoard:
   # --- Palette ---
-  --palette-mint: "#B9FBC0"
-  --palette-aqua: "#98F5E1"
-  --palette-cyan: "#8EECF5"
-  --palette-sky: "#90DBF4"
-  --palette-bluegrey: "#A3C4F3"
-  --palette-lilac: "#CFBAF0"
-  --palette-rose: "#FFCFD2"
-  --palette-vanilla: "#FBF8CC"
+  palette-mint:     "#B9FBC0"
+  palette-aqua:     "#98F5E1"
+  palette-cyan:     "#8EECF5"
+  palette-sky:      "#90DBF4"
+  palette-bluegrey: "#A3C4F3"
+  palette-lilac:    "#CFBAF0"
+  palette-rose:     "#FFCFD2"
+  palette-vanilla:  "#FBF8CC"
 
   # --- Dashboard accents ---
   primary-color: var(--palette-mint)
-  accent-color: var(--palette-lilac)
+  accent-color:  var(--palette-lilac)
 
   # --- Sidebar tokens ---
-  --sb-inactive-bg: var(--palette-lilac)
-  --sb-inactive-icon: "#0F172A"
-  --sb-active-bg: var(--primary-color)
-  --sb-active-icon: "#0F172A"
+  sb-inactive-bg:    var(--palette-lilac)
+  sb-inactive-icon:  "#0F172A"
+  sb-active-bg:      var(--primary-color)
+  sb-active-icon:    "#0F172A"
 
   # --- FAB colours per section ---
-  --fab-color-calendar: var(--palette-mint)
-  --fab-color-chores: var(--palette-lilac)
-  --fab-color-default: var(--primary-color)
+  fab-color-calendar: var(--palette-mint)
+  fab-color-chores:   var(--palette-lilac)
+  fab-color-default:  var(--primary-color)
 
-  # --- Header/chrome metrics ---
-  --header-height: 'calc(56px + env(safe-area-inset-top, 0px))'
+  # --- Header/chrome metrics (now with CSS var) ---
+  # Used for sticky heights & viewport math
+  --header-height: "calc(56px + env(safe-area-inset-top, 0px))"
+
+  # Small knobs for spacing (used in chips/heading alignment)
   --family-heading-height: 48px
-  --family-chips-height: 56px
+  --family-chips-height:   56px
 
   # --- Brand / Family colours ---
-  --family-color-family: "#36B37E"
-  --family-color-anthony: "#7E57C2"
-  --family-color-joy: "#F4B400"
-  --family-color-lizzie: "#EC407A"
-  --family-color-toby: "#42A5F5"
+  family-color-family:  "#36B37E"
+  family-color-anthony: "#7E57C2"
+  family-color-joy:     "#F4B400"
+  family-color-lizzie:  "#EC407A"
+  family-color-toby:    "#42A5F5"
 
   # --- Core theme colours (light) ---
-  error-color: "#E53935"
-  primary-text-color: "#0F172A"
-  secondary-text-color: "#475569"
-  text-primary-color: var(--primary-text-color)
+  error-color:            "#E53935"
+  primary-text-color:     "#0F172A"
+  secondary-text-color:   "#475569"
+  text-primary-color:     var(--primary-text-color)
 
   # --- Backgrounds ---
-  --family-surface: "#FFFFFF"
-  --family-background: "#FFFFFF"
+  family-surface:     "#FFFFFF"
+  family-background:  "#FFFFFF"
   lovelace-background: var(--family-background)
   card-background-color: var(--family-surface)
 
   # --- Dividers / borders / scrollbars ---
   divider-color: "#E5E7EB"
-  --scrollbar-thumb-color: "rgba(15, 23, 42, 0.25)"
-  --scrollbar-track-color: "transparent"
+  scrollbar-thumb-color: "rgba(15, 23, 42, 0.25)"
+  scrollbar-track-color: "transparent"
 
   # --- Header / sidebar ---
   app-header-background-color: var(--palette-lilac)
-  app-header-text-color: var(--primary-text-color)
-  sidebar-background-color: var(--palette-lilac)
-  sidebar-icon-color: var(--secondary-text-color)
-  sidebar-text-color: var(--primary-text-color)
+  app-header-text-color:       var(--primary-text-color)
+  sidebar-background-color:    var(--palette-lilac)
+  sidebar-icon-color:          var(--secondary-text-color)
+  sidebar-text-color:          var(--primary-text-color)
   sidebar-selected-icon-color: var(--primary-color)
   sidebar-selected-text-color: var(--primary-text-color)
 
@@ -69,15 +71,17 @@ FamilyBoard:
     Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
   mdc-typography-font-family: var(--primary-font-family)
+  paper-font-common-base_-_-font-family: var(--primary-font-family)
+  paper-font-common-code_-_-font-family: var(--primary-font-family)
 
   # --- Card & container shapes ---
   ha-card-border-radius: "0px"
-  ha-card-border-width: "0px"
-  ha-card-box-shadow: "none"
+  ha-card-border-width:  "0px"
+  ha-card-box-shadow:    "none"
 
   # --- Icons / states ---
-  state-icon-color: "#64748B"
-  state-icon-active-color: var(--primary-color)
+  state-icon-color:             "#64748B"
+  state-icon-active-color:      var(--primary-color)
   state-icon-unavailable-color: "#CBD5E1"
 
   # --- Mushroom tuning (if used) ---
@@ -93,23 +97,23 @@ FamilyBoard:
   mush-card-primary-color: var(--primary-text-color)
   mush-card-secondary-color: var(--secondary-text-color)
   mush-chip-height: 36px
-  mush-chip-padding: "0 0.6em"
+  mush-chip-padding: 0 0.6em
   mush-chip-spacing: 8px
 
   # --- Calendar / family accent tokens ---
-  --cal-color-family: var(--family-color-family)
-  --cal-color-anthony: var(--family-color-anthony)
-  --cal-color-joy: var(--family-color-joy)
-  --cal-color-lizzie: var(--family-color-lizzie)
-  --cal-color-toby: var(--family-color-toby)
+  cal-color-family:  var(--family-color-family)
+  cal-color-anthony: var(--family-color-anthony)
+  cal-color-joy:     var(--family-color-joy)
+  cal-color-lizzie:  var(--family-color-lizzie)
+  cal-color-toby:    var(--family-color-toby)
 
   # --- Card-mod global styling ---
   card-mod-theme: FamilyBoard
 
   # --- Zero gaps baseline ---
-  --grid-card-gap: "0px"
+  grid-card-gap: "0px"
 
-  # --- Card-mod view / root / card hooks ---
+  # --- Card-mod view / root / card hooks (as you had) ---
   card-mod-view: |
     :host {
       --grid-card-gap: 0px !important;
@@ -137,11 +141,9 @@ FamilyBoard:
       --layout-margin: 0 !important;
       layout-margin: 0 !important;
     }
-
   card-mod-root-yaml: |
     hui-root$ hui-view$ :host { padding: 0 !important; }
     hui-root$ hui-view$ #view { padding: 0 !important; margin: 0 !important; }
-
   card-mod-root: |
     :host {
       --mdc-theme-primary: var(--primary-color);
@@ -160,7 +162,6 @@ FamilyBoard:
       background-clip: padding-box;
     }
     ::-webkit-scrollbar-track { background: transparent; }
-
   card-mod-card: |
     ha-card {
       background: var(--card-background-color);
@@ -173,19 +174,20 @@ FamilyBoard:
       font-size: var(--ha-font-size-l, 16px);
       letter-spacing: -0.2px;
     }
-
   card-mod-row: |
     .mdc-list-item__primary-text { color: var(--primary-text-color); }
     :host(:hover) .mdc-list-item__primary-text { color: var(--primary-text-color); }
-
   card-mod-badge: |
     .label-badge { filter: none; }
-
   card-mod-element: |
     :host { /* reserved */ }
-
   card-mod-sidebar: |
-    :host { /* values already come from theme vars */ }
+    :host {
+      --sidebar-background-color: var(--sidebar-background-color);
+      --sidebar-icon-color: var(--sidebar-icon-color);
+      --sidebar-selected-icon-color: var(--sidebar-selected-icon-color);
+      --sidebar-selected-text-color: var(--sidebar-selected-text-color);
+    }
     .menu .iron-selected, .menu .selected, .mdc-list-item--selected {
       background: #FFFFFF !important;
       color: var(--sidebar-selected-text-color) !important;
