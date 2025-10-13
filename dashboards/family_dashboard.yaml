@@ -78,7 +78,7 @@ button_card_templates:
         - color: var(--sb-inactive-icon) !important
       custom_fields:
         badge:
-          - position: absolute
+          # - position: absolute
           - top: -6px
           - right: -6px
           - min-width: 20px
