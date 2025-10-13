@@ -50,6 +50,9 @@ button_card_templates:
           opacity: 1 !important;
           filter: none !important;
         }
+        ha-state-icon#icon {
+          position: relative !important;
+        }
     custom_fields:
       badge: >
         [[[
@@ -67,7 +70,7 @@ button_card_templates:
         - color: blue
         - display: grid
         - place-items: center
-        - position: relative
+        # - position: relative
         - padding: 0
         - margin: 0
         - overflow: visible
@@ -78,7 +81,7 @@ button_card_templates:
         - color: var(--sb-inactive-icon) !important
       custom_fields:
         badge:
-          # - position: absolute
+          - position: absolute
           - top: -6px
           - right: -6px
           - min-width: 20px
