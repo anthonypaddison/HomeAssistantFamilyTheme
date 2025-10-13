@@ -64,7 +64,7 @@ button_card_templates:
         - border-radius: 0px
         - box-shadow: none
         - background: transparent
-        - color: var(--sb-inactive-icon)
+        - color: blue
         - display: grid
         - place-items: center
         - position: relative
@@ -100,16 +100,16 @@ button_card_templates:
         styles:
           card:
             - background: var(--sb-active-bg)
-            - color: var(--sb-active-icon)
+            - color: black
           icon:
             - color: var(--sb-active-icon) !important
         card_mod:
           style: |
             ha-icon, mwc-icon, .button-card-icon {
-              color: var(--sb-active-icon) !important;
+              color: black !important;
               opacity: 1 !important;
               filter: none !important;
-
+            }
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
     show_icon: true
@@ -204,7 +204,6 @@ views:
         card_mod:
           style: |
             :host {
-              # display: block;
               height: 100vh !important;
               align-self: stretch;
             }
