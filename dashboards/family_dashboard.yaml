@@ -54,10 +54,11 @@ button_card_templates:
         - position: relative
         - padding: 0
         - margin: 0
-        - transition: transform .05s ease
+        - overflow: visible
       icon:
         - width: 28px
         - height: 28px
+        - color: var(--sb-inactive-icon)
       custom_fields:
         badge:
           - position: absolute
@@ -70,10 +71,12 @@ button_card_templates:
           - color: '#0F172A'
           - font-weight: 800
           - font-size: 12px
+          - line-height: 20px
           - display: flex
           - align-items: center
           - justify-content: center
           - border: 2px solid var(--divider-color)
+          - z-index: 2
     state:
       - operator: template
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
@@ -81,6 +84,9 @@ button_card_templates:
           card:
             - background: var(--sb-active-bg)
             - color: var(--sb-active-icon)
+          icon:
+            - color: var(--sb-active-icon)
+
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
@@ -131,13 +137,14 @@ button_card_templates:
 
 # ====== VIEWS ======
 views:
-
-  # =========================
-  # MAIN FAMILY VIEW
-  # =========================
   - title: Family
     path: family
+    panel: true
     type: custom:grid-layout
+    card_mod:
+      style: |
+        :host { margin: 0 !important; }      /* kill any view margin */
+        hui-view { padding: 0 !important; }  /* kill default paddings */
     layout:
       padding: 0px
       grid-template-columns: 6% 1fr
@@ -149,28 +156,24 @@ views:
       gap: 0px
       column-gap: 0px
       row-gap: 0px
-      mediaquery:
-        "(max-width: 900px)":
-          grid-template-columns: 1fr
-          grid-template-areas: |
-            "heading"
-            "chips"
-            "main"
-
     cards:
+
+      # 1) SIDEBAR (include) - full-height rail
       - type: custom:mod-card
         view_layout: { grid-area: sidebar }
         card_mod:
           style: |
+            :host { height: 100%; display: block; }
             ha-card {
-              background: var(--app-header-background-color) !important; /* rail is header colour */
+              height: 100%;
+              background: var(--app-header-background-color) !important;
               border-radius: 0;
               padding: 0;
               box-shadow: none;
-              border-right: 1px solid var(--divider-color); /* subtle seam */
+              margin: 0 !important;
+              border-right: none;
             }
-        card:
-          !include /config/dashboards/includes/sidebar_menu.yaml
+        card: !include /config/dashboards/includes/sidebar_menu.yaml
 
       # 2) HEADING ROW
       - type: custom:mod-card

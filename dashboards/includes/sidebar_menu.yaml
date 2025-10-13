@@ -1,7 +1,7 @@
 
 type: vertical-stack
 cards:
-  # Family Icon (top) — toggles HA main sidebar
+  # Family Icon (top) - toggles HA main sidebar
   - type: custom:button-card
     template: family_icon
     icon: mdi:home-heart
