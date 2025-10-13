@@ -25,15 +25,21 @@ button_card_templates:
         - height: 28px
 
   # --- Sidebar icon-only with floating badge
-  # variables:
-  #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
-  #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
   sb_icon_only:
     show_name: false
     show_icon: true
     variables:
       section: ""
       badge_entity: ""
+    # NEW: backstop to force icon colour on the actual <ha-icon>
+    card_mod:
+      style: |
+        ha-icon {
+          color: var(--sb-inactive-icon) !important;
+          --mdc-icon-size: 28px !important;
+          width: 28px !important;
+          height: 28px !important;
+        }
     custom_fields:
       badge: >
         [[[
@@ -47,7 +53,7 @@ button_card_templates:
         - height: 56px
         - border-radius: 0px
         - box-shadow: none
-        - background: transparent                 # rail paints the inactive bg
+        - background: transparent
         - color: var(--sb-inactive-icon)
         - display: grid
         - place-items: center
@@ -81,13 +87,17 @@ button_card_templates:
     state:
       - operator: template
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
+        # When active (white tile), flip icon/text to dark
         styles:
           card:
-            - background: var(--sb-active-bg)      # = dashboard surface (white)
+            - background: var(--sb-active-bg)
             - color: var(--sb-active-icon)
           icon:
             - color: var(--sb-active-icon) !important
-
+        # And backstop the actual <ha-icon>
+        card_mod:
+          style: |
+            ha-icon { color: var(--sb-active-icon) !important; }
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
@@ -177,14 +187,19 @@ views:
       row-gap: 0px
     cards:
 
-      # 1) SIDEBAR (include) - full-height rail
+      # 1) SIDEBAR — full-height rail
       - type: custom:mod-card
         view_layout: { grid-area: sidebar }
         card_mod:
           style: |
-            :host { height: 100%; display: block; }
-            ha-card {
+            :host {
+              display: block;
               height: 100%;
+            }
+            ha-card {
+              position: sticky;
+              top: var(--header-height, 56px);
+              height: calc(100vh - var(--header-height, 56px));
               background: var(--app-header-background-color) !important;
               border-radius: 0;
               padding: 0;
@@ -193,7 +208,6 @@ views:
               border-right: none;
             }
         card: !include /config/dashboards/includes/sidebar_menu.yaml
-
 
       # 2) HEADING ROW
       - type: custom:mod-card
