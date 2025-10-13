@@ -62,7 +62,7 @@ button_card_templates:
         ]]]
     styles:
       card:
-        - width: 56px
+        - width: 100% !important
         - height: 56px
         - border-radius: 0px
         - box-shadow: none
@@ -112,7 +112,6 @@ button_card_templates:
               opacity: 1 !important;
               filter: none !important;
             }
-
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
@@ -301,7 +300,7 @@ views:
               margin: 0 !important;
               padding: 6px 12px !important;
               min-height: var(--family-chips-height, 56px);
-              display: flex; align-items: center; justify-content: stretch;
+              align-items: center;
             }
         card:
           type: grid
