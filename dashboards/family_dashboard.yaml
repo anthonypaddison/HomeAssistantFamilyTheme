@@ -103,14 +103,12 @@ button_card_templates:
             - color: var(--sb-active-icon)
           icon:
             - color: var(--sb-active-icon) !important
-        # Backstop the actual icon host when active too
         card_mod:
           style: |
             ha-icon, mwc-icon, .button-card-icon {
               color: var(--sb-active-icon) !important;
               opacity: 1 !important;
               filter: none !important;
-
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
@@ -168,7 +166,7 @@ views:
     card_mod:
       style: |
         :host {
-          height: 100% !important;
+          height: 100vh !important;
           # block-size: calc(100vh - var(--header-height));
           width: 100vw;
           margin: 0 !important;
@@ -187,6 +185,7 @@ views:
         }
     layout:
       margin: 0px
+      height: 100vh
       padding: 0px
       grid-template-columns: 6% 1fr
       grid-template-rows: auto auto minmax(0, 1fr)   # <-- row 3 fills remaining height
@@ -206,11 +205,11 @@ views:
           style: |
             :host {
               # display: block;
-              height: !important;
+              height: 100vh !important;
               align-self: stretch;
             }
             ha-card {
-              height: 100% !important;                 /* fill the grid area */
+              height: 100vh !important;
               background: var(--app-header-background-color) !important;
               border-radius: 0;
               padding: 0;
