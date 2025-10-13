@@ -47,7 +47,7 @@ button_card_templates:
         - height: 56px
         - border-radius: 0px
         - box-shadow: none
-        - background: transparent
+        - background: transparent                 # rail paints the inactive bg
         - color: var(--sb-inactive-icon)
         - display: grid
         - place-items: center
@@ -58,7 +58,8 @@ button_card_templates:
       icon:
         - width: 28px
         - height: 28px
-        - color: var(--sb-inactive-icon)
+        - --mdc-icon-size: 28px
+        - color: var(--sb-inactive-icon) !important
       custom_fields:
         badge:
           - position: absolute
@@ -82,10 +83,10 @@ button_card_templates:
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
         styles:
           card:
-            - background: var(--sb-active-bg)
+            - background: var(--sb-active-bg)      # = dashboard surface (white)
             - color: var(--sb-active-icon)
           icon:
-            - color: var(--sb-active-icon)
+            - color: var(--sb-active-icon) !important
 
 
   # --- Compact progress chip (unchanged behavior)
@@ -139,16 +140,34 @@ button_card_templates:
 views:
   - title: Family
     path: family
-    panel: true
+    panel: true                               # <-- remove Lovelace outer margins
     type: custom:grid-layout
     card_mod:
       style: |
-        :host { margin: 0 !important; }      /* kill any view margin */
-        hui-view { padding: 0 !important; }  /* kill default paddings */
+        :host {
+          /* full height minus the HA header bar */
+          height: calc(100vh - var(--header-height));
+          block-size: calc(100vh - var(--header-height));
+          width: 100vw;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        hui-view {
+          height: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        /* grid-layout container */
+        #root, .layout, .grid, .horizontal, .vertical {
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
     layout:
+      margin: 0px
       padding: 0px
       grid-template-columns: 6% 1fr
-      grid-template-rows: auto auto 1fr
+      grid-template-rows: auto auto minmax(0, 1fr)   # <-- row 3 fills remaining height
       grid-template-areas: |
         "sidebar heading"
         "sidebar chips"
@@ -169,11 +188,12 @@ views:
               background: var(--app-header-background-color) !important;
               border-radius: 0;
               padding: 0;
-              box-shadow: none;
               margin: 0 !important;
+              box-shadow: none;
               border-right: none;
             }
         card: !include /config/dashboards/includes/sidebar_menu.yaml
+
 
       # 2) HEADING ROW
       - type: custom:mod-card

@@ -1,5 +1,8 @@
-
 type: vertical-stack
+card_mod:
+  style: |
+    :host { display: block; height: 100%; }
+    ha-card { background: transparent; box-shadow: none; padding: 0; margin: 0; }
 cards:
   # Family Icon (top) - toggles HA main sidebar
   - type: custom:button-card
