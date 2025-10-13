@@ -15,10 +15,12 @@ FamilyBoard:
   accent-color:  var(--palette-lilac)
 
   # --- Sidebar tokens (inactive/active backgrounds & icon colors) ---
-  sb-inactive-bg: var(--palette-lilac)
+  sb-inactive-bg: var(--app-header-background-color)
   sb-inactive-icon: "#0F172A"
-  sb-active-bg:    var(--primary-color)
-  sb-active-icon:  "#0F172A"
+
+  sb-active-bg: var(--card-background-color)
+  sb-active-icon: "#0F172A"
+
 
   # --- FAB colours per section ---
   fab-color-calendar: var(--palette-mint)

@@ -42,44 +42,45 @@ button_card_templates:
           return n > 0 ? `${n}` : '';
         ]]]
     styles:
-      # card:
-      #   - width: 56px
-      #   - height: 56px
-      #   - border-radius: 0px
-      #   - box-shadow: none
-      #   - background: var(--sb-inactive-bg)
-      #   - color: var(--sb-inactive-icon)
-      #   - display: grid
-      #   - place-items: center
-      #   - position: relative
-      #   - padding: 0
-      #   - transition: transform .05s ease
+      card:
+        - width: 56px
+        - height: 56px
+        - border-radius: 0px
+        - box-shadow: none
+        - background: transparent
+        - color: var(--sb-inactive-icon)
+        - display: grid
+        - place-items: center
+        - position: relative
+        - padding: 0
+        - margin: 0
+        - transition: transform .05s ease
       icon:
         - width: 28px
         - height: 28px
       custom_fields:
         badge:
-          # - position: absolute
-          # - top: -6px
-          # - right: -6px
-          # - min-width: 20px
-          # - height: 20px
-          # - border-radius: 10px
-          # - background: white
-          # - color: '#0F172A'
-          # - font-weight: 800
-          # - font-size: 12px
-          # - display: flex
-          # - align-items: center
-          # - justify-content: center
-          # - border: 2px solid var(--divider-color)
+          - position: absolute
+          - top: -6px
+          - right: -6px
+          - min-width: 20px
+          - height: 20px
+          - border-radius: 10px
+          - background: white
+          - color: '#0F172A'
+          - font-weight: 800
+          - font-size: 12px
+          - display: flex
+          - align-items: center
+          - justify-content: center
+          - border: 2px solid var(--divider-color)
     state:
       - operator: template
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
         styles:
           card:
-            # - background: var(--sb-active-bg)
-            # - color: var(--sb-active-icon)
+            - background: var(--sb-active-bg)
+            - color: var(--sb-active-icon)
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
@@ -157,8 +158,19 @@ views:
             "main"
 
     cards:
-      # 1) SIDEBAR (include)
-      - !include /config/dashboards/includes/sidebar_menu.yaml
+      - type: custom:mod-card
+        view_layout: { grid-area: sidebar }
+        card_mod:
+          style: |
+            ha-card {
+              background: var(--app-header-background-color) !important; /* rail is header colour */
+              border-radius: 0;
+              padding: 0;
+              box-shadow: none;
+              border-right: 1px solid var(--divider-color); /* subtle seam */
+            }
+        card:
+          !include /config/dashboards/includes/sidebar_menu.yaml
 
       # 2) HEADING ROW
       - type: custom:mod-card
