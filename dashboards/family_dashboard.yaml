@@ -205,8 +205,8 @@ views:
         card_mod:
           style: |
             :host {
-              display: block;
-              height: 100%;
+              # display: block;
+              height: !important;
               align-self: stretch;
             }
             ha-card {
