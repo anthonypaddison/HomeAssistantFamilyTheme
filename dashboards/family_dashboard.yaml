@@ -116,9 +116,6 @@ button_card_templates:
 
   # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
-    show_icon: true
-    show_name: true
-    show_state: false
     tap_action: { action: none }
     variables:
       name: "unknown"
