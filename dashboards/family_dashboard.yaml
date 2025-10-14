@@ -45,7 +45,6 @@ button_card_templates:
         - color: var(--sb-inactive-icon)
         - display: grid
         - place-items: center
-        # - position: relative
         - padding: 0
         - transition: transform .05s ease
       icon:
