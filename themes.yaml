@@ -14,9 +14,9 @@ FamilyBoard:
   accent-color:  var(--palette-lilac)
 
   # --- Sidebar tokens ---
-  sb-inactive-bg:    var(--palette-lilac)
+  sb-inactive-bg:    var(--palette-lilac) !important
   sb-inactive-icon:  "#0F172A"
-  sb-active-bg:      var(--primary-color)
+  sb-active-bg:      var(--family-background) !important
   sb-active-icon:    "#0F172A"
 
   # --- FAB colours per section ---
@@ -59,11 +59,11 @@ FamilyBoard:
   # --- Header / sidebar ---
   app-header-background-color: var(--palette-lilac)
   app-header-text-color:       var(--primary-text-color)
-  sidebar-background-color:    var(--palette-lilac)
-  sidebar-icon-color:          var(--secondary-text-color)
-  sidebar-text-color:          var(--primary-text-color)
-  sidebar-selected-icon-color: var(--primary-color)
-  sidebar-selected-text-color: var(--primary-text-color)
+  # sidebar-background-color:    var(--palette-lilac) !important
+  # sidebar-icon-color:          var(--secondary-text-color) !important
+  # sidebar-text-color:          var(--primary-text-color) !important
+  # sidebar-selected-icon-color: var(--primary-color) !important
+  # sidebar-selected-text-color: var(--primary-text-color) !important
 
   # --- Typography ---
   primary-font-family: >
@@ -181,19 +181,19 @@ FamilyBoard:
     .label-badge { filter: none; }
   card-mod-element: |
     :host { /* reserved */ }
-  card-mod-sidebar: |
-    :host {
-      --sidebar-background-color: var(--sidebar-background-color);
-      --sidebar-icon-color: var(--sidebar-icon-color);
-      --sidebar-selected-icon-color: var(--sidebar-selected-icon-color);
-      --sidebar-selected-text-color: var(--sidebar-selected-text-color);
-    }
-    .menu .iron-selected, .menu .selected, .mdc-list-item--selected {
-      background: #FFFFFF !important;
-      color: var(--sidebar-selected-text-color) !important;
-    }
-    .menu .iron-selected ha-icon,
-    .menu .selected ha-icon,
-    .mdc-list-item--selected ha-icon {
-      color: var(--sidebar-selected-icon-color) !important;
-    }
+  # card-mod-sidebar: |
+  #   :host {
+  #     --sidebar-background-color: var(--sidebar-background-color);
+  #     --sidebar-icon-color: var(--sidebar-icon-color);
+  #     --sidebar-selected-icon-color: var(--sidebar-selected-icon-color);
+  #     --sidebar-selected-text-color: var(--sidebar-selected-text-color);
+  #   }
+  #   .menu .iron-selected, .menu .selected, .mdc-list-item--selected {
+  #     background: #FFFFFF !important;
+  #     color: var(--sidebar-selected-text-color) !important;
+  #   }
+  #   .menu .iron-selected ha-icon,
+  #   .menu .selected ha-icon,
+  #   .mdc-list-item--selected ha-icon {
+  #     color: var(--sidebar-selected-icon-color) !important;
+  #   }

@@ -40,8 +40,8 @@ button_card_templates:
         - height: 56px
         - border-radius: 12px
         - box-shadow: none
-        - background: var(--sb-inactive-bg)
-        - color: var(--sb-inactive-icon)
+        - background: var(--sb-inactive-bg) !important
+        - color: var(--sb-inactive-icon) !important
         - place-items: center
         - padding: 0
         - transition: transform .05s ease
@@ -69,12 +69,9 @@ button_card_templates:
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
         styles:
           card:
-            - background: var(--sb-active-bg)
-            - color: var(--sb-active-icon)
+            - background: var(--sb-active-bg) !important
+            - color: var(--sb-active-icon) !important
 
-  # --- Compact progress chip for "Due today": name+icon on one row + tiny progress bar
-  # variables:
-  #   name, icon, color, completed (input_number.*), outstanding (input_number.*)
   due_today_progress_chip:
     show_icon: true
     show_name: true
@@ -152,6 +149,7 @@ views:
   # =========================
   - title: Family
     path: family
+    panel: true                               # <-- remove Lovelace outer margins
     type: custom:grid-layout
     layout:
       padding: 0px
