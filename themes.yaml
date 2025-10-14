@@ -114,73 +114,89 @@ FamilyBoard:
   grid-card-gap: "0px"
 
   # --- Card-mod view / root / card hooks (as you had) ---
-  # card-mod-view: |
-  #   :host {
-  #     --grid-card-gap: 0px !important;
-  #     margin: 0 !important;
-  #     --mdc-theme-primary: var(--primary-color);
-  #     layout-margin: 0px !important;
-  #     --layout-margin: 0px !important;
-  #   }
-  #   hui-view #view, hui-masonry-view, hui-grid-layout, .content, #columns, .column {
-  #     margin: 0 !important;
-  #     padding: 0 !important;
-  #   }
-  #   hui-view {
-  #     margin: 0 !important;
-  #     padding: 0 !important;
-  #     --masonry-view-card-margin: 0px !important;
-  #     --grid-card-gap: var(--grid-card-gap, 0px) !important;
-  #   }
-  #   #root, .layout, .grid, .horizontal, .vertical {
-  #     margin: 0 !important;
-  #     gap: 0 !important;
-  #   }
-  #   #root > * {
-  #     margin: 0 !important;
-  #     --layout-margin: 0 !important;
-  #     layout-margin: 0 !important;
-  #   }
-  # card-mod-root-yaml: |
-  #   hui-root$ hui-view$ :host { padding: 0 !important; }
-  #   hui-root$ hui-view$ #view { padding: 0 !important; margin: 0 !important; }
-  # card-mod-root: |
-  #   :host {
-  #     --mdc-theme-primary: var(--primary-color);
-  #     layout-margin: 0px !important;
-  #     --layout-margin: 0px !important;
-  #   }
-  #   app-header, .toolbar {
-  #     background: var(--app-header-background-color);
-  #     color: var(--app-header-text-color);
-  #     box-shadow: 0 1px 0 0 var(--divider-color);
-  #   }
-  #   ::-webkit-scrollbar { width: 8px; height: 8px; }
-  #   ::-webkit-scrollbar-thumb {
-  #     background: var(--scrollbar-thumb-color);
-  #     border: 2px solid transparent;
-  #     background-clip: padding-box;
-  #   }
-  #   ::-webkit-scrollbar-track { background: transparent; }
-  # card-mod-card: |
-  #   ha-card {
-  #     background: var(--card-background-color);
-  #     color: var(--primary-text-color);
-  #     border: var(--ha-card-border-width) solid var(--divider-color);
-  #     box-shadow: var(--ha-card-box-shadow);
-  #   }
-  #   ha-card .card-header {
-  #     font-weight: var(--ha-font-weight-bold, 700);
-  #     font-size: var(--ha-font-size-l, 16px);
-  #     letter-spacing: -0.2px;
-  #   }
-  # card-mod-row: |
-  #   .mdc-list-item__primary-text { color: var(--primary-text-color); }
-  #   :host(:hover) .mdc-list-item__primary-text { color: var(--primary-text-color); }
-  # card-mod-badge: |
-  #   .label-badge { filter: none; }
-  # card-mod-element: |
-  #   :host { /* reserved */ }
+  card-mod-view: |
+    :host {
+      --grid-card-gap: 0px !important;
+      margin: 0 !important;
+      # --mdc-theme-primary: var(--primary-color);
+      layout-margin: 0px !important;
+      --layout-margin: 0px !important;
+    }
+    hui-view #view, hui-masonry-view, hui-grid-layout, .content, #columns, .column {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    hui-view {
+      margin: 0 !important;
+      padding: 0 !important;
+      --masonry-view-card-margin: 0px !important;
+      --grid-card-gap: var(--grid-card-gap, 0px) !important;
+    }
+    #root, .layout, .grid, .horizontal, .vertical {
+      margin: 0 !important;
+      gap: 0 !important;
+    }
+    #root > * {
+      margin: 0 !important;
+      --layout-margin: 0 !important;
+      layout-margin: 0 !important;
+    }
+  card-mod-root-yaml: |
+    hui-root$ hui-view$ :host {
+      padding: 0 !important;
+    }
+    hui-root$ hui-view$ #view {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  card-mod-root: |
+    :host {
+      # --mdc-theme-primary: var(--primary-color);
+      layout-margin: 0px !important;
+      --layout-margin: 0px !important;
+    }
+    app-header, .toolbar {
+      background: var(--app-header-background-color);
+      color: var(--app-header-text-color);
+      box-shadow: 0 1px 0 0 var(--divider-color);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    # ::-webkit-scrollbar-thumb {
+    #   background: var(--scrollbar-thumb-color);
+    #   border: 2px solid transparent;
+    #   background-clip: padding-box;
+    # }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  card-mod-card: |
+    # ha-card {
+    #   background: var(--card-background-color);
+    #   color: var(--primary-text-color);
+    #   border: var(--ha-card-border-width) solid var(--divider-color);
+    #   box-shadow: var(--ha-card-box-shadow);
+    # }
+    ha-card .card-header {
+      font-weight: var(--ha-font-weight-bold, 700);
+      font-size: var(--ha-font-size-l, 16px);
+      letter-spacing: -0.2px;
+    }
+  card-mod-row: |
+    .mdc-list-item__primary-text {
+      color: var(--primary-text-color);
+    }
+    :host(:hover) .mdc-list-item__primary-text {
+      color: var(--primary-text-color);
+    }
+  card-mod-badge: |
+    .label-badge {
+      filter: none;
+    }
+  card-mod-element: |
+    :host { /* reserved */ }
   # card-mod-sidebar: |
   #   :host {
   #     --sidebar-background-color: var(--sidebar-background-color);
