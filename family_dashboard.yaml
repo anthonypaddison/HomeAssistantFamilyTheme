@@ -2,7 +2,6 @@ title: Family
 theme: FamilyBoard
 
 button_card_templates:
-
   family_icon:
     show_name: false
     show_icon: true
@@ -31,7 +30,7 @@ button_card_templates:
       badge: >
         [[[
           const e = variables.badge_entity ? states[variables.badge_entity] : null;
-          const n = e ? Number(e.state || 0) : 0;
+          const n = e ? Number(e.state ?? 0) : 0;
           return n > 0 ? `${n}` : '';
         ]]]
     styles:
@@ -57,7 +56,7 @@ button_card_templates:
           - height: 20px
           - border-radius: 10px
           - background: white
-          - color: #0F172A
+          - color: "#0F172A"
           - font-weight: 800
           - font-size: 12px
           - display: flex
@@ -88,7 +87,7 @@ button_card_templates:
       card:
         - padding: 6px 10px
         - border-radius: 14px
-        - background: '[[[ return variables.color || "var(--primary-color)"; ]]]'
+        - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
         - min-height: 36px
         - box-shadow: none
       grid:
@@ -127,15 +126,15 @@ button_card_templates:
     custom_fields:
       v: >
         [[[
-          const done = Number(states[variables.completed]?.state || 0);
-          const rem  = Number(states[variables.outstanding]?.state || 0);
+          const done = Number(states[variables.completed]?.state ?? 0);
+          const rem  = Number(states[variables.outstanding]?.state ?? 0);
           const total = Math.max(0, done + rem);
           return `${done}/${total}`;
         ]]]
       bar: >
         [[[
-          const done = Number(states[variables.completed]?.state || 0);
-          const rem  = Number(states[variables.outstanding]?.state || 0);
+          const done = Number(states[variables.completed]?.state ?? 0);
+          const rem  = Number(states[variables.outstanding]?.state ?? 0);
           const total = Math.max(0, done + rem);
           const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
           return `<div style="position:absolute;inset:0;background:rgba(255,255,255,.85);transform-origin:left;transform:scaleX(${pct/100});"></div>`;
@@ -143,13 +142,12 @@ button_card_templates:
 
 # ====== VIEWS ======
 views:
-
   # =========================
   # MAIN FAMILY VIEW
   # =========================
   - title: Family
     path: family
-    panel: true                               # <-- remove Lovelace outer margins
+    panel: true  # <-- remove Lovelace outer margins
     type: custom:grid-layout
     card_mod:
       style: |
@@ -175,7 +173,7 @@ views:
     layout:
       margin: 0px
       padding: 0px
-      grid-template-columns: 6% 1fr          # Sidebar at ~6% as requested
+      grid-template-columns: 6% 1fr  # Sidebar at ~6% as requested
       grid-template-rows: auto auto 1fr
       grid-template-areas: |
         "sidebar heading"
@@ -193,12 +191,11 @@ views:
             "main"
 
     cards:
-
       # 1) SIDEBAR (sticky, provided as include)
       - !include /config/sidebar_menu.yaml
 
-      # 2) HEADING ROW
-      - type: custom:mod-card
+      # 2) HEADING ROW  ——— FIXED: no mod-card; style button-card directly
+      - type: custom:button-card
         view_layout: { grid-area: heading }
         card_mod:
           style: |
@@ -213,75 +210,73 @@ views:
               min-height: var(--family-heading-height, 56px);
               display: flex; align-items: center;
             }
-        card:
-          type: custom:button-card
-          show_icon: false
-          show_name: false
-          show_state: false
-          styles:
-            card:
-              - background: transparent
-              - box-shadow: none
-              - padding: 0
-              - color: "#000000 !important"
-            grid:
-              - grid-template-areas: "'left center right'"
-              - grid-template-columns: 1fr auto 1fr
-              - align-items: center
-              - column-gap: 12px
-            custom_fields:
-              left:
-                - justify-self: start
-                - font-weight: 700
-              center:
-                - justify-self: center
-                - font-weight: 700
-                - font-size: 22px
-              right:
-                - justify-self: end
-                - text-align: right
-                - white-space: nowrap
-                - overflow: hidden
-                - text-overflow: ellipsis
-                - font-weight: 700
+        show_icon: false
+        show_name: false
+        show_state: false
+        styles:
+          card:
+            - background: transparent
+            - box-shadow: none
+            - padding: 0
+            - color: "#000000 !important"
+          grid:
+            - grid-template-areas: "'left center right'"
+            - grid-template-columns: 1fr auto 1fr
+            - align-items: center
+            - column-gap: 12px
           custom_fields:
-            left: >
-              [[[
-                const d = new Date();
-                const date = d.toLocaleDateString('en-GB',
-                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                return `Panogu Family - ${date}`;
-              ]]]
-            center: >
-              [[[
-                const d = new Date();
-                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-              ]]]
-            right: >
-              [[[
-                const e = states['calendar.routine'];
-                if (!e) return 'Routine calendar not found';
-                const a = e.attributes ?? {};
-                const title = a.message ?? 'No upcoming events';
-                if (!a.start_time) return `${title}`;
-                const start = new Date(a.start_time);
-                const end   = a.end_time ? new Date(a.end_time) : null;
-                const now   = new Date();
-                const tf = { hour: '2-digit', minute: '2-digit' };
-                const df = { weekday: 'short', month: 'short', day: 'numeric' };
-                const same = start.toDateString() === now.toDateString();
-                const inProg = e.state === 'on' && start <= now && (!end || now < end);
-                const when = inProg
-                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
-                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
-                return `${title} - ${when}`;
-              ]]]
-          triggers_update:
-            - sensor.time
-            - calendar.routine
+            left:
+              - justify-self: start
+              - font-weight: 700
+            center:
+              - justify-self: center
+              - font-weight: 700
+              - font-size: 22px
+            right:
+              - justify-self: end
+              - text-align: right
+              - white-space: nowrap
+              - overflow: hidden
+              - text-overflow: ellipsis
+              - font-weight: 700
+        custom_fields:
+          left: >
+            [[[
+              const d = new Date();
+              const date = d.toLocaleDateString('en-GB',
+                { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+              return `Panogu Family - ${date}`;
+            ]]]
+          center: >
+            [[[
+              const d = new Date();
+              return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+            ]]]
+          right: >
+            [[[
+              const e = states['calendar.routine'];
+              if (!e) return 'Routine calendar not found';
+              const a = e.attributes ?? {};
+              const title = a.message ?? 'No upcoming events';
+              if (!a.start_time) return `${title}`;
+              const start = new Date(a.start_time);
+              const end = a.end_time ? new Date(a.end_time) : null;
+              const now = new Date();
+              const tf = { hour: '2-digit', minute: '2-digit' };
+              const df = { weekday: 'short', month: 'short', day: 'numeric' };
+              const same = start.toDateString() === now.toDateString();
+              const inProg = e.state === 'on' && start <= now && (!end || now < end);
+              const when = inProg
+                ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+              return `${title} - ${when}`;
+            ]]]
+        triggers_update:
+          - sensor.time
+          - calendar.routine
 
-      # 3) CHIPS ROW (shorter height, progress bar, name+icon one row)
-      - type: custom:mod-card
+      # 3) CHIPS ROW ——— FIXED: no mod-card; style the Grid card directly
+      - type: grid
         view_layout: { grid-area: chips }
         card_mod:
           style: |
@@ -295,71 +290,68 @@ views:
               min-height: var(--family-chips-height, 56px);
               display: flex; align-items: center;
             }
-        card:
-          type: grid
-          columns: 5
-          square: false
-          cards:
-            - type: custom:button-card
-              template: due_today_progress_chip
-              variables:
-                name: Family
-                icon: mdi:account-group
-                color: var(--family-color-family)
-                completed: input_number.completed_due_today_family
-                outstanding: input_number.outstanding_family_today
+        columns: 5
+        square: false
+        cards:
+          - type: custom:button-card
+            template: due_today_progress_chip
+            variables:
               name: Family
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Family } }
+              icon: mdi:account-group
+              color: var(--family-color-family)
+              completed: input_number.completed_due_today_family
+              outstanding: input_number.outstanding_family_today
+            name: Family
+            tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Family } }
 
-            - type: custom:button-card
-              template: due_today_progress_chip
-              variables:
-                name: Anthony
-                icon: mdi:laptop
-                color: var(--family-color-anthony)
-                completed: input_number.completed_due_today_anthony
-                outstanding: input_number.outstanding_anthony_today
+          - type: custom:button-card
+            template: due_today_progress_chip
+            variables:
               name: Anthony
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Anthony } }
+              icon: mdi:laptop
+              color: var(--family-color-anthony)
+              completed: input_number.completed_due_today_anthony
+              outstanding: input_number.outstanding_anthony_today
+            name: Anthony
+            tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Anthony } }
 
-            - type: custom:button-card
-              template: due_today_progress_chip
-              variables:
-                name: Joy
-                icon: mdi:book-open-variant
-                color: var(--family-color-joy)
-                completed: input_number.completed_due_today_joy
-                outstanding: input_number.outstanding_joy_today
+          - type: custom:button-card
+            template: due_today_progress_chip
+            variables:
               name: Joy
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Joy } }
+              icon: mdi:book-open-variant
+              color: var(--family-color-joy)
+              completed: input_number.completed_due_today_joy
+              outstanding: input_number.outstanding_joy_today
+            name: Joy
+            tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Joy } }
 
-            - type: custom:button-card
-              template: due_today_progress_chip
-              variables:
-                name: Lizzie
-                icon: mdi:teddy-bear
-                color: var(--family-color-lizzie)
-                completed: input_number.completed_due_today_lizzie
-                outstanding: input_number.outstanding_lizzie_today
+          - type: custom:button-card
+            template: due_today_progress_chip
+            variables:
               name: Lizzie
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Lizzie } }
+              icon: mdi:teddy-bear
+              color: var(--family-color-lizzie)
+              completed: input_number.completed_due_today_lizzie
+              outstanding: input_number.outstanding_lizzie_today
+            name: Lizzie
+            tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Lizzie } }
 
-            - type: custom:button-card
-              template: due_today_progress_chip
-              variables:
-                name: Toby
-                icon: mdi:soccer
-                color: var(--family-color-toby)
-                completed: input_number.completed_due_today_toby
-                outstanding: input_number.outstanding_toby_today
+          - type: custom:button-card
+            template: due_today_progress_chip
+            variables:
               name: Toby
-              tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Toby } }
+              icon: mdi:soccer
+              color: var(--family-color-toby)
+              completed: input_number.completed_due_today_toby
+              outstanding: input_number.outstanding_toby_today
+            name: Toby
+            tap_action: { action: call-service, service: script.open_person_view, data: { browser_id: THIS, person: Toby } }
 
       # 4) MAIN AREA (conditional sections)
       - type: vertical-stack
         view_layout: { grid-area: main }
         cards:
-
           # ---- Calendar
           - type: conditional
             conditions:
@@ -368,7 +360,7 @@ views:
             card:
               type: vertical-stack
               cards:
-                # Toggle (Day / 5-Day / Month)
+                # Toggle (Day / 5-Day / Month) — mod-card OK here (wraps a stack)
                 - type: custom:mod-card
                   card_mod:
                     style: |
@@ -401,6 +393,7 @@ views:
                           card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
                           name: [ font-size: 12px, font-weight: 700 ]
                           icon: [ width: 16px, height: 16px ]
+
                 # Day
                 - type: conditional
                   conditions:
@@ -435,7 +428,6 @@ views:
                   columns: 3
                   square: false
                   cards:
-
                     # Anthony
                     - type: vertical-stack
                       cards:
@@ -559,12 +551,11 @@ views:
                               ha-todo-list #add,
                               ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                # Kids (2) - chip-like rows, Next up at bottom, no extra plus
+                # Kids (2)
                 - type: grid
                   columns: 2
                   square: false
                   cards:
-
                     # Lizzie
                     - type: vertical-stack
                       cards:
@@ -599,7 +590,7 @@ views:
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
                           name: >
-                            [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state || 'All done!'); ]]]
+                            [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state ?? 'All done!'); ]]]
                           show_state: false
                           styles:
                             card:
@@ -644,7 +635,7 @@ views:
                         - type: custom:button-card
                           icon: mdi:star-four-points-outline
                           name: >
-                            [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state || 'All done!'); ]]]
+                            [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state ?? 'All done!'); ]]]
                           show_state: false
                           styles:
                             card:
@@ -677,7 +668,7 @@ views:
               content: >
                 {{ states('input_text.shopping_md') if states('input_text.shopping_md') not in ['unknown','unavailable',''] else '_No shopping items._' }}
 
-          # ---- Toby standalone (same style as kids)
+          # ---- Toby standalone
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -714,7 +705,7 @@ views:
                 - type: custom:button-card
                   icon: mdi:star-four-points-outline
                   name: >
-                    [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state || 'All done!'); ]]]
+                    [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state ?? 'All done!'); ]]]
                   show_state: false
                   styles:
                     card:
@@ -727,7 +718,7 @@ views:
                     icon:
                       - color: rgba(66,165,245,1)
 
-          # ---- Lizzie standalone (same style as kids)
+          # ---- Lizzie standalone
           - type: conditional
             conditions:
               - entity: input_select.family_section
@@ -764,7 +755,7 @@ views:
                 - type: custom:button-card
                   icon: mdi:star-four-points-outline
                   name: >
-                    [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state || 'All done!'); ]]]
+                    [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state ?? 'All done!'); ]]]
                   show_state: false
                   styles:
                     card:
@@ -819,6 +810,7 @@ views:
     path: person
     visible: false
     cards:
+      # mod-card OK here (wraps a stack)
       - type: custom:mod-card
         card_mod:
           style: |
@@ -829,24 +821,19 @@ views:
             - type: markdown
               content: >
                 ## {{ states('input_select.active_person') }} - To-dos
-
             # Render the right list based on active_person
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Family } ]
               card: { type: todo-list, entity: todo.family, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Anthony } ]
               card: { type: todo-list, entity: todo.anthony, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Joy } ]
               card: { type: todo-list, entity: todo.joy, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Lizzie } ]
               card: { type: todo-list, entity: todo.lizzie, hide_completed: false }
-
             - type: conditional
               conditions: [ { entity: input_select.active_person, state: Toby } ]
               card: { type: todo-list, entity: todo.toby, hide_completed: false }

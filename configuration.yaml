@@ -1,14 +1,12 @@
-
 default_config:
 
 frontend:
   themes: !include themes.yaml
-
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js
 lovelace:
   mode: yaml
   resources:
-    - url: /hacsfiles/lovelace-card-mod/card-mod.js
-      type: module
     - url: /hacsfiles/button-card/button-card.js
       type: module
     - url: /hacsfiles/lovelace-layout-card/layout-card.js
@@ -27,7 +25,6 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 template: !include template.yaml
 sensor: !include sensor.yaml
-
 input_select: !include input_select.yaml
 input_number: !include input_number.yaml
 input_text: !include input_text.yaml
