@@ -14,7 +14,6 @@ button_card_templates:
         - box-shadow: none
         - background: var(--sb-inactive-bg)
         - color: var(--sb-inactive-icon)
-        - display: grid
         - place-items: center
         - position: relative
         - padding: 0
@@ -43,7 +42,6 @@ button_card_templates:
         - box-shadow: none
         - background: var(--sb-inactive-bg)
         - color: var(--sb-inactive-icon)
-        - display: grid
         - place-items: center
         - padding: 0
         - transition: transform .05s ease
