@@ -36,9 +36,9 @@ button_card_templates:
         ]]]
     styles:
       card:
-        - width: 56px
-        - height: 56px
-        - border-radius: 12px
+        - width: 100% !important
+        - height: 65px
+        - border-radius: 0
         - box-shadow: none
         - background: var(--sb-inactive-bg) !important
         - color: var(--sb-inactive-icon) !important
@@ -51,7 +51,7 @@ button_card_templates:
       custom_fields:
         badge:
           - position: absolute
-          - top: -6px
+          - bottom: 6px
           - right: -6px
           - min-width: 20px
           - height: 20px
@@ -63,14 +63,14 @@ button_card_templates:
           - display: flex
           - align-items: center
           - justify-content: center
-          - border: 2px solid var(--divider-color)
+          - border: 2px solid #0F172A
     state:
       - operator: template
         value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
         styles:
           card:
-            - background: var(--sb-active-bg) !important
-            - color: var(--sb-active-icon) !important
+            - background: var(--sb-active-bg)
+            - color: var(--sb-active-icon)
 
   due_today_progress_chip:
     show_icon: true
