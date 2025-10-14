@@ -496,7 +496,7 @@
             {% set s = as_datetime(next.start) %}
             {% set tf = '%H:%M' %}
             {% set df = '%a %d %b' %}
-            {{ next.summary }} ... {{ s.strftime(tf) }} ({{ s.strftime(df) }})
+            {{ next.summary }} - {{ s.strftime(tf) }} ({{ s.strftime(df) }})
           {% else %}
             No upcoming events
           {% endif %}

@@ -1,10 +1,9 @@
 title: Family
 theme: FamilyBoard
 
-# ====== Button-card templates ======
+# ====== Button-card templates (local to this dashboard) ======
 button_card_templates:
 
-  # (kept for completeness; no longer used in the sidebar)
   family_icon:
     show_name: false
     show_icon: true
@@ -20,9 +19,9 @@ button_card_templates:
         - place-items: center
         - position: relative
         - padding: 0
-    icon:
-      - width: 28px
-      - height: 28px
+      icon:
+        - width: 28px
+        - height: 28px
     card_mod:
       style: |
         ha-icon, mwc-icon, .button-card-icon {
@@ -34,73 +33,79 @@ button_card_templates:
           filter: none !important;
         }
 
-  # Sidebar item with badge (Calendar/Chores)
   sb_icon_only:
     show_name: false
     show_icon: true
     variables:
       section: ""
       badge_entity: ""
+    # FORCE icon colour/size on all likely hosts
     card_mod:
       style: |
         ha-icon, mwc-icon, .button-card-icon {
           color: var(--sb-inactive-icon) !important;
           --mdc-icon-size: 28px !important;
-          width: 28px !important; height: 28px !important;
-          opacity: 1 !important; filter: none !important;
+          width: 28px !important;
+          height: 28px !important;
+          opacity: 1 !important;
+          filter: none !important;
         }
-        :host {
-          /* Change to #ef4444 if you want red */
-          --sb-badge-border-color: #000000;
+        ha-state-icon#icon {
+          position: relative !important;
         }
+
     custom_fields:
-      badge: >
-        [[[
-          const id = variables.badge_entity;
-          const st = id ? states[id]?.state : undefined;
-          const n = Number(st);
-          return Number.isFinite(n) && n > 0 ? `${n}` : '';
-        ]]]
+          badge: >
+            [[[
+              const id = variables.badge_entity;
+              const st = id ? states[id]?.state : undefined;
+              const n  = Number(st);
+              // Only show a number if it's a finite positive integer
+              return Number.isFinite(n) && n > 0 ? `${n}` : '';
+            ]]]
+
     styles:
       card:
         - width: 100% !important
-        - height: 64px           # a touch taller than before
+        - height: 56px
         - border-radius: 0px
         - box-shadow: none
-        - background: var(--sb-inactive-bg)   # <— fill the tile
-        - display: flex
-        - align-items: center
-        - justify-content: flex-start         # <— left align
-        - padding: 0 16px
+        - background: transparent
+        - color: blue
+        - display: grid
+        - place-items: center
+        - padding: 0
         - margin: 0
         - overflow: visible
       icon:
         - width: 28px
         - height: 28px
+        - --mdc-icon-size: 28px
         - color: var(--sb-inactive-icon) !important
       custom_fields:
         badge:
           - position: absolute
           - top: -6px
           - right: -6px
-          - min-width: 22px
-          - height: 22px
-          - border-radius: 11px
+          - min-width: 20px
+          - height: 20px
+          - border-radius: 10px
           - background: white
-          - color: var(--sb-badge-border-color)
+          - color: '#0F172A'
           - font-weight: 800
           - font-size: 12px
-          - line-height: 22px
+          - line-height: 20px
           - display: >
               [[[
                 const id = variables.badge_entity;
                 const st = id ? states[id]?.state : undefined;
-                const n = Number(st);
+                const n  = Number(st);
+                // Hide the whole bubble for '', 0, NaN, unknown/unavailable, etc.
                 return Number.isFinite(n) && n > 0 ? 'flex' : 'none';
               ]]]
           - align-items: center
           - justify-content: center
-          - border: 2px solid var(--sb-badge-border-color)
+          - border: 2px solid var(--divider-color)
           - z-index: 2
     state:
       - operator: template
@@ -109,15 +114,18 @@ button_card_templates:
           card:
             - background: var(--sb-active-bg) !important
             - color: var(--sb-active-icon) !important
+          icon:
+            - color: var(--sb-active-icon) !important
         card_mod:
           style: |
             ha-icon, mwc-icon, .button-card-icon {
-              color: var(--sb-active-icon) !important;
+              color: black !important;
+              opacity: 1 !important;
+              filter: none !important;
             }
 
-  # Compact progress chip: name, icon, bar, "completed / total".
+  # --- Compact progress chip (unchanged behavior)
   due_today_progress_chip:
-    show_name: true
     tap_action: { action: none }
     variables:
       name: "unknown"
@@ -129,7 +137,7 @@ button_card_templates:
       card:
         - padding: 6px 10px
         - border-radius: 14px
-        - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
+        - background: '[[[ return variables.color || "var(--primary-color)"; ]]]'
         - min-height: 56px
         - box-shadow: none
       grid:
@@ -143,8 +151,6 @@ button_card_templates:
       custom_fields:
         v: [ align-self: center, justify-self: end, font-size: 12px, font-weight: 800, color: '#0F172A' ]
         bar: [ width: 100%, height: 4px, border-radius: 2px, background: 'rgba(0,0,0,.15)', position: relative, overflow: hidden ]
-    name: '[[[ return variables.name; ]]]'
-    icon: '[[[ return variables.icon; ]]]'
     custom_fields:
       v: >
         [[[
@@ -172,6 +178,7 @@ views:
       style: |
         :host {
           height: 100vh !important;
+          # block-size: calc(100vh - var(--header-height));
           width: 100vw;
           margin: 0 !important;
           padding: 0 !important;
@@ -191,8 +198,7 @@ views:
       margin: 0px
       height: 100vh
       padding: 0px
-      # --- widened sidebar rail
-      grid-template-columns: 88px 1fr
+      grid-template-columns: 6% 1fr
       grid-template-rows: auto auto minmax(0, 1fr)
       grid-template-areas: |
         "sidebar heading"
@@ -201,15 +207,17 @@ views:
       gap: 0px
       column-gap: 0px
       row-gap: 0px
-
     cards:
 
-      # 1) SIDEBAR (Calendar + Chores only)
+      # 1) SIDEBAR - full-height rail (grid-stretched)
       - type: custom:mod-card
         view_layout: { grid-area: sidebar }
         card_mod:
           style: |
-            :host { height: 100vh !important; align-self: stretch; }
+            :host {
+              height: 100vh !important;
+              align-self: stretch;
+            }
             ha-card {
               height: 100vh !important;
               background: var(--app-header-background-color) !important;
@@ -220,8 +228,7 @@ views:
               border-right: none;
             }
         card: !include /config/sidebar_menu.yaml
-
-      # 2) HEADING ROW (Left: next event; Center: time above date; Right: empty)
+      # 2) HEADING ROW
       - type: custom:mod-card
         view_layout: { grid-area: heading }
         card_mod:
@@ -250,33 +257,48 @@ views:
               - align-items: center
               - column-gap: 12px
             custom_fields:
-              left: [ justify-self: start, font-weight: 700, font-size: 14px, line-height: 1.2, white-space: nowrap, overflow: hidden, text-overflow: ellipsis ]
+              left:  [ justify-self: start, font-weight: 700 ]
               center:
                 - justify-self: center
-              right: [ justify-self: end ]
+                - font-weight: 700
+                - font-size: 22px
+              right: [ justify-self: end, text-align: right, white-space: nowrap, overflow: hidden, text-overflow: ellipsis, font-weight: 700 ]
           custom_fields:
             left: >
               [[[
-                const s = states['input_text.up_next_family_md']?.state;
-                return s && s !== 'unknown' && s !== 'unavailable' ? s : 'No upcoming events';
+                const d = new Date();
+                const date = d.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+                return `Panogu Family - ${date}`;
               ]]]
             center: >
               [[[
                 const d = new Date();
-                const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                const date = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                return `<div style="display:grid;place-items:center;line-height:1.1">
-                  <div style="font-weight:800;font-size:28px">${time}</div>
-                  <div style="margin-top:4px;font-weight:600;font-size:14px;opacity:.85">${date}</div>
-                </div>`;
+                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
               ]]]
             right: >
-              [[[ return ''; ]]]
+              [[[
+                const e = states['calendar.routine'];
+                if (!e) return 'Routine calendar not found';
+                const a = e.attributes ?? {};
+                const title = a.message ?? 'No upcoming events';
+                if (!a.start_time) return `${title}`;
+                const start = new Date(a.start_time);
+                const end = a.end_time ? new Date(a.end_time) : null;
+                const now = new Date();
+                const tf = { hour:'2-digit', minute:'2-digit' };
+                const df = { weekday:'short', month:'short', day:'numeric' };
+                const same = start.toDateString() === now.toDateString();
+                const inProg = e.state === 'on' && start <= now && (!end || now < end);
+                const when = inProg
+                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+                return `${title} - ${when}`;
+              ]]]
           triggers_update:
             - sensor.time
-            - input_text.up_next_family_md
+            - calendar.routine
 
-      # 3) CHIPS ROW (progress per person)
+      # 3) CHIPS ROW
       - type: custom:mod-card
         view_layout: { grid-area: chips }
         card_mod:
@@ -371,9 +393,10 @@ views:
                   browser_id: '[[[ return window.browser_mod?.browserID ?? null; ]]]'
                   person: Toby
 
-      # 4) MAIN AREA — Calendar + Chores only
+      # 4) MAIN AREA (conditional sections)
+
+      # ---- Calendar
       - type: conditional
-        view_layout: { grid-area: main }
         conditions:
           - condition: state
             entity: input_select.family_section
@@ -381,48 +404,39 @@ views:
         card:
           type: vertical-stack
           cards:
-
-            # Toggle (Day / 5-Day / Month) — hidden when Month active
-            - type: conditional
-              conditions:
-                - condition: state
-                  entity: input_select.calendar_view
-                  state_not: "Month"
+            # Toggle (Day / 5-Day / Month)
+            - type: custom:mod-card
+              card_mod:
+                style: |
+                  ha-card { background: transparent; box-shadow: none; padding: 0; }
+                  .card-content { display: flex; justify-content: flex-end; gap: 8px; }
               card:
-                type: custom:mod-card
-                card_mod:
-                  style: |
-                    ha-card { background: transparent; box-shadow: none; padding: 0; }
-                    .card-content { display: flex; justify-content: flex-end; gap: 8px; }
-                card:
-                  type: horizontal-stack
-                  cards:
-                    - type: custom:button-card
-                      name: Day
-                      icon: mdi:calendar-today
-                      tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Day } }
-                      styles:
-                        card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
-                        name: [ font-size: 12px, font-weight: 700 ]
-                        icon: [ width: 16px, height: 16px ]
-
-                    - type: custom:button-card
-                      name: 5-Day
-                      icon: mdi:calendar-range
-                      tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: "5-Day" } }
-                      styles:
-                        card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
-                        name: [ font-size: 12px, font-weight: 700 ]
-                        icon: [ width: 16px, height: 16px ]
-
-                    - type: custom:button-card
-                      name: Month
-                      icon: mdi:calendar-month
-                      tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Month } }
-                      styles:
-                        card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
-                        name: [ font-size: 12px, font-weight: 700 ]
-                        icon: [ width: 16px, height: 16px ]
+                type: horizontal-stack
+                cards:
+                  - type: custom:button-card
+                    name: Day
+                    icon: mdi:calendar-today
+                    tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Day } }
+                    styles:
+                      card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
+                      name: [ font-size: 12px, font-weight: 700 ]
+                      icon: [ width: 16px, height: 16px ]
+                  - type: custom:button-card
+                    name: 5-Day
+                    icon: mdi:calendar-range
+                    tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: "5-Day" } }
+                    styles:
+                      card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
+                      name: [ font-size: 12px, font-weight: 700 ]
+                      icon: [ width: 16px, height: 16px ]
+                  - type: custom:button-card
+                    name: Month
+                    icon: mdi:calendar-month
+                    tap_action: { action: call-service, service: input_select.select_option, target: { entity_id: input_select.calendar_view }, data: { option: Month } }
+                    styles:
+                      card: [ height: 36px, padding: "4px 10px", border-radius: 10px, background: var(--card-background-color) ]
+                      name: [ font-size: 12px, font-weight: 700 ]
+                      icon: [ width: 16px, height: 16px ]
 
             # Day
             - type: conditional
@@ -448,20 +462,20 @@ views:
                   state: Month
               card: !include /config/calendar_month.yaml
 
+      # ---- Chores (your original content, styles preserved)
       - type: conditional
-        view_layout: { grid-area: main }
         conditions:
           - condition: state
             entity: input_select.family_section
             state: Chores
         card:
+          # (kept your existing Chores stack, compacted only where safe)
           type: vertical-stack
           cards:
             - type: grid
               columns: 3
               square: false
               cards:
-                # Anthony
                 - type: vertical-stack
                   cards:
                     - type: custom:button-card
@@ -487,36 +501,22 @@ views:
                       hide_completed: false
                       card_mod:
                         style: |
-                          :host, ha-card { color: var(--family-color-anthony); }
-                          ul { display: flex; flex-direction: column; gap: 6px; }
-                          li {
-                            min-height: 34px !important; border-radius: 18px;
-                            padding: 2px 10px !important; position: relative;
-                          }
-                          li:nth-child(odd)  { background: rgba(0,0,0,0.00); border: 1px solid rgba(0,0,0,0.00); }
-                          li:nth-child(even) { background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-                          ha-todo-list[slot="add"],
-                          ha-todo-list .add, ha-todo-list .add-item, ha-todo-list mwc-textfield,
-                          ha-todo-list #add, ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                          li { min-height: 28px !important; }
                           mwc-checkbox {
                             --mdc-checkbox-unchecked-color: #CBD5E1;
                             --mdc-checkbox-checked-color: var(--family-color-family);
                             --mdc-checkbox-mark-color: #FFFFFF;
+                            border-radius: 50% !important;
                             transform: scale(1.4);
                             margin-right: 8px;
-                            opacity: 0;
-                            position: absolute; inset: 0;
-                            width: 100%;
-                            height: 100%;
-                            margin: 0 !important;
-                            pointer-events: auto;
                           }
-                          mwc-checkbox::before {
-                            content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
-                            width:32px; height:32px; border-radius:16px;
-                          }
+                          ha-todo-list[slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                # Joy
                 - type: vertical-stack
                   cards:
                     - type: custom:button-card
@@ -539,32 +539,22 @@ views:
                       hide_completed: false
                       card_mod:
                         style: |
-                          :host, ha-card { color: var(--family-color-joy); }
-                          ul { display: flex; flex-direction: column; gap: 6px; }
-                          li {
-                            min-height: 34px !important; border-radius: 18px;
-                            padding: 2px 10px !important; position: relative;
-                          }
-                          li:nth-child(odd)  { background: rgba(0,0,0,0.00); border: 1px solid rgba(0,0,0,0.00); }
-                          li:nth-child(even) { background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-                          ha-todo-list[slot="add"],
-                          ha-todo-list .add, ha-todo-list .add-item, ha-todo-list mwc-textfield,
-                          ha-todo-list #add, ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                          li { min-height: 28px !important; }
                           mwc-checkbox {
                             --mdc-checkbox-unchecked-color: #CBD5E1;
                             --mdc-checkbox-checked-color: var(--family-color-family);
                             --mdc-checkbox-mark-color: #FFFFFF;
+                            border-radius: 50% !important;
                             transform: scale(1.4);
                             margin-right: 8px;
-                            opacity: 0;
-                            width: 24px; min-width: 24px; height: 24px;
                           }
-                          mwc-checkbox::before {
-                            content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
-                            width:32px; height:32px; border-radius:16px;
-                          }
+                          ha-todo-list[slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
-                # Family
                 - type: vertical-stack
                   cards:
                     - type: custom:button-card
@@ -587,36 +577,26 @@ views:
                       hide_completed: false
                       card_mod:
                         style: |
-                          :host, ha-card { color: var(--family-color-family); }
-                          ul { display: flex; flex-direction: column; gap: 6px; }
-                          li {
-                            min-height: 34px !important; border-radius: 18px;
-                            padding: 2px 10px !important; position: relative;
-                          }
-                          li:nth-child(odd)  { background: rgba(0,0,0,0.00); border: 1px solid rgba(0,0,0,0.00); }
-                          li:nth-child(even) { background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-                          ha-todo-list[slot="add"],
-                          ha-todo-list .add, ha-todo-list .add-item, ha-todo-list mwc-textfield,
-                          ha-todo-list #add, ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+                          li { min-height: 28px !important; }
                           mwc-checkbox {
                             --mdc-checkbox-unchecked-color: #CBD5E1;
                             --mdc-checkbox-checked-color: var(--family-color-family);
                             --mdc-checkbox-mark-color: #FFFFFF;
+                            border-radius: 50% !important;
                             transform: scale(1.4);
                             margin-right: 8px;
-                            opacity: 0;
-                            width: 24px; min-width: 24px; height: 24px;
                           }
-                          mwc-checkbox::before {
-                            content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
-                            width:32px; height:32px; border-radius:16px;
-                          }
+                          ha-todo-list[slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
 
             - type: grid
               columns: 2
               square: false
               cards:
-                # Lizzie
                 - type: vertical-stack
                   cards:
                     - type: todo-list
@@ -624,30 +604,27 @@ views:
                       hide_completed: false
                       card_mod:
                         style: |
-                          :host, ha-card { color: var(--family-color-lizzie); }
                           ul { display: flex; flex-direction: column; gap: 8px; }
                           li {
                             min-height: 34px !important; border-radius: 18px;
-                            padding: 2px 10px !important; position: relative;
+                            background: rgba(236,64,122,0.12);
+                            border: 1px solid rgba(236,64,122,0.30);
+                            padding: 2px 10px !important;
                           }
-                          li:nth-child(odd)  { background: rgba(0,0,0,0.00); border: 1px solid rgba(0,0,0,0.00); }
-                          li:nth-child(even) { background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-                          ha-todo-list[slot="add"],
-                          ha-todo-list .add, ha-todo-list .add-item, ha-todo-list mwc-textfield,
-                          ha-todo-list #add, ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                           mwc-checkbox {
                             --mdc-checkbox-unchecked-color: #CBD5E1;
                             --mdc-checkbox-checked-color: var(--family-color-family);
                             --mdc-checkbox-mark-color: #FFFFFF;
+                            border-radius: 50% !important;
                             transform: scale(1.4);
                             margin-right: 8px;
-                            opacity: 0;
-                            width: 24px; min-width: 24px; height: 24px;
                           }
-                          mwc-checkbox::before {
-                            content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
-                            width:32px; height:32px; border-radius:16px;
-                          }
+                          ha-todo-list[slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                     - type: custom:button-card
                       icon: mdi:star-four-points-outline
                       name: >
@@ -655,15 +632,14 @@ views:
                       show_state: false
                       styles:
                         card:
-                          - background: 'color-mix(in srgb, var(--family-color-lizzie) 15%, transparent)'
-                          - border: 1px solid color-mix(in srgb, var(--family-color-lizzie) 35%, transparent)
+                          - background: 'rgba(236,64,122,0.15)'
+                          - border: 1px solid rgba(236,64,122,0.35)
                           - padding: 8px
                           - border-radius: 10px
                           - box-shadow: none
                           - margin-top: 8px
-                        icon: [ color: var(--family-color-lizzie) ]
+                        icon: [ color: rgba(236,64,122,1) ]
 
-                # Toby
                 - type: vertical-stack
                   cards:
                     - type: todo-list
@@ -671,30 +647,27 @@ views:
                       hide_completed: false
                       card_mod:
                         style: |
-                          :host, ha-card { color: var(--family-color-toby); }
                           ul { display: flex; flex-direction: column; gap: 8px; }
                           li {
                             min-height: 34px !important; border-radius: 18px;
-                            padding: 2px 10px !important; position: relative;
+                            background: rgba(66,165,245,0.12);
+                            border: 1px solid rgba(66,165,245,0.30);
+                            padding: 2px 10px !important;
                           }
-                          li:nth-child(odd)  { background: rgba(0,0,0,0.00); border: 1px solid rgba(0,0,0,0.00); }
-                          li:nth-child(even) { background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); }
-                          ha-todo-list[slot="add"],
-                          ha-todo-list .add, ha-todo-list .add-item, ha-todo-list mwc-textfield,
-                          ha-todo-list #add, ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                           mwc-checkbox {
                             --mdc-checkbox-unchecked-color: #CBD5E1;
                             --mdc-checkbox-checked-color: var(--family-color-family);
                             --mdc-checkbox-mark-color: #FFFFFF;
+                            border-radius: 50% !important;
                             transform: scale(1.4);
                             margin-right: 8px;
-                            opacity: 0;
-                            width: 24px; min-width: 24px; height: 24px;
                           }
-                          mwc-checkbox::before {
-                            content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
-                            width:32px; height:32px; border-radius:16px;
-                          }
+                          ha-todo-list[slot="add"],
+                          ha-todo-list .add,
+                          ha-todo-list .add-item,
+                          ha-todo-list mwc-textfield,
+                          ha-todo-list #add,
+                          ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
                     - type: custom:button-card
                       icon: mdi:star-four-points-outline
                       name: >
@@ -702,15 +675,137 @@ views:
                       show_state: false
                       styles:
                         card:
-                          - background: 'color-mix(in srgb, var(--family-color-toby) 15%, transparent)'
-                          - border: 1px solid color-mix(in srgb, var(--family-color-toby) 35%, transparent)
+                          - background: 'rgba(66,165,245,0.15)'
+                          - border: 1px solid rgba(66,165,245,0.35)
                           - padding: 8px
                           - border-radius: 10px
                           - box-shadow: none
                           - margin-top: 8px
-                        icon: [ color: var(--family-color-toby) ]
+                        icon: [ color: rgba(66,165,245,1) ]
 
-      # 5) Floating FAB (context-aware add)
+      # ---- Photos
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: input_select.family_section
+            state: Photos
+        card:
+          type: iframe
+          url: /media-browser
+          aspect_ratio: 160%
+
+      # ---- Lists (Shopping markdown)
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: input_select.family_section
+            state: Lists
+        card:
+          type: markdown
+          content: >
+            {{ states('input_text.shopping_md') if states('input_text.shopping_md') not in ['unknown','unavailable',''] else '_No shopping items._' }}
+
+      # ---- Toby standalone
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: input_select.family_section
+            state: Toby
+        card:
+          type: vertical-stack
+          cards:
+            - type: todo-list
+              entity: todo.toby
+              hide_completed: false
+              card_mod:
+                style: |
+                  ul { display: flex; flex-direction: column; gap: 8px; }
+                  li {
+                    min-height: 34px !important; border-radius: 18px;
+                    background: rgba(66,165,245,0.12);
+                    border: 1px solid rgba(66,165,245,0.30);
+                    padding: 2px 10px !important;
+                  }
+                  mwc-checkbox {
+                    --mdc-checkbox-unchecked-color: #CBD5E1;
+                    --mdc-checkbox-checked-color: var(--family-color-family);
+                    --mdc-checkbox-mark-color: #FFFFFF;
+                    border-radius: 50% !important;
+                    transform: scale(1.4);
+                    margin-right: 8px;
+                  }
+                  ha-todo-list[slot="add"],
+                  ha-todo-list .add,
+                  ha-todo-list .add-item,
+                  ha-todo-list mwc-textfield,
+                  ha-todo-list #add,
+                  ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+            - type: custom:button-card
+              icon: mdi:star-four-points-outline
+              name: >
+                [[[ return 'Next up: ' + (states["sensor.next_up_toby"]?.state ?? 'All done!'); ]]]
+              show_state: false
+              styles:
+                card:
+                  - background: 'rgba(66,165,245,0.15)'
+                  - border: 1px solid rgba(66,165,245,0.35)
+                  - padding: 8px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  - margin-top: 8px
+                icon: [ color: rgba(66,165,245,1) ]
+
+      # ---- Lizzie standalone
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: input_select.family_section
+            state: Lizzie
+        card:
+          type: vertical-stack
+          cards:
+            - type: todo-list
+              entity: todo.lizzie
+              hide_completed: false
+              card_mod:
+                style: |
+                  ul { display: flex; flex-direction: column; gap: 8px; }
+                  li {
+                    min-height: 34px !important; border-radius: 18px;
+                    background: rgba(236,64,122,0.12);
+                    border: 1px solid rgba(236,64,122,0.30);
+                    padding: 2px 10px !important;
+                  }
+                  mwc-checkbox {
+                    --mdc-checkbox-unchecked-color: #CBD5E1;
+                    --mdc-checkbox-checked-color: var(--family-color-family);
+                    --mdc-checkbox-mark-color: #FFFFFF;
+                    border-radius: 50% !important;
+                    transform: scale(1.4);
+                    margin-right: 8px;
+                  }
+                  ha-todo-list[slot="add"],
+                  ha-todo-list .add,
+                  ha-todo-list .add-item,
+                  ha-todo-list mwc-textfield,
+                  ha-todo-list #add,
+                  ha-todo-list ha-icon-button[slot="add"] { display:none !important; }
+            - type: custom:button-card
+              icon: mdi:star-four-points-outline
+              name: >
+                [[[ return 'Next up: ' + (states["sensor.next_up_lizzie"]?.state ?? 'All done!'); ]]]
+              show_state: false
+              styles:
+                card:
+                  - background: 'rgba(236,64,122,0.15)'
+                  - border: 1px solid rgba(236,64,122,0.35)
+                  - padding: 8px
+                  - border-radius: 10px
+                  - box-shadow: none
+                  - margin-top: 8px
+                icon: [ color: rgba(236,64,122,1) ]
+
+      # 5) Floating FAB (context‑aware add)
       - type: custom:button-card
         icon: mdi:plus
         show_name: false
@@ -743,9 +838,11 @@ views:
                   };
                   return map[s] || pick('--fab-color-default','var(--primary-color)');
                 ]]]
-        icon: [ width: 28px, height: 28px ]
+          icon: [ width: 28px, height: 28px ]
 
-  # Invisible Person Detail View
+  # =========================
+  # INVISIBLE PERSON DETAIL VIEW
+  # =========================
   - title: Person
     path: person
     visible: false
