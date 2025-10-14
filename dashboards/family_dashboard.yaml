@@ -53,13 +53,17 @@ button_card_templates:
         ha-state-icon#icon {
           position: relative !important;
         }
+
     custom_fields:
-      badge: >
-        [[[
-          const e = variables.badge_entity ? states[variables.badge_entity] : null;
-          const n = e ? (Number(e.state) || 0) : 0;
-          return n > 0 ? `${n}` : '';
-        ]]]
+          badge: >
+            [[[
+              const id = variables.badge_entity;
+              const st = id ? states[id]?.state : undefined;
+              const n  = Number(st);
+              // Only show a number if it's a finite positive integer
+              return Number.isFinite(n) && n > 0 ? `${n}` : '';
+            ]]]
+
     styles:
       card:
         - width: 100% !important
@@ -91,7 +95,14 @@ button_card_templates:
           - font-weight: 800
           - font-size: 12px
           - line-height: 20px
-          - display: flex
+          - display: >
+              [[[
+                const id = variables.badge_entity;
+                const st = id ? states[id]?.state : undefined;
+                const n  = Number(st);
+                // Hide the whole bubble for '', 0, NaN, unknown/unavailable, etc.
+                return Number.isFinite(n) && n > 0 ? 'flex' : 'none';
+              ]]]
           - align-items: center
           - justify-content: center
           - border: 2px solid var(--divider-color)

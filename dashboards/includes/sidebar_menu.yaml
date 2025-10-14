@@ -1,13 +1,15 @@
 type: vertical-stack
 card_mod:
   style: |
-    :host { display: block; height: 100%; }
-    ha-card { background: transparent; box-shadow: none; padding: 0; margin: 0; }
+    :host { display: block; height: 100%; width: 100%; }   # added width
+    ha-card { background: transparent; box-shadow: none; padding: 0; margin: 0; width: 100%; }  # added width
 cards:
-  # Family Icon (top) - toggles HA main sidebar
   - type: custom:button-card
     template: family_icon
     icon: mdi:home-heart
+    styles:
+      card:
+        - width: 100%
     tap_action:
       action: call-service
       service: browser_mod.javascript
