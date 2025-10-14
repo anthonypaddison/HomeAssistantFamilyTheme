@@ -1,10 +1,8 @@
 title: Family
 theme: FamilyBoard
 
-# ====== Button-card templates (local to this dashboard) ======
 button_card_templates:
 
-  # --- Family icon (square tile top of sidebar)
   family_icon:
     show_name: false
     show_icon: true
@@ -24,10 +22,6 @@ button_card_templates:
         - width: 28px
         - height: 28px
 
-  # --- Sidebar icon-only with floating badge (no shrink)
-  # variables:
-  #   section: "Calendar" | "Chores" | "Photos" | "Lists" | "Toby" | "Lizzie"
-  #   badge_entity: "input_number.events_today" | "sensor.chores_incomplete_total" | ...
   sb_icon_only:
     variables:
       section: ""
@@ -51,7 +45,7 @@ button_card_templates:
         - color: var(--sb-inactive-icon)
         - display: grid
         - place-items: center
-        - position: relative
+        # - position: relative
         - padding: 0
         - transition: transform .05s ease
       icon:
