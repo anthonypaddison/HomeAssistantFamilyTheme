@@ -195,7 +195,7 @@ views:
     cards:
 
       # 1) SIDEBAR (sticky, provided as include)
-      - !include /config/dashboards/includes/sidebar_menu.yaml
+      - !include /config/sidebar_menu.yaml
 
       # 2) HEADING ROW
       - type: custom:mod-card
