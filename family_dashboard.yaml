@@ -50,8 +50,8 @@ button_card_templates:
           opacity: 1 !important; filter: none !important;
         }
         :host {
-          /* Border + text colour for badge; change here if you want red: #ef4444 */
-          --sb-badge-border-color: var(--sb-badge-border-color, #0F172A);
+          /* Change to #ef4444 if you want red */
+          --sb-badge-border-color: #000000;
         }
     custom_fields:
       badge: >
@@ -59,19 +59,19 @@ button_card_templates:
           const id = variables.badge_entity;
           const st = id ? states[id]?.state : undefined;
           const n = Number(st);
-          // Only show a number if it's a finite positive integer
           return Number.isFinite(n) && n > 0 ? `${n}` : '';
         ]]]
     styles:
       card:
         - width: 100% !important
-        - height: 56px
+        - height: 64px           # a touch taller than before
         - border-radius: 0px
         - box-shadow: none
-        - background: transparent
-        - display: grid
-        - place-items: center
-        - padding: 0
+        - background: var(--sb-inactive-bg)   # <— fill the tile
+        - display: flex
+        - align-items: center
+        - justify-content: flex-start         # <— left align
+        - padding: 0 16px
         - margin: 0
         - overflow: visible
       icon:
@@ -109,18 +109,15 @@ button_card_templates:
           card:
             - background: var(--sb-active-bg) !important
             - color: var(--sb-active-icon) !important
-          icon:
-            - color: var(--sb-active-icon) !important
         card_mod:
           style: |
             ha-icon, mwc-icon, .button-card-icon {
-              color: black !important;
-              opacity: 1 !important;
-              filter: none !important;
+              color: var(--sb-active-icon) !important;
             }
 
   # Compact progress chip: name, icon, bar, "completed / total".
   due_today_progress_chip:
+    show_name: true
     tap_action: { action: none }
     variables:
       name: "unknown"
@@ -146,6 +143,8 @@ button_card_templates:
       custom_fields:
         v: [ align-self: center, justify-self: end, font-size: 12px, font-weight: 800, color: '#0F172A' ]
         bar: [ width: 100%, height: 4px, border-radius: 2px, background: 'rgba(0,0,0,.15)', position: relative, overflow: hidden ]
+    name: '[[[ return variables.name; ]]]'
+    icon: '[[[ return variables.icon; ]]]'
     custom_fields:
       v: >
         [[[
@@ -506,7 +505,11 @@ views:
                             transform: scale(1.4);
                             margin-right: 8px;
                             opacity: 0;
-                            width: 24px; min-width: 24px; height: 24px;
+                            position: absolute; inset: 0;
+                            width: 100%;
+                            height: 100%;
+                            margin: 0 !important;
+                            pointer-events: auto;
                           }
                           mwc-checkbox::before {
                             content:''; position:absolute; left:6px; top:50%; translate:0 -50%;
