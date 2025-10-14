@@ -16,4 +16,3 @@ person_focus:
 active_person:
   name: Active Person
   options: [Family, Anthony, Joy, Lizzie, Toby]
-  initial: Family

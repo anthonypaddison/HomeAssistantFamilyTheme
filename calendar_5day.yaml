@@ -1,6 +1,7 @@
 type: vertical-stack
 cards:
-  # Overlay header "Thu 2 - Mon 7"
+
+  # Overlay header row with exact format "Thu 2" ... "Mon 7"
   - type: custom:button-card
     show_icon: false
     show_state: false
@@ -8,7 +9,7 @@ cards:
       card:
         - background: transparent
         - box-shadow: none
-        - padding: 0 8px 4px 64px   # left ~ rail width
+        - padding: 0 8px 4px 64px   # left padding ~= rail width
       grid:
         - grid-template-columns: repeat(5, 1fr)
       custom_fields:
@@ -19,17 +20,31 @@ cards:
         d5: [ justify-self: center, font-weight: 800 ]
     custom_fields:
       d1: >
-        [[[ const d=new Date(); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
+        [[[
+          const d=new Date(); const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
       d2: >
-        [[[ const d=new Date(); d.setDate(d.getDate()+1); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+1);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
       d3: >
-        [[[ const d=new Date(); d.setDate(d.getDate()+2); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+2);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
       d4: >
-        [[[ const d=new Date(); d.setDate(d.getDate()+3); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+3);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
       d5: >
-        [[[ const d=new Date(); d.setDate(d.getDate()+4); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
+        [[[
+          const d=new Date(); d.setDate(d.getDate()+4);
+          const opts={weekday:'short'}; return `${d.toLocaleDateString('en-GB',opts)} ${d.getDate()}`;
+        ]]]
 
-  # Planner (5 days rolling)
+  # The planner itself (headers hidden; today ring kept via overlay)
   - type: custom:week-planner-card
     days: 5
     startingDay: today
@@ -49,30 +64,32 @@ cards:
     card_mod:
       style:
         $: |
-          :host, ha-card, .days { direction: ltr !important; } /* keep rail left */
           :host {
             --hour-height: 64px;
             --rail-width: 56px;
             --rail-pad-left: 10px;
             --rail-fsize: 12px;
             --rail-color: var(--secondary-text-color);
-            --day-header-h: 0px;     /* hide card's own header */
+            --day-header-h: 0px;      /* hide internally */
             --allday-row-h: 32px;
             --sticky-gap: 4px;
             --rail-top: calc(0px + var(--sticky-gap) + var(--allday-row-h));
           }
-          ha-card { height: calc(100vh - var(--header-height)); display:flex; flex-direction:column; }
-          .days { position: relative; padding-left: var(--rail-width); overflow: auto; flex:1 1 auto; background: #F8FAFC; }
+          ha-card {
+            height: calc(100vh - var(--header-height));
+            display: flex; flex-direction: column;
+          }
+          .days { position: relative; padding-left: var(--rail-width); overflow: auto; flex: 1 1 auto; background: #F8FAFC; }
           .day  { background: #F8FAFC; }
-          .day .header { display: none !important; } /* overlay header used */
+          /* hide built-in headers so overlay row is the only header */
+          .day .header { display: none !important; }
+          /* All-day row (sticky + grey) */
           .day .all-day, .day .allday {
             position: sticky; top: var(--sticky-gap); z-index: 3;
             height: var(--allday-row-h); display:flex; align-items:center;
             background: #EEF2F7; border-bottom: 1px solid var(--divider-color);
           }
-          /* Lighter column through the hours */
-          .day .content { background: #F9FBFD; }
-          /* Left time rail 00:00 -> 23:00 aligned to --hour-height */
+          /* Left time rail (00:00 -> 23:00) */
           .days::before {
             content:
             "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";
