@@ -1,6 +1,6 @@
 type: vertical-stack
 cards:
-  # Overlay header "Thu 2 … Mon 7"
+  # Overlay header "Thu 2 - Mon 7"
   - type: custom:button-card
     show_icon: false
     show_state: false
