@@ -1,10 +1,9 @@
 # =========================
 # AUTOMATIONS
 # =========================
-
-# -------------------------------------------------
+# -----------------------------------------------
 # To-do - Increment completed counter (on complete)
-# -------------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Increment completed counter (on complete)"
   id: todo_increment_completed_on_complete
   mode: parallel
@@ -45,9 +44,9 @@
             - service: input_number.increment
               target: { entity_id: input_number.completed_toby_today }
 
-# ---------------------------------------------------
+# -----------------------------------------------
 # To-do - Decrement completed counter (on uncomplete)
-# ---------------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Decrement completed counter (on uncomplete)"
   id: todo_decrement_completed_on_uncomplete
   mode: parallel
@@ -88,9 +87,9 @@
             - service: input_number.decrement
               target: { entity_id: input_number.completed_toby_today }
 
-# ------------------------------------------------------
+# -----------------------------------------------
 # To-do - Reset completed counters at midnight (00:00:00)
-# ------------------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Reset completed counters at midnight"
   id: todo_reset_completed_counters_midnight
   mode: single
@@ -108,9 +107,9 @@
           - input_number.completed_toby_today
       data: { value: 0 }
 
-# ---------------------------------------------------------
+# -----------------------------------------------
 # Calendar - Count today's events (all family calendars)
-# ---------------------------------------------------------
+# -----------------------------------------------
 - alias: "Calendar - Count today's events (all family calendars)"
   id: calendar_count_events_today
   mode: single
@@ -147,9 +146,9 @@
             + (agenda['calendar.toby'].events | count)
           }}
 
-# ---------------------------------------------------------
+# -----------------------------------------------
 # To-do - Count outstanding due TODAY (all lists)
-# ---------------------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Count outstanding due TODAY (all lists)"
   id: todo_count_outstanding_due_today
   mode: single
@@ -171,55 +170,100 @@
           - todo.toby
       data: { status: needs_action }
       response_variable: lists
-
     # Family
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_family_today }
       data:
         value: >-
           {% set items = (lists['todo.family'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date','defined') | selectattr('due_date','eq', today) | list | count) }}
-
+          {{
+            (items
+              | selectattr('due', 'defined')
+              | selectattr('due','search', today)
+              | list
+              | count)
+           + (items
+              | selectattr('due_date','defined')
+              | selectattr('due_date','eq', today)
+              | list
+              | count)
+          }}
     # Anthony
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_anthony_today }
       data:
         value: >-
           {% set items = (lists['todo.anthony'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date','defined') | selectattr('due_date','eq', today) | list | count) }}
-
+          {{
+            (items
+              | selectattr('due', 'defined')
+              | selectattr('due','search', today)
+              | list
+              | count)
+           + (items
+              | selectattr('due_date','defined')
+              | selectattr('due_date','eq', today)
+              | list
+              | count)
+          }}
     # Joy
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_joy_today }
       data:
         value: >-
           {% set items = (lists['todo.joy'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date','defined') | selectattr('due_date','eq', today) | list | count) }}
-
+          {{
+            (items
+              | selectattr('due', 'defined')
+              | selectattr('due','search', today)
+              | list
+              | count)
+           + (items
+              | selectattr('due_date','defined')
+              | selectattr('due_date','eq', today)
+              | list
+              | count)
+          }}
     # Lizzie
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_lizzie_today }
       data:
         value: >-
           {% set items = (lists['todo.lizzie'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date','defined') | selectattr('due_date','eq', today) | list | count) }}
-
+          {{
+            (items
+              | selectattr('due', 'defined')
+              | selectattr('due','search', today)
+              | list
+              | count)
+           + (items
+              | selectattr('due_date','defined')
+              | selectattr('due_date','eq', today)
+              | list
+              | count)
+          }}
     # Toby
     - service: input_number.set_value
       target: { entity_id: input_number.outstanding_toby_today }
       data:
         value: >-
           {% set items = (lists['todo.toby'].items | list) %}
-          {{ (items | selectattr('due', 'defined') | selectattr('due','search', today) | list | count)
-           + (items | selectattr('due_date','defined') | selectattr('due_date','eq', today) | list | count) }}
+          {{
+            (items
+              | selectattr('due', 'defined')
+              | selectattr('due','search', today)
+              | list
+              | count)
+           + (items
+              | selectattr('due_date','defined')
+              | selectattr('due_date','eq', today)
+              | list
+              | count)
+          }}
 
-# --------------------------------------------
+# -----------------------------------------------
 # To-do - Compute "next up" for kids (Toby/Lizzie)
-# --------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Compute 'next up' for kids"
   id: todo_next_up_kids
   mode: single
@@ -239,11 +283,17 @@
           {% macro next(list) -%}
           {%- set items = lists[list].items | list -%}
           {%- set today = now().date().isoformat() -%}
-          {%- set today_items = items | selectattr('due','defined') | selectattr('due','match', today ~ '.*') | list -%}
+          {%- set today_items = items
+               | selectattr('due','defined')
+               | selectattr('due','match', today ~ '.*')
+               | list -%}
           {%- if today_items|count > 0 -%}
             {{ today_items[0].summary }}
           {%- else -%}
-            {%- set with_due = items | selectattr('due','defined') | sort(attribute='due') | list -%}
+            {%- set with_due = items
+                 | selectattr('due','defined')
+                 | sort(attribute='due')
+                 | list -%}
             {%- if with_due|count > 0 -%}
               {{ with_due[0].summary }}
             {%- else -%}
@@ -256,9 +306,9 @@
         next_toby: "{{ pick_next('todo.toby') }}"
         next_lizzie: "{{ pick_next('todo.lizzie') }}"
 
-# -------------------------------------------------
+# -----------------------------------------------
 # To-do - Count COMPLETED with due today (per list)
-# -------------------------------------------------
+# -----------------------------------------------
 - alias: "To-do - Count COMPLETED with due today"
   id: todo_count_completed_due_today
   mode: single
@@ -282,10 +332,11 @@
         today: "{{ now().date().isoformat() }}"
         cnt: >-
           {% macro cnt(eid) -%}
-            {{ lists[eid].items
-               | selectattr('due','defined')
-               | selectattr('due','match', today ~ '.*')
-               | list | count }}
+          {{ lists[eid].items
+             | selectattr('due','defined')
+             | selectattr('due','match', today ~ '.*')
+             | list
+             | count }}
           {%- endmacro %}
     - service: input_number.set_value
       target: { entity_id: input_number.completed_due_today_family }
@@ -303,9 +354,9 @@
       target: { entity_id: input_number.completed_due_today_toby }
       data: { value: "{{ cnt('todo.toby')|int }}" }
 
-# -------------------------------------------------------
-# To-do - Build "shopping" markdown from Family list
-# -------------------------------------------------------
+# -----------------------------------------------
+# To-do - Build 'shopping' markdown from Family list
+# -----------------------------------------------
 - alias: "To-do - Build 'shopping' markdown from Family list"
   id: todo_build_shopping_md
   mode: single
@@ -325,23 +376,24 @@
           {{ items
              | selectattr('description','defined')
              | selectattr('description','search','(?i)#shopping')
-             | map(attribute='summary') | list }}
+             | map(attribute='summary')
+             | list }}
         md: >-
           {% if filtered | count == 0 -%}
           _No shopping items._
           {%- else -%}
           **Shopping**
-          {% for t in filtered -%}
+          {%- for t in filtered -%}
           - {{ t }}
-          {% endfor -%}
+          {%- endfor -%}
           {%- endif %}
     - service: input_text.set_value
       target: { entity_id: input_text.shopping_md }
       data: { value: "{{ md }}" }
 
-# -----------------------------
-# NEW: System - Backend heartbeat
-# -----------------------------
+# -----------------------------------------------
+# System - Backend heartbeat
+# -----------------------------------------------
 - alias: "System - Backend heartbeat"
   id: system_backend_heartbeat
   mode: single
@@ -354,9 +406,9 @@
       data:
         value: "{{ now().isoformat() }}"
 
-# -------------------------------------
-# NEW: To-do - Build Leaderboard markdown
-# -------------------------------------
+# -----------------------------------------------
+# To-do - Build Leaderboard markdown
+# -----------------------------------------------
 - alias: "To-do - Build Leaderboard markdown"
   id: todo_build_leaderboard_md
   mode: single
@@ -392,13 +444,59 @@
           ] %}
           {% set sorted = data | sort(attribute='o') | sort(attribute='c', reverse=true) %}
           {{ sorted }}
-        md: >
-          {% set hdr = "**🏆 Today’s To‑do Leaderboard**  \n_Name — Completed / Due‑today / Outstanding_" %}
+        md: >-
+          {% set hdr = "**🏆 Today’s To‑do Leaderboard** \n_Name — Completed / Due‑today / Outstanding_" %}
           {% set body = "" %}
           {% for r in rows %}
-            {% set body = body ~ "\n- **" ~ r.name ~ "** — " ~ r.c ~ " / " ~ r.d ~ " / " ~ r.o %}
+          {% set body = body ~ "\n- **" ~ r.name ~ "** — " ~ r.c ~ " / " ~ r.d ~ " / " ~ r.o %}
           {% endfor %}
           {{ hdr ~ "\n" ~ body }}
     - service: input_text.set_value
       target: { entity_id: input_text.leaderboard_md }
       data: { value: "{{ md }}" }
+
+# -----------------------------------------------
+# NEW: Calendar - Next 'Family' upcoming event (feeds heading left)
+# -----------------------------------------------
+- alias: "Calendar - Next 'Family' upcoming event"
+  id: calendar_next_family_event
+  mode: single
+  triggers:
+    - trigger: time_pattern
+      minutes: "/5"
+    - trigger: time
+      at: "00:00:30"
+  variables:
+    start: "{{ now().isoformat() }}"
+    end: "{{ (now() + timedelta(days=7)).isoformat() }}"
+  action:
+    - service: calendar.get_events
+      target: { entity_id: calendar.family }
+      data:
+        start_date_time: "{{ start }}"
+        end_date_time: "{{ end }}"
+      response_variable: fam
+    - variables:
+        items: "{{ fam['calendar.family'].events | list }}"
+        next: >-
+          {% set nowts = now().timestamp() %}
+          {% set sorted = items | sort(attribute='start') %}
+          {% for e in sorted %}
+          {% set s = as_datetime(e.start).timestamp() %}
+          {% if s >= nowts %}
+          {{ e }}
+          {% break %}
+          {% endif %}
+          {% endfor %}
+    - service: input_text.set_value
+      target: { entity_id: input_text.up_next_family_md }
+      data:
+        value: >-
+          {% if next %}
+            {% set s = as_datetime(next.start) %}
+            {% set tf = '%H:%M' %}
+            {% set df = '%a %d %b' %}
+            {{ next.summary }} ... {{ s.strftime(tf) }} ({{ s.strftime(df) }})
+          {% else %}
+            No upcoming events
+          {% endif %}

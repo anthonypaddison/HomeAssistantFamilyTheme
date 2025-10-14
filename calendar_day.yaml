@@ -22,7 +22,7 @@ noCardBackground: false
 card_mod:
   style:
     $: |
-      :host, ha-card, .days { direction: ltr !important; }  /* keep time rail left */
+      :host, ha-card, .days { direction: ltr !important; } /* keep time rail left */
       :host {
         --hour-height: 64px;
         --rail-width: 56px;
@@ -39,15 +39,17 @@ card_mod:
         display: flex;
         flex-direction: column;
       }
+      /* Center the planner column area */
       .days {
         position: relative;
         padding-left: var(--rail-width);
         overflow: auto;
         flex: 1 1 auto;
         background: #F8FAFC;
+        max-width: 1100px;
+        margin: 0 auto;             /* centered */
       }
       .day { background: #F8FAFC; }
-
       .day .header {
         position: sticky; top: 0; z-index: 4;
         height: var(--day-header-h);
@@ -61,8 +63,7 @@ card_mod:
         display:flex; align-items:center;
         background: #EEF2F7; border-bottom: 1px solid var(--divider-color);
       }
-
-      /* Left time rail 00:00 -> 23:00 */
+      /* Left time rail 00:00 -> 23:00 aligned to --hour-height */
       .days::before {
         content:
         "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";

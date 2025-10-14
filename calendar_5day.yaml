@@ -11,12 +11,12 @@ cards:
         - padding: 0 8px 4px 64px   # left ~ rail width
       grid:
         - grid-template-columns: repeat(5, 1fr)
-    custom_fields:
-      d1: [ justify-self: center, font-weight: 800 ]
-      d2: [ justify-self: center, font-weight: 800 ]
-      d3: [ justify-self: center, font-weight: 800 ]
-      d4: [ justify-self: center, font-weight: 800 ]
-      d5: [ justify-self: center, font-weight: 800 ]
+      custom_fields:
+        d1: [ justify-self: center, font-weight: 800 ]
+        d2: [ justify-self: center, font-weight: 800 ]
+        d3: [ justify-self: center, font-weight: 800 ]
+        d4: [ justify-self: center, font-weight: 800 ]
+        d5: [ justify-self: center, font-weight: 800 ]
     custom_fields:
       d1: >
         [[[ const d=new Date(); const o={weekday:'short'}; return `${d.toLocaleDateString('en-GB',o)} ${d.getDate()}`; ]]]
@@ -49,14 +49,14 @@ cards:
     card_mod:
       style:
         $: |
-          :host, ha-card, .days { direction: ltr !important; }  /* keep rail left */
+          :host, ha-card, .days { direction: ltr !important; } /* keep rail left */
           :host {
             --hour-height: 64px;
             --rail-width: 56px;
             --rail-pad-left: 10px;
             --rail-fsize: 12px;
             --rail-color: var(--secondary-text-color);
-            --day-header-h: 0px;   /* hide card's own header */
+            --day-header-h: 0px;     /* hide card's own header */
             --allday-row-h: 32px;
             --sticky-gap: 4px;
             --rail-top: calc(0px + var(--sticky-gap) + var(--allday-row-h));
@@ -65,14 +65,14 @@ cards:
           .days { position: relative; padding-left: var(--rail-width); overflow: auto; flex:1 1 auto; background: #F8FAFC; }
           .day  { background: #F8FAFC; }
           .day .header { display: none !important; } /* overlay header used */
-
           .day .all-day, .day .allday {
             position: sticky; top: var(--sticky-gap); z-index: 3;
             height: var(--allday-row-h); display:flex; align-items:center;
             background: #EEF2F7; border-bottom: 1px solid var(--divider-color);
           }
-
-          /* Left time rail */
+          /* Lighter column through the hours */
+          .day .content { background: #F9FBFD; }
+          /* Left time rail 00:00 -> 23:00 aligned to --hour-height */
           .days::before {
             content:
             "00:00\A01:00\A02:00\A03:00\A04:00\A05:00\A06:00\A07:00\A08:00\A09:00\A10:00\A11:00\A12:00\A13:00\A14:00\A15:00\A16:00\A17:00\A18:00\A19:00\A20:00\A21:00\A22:00\A23:00";

@@ -5,3 +5,10 @@ entities:
   - calendar.joy
   - calendar.lizzie
   - calendar.toby
+card_mod:
+  style: |
+    ha-card {
+      height: calc(100vh - var(--header-height));
+      display: flex; flex-direction: column;
+    }
+    ha-card > *:last-child { flex: 1 1 auto; }

@@ -1,34 +1,17 @@
 type: vertical-stack
 card_mod:
   style: |
-    :host { display: block;
-      height: 100% !important;
-      width: 100% !important;
-    }
-    ha-card { background: transparent;
+    :host { display: block; height: 100% !important; width: 100% !important; }
+    ha-card {
+      background: transparent;
       box-shadow: none !important;
       padding: 0 !important;
       margin: 0 !important;
       width: 100% !important;
     }
-cards:
-  - type: custom:button-card
-    template: family_icon
-    icon: mdi:home-heart
-    styles:
-      card:
-        - width: 100%
-    tap_action:
-      action: call-service
-      service: browser_mod.javascript
-      data:
-        code: |
-          (function(){
-            const root = document.querySelector('home-assistant');
-            if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', { bubbles: true, composed: true }));
-          })();
 
-  # Calendar (starts after heading + chips)
+cards:
+  # Calendar (starts below heading + chips)
   - type: custom:button-card
     template: sb_icon_only
     icon: mdi:calendar
@@ -58,54 +41,3 @@ cards:
       service: input_select.select_option
       target: { entity_id: input_select.family_section }
       data: { option: Chores }
-
-  # Photos
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:image-multiple
-    show_icon: true
-    variables:
-      section: Photos
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
-      data: { option: Photos }
-
-  # Lists
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:format-list-bulleted
-    show_icon: true
-    variables:
-      section: Lists
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
-      data: { option: Lists }
-
-  # Toby
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:robot-happy-outline
-    show_icon: true
-    variables:
-      section: Toby
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
-      data: { option: Toby }
-
-  # Lizzie
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:unicorn-variant
-    show_icon: true
-    variables:
-      section: Lizzie
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
