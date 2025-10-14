@@ -406,21 +406,21 @@ views:
                   conditions:
                     - entity: input_select.calendar_view
                       state: Day
-                  card: !include /config/dashboards/includes/calendar_day.yaml
+                  card: !include /config/calendar_day.yaml
 
                 # 5-Day
                 - type: conditional
                   conditions:
                     - entity: input_select.calendar_view
                       state: 5-Day
-                  card: !include /config/dashboards/includes/calendar_5day.yaml
+                  card: !include /config/calendar_5day.yaml
 
                 # Month
                 - type: conditional
                   conditions:
                     - entity: input_select.calendar_view
                       state: Month
-                  card: !include /config/dashboards/includes/calendar_month.yaml
+                  card: !include /config/calendar_month.yaml
 
           # ---- Chores (Adults compact + Kids chips-like; no Add item areas)
           - type: conditional
