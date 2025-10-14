@@ -1,0 +1,8 @@
+event_start:
+  name: Event Start
+  has_date: true
+  has_time: true
+event_end:
+  name: Event End
+  has_date: true
+  has_time: true

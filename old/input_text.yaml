@@ -1,0 +1,8 @@
+event_title:
+  name: Event Title
+event_description:
+  name: Event Description
+new_todo_item:
+  name: New To-do Item
+new_todo_description:
+  name: To-do Description

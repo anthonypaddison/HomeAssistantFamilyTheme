@@ -1,0 +1,18 @@
+family_section:
+  name: Family Section
+  options: [Calendar, Chores, Photos, Lists, Toby, Lizzie]
+  initial: Calendar
+
+calendar_view:
+  name: Calendar View
+  options: [Day, 5-Day, Month]
+  initial: 5-Day
+
+person_focus:
+  name: Person Focus
+  options: [Family, Anthony, Joy, Lizzie, Toby]
+  initial: Family
+
+active_person:
+  name: Active Person
+  options: [Family, Anthony, Joy, Lizzie, Toby]

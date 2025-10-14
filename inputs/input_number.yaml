@@ -1,0 +1,98 @@
+completed_family_today:
+  name: Completed Family Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_anthony_today:
+  name: Completed Anthony Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_joy_today:
+  name: Completed Joy Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_lizzie_today:
+  name: Completed Lizzie Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_toby_today:
+  name: Completed Toby Today
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+events_today:
+  name: Calendar Events Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+
+outstanding_family_today:
+  name: Outstanding Family Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_anthony_today:
+  name: Outstanding Anthony Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_joy_today:
+  name: Outstanding Joy Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_lizzie_today:
+  name: Outstanding Lizzie Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+outstanding_toby_today:
+  name: Outstanding Toby Today
+  min: 0
+  max: 200
+  step: 1
+  mode: box
+
+completed_due_today_family:
+  name: Completed Due Today Family
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_due_today_anthony:
+  name: Completed Due Today Anthony
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_due_today_joy:
+  name: Completed Due Today Joy
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_due_today_lizzie:
+  name: Completed Due Today Lizzie
+  min: 0
+  max: 999
+  step: 1
+  mode: box
+completed_due_today_toby:
+  name: Completed Due Today Toby
+  min: 0
+  max: 999
+  step: 1
+  mode: box
