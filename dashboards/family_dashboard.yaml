@@ -151,7 +151,29 @@ views:
     path: family
     panel: true                               # <-- remove Lovelace outer margins
     type: custom:grid-layout
+    card_mod:
+      style: |
+        :host {
+          /* full height minus the HA header bar */
+          height: calc(100vh - var(--header-height));
+          block-size: calc(100vh - var(--header-height));
+          width: 100vw;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        hui-view {
+          height: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        /* grid-layout container */
+        #root, .layout, .grid, .horizontal, .vertical {
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
     layout:
+      margin: 0px
       padding: 0px
       grid-template-columns: 6% 1fr          # Sidebar at ~6% as requested
       grid-template-rows: auto auto 1fr
