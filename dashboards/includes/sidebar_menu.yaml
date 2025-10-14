@@ -1,8 +1,16 @@
 type: vertical-stack
 card_mod:
   style: |
-    :host { display: block; height: 100%; width: 100%; }   # added width
-    ha-card { background: transparent; box-shadow: none; padding: 0; margin: 0; width: 100%; }  # added width
+    :host { display: block;
+      height: 100% !important;
+      width: 100% !important;
+    }
+    ha-card { background: transparent;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100% !important;
+    }
 cards:
   - type: custom:button-card
     template: family_icon
@@ -101,4 +109,3 @@ cards:
       action: call-service
       service: input_select.select_option
       target: { entity_id: input_select.family_section }
-      data: { option: Lizzie }
