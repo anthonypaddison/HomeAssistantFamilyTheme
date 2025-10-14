@@ -197,8 +197,8 @@ views:
       # 1) SIDEBAR (sticky, provided as include)
       - !include /config/sidebar_menu.yaml
 
-      # 2) HEADING ROW
-      - type: custom:mod-card
+      # 2) HEADING ROW (fixed)
+      - type: custom:button-card
         view_layout: { grid-area: heading }
         card_mod:
           style: |
@@ -213,72 +213,55 @@ views:
               min-height: var(--family-heading-height, 56px);
               display: flex; align-items: center;
             }
-        card:
-          type: custom:button-card
-          show_icon: false
-          show_name: false
-          show_state: false
-          styles:
-            card:
-              - background: transparent
-              - box-shadow: none
-              - padding: 0
-              - color: "#000000 !important"
-            grid:
-              - grid-template-areas: "'left center right'"
-              - grid-template-columns: 1fr auto 1fr
-              - align-items: center
-              - column-gap: 12px
-            custom_fields:
-              left:
-                - justify-self: start
-                - font-weight: 700
-              center:
-                - justify-self: center
-                - font-weight: 700
-                - font-size: 22px
-              right:
-                - justify-self: end
-                - text-align: right
-                - white-space: nowrap
-                - overflow: hidden
-                - text-overflow: ellipsis
-                - font-weight: 700
-          custom_fields:
-            left: >
-              [[[
-                const d = new Date();
-                const date = d.toLocaleDateString('en-GB',
-                  { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-                return `Panogu Family - ${date}`;
-              ]]]
-            center: >
-              [[[
-                const d = new Date();
-                return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
-              ]]]
-            right: >
-              [[[
-                const e = states['calendar.routine'];
-                if (!e) return 'Routine calendar not found';
-                const a = e.attributes ?? {};
-                const title = a.message ?? 'No upcoming events';
-                if (!a.start_time) return `${title}`;
-                const start = new Date(a.start_time);
-                const end   = a.end_time ? new Date(a.end_time) : null;
-                const now   = new Date();
-                const tf = { hour: '2-digit', minute: '2-digit' };
-                const df = { weekday: 'short', month: 'short', day: 'numeric' };
-                const same = start.toDateString() === now.toDateString();
-                const inProg = e.state === 'on' && start <= now && (!end || now < end);
-                const when = inProg
-                  ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
-                  : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
-                return `${title} - ${when}`;
-              ]]]
-          triggers_update:
-            - sensor.time
-            - calendar.routine
+        show_icon: false
+        show_name: false
+        show_state: false
+        styles:
+          card:
+            - background: transparent
+            - box-shadow: none
+            - padding: 0
+            # (Removed the earlier `color: "#000000 !important"` to avoid fighting the white header text)
+          grid:
+            - grid-template-areas: "'left center right'"
+            - grid-template-columns: 1fr auto 1fr
+            - align-items: center
+            - column-gap: 12px
+        custom_fields:
+          left: >
+            [[[
+              const d = new Date();
+              const date = d.toLocaleDateString('en-GB',
+                { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+              return `Panogu Family - ${date}`;
+            ]]]
+          center: >
+            [[[
+              const d = new Date();
+              return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+            ]]]
+          right: >
+            [[[
+              const e = states['calendar.routine'];
+              if (!e) return 'Routine calendar not found';
+              const a = e.attributes ?? {};
+              const title = a.message ?? 'No upcoming events';
+              if (!a.start_time) return `${title}`;
+              const start = new Date(a.start_time);
+              const end = a.end_time ? new Date(a.end_time) : null;
+              const now = new Date();
+              const tf = { hour: '2-digit', minute: '2-digit' };
+              const df = { weekday: 'short', month: 'short', day: 'numeric' };
+              const same = start.toDateString() === now.toDateString();
+              const inProg = e.state === 'on' && start <= now && (!end || now < end);
+              const when = inProg
+                ? `Now - ${start.toLocaleTimeString([], tf)}${end ? '-' + end.toLocaleTimeString([], tf) : ''}`
+                : (same ? 'Today' : start.toLocaleDateString([], df)) + ' - ' + start.toLocaleTimeString([], tf);
+              return `${title} - ${when}`;
+            ]]]
+        triggers_update:
+          - sensor.time
+          - calendar.routine
 
       # 3) CHIPS ROW (shorter height, progress bar, name+icon one row)
       - type: custom:mod-card
