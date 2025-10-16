@@ -74,17 +74,15 @@ view_layout: { grid-area: sidebar }
 card_mod:
   style: |
     :host {
-      /* Local tokens for THIS sidebar only (override theme safely) */
+      /* Local tokens for this sidebar only */
       --sb-inactive-bg:   var(--palette-lilac);
       --sb-inactive-icon: #0F172A;
       --sb-active-bg:     var(--family-background);
       --sb-active-icon:   #0F172A;
 
-      /* If these are only used here, keep them local */
       --family-heading-height: 48px;
       --family-chips-height:   56px;
 
-      /* Make the sidebar sticky inside the scrolling area */
       position: sticky;
       top: 8px;
       z-index: 2;
@@ -100,8 +98,9 @@ card_mod:
       border-radius: var(--ha-card-border-radius, 16px);
       box-shadow: var(--ha-card-box-shadow);
       padding: 0;
-      overflow: visible; /* prevent badge clipping */
+      overflow: visible;
     }
+
 card:
   type: vertical-stack
   card_mod:
@@ -112,23 +111,18 @@ card:
         border: 0;
         padding: 0;
       }
-      /* Remove spacing between child cards */
       .card-content #root > * {
-        margin: 0 !important;
+        margin: 0 !important;  /* no gaps between buttons */
       }
 
   cards:
+    # Top button — simplest/safest behaviour: navigate to your home view
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
       tap_action:
-        action: fire-dom-event
-        browser_mod:
-          service: |
-            [[[
-              this.dispatchEvent(new Event('hass-toggle-menu', {bubbles: true, composed: true}));
-              return null;
-            ]]]
+        action: navigate
+        navigation_path: /lovelace   # adjust to your landing view
 
     # Calendar
     - type: custom:button-card
