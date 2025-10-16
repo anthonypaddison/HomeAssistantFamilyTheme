@@ -1,116 +1,184 @@
+# Self-contained sidebar include.
+# - Local variables (sb-*, heading heights) live here
+# - Wrapped in mod-card to isolate styles to this stack only
+
 button_card_templates:
-family_icon:
-  show_name: false
-  show_icon: true
-  styles:
-    card:
-      - width: 100% !important
-      - height: 75px
-      - border-radius: 0
-      - box-shadow: none
-      - background: var(--sb-inactive-bg)
-      - color: var(--sb-inactive-icon)
-      - place-items: center
-      - position: relative
-      - padding: 0
-    icon:
-      - width: 50px
-      - height: 50px
-
-sb_icon_only:
-  variables:
-    section: ""
-    badge_entity: ""
-  show_name: false
-  show_icon: true
-  custom_fields:
-    badge: >
-      [[[
-        const e = variables.badge_entity ? states[variables.badge_entity] : null;
-        const n = e ? Number(e.state ?? 0) : 0;
-        return n > 0 ? `${n}` : '';
-      ]]]
-  styles:
-    card:
-      - width: 100% !important
-      - height: 75px
-      - border-radius: 0
-      - box-shadow: none
-      - background: var(--sb-inactive-bg) !important
-      - color: var(--sb-inactive-icon) !important
-      - place-items: center
-      - padding: 0
-      - transition: transform .05s ease
-    icon:
-      - width: 50px
-      - height: 50px
-    custom_fields:
-      badge:
-        - position: absolute
-        - bottom: 6px
-        - right: -6px
-        - min-width: 20px
-        - height: 20px
-        - border-radius: 10px
-        - background: white
-        - color: "#0F172A"
-        - font-weight: 800
-        - font-size: 12px
-        - display: flex
-        - align-items: center
-        - justify-content: center
-        - border: 2px solid #0F172A
-  state:
-    - operator: template
-      value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
-      styles:
-        card:
-          - background: var(--sb-active-bg)
-          - color: var(--sb-active-icon)
-
-type: vertical-stack
-view_layout: { grid-area: sidebar }
-
-cards:
-  # Family Icon (top) - toggles HA main sidebar
-  - type: custom:button-card
-    template: family_icon
-    icon: mdi:home-heart
-    tap_action:
-      action: call-service
-      service: browser_mod.javascript
-      data:
-        code: |
-          (function(){
-            const root = document.querySelector('home-assistant');
-            if (root) root.dispatchEvent(new CustomEvent('hass-toggle-menu', {bubbles:true, composed:true}));
-          })();
-
-  # Calendar (starts after heading + chips)
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:calendar
+  family_icon:
+    show_name: false
+    show_icon: true
     styles:
       card:
-        - margin-top: "calc(var(--family-heading-height,56px) + var(--family-chips-height,56px))"
-    variables:
-      section: Calendar
-      badge_entity: input_number.events_today
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
-      data: { option: Calendar }
+        - width: 100% !important
+        - height: 75px
+        - border-radius: 0
+        - box-shadow: none
+        - background: var(--sb-inactive-bg)
+        - color: var(--sb-inactive-icon)
+        - place-items: center
+        - position: relative
+        - padding: 0
+      icon:
+        - width: 50px
+        - height: 50px
 
-  # Chores (badge = total incomplete across lists)
-  - type: custom:button-card
-    template: sb_icon_only
-    icon: mdi:broom
+  sb_icon_only:
     variables:
-      section: Chores
-      badge_entity: sensor.chores_incomplete_total
-    tap_action:
-      action: call-service
-      service: input_select.select_option
-      target: { entity_id: input_select.family_section }
-      data: { option: Chores }
+      section: ""
+      badge_entity: ""
+    show_name: false
+    show_icon: true
+    custom_fields:
+      badge: >
+        [[[
+          const e = variables.badge_entity ? states[variables.badge_entity] : null;
+          const n = e ? Number(e.state ?? 0) : 0;
+          return n > 0 ? `${n}` : '';
+        ]]]
+    styles:
+      card:
+        - width: 100% !important
+        - height: 75px
+        - border-radius: 0
+        - box-shadow: none
+        - background: var(--sb-inactive-bg) !important
+        - color: var(--sb-inactive-icon) !important
+        - place-items: center
+        - padding: 0
+        - transition: transform .05s ease
+      icon:
+        - width: 50px
+        - height: 50px
+      custom_fields:
+        badge:
+          - position: absolute
+          - bottom: 6px
+          - right: -6px
+          - min-width: 20px
+          - height: 20px
+          - border-radius: 10px
+          - background: white
+          - color: "#0F172A"
+          - font-weight: 800
+          - font-size: 12px
+          - display: flex
+          - align-items: center
+          - justify-content: center
+          - border: 2px solid #0F172A
+    state:
+      - operator: template
+        value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
+        styles:
+          card:
+            - background: var(--sb-active-bg)
+            - color: var(--sb-active-icon)
+
+# ---- Sidebar wrapper (scoped styles & variables) ----
+type: custom:mod-card
+card_mod:
+  style: |
+    :host {
+      /* Local tokens for this sidebar only */
+      --sb-inactive-bg:   var(--palette-lilac);
+      --sb-inactive-icon: #0F172A;
+      --sb-active-bg:     var(--family-background);
+      --sb-active-icon:   #0F172A;
+
+      /* Spacing knobs used by your chips/heading offset */
+      --family-heading-height: 48px;
+      --family-chips-height:   56px;
+
+      /* Make the sidebar sticky while content scrolls */
+      position: sticky;
+      top: 8px;
+      z-index: 2;
+    }
+    ha-card {
+      background: var(--card-background-color);
+      border-radius: var(--ha-card-border-radius, 16px);
+      box-shadow: var(--ha-card-box-shadow);
+      padding: 0;            /* flush buttons edge-to-edge */
+      overflow: visible;     /* avoid clipping badges */
+    }
+card:
+  type: vertical-stack
+  view_layout: { grid-area: sidebar }
+  card_mod:
+    style: |
+      ha-card {
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+      }
+      /* Remove any gaps between child cards */
+      .card-content #root > * {
+        margin: 0 !important;
+      }
+
+  cards:
+    # 1) Top "home" button
+    # SAFEST option: keep it simple (navigate to your main view)
+    # If you truly need to toggle HA's main menu from a card, see note below.
+    - type: custom:button-card
+      template: family_icon
+      icon: mdi:home-heart
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace  # change to your preferred landing view
+
+    # 2) Calendar
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:calendar
+      styles:
+        card:
+          - margin-top: "calc(var(--family-heading-height,56px) + var(--family-chips-height,56px))"
+      variables:
+        section: Calendar
+        badge_entity: input_number.events_today
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        data: { option: Calendar }
+
+    # 3) Chores
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:broom
+      variables:
+        section: Chores
+        badge_entity: sensor.chores_incomplete_total
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        data: { option: Chores }
+
+# --- Optional, advanced: Toggle the HA main sidebar from a button ---
+# Home Assistant's frontend listens for a 'hass-toggle-menu' event.
+# If you want the top button to toggle the sidebar, replace its tap_action with:
+#
+# tap_action:
+#   action: none
+#   # Use a JS template to dispatch the event from the button element.
+#   # (This relies on the frontend event; it's widely used but not an HA service call.)
+#   # Tested pattern from community threads:
+#   hold_action:
+#     action: none
+#   double_tap_action:
+#     action: none
+#   # Inject the event on click via the "extra_styles" host listener:
+#   extra_styles: |
+#     :host { cursor: pointer; }
+#   # Or use a JS template field if your button-card version supports it:
+#   # tap_action:
+#   #   action: fire-dom-event
+#   #   browser_mod:
+#   #     service: |
+#   #       [[[
+#   #         this.dispatchEvent(new Event('hass-toggle-menu', {bubbles: true, composed: true}));
+#   #         return null;
+#   #       ]]]
+#
+# Reference: community guidance on using 'hass-toggle-menu' and scoping styles with card-mod/mod-card.
