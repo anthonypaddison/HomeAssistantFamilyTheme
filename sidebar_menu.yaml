@@ -1,4 +1,21 @@
 button_card_templates:
+family_icon:
+  show_name: false
+  show_icon: true
+  styles:
+    card:
+      - width: 100% !important
+      - height: 75px
+      - border-radius: 0
+      - box-shadow: none
+      - background: var(--sb-inactive-bg)
+      - color: var(--sb-inactive-icon)
+      - place-items: center
+      - position: relative
+      - padding: 0
+    icon:
+      - width: 50px
+      - height: 50px
 
 sb_icon_only:
   variables:
@@ -16,7 +33,7 @@ sb_icon_only:
   styles:
     card:
       - width: 100% !important
-      - height: 65px
+      - height: 75px
       - border-radius: 0
       - box-shadow: none
       - background: var(--sb-inactive-bg) !important
@@ -25,8 +42,8 @@ sb_icon_only:
       - padding: 0
       - transition: transform .05s ease
     icon:
-      - width: 28px
-      - height: 28px
+      - width: 50px
+      - height: 50px
     custom_fields:
       badge:
         - position: absolute

@@ -1,20 +1,4 @@
-family_icon:
-  show_name: false
-  show_icon: true
-  styles:
-    card:
-      - width: 56px
-      - height: 56px
-      - border-radius: 12px
-      - box-shadow: none
-      - background: var(--sb-inactive-bg)
-      - color: var(--sb-inactive-icon)
-      - place-items: center
-      - position: relative
-      - padding: 0
-    icon:
-      - width: 28px
-      - height: 28px
+
 
 due_today_progress_chip:
   show_icon: true
