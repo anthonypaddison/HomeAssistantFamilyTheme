@@ -1,0 +1,137 @@
+family_icon:
+  show_name: false
+  show_icon: true
+  styles:
+    card:
+      - width: 56px
+      - height: 56px
+      - border-radius: 12px
+      - box-shadow: none
+      - background: var(--sb-inactive-bg)
+      - color: var(--sb-inactive-icon)
+      - place-items: center
+      - position: relative
+      - padding: 0
+    icon:
+      - width: 28px
+      - height: 28px
+
+sb_icon_only:
+  variables:
+    section: ""
+    badge_entity: ""
+  show_name: false
+  show_icon: true
+  custom_fields:
+    badge: >
+      [[[
+        const e = variables.badge_entity ? states[variables.badge_entity] : null;
+        const n = e ? Number(e.state ?? 0) : 0;
+        return n > 0 ? `${n}` : '';
+      ]]]
+  styles:
+    card:
+      - width: 100% !important
+      - height: 65px
+      - border-radius: 0
+      - box-shadow: none
+      - background: var(--sb-inactive-bg) !important
+      - color: var(--sb-inactive-icon) !important
+      - place-items: center
+      - padding: 0
+      - transition: transform .05s ease
+    icon:
+      - width: 28px
+      - height: 28px
+    custom_fields:
+      badge:
+        - position: absolute
+        - bottom: 6px
+        - right: -6px
+        - min-width: 20px
+        - height: 20px
+        - border-radius: 10px
+        - background: white
+        - color: "#0F172A"
+        - font-weight: 800
+        - font-size: 12px
+        - display: flex
+        - align-items: center
+        - justify-content: center
+        - border: 2px solid #0F172A
+  state:
+    - operator: template
+      value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
+      styles:
+        card:
+          - background: var(--sb-active-bg)
+          - color: var(--sb-active-icon)
+
+due_today_progress_chip:
+  show_icon: true
+  show_name: true
+  show_state: false
+  tap_action:
+    action: none
+  variables:
+    name: ""
+    icon: mdi:checkbox-marked-circle
+    color: var(--primary-color)
+    completed: ""
+    outstanding: ""
+  styles:
+    card:
+      - padding: 6px 10px
+      - border-radius: 14px
+      - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
+      - min-height: 36px
+      - box-shadow: none
+    grid:
+      - grid-template-areas: "'i n v' 'bar bar bar'"
+      - grid-template-columns: 20px auto auto
+      - grid-template-rows: auto 4px
+      - column-gap: 8px
+    img_cell:
+      - align-self: center
+      - justify-self: start
+    icon:
+      - width: 18px
+      - height: 18px
+      - color: '#0F172A'
+    name:
+      - align-self: center
+      - justify-self: start
+      - font-weight: '800'
+      - color: '#0F172A'
+      - font-size: 13px
+      - line-height: 16px
+    custom_fields:
+      v:
+        - align-self: center
+        - justify-self: end
+        - font-size: 12px
+        - font-weight: 800
+        - color: '#0F172A'
+      bar:
+        - width: 100%
+        - height: 4px
+        - border-radius: 2px
+        - background: 'rgba(0,0,0,.15)'
+        - position: relative
+        - overflow: hidden
+  custom_fields:
+    v: >
+      [[[
+        const done = Number(states[variables.completed]?.state ?? 0);
+        const rem = Number(states[variables.outstanding]?.state ?? 0);
+        const total = Math.max(0, done + rem);
+        return `${done}/${total}`;
+      ]]]
+    bar: >
+      [[[
+        const done = Number(states[variables.completed]?.state ?? 0);
+        const rem = Number(states[variables.outstanding]?.state ?? 0);
+        const total = Math.max(0, done + rem);
+        const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
+        return `<div style="position:absolute;inset:0;background:rgba(255,255,255,.85);transform-origin:left;transform:scaleX(${pct/100});"></div>`;
+      ]]]

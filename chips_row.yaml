@@ -1,0 +1,64 @@
+type: custom:mod-card
+view_layout: { grid-area: chips }
+card_mod:
+  style: |
+    ha-card {
+      box-sizing: border-box;
+      width: 100%;
+      background: var(--app-header-background-color) !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      padding: 6px 12px !important;
+      min-height: var(--family-chips-height, 56px);
+      display: flex; align-items: center;
+    }
+card:
+  type: grid
+  columns: 5
+  square: false
+  cards:
+    - type: custom:button-card
+      template: due_today_progress_chip
+      variables:
+        name: Family
+        icon: mdi:account-group
+        color: var(--family-color-family)
+        completed: input_number.completed_due_today_family
+        outstanding: input_number.outstanding_family_today
+      tap_action: { action: none }
+    - type: custom:button-card
+      template: due_today_progress_chip
+      variables:
+        name: Anthony
+        icon: mdi:laptop
+        color: var(--family-color-anthony)
+        completed: input_number.completed_due_today_anthony
+        outstanding: input_number.outstanding_anthony_today
+      tap_action: { action: none }
+    - type: custom:button-card
+      template: due_today_progress_chip
+      variables:
+        name: Joy
+        icon: mdi:book-open-variant
+        color: var(--family-color-joy)
+        completed: input_number.completed_due_today_joy
+        outstanding: input_number.outstanding_joy_today
+      tap_action: { action: none }
+    - type: custom:button-card
+      template: due_today_progress_chip
+      variables:
+        name: Lizzie
+        icon: mdi:teddy-bear
+        color: var(--family-color-lizzie)
+        completed: input_number.completed_due_today_lizzie
+        outstanding: input_number.outstanding_lizzie_today
+      tap_action: { action: none }
+    - type: custom:button-card
+      template: due_today_progress_chip
+      variables:
+        name: Toby
+        icon: mdi:soccer
+        color: var(--family-color-toby)
+        completed: input_number.completed_due_today_toby
+        outstanding: input_number.outstanding_toby_today
+      tap_action: { action: none }

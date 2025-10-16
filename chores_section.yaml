@@ -1,0 +1,83 @@
+type: vertical-stack
+cards:
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            icon: mdi:laptop
+            name: "Anthony"
+            styles:
+              card: &header_card
+                - background: transparent
+                - box-shadow: none
+                - padding: 4px 0 0
+              name:
+                - color: var(--family-color-anthony)
+                - font-weight: 800
+                - font-size: 14px
+              icon:
+                - color: var(--family-color-anthony)
+                - width: 18px
+                - height: 18px
+            show_state: false
+            show_label: false
+          - type: todo-list
+            entity: todo.anthony
+            hide_completed: false
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            icon: mdi:book-open-variant
+            name: "Joy"
+            styles:
+              card: *header_card
+              name:
+                - color: var(--family-color-joy)
+                - font-weight: 800
+                - font-size: 14px
+              icon:
+                - color: var(--family-color-joy)
+                - width: 18px
+                - height: 18px
+            show_state: false
+            show_label: false
+          - type: todo-list
+            entity: todo.joy
+            hide_completed: false
+      - type: vertical-stack
+        cards:
+          - type: custom:button-card
+            icon: mdi:account-group
+            name: "Family"
+            styles:
+              card: *header_card
+              name:
+                - color: var(--family-color-family)
+                - font-weight: 800
+                - font-size: 14px
+              icon:
+                - color: var(--family-color-family)
+                - width: 18px
+                - height: 18px
+            show_state: false
+            show_label: false
+          - type: todo-list
+            entity: todo.family
+            hide_completed: false
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: todo-list
+            entity: todo.lizzie
+            hide_completed: false
+      - type: vertical-stack
+        cards:
+          - type: todo-list
+            entity: todo.toby
+            hide_completed: false
