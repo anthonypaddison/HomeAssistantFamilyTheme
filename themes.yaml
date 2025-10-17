@@ -1,98 +1,98 @@
-FamilyBoard-Base:
-  # --- Palette ---
-  palette-mint:     "#B9FBC0"
-  palette-aqua:     "#98F5E1"
-  palette-cyan:     "#8EECF5"
-  palette-sky:      "#90DBF4"
-  palette-bluegrey: "#A3C4F3"
-  palette-lilac:    "#CFBAF0"
-  palette-rose:     "#FFCFD2"
-  palette-vanilla:  "#FBF8CC"
+# FamilyBoard-Base:
+#   # --- Palette ---
+#   palette-mint:     "#B9FBC0"
+#   palette-aqua:     "#98F5E1"
+#   palette-cyan:     "#8EECF5"
+#   palette-sky:      "#90DBF4"
+#   palette-bluegrey: "#A3C4F3"
+#   palette-lilac:    "#CFBAF0"
+#   palette-rose:     "#FFCFD2"
+#   palette-vanilla:  "#FBF8CC"
 
-  # --- Primary accents ---
-  primary-color: var(--palette-mint)
-  accent-color:  var(--palette-lilac)
+#   # --- Primary accents ---
+#   primary-color: var(--palette-mint)
+#   accent-color:  var(--palette-lilac)
 
-  # --- Brand / Family colours ---
-  family-color-family:  "#36B37E"
-  family-color-anthony: "#7E57C2"
-  family-color-joy:     "#F4B400"
-  family-color-lizzie:  "#EC407A"
-  family-color-toby:    "#42A5F5"
+#   # --- Brand / Family colours ---
+#   family-color-family:  "#36B37E"
+#   family-color-anthony: "#7E57C2"
+#   family-color-joy:     "#F4B400"
+#   family-color-lizzie:  "#EC407A"
+#   family-color-toby:    "#42A5F5"
 
-  # --- FAB colours per section (global tokens; usage is optional) ---
-  fab-color-calendar: var(--palette-mint)
-  fab-color-chores:   var(--palette-lilac)
-  fab-color-default:  var(--primary-color)
+#   # --- FAB colours per section (global tokens; usage is optional) ---
+#   fab-color-calendar: var(--palette-mint)
+#   fab-color-chores:   var(--palette-lilac)
+#   fab-color-default:  var(--primary-color)
 
-  # --- Core theme colours (light) ---
-  error-color:              "#E53935"
-  primary-text-color:       "#0F172A"
-  secondary-text-color:     "#475569"
-  text-primary-color:       var(--primary-text-color)
+#   # --- Core theme colours (light) ---
+#   error-color:              "#E53935"
+#   primary-text-color:       "#0F172A"
+#   secondary-text-color:     "#475569"
+#   text-primary-color:       var(--primary-text-color)
 
-  # --- Backgrounds ---
-  family-surface:           "#FFFFFF"
-  family-background:        "#FFFFFF"
-  lovelace-background:      var(--family-background)
-  card-background-color:    var(--family-surface)
+#   # --- Backgrounds ---
+#   family-surface:           "#FFFFFF"
+#   family-background:        "#FFFFFF"
+#   lovelace-background:      var(--family-background)
+#   card-background-color:    var(--family-surface)
 
-  # --- Dividers / borders / scrollbars ---
-  divider-color:            "#E5E7EB"
-  scrollbar-thumb-color:    "rgba(15, 23, 42, 0.25)"
-  scrollbar-track-color:    "transparent"
+#   # --- Dividers / borders / scrollbars ---
+#   divider-color:            "#E5E7EB"
+#   scrollbar-thumb-color:    "rgba(15, 23, 42, 0.25)"
+#   scrollbar-track-color:    "transparent"
 
-  # --- Header / HA main sidebar (global app chrome) ---
-  app-header-background-color: var(--palette-lilac)
-  app-header-text-color:       var(--primary-text-color)
-  sidebar-background-color:    var(--palette-lilac)
-  sidebar-icon-color:          var(--secondary-text-color)
-  sidebar-text-color:          var(--primary-text-color)
-  sidebar-selected-icon-color: var(--primary-color)
-  sidebar-selected-text-color: var(--primary-text-color)
+#   # --- Header / HA main sidebar (global app chrome) ---
+#   app-header-background-color: var(--palette-lilac)
+#   app-header-text-color:       var(--primary-text-color)
+#   sidebar-background-color:    var(--palette-lilac)
+#   sidebar-icon-color:          var(--secondary-text-color)
+#   sidebar-text-color:          var(--primary-text-color)
+#   sidebar-selected-icon-color: var(--primary-color)
+#   sidebar-selected-text-color: var(--primary-text-color)
 
-  # --- Typography ---
-  primary-font-family: >
-    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans",
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
-  mdc-typography-font-family: var(--primary-font-family)
-  paper-font-common-base_-_-font-family: var(--primary-font-family)
-  paper-font-common-code_-_-font-family: var(--primary-font-family)
+#   # --- Typography ---
+#   primary-font-family: >
+#     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+#     Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans",
+#     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+#   mdc-typography-font-family: var(--primary-font-family)
+#   paper-font-common-base_-_-font-family: var(--primary-font-family)
+#   paper-font-common-code_-_-font-family: var(--primary-font-family)
 
-  # --- Card shapes (optional globals; keep if you want flat cards everywhere) ---
-  ha-card-border-radius: "0px"
-  ha-card-border-width:  "0px"
-  ha-card-box-shadow:    "none"
+#   # --- Card shapes (optional globals; keep if you want flat cards everywhere) ---
+#   ha-card-border-radius: "0px"
+#   ha-card-border-width:  "0px"
+#   ha-card-box-shadow:    "none"
 
-  # --- Icons / states ---
-  state-icon-color:             "#64748B"
-  state-icon-active-color:      var(--primary-color)
-  state-icon-unavailable-color: "#CBD5E1"
+#   # --- Icons / states ---
+#   state-icon-color:             "#64748B"
+#   state-icon-active-color:      var(--primary-color)
+#   state-icon-unavailable-color: "#CBD5E1"
 
-  # --- Mushroom tuning (optional) ---
-  mush-spacing: 12px
-  mush-title-font-size: 28px
-  mush-title-font-weight: 700
-  mush-title-line-height: 32px
-  mush-title-color: var(--primary-text-color)
-  mush-subtitle-font-size: 15px
-  mush-subtitle-color: var(--secondary-text-color)
-  mush-card-primary-font-size: 15px
-  mush-card-secondary-font-size: 13px
-  mush-card-primary-color: var(--primary-text-color)
-  mush-card-secondary-color: var(--secondary-text-color)
-  mush-chip-height: 36px
-  mush-chip-padding: 0 0.6em
-  mush-chip-spacing: 8px
+#   # --- Mushroom tuning (optional) ---
+#   mush-spacing: 12px
+#   mush-title-font-size: 28px
+#   mush-title-font-weight: 700
+#   mush-title-line-height: 32px
+#   mush-title-color: var(--primary-text-color)
+#   mush-subtitle-font-size: 15px
+#   mush-subtitle-color: var(--secondary-text-color)
+#   mush-card-primary-font-size: 15px
+#   mush-card-secondary-font-size: 13px
+#   mush-card-primary-color: var(--primary-text-color)
+#   mush-card-secondary-color: var(--secondary-text-color)
+#   mush-chip-height: 36px
+#   mush-chip-padding: 0 0.6em
+#   mush-chip-spacing: 8px
 
-  # --- Calendar / family accent tokens ---
-  cal-color-family:  var(--family-color-family)
-  cal-color-anthony: var(--family-color-anthony)
-  cal-color-joy:     var(--family-color-joy)
-  cal-color-lizzie:  var(--family-color-lizzie)
-  cal-color-toby:    var(--family-color-toby)
+#   # --- Calendar / family accent tokens ---
+#   cal-color-family:  var(--family-color-family)
+#   cal-color-anthony: var(--family-color-anthony)
+#   cal-color-joy:     var(--family-color-joy)
+#   cal-color-lizzie:  var(--family-color-lizzie)
+#   cal-color-toby:    var(--family-color-toby)
 
-  # NOTE:
-  # - No card-mod hooks here on purpose (avoid global bleed).
-  #   Use per-view or per-card card_mod for layout tweaks. (See sidebar.yaml)
+#   # NOTE:
+#   # - No card-mod hooks here on purpose (avoid global bleed).
+#   #   Use per-view or per-card card_mod for layout tweaks. (See sidebar.yaml)
