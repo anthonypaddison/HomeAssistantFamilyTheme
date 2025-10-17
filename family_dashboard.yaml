@@ -1,52 +1,72 @@
-title: Family (TEST)
-theme: FamilyBoard-Base
-
-# ⬇️ TEMP: Inline a minimal template to prove templates work
-button_card_templates:
-  family_icon:
-    show_name: false
-    show_icon: true
-    styles:
-      card:
-        - height: 72px
-        - background: var(--palette-lilac)
-        - color: "#0F172A"
-        - place-items: center
-      icon:
-        - width: 40px
-        - height: 40px
-
+title: Family
+theme: FamilyBoard
+button_card_templates: !include button_card_templates.yaml
 views:
   - title: Family
     path: family
+    # panel: true        # ← Optional: I'd remove this when using custom:grid-layout
     type: custom:grid-layout
+    card_mod:
+      style: |
+        :host {
+          height: calc(100vh - var(--header-height));
+          block-size: calc(100vh - var(--header-height));
+          width: 100vw;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: green !important;
+        }
+        hui-view {
+          height: 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        #root, .layout, .grid, .horizontal, .vertical {
+          height: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
     layout:
-      grid-template-columns: 120px 1fr
+      margin: 0px
+      padding: 0px
+      grid-template-columns: 6% 1fr
+      grid-template-rows: auto auto 1fr
       grid-template-areas: |
+        "sidebar heading"
+        "sidebar chips"
         "sidebar main"
+      gap: 0px
+      column-gap: 0px
+      row-gap: 0px
+
     cards:
-      - type: custom:mod-card
-        view_layout: { grid-area: sidebar }
-        card:
-          type: vertical-stack
-          cards:
-            - type: markdown
-              content: "**Inline template test**"
+      # - !include /config/sidebar_menu.yaml
+      - !include /config/sidebar_menu_test.yaml
 
-            # Raw custom button (no template) — should render
-            - type: custom:button-card
-              name: Raw custom
-              icon: mdi:flash
-              show_icon: true
-              show_name: true
 
-            # Templated button — should render if inline template works
-            - type: custom:button-card
-              template: family_icon
-              icon: mdi:home-heart
-              tap_action: { action: none }
+# # 2) HEADING ROW
+# - !include /config/heading_row.yaml
 
-            # Intentional error — should be a red error card
-            - type: custom:button-card
-              name: Should be RED error
-              template: does_not_exist
+# # 3) CHIPS ROW
+# - !include /config/chips_row.yaml
+
+# # 4) MAIN AREA (conditional sections)
+# - type: vertical-stack
+#   view_layout: { grid-area: main }
+#   cards:
+#     # Calendar Section
+#     - type: conditional
+#       conditions:
+#         - entity: input_select.family_section
+#           state: Calendar
+#       card: !include /config/calendar_section.yaml
+
+#     # Chores Section
+#     - type: conditional
+#       conditions:
+#         - entity: input_select.family_section
+#           state: Chores
+#       card: !include /config/chores_section.yaml
+
+# # 5) FAB BUTTON (always present)
+# - !include /config/fab_button.yaml
