@@ -66,24 +66,25 @@ due_today_progress_chip:
         const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
         return `<div style="position:absolute;inset:0;background:rgba(255,255,255,.85);transform-origin:left;transform:scaleX(${pct/100});"></div>`;
       ]]]
+# button_card_templates.yaml
 
 family_icon:
-    show_name: false
-    show_icon: true
-    styles:
-      card:
-        - width: 100% !important
-        - height: 75px
-        - border-radius: 0
-        - box-shadow: none
-        - background: var(--sb-inactive-bg)
-        - color: var(--sb-inactive-icon)
-        - place-items: center
-        - position: relative
-        - padding: 0
-      icon:
-        - width: 50px
-        - height: 50px
+  show_name: false
+  show_icon: true
+  styles:
+    card:
+      - width: 100% !important
+      - height: 75px
+      - border-radius: 0
+      - box-shadow: none
+      - background: var(--sb-inactive-bg)
+      - color: var(--sb-inactive-icon)
+      - place-items: center
+      - position: relative
+      - padding: 0
+    icon:
+      - width: 50px
+      - height: 50px
 
 sb_icon_only:
   variables:
