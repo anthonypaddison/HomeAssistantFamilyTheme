@@ -17,6 +17,7 @@ card_mod:
       height: 100vh !important;
       # width: 150px !important;
       inline-size: 100%;
+      z-index: 10;
     }
 
     ha-card {
