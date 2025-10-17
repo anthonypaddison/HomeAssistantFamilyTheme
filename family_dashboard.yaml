@@ -40,33 +40,37 @@ views:
       gap: 0px
       column-gap: 0px
       row-gap: 0px
-    cards:
-      # 1) SIDEBAR
-      - !include /config/sidebar_menu.yaml
 
-      # # 2) HEADING ROW
-      # - !include /config/heading_row.yaml
+  - type: markdown
+    view_layout: { grid-area: sidebar }
+    content: |
+      **Sidebar test**
+      If you can read this, the grid is good.
 
-      # # 3) CHIPS ROW
-      # - !include /config/chips_row.yaml
 
-      # # 4) MAIN AREA (conditional sections)
-      # - type: vertical-stack
-      #   view_layout: { grid-area: main }
-      #   cards:
-      #     # Calendar Section
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Calendar
-      #       card: !include /config/calendar_section.yaml
+# # 2) HEADING ROW
+# - !include /config/heading_row.yaml
 
-      #     # Chores Section
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Chores
-      #       card: !include /config/chores_section.yaml
+# # 3) CHIPS ROW
+# - !include /config/chips_row.yaml
 
-      # # 5) FAB BUTTON (always present)
-      # - !include /config/fab_button.yaml
+# # 4) MAIN AREA (conditional sections)
+# - type: vertical-stack
+#   view_layout: { grid-area: main }
+#   cards:
+#     # Calendar Section
+#     - type: conditional
+#       conditions:
+#         - entity: input_select.family_section
+#           state: Calendar
+#       card: !include /config/calendar_section.yaml
+
+#     # Chores Section
+#     - type: conditional
+#       conditions:
+#         - entity: input_select.family_section
+#           state: Chores
+#       card: !include /config/chores_section.yaml
+
+# # 5) FAB BUTTON (always present)
+# - !include /config/fab_button.yaml

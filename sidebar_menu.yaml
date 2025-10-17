@@ -3,19 +3,29 @@ type: custom:mod-card
 view_layout: { grid-area: sidebar }
 card_mod:
   style: |
-    :host {
-      /* Local tokens for this sidebar only */
-      --sb-inactive-bg:   var(--palette-lilac);
-      --sb-inactive-icon: #0F172A;
-      --sb-active-bg:     var(--family-background);
-      --sb-active-icon:   #0F172A;
+    # :host {
+    #   /* Local tokens for this sidebar only */
+    #   --sb-inactive-bg:   var(--palette-lilac);
+    #   --sb-inactive-icon: #0F172A;
+    #   --sb-active-bg:     var(--family-background);
+    #   --sb-active-icon:   #0F172A;
 
-      --family-heading-height: 48px;
-      --family-chips-height:   56px;
+    #   --family-heading-height: 48px;
+    #   --family-chips-height:   56px;
+    #   background-color: black !important;
+    #   position: sticky !important;
+    #   height: 100vh !important;
+    #   width: 150px !important;
+    # }
+
+    :host {
       background-color: black !important;
       position: sticky !important;
       height: 100vh !important;
       width: 150px !important;
+      position: sticky;
+      top: 8px;      /* keep it pinned under the header */
+      z-index: 2;
     }
 
     ha-card {
