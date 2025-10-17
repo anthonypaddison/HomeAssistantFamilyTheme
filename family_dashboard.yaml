@@ -57,7 +57,7 @@ views:
       grid-template-areas: |
         "sidebar main"
     cards:
-      - !include sidebar_menu.yaml
+      - !include sidebar_menu_test.yaml
       - type: markdown
         view_layout: { grid-area: main }
         content: "Main area"
