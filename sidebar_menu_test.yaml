@@ -1,38 +1,72 @@
-- type: custom:mod-card
-  view_layout: { grid-area: sidebar }
+type: custom:mod-card
+view_layout: { grid-area: sidebar }
+
+card_mod:
+  style: |
+    :host {
+      --sb-inactive-bg:   var(--palette-lilac);
+      --sb-inactive-icon: #0F172A;
+      --sb-active-bg:     var(--family-background);
+      --sb-active-icon:   #0F172A;
+
+      position: sticky;
+      top: 8px;
+      z-index: 2;
+    }
+    ha-card {
+      background: var(--card-background-color);
+      border-radius: var(--ha-card-border-radius, 16px);
+      box-shadow: var(--ha-card-box-shadow);
+      padding: 0;
+      overflow: visible;
+    }
+
+card:
+  type: vertical-stack
   card_mod:
     style: |
-      :host {
-        --sb-inactive-bg:   var(--palette-lilac);
-        --sb-inactive-icon: #0F172A;
-        --sb-active-bg:     var(--family-background);
-        --sb-active-icon:   #0F172A;
-        position: sticky; top: 8px; z-index: 2;
+      ha-card {
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
       }
-  card:
-    type: vertical-stack
-    cards:
-      - type: custom:button-card
-        template: family_icon
-        icon: mdi:home-heart
-        tap_action: { action: navigate, navigation_path: /lovelace }
+      .card-content #root > * { margin: 0 !important; }
 
-      - type: custom:button-card
-        template: sb_icon_only
-        icon: mdi:calendar
-        variables: { section: Calendar, badge_entity: input_number.events_today }
-        tap_action:
-          action: call-service
-          service: input_select.select_option
-          target: { entity_id: input_select.family_section }
-          data: { option: Calendar }
+  cards:
+    - type: custom:button-card
+      template: family_icon
+      icon: mdi:home-heart
+      tap_action:
+        action: navigate
+        navigation_path: /lovelace
 
-      - type: custom:button-card
-        template: sb_icon_only
-        icon: mdi:broom
-        variables: { section: Chores, badge_entity: sensor.chores_incomplete_total }
-        tap_action:
-          action: call-service
-          service: input_select.select_option
-          target: { entity_id: input_select.family_section }
-          data: { option: Chores }
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:calendar
+      styles:
+        card:
+          - margin-top: calc(48px + 56px)   # space for heading+chips if you have them
+      variables:
+        section: Calendar
+        badge_entity: input_number.events_today
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        data: { option: Calendar }
+
+    - type: custom:button-card
+      template: sb_icon_only
+      icon: mdi:broom
+      variables:
+        section: Chores
+        badge_entity: sensor.chores_incomplete_total
+      tap_action:
+        action: call-service
+        service: input_select.select_option
+        target: { entity_id: input_select.family_section }
+        data: { option: Chores }
+
+    - type: markdown
+      content: "_Sidebar OK (marker)._"

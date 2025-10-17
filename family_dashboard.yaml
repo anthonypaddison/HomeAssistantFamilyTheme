@@ -1,6 +1,6 @@
 title: Family
-theme: FamilyBoard
-button_card_templates: !include button_card_templates.yaml
+theme: FamilyBoard-Base
+button_card_templates: !include /config/button_card_templates.yaml
 views:
   - title: Family
     path: family
