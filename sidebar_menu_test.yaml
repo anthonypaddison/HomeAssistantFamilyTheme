@@ -1,4 +1,4 @@
-# sidebar_menu_test.yaml  (FULL CARD, not a fragment)
+# sidebar_menu_test.yaml (FULL CARD)
 type: custom:mod-card
 view_layout: { grid-area: sidebar }
 
@@ -15,7 +15,7 @@ card_mod:
 card:
   type: vertical-stack
   cards:
-    # --- 0A) Raw custom button: should render regardless of templates ---
+    # 0A) Raw custom button — should render regardless of templates
     - type: custom:button-card
       name: RAW CHECK (should be visible)
       icon: mdi:check
@@ -28,18 +28,17 @@ card:
           - color: "#0F172A"
           - place-items: center
 
-    # --- 0B) Missing template: should render a RED error card if template engine is active ---
+    # 0B) Intentional missing template — should render a RED error card
     - type: custom:button-card
       name: RED ERROR expected (template not found)
       template: does_not_exist
-
-    # --- Uses inline template defined in the dashboard (debug_inline_icon) ---
+    # Uses the inline template defined in the dashboard: debug_inline_icon
     - type: custom:button-card
       template: debug_inline_icon
       icon: mdi:home-heart
       name: INLINE TEMPLATE CHECK
       show_name: true
 
-    # --- Marker so you know the include fully loaded ---
+    # Marker so you know the include fully loaded
     - type: markdown
       content: "_Sidebar OK (marker)._"
