@@ -10,7 +10,7 @@ views:
       style: |
         :host {
           height: calc(100vh - var(--header-height));
-          # block-size: calc(100vh - var(--header-height));
+          block-size: calc(100vh - var(--header-height));
           width: 100vw;
           margin: 0 !important;
           padding: 0 !important;
