@@ -33,10 +33,15 @@ card:
       template: does_not_exist
 
     # These two should now be visible (use the tokens above)
+
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
-      tap_action: { action: none }
+      styles:
+        card:
+          - background: "#CFBAF0"
+          - color: "#0F172A"
+
 
     - type: custom:button-card
       template: sb_icon_only
