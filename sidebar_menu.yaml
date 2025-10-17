@@ -15,11 +15,7 @@ card_mod:
       background-color: black !important;
       position: sticky !important;
       height: 100vh !important;
-    }
-
-    /* Hide the sidebar when your grid collapses at <=900px */
-    @media (max-width: 900px) {
-      :host { display: none !important; }
+      width: 150px !important;
     }
 
     ha-card {
