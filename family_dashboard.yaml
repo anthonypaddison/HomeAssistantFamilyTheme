@@ -40,7 +40,8 @@ views:
       row-gap: 0px
 
     cards:
-      - !include /config/sidebar_menu.yaml
+      # - !include /config/sidebar_menu.yaml
+      - !include /config/sidebar_menu_test.yaml
 
 
 # # 2) HEADING ROW
