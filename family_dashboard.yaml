@@ -40,11 +40,7 @@ views:
       row-gap: 0px
 
     cards:
-      - type: markdown
-        view_layout: { grid-area: sidebar }
-        content: |
-          **Sidebar test**
-          If you can read this, the grid is good.
+      - !include /config/sidebar_menu.yaml
 
 
 # # 2) HEADING ROW
