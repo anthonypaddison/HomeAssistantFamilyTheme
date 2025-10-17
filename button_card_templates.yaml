@@ -61,6 +61,7 @@ sb_icon_only:
         - justify-content: center
         - border: 2px solid #0F172A
         - overflow: visible
+        - margin: 2px
   state:
     - operator: template
       value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
