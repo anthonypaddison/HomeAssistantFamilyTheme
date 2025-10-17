@@ -1,6 +1,4 @@
-# button_card_templates.yaml
-
-# Debug template (kept here temporarily to prove the include works)
+# --- Debug template (keep temporarily so we can verify the include) ---
 debug_inline_icon:
   show_name: false
   show_icon: true
@@ -14,6 +12,7 @@ debug_inline_icon:
       - width: 36px
       - height: 36px
 
+# --- The two sidebar templates you want ---
 family_icon:
   show_name: false
   show_icon: true

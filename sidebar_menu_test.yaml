@@ -25,19 +25,15 @@ card:
       name: RED ERROR expected (template not found)
       template: does_not_exist
 
-    # 1) From external templates file
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
-      tap_action: { action: none }
 
-    # 2) From external templates file (with variables)
     - type: custom:button-card
       template: sb_icon_only
       icon: mdi:calendar
-      variables: { section: Calendar, badge_entity: "" }  # safe: empty badge entity
+      variables: { section: Calendar, badge_entity: "" }
 
-    # 3) Debug template (also now in the external file)
     - type: custom:button-card
       template: debug_inline_icon
       icon: mdi:home-heart

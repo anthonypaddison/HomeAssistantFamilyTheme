@@ -45,7 +45,6 @@
 
 title: Family
 theme: FamilyBoard-Base
-
 button_card_templates: !include button_card_templates.yaml
 
 views:
