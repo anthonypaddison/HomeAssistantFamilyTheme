@@ -1,4 +1,20 @@
-cards:
+# sidebar_menu_test.yaml  (FULL CARD, not a fragment)
+type: custom:mod-card
+view_layout: { grid-area: sidebar }
+
+card_mod:
+  style: |
+    :host { position: sticky; top: 8px; z-index: 2; }
+    ha-card {
+      background: var(--card-background-color);
+      border-radius: var(--ha-card-border-radius, 16px);
+      box-shadow: var(--ha-card-box-shadow);
+      padding: 0;
+    }
+
+card:
+  type: vertical-stack
+  cards:
     # --- 0A) Raw custom button: should render regardless of templates ---
     - type: custom:button-card
       name: RAW CHECK (should be visible)
@@ -17,46 +33,13 @@ cards:
       name: RED ERROR expected (template not found)
       template: does_not_exist
 
-    # --- Your existing templated buttons follow here ---
-    - type: custom:button-card
-      template: family_icon
-      icon: mdi:home-heart
-      tap_action:
-        action: navigate
-        navigation_path: /lovelace
-
-    - type: custom:button-card
-      template: sb_icon_only
-      icon: mdi:calendar
-      styles:
-        card:
-          - margin-top: calc(48px + 56px)
-      variables:
-        section: Calendar
-        badge_entity: input_number.events_today
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        data: { option: Calendar }
-
-    - type: custom:button-card
-      template: sb_icon_only
-      icon: mdi:broom
-      variables:
-        section: Chores
-        badge_entity: sensor.chores_incomplete_total
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        data: { option: Chores }
-
+    # --- Uses inline template defined in the dashboard (debug_inline_icon) ---
     - type: custom:button-card
       template: debug_inline_icon
       icon: mdi:home-heart
-      name: "INLINE TEMPLATE CHECK"
+      name: INLINE TEMPLATE CHECK
       show_name: true
 
+    # --- Marker so you know the include fully loaded ---
     - type: markdown
       content: "_Sidebar OK (marker)._"
