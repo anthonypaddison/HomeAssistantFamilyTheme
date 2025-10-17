@@ -50,8 +50,8 @@ sb_icon_only:
       - height: 75px
       - border-radius: 0
       - box-shadow: none
-      - background: var(--sb-inactive-bg) !important
-      - color: var(--sb-inactive-icon) !important
+      - background: white
+      - color: blue
       - place-items: center
       - padding: 0
       - transition: transform .05s ease
@@ -79,5 +79,5 @@ sb_icon_only:
       value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'
       styles:
         card:
-          - background: var(--sb-active-bg)
-          - color: var(--sb-active-icon)
+          - background: blue
+          - color: yellow
