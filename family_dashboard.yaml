@@ -43,24 +43,10 @@
 #       # - !include /config/sidebar_menu.yaml
 #       - !include /config/sidebar_menu_test.yaml
 
-
 title: Family
 theme: FamilyBoard-Base
 
-# TEMP inline template (leave this in for the test)
-button_card_templates:
-  debug_inline_icon:
-    show_name: false
-    show_icon: true
-    styles:
-      card:
-        - height: 64px
-        - background: "#B9FBC0"   # mint
-        - color: "#0F172A"
-        - place-items: center
-      icon:
-        - width: 36px
-        - height: 36px
+button_card_templates: !include button_card_templates.yaml
 
 views:
   - title: Family

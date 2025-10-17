@@ -1,3 +1,19 @@
+# button_card_templates.yaml
+
+# Debug template (kept here temporarily to prove the include works)
+debug_inline_icon:
+  show_name: false
+  show_icon: true
+  styles:
+    card:
+      - height: 64px
+      - background: "#B9FBC0"   # mint
+      - color: "#0F172A"
+      - place-items: center
+    icon:
+      - width: 36px
+      - height: 36px
+
 family_icon:
   show_name: false
   show_icon: true
