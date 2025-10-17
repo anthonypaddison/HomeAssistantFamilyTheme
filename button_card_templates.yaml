@@ -48,7 +48,7 @@ sb_icon_only:
       badge:
         - position: absolute
         - bottom: 6px
-        - right: -6px
+        - right: 6px
         - min-width: 20px
         - height: 20px
         - border-radius: 10px
