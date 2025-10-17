@@ -3,23 +3,23 @@ view_layout: { grid-area: sidebar }
 
 card_mod:
   style: |
-    :host {
-      --sb-inactive-bg:   var(--palette-lilac);
-      --sb-inactive-icon: #0F172A;
-      --sb-active-bg:     var(--family-background);
-      --sb-active-icon:   #0F172A;
+    # :host {
+    #   --sb-inactive-bg:   var(--palette-lilac);
+    #   --sb-inactive-icon: #0F172A;
+    #   --sb-active-bg:     var(--family-background);
+    #   --sb-active-icon:   #0F172A;
 
-      position: sticky;
-      top: 8px;
-      z-index: 2;
-    }
-    ha-card {
-      background: var(--card-background-color);
-      border-radius: var(--ha-card-border-radius, 16px);
-      box-shadow: var(--ha-card-box-shadow);
-      padding: 0;
-      overflow: visible;
-    }
+    #   position: sticky;
+    #   top: 8px;
+    #   z-index: 2;
+    # }
+    # ha-card {
+    #   background: var(--card-background-color);
+    #   border-radius: var(--ha-card-border-radius, 16px);
+    #   box-shadow: var(--ha-card-box-shadow);
+    #   padding: 0;
+    #   overflow: visible;
+    # }
 
 card:
   type: vertical-stack
