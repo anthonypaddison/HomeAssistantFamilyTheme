@@ -1,20 +1,53 @@
-# sidebar_menu_core_only.yaml
-# No custom cards required. Pure core cards to prove layout & CSS are OK.
+# sidebar_menu_diag.yaml
+# Mix of core + custom to diagnose resource loading.
 
 type: custom:mod-card
 view_layout: { grid-area: sidebar }
+
+card_mod:
+  style: |
+    :host {
+      /* Simple sticky */
+      position: sticky; top: 8px; z-index: 2;
+      /* Local tokens used if custom button loads */
+      --sb-inactive-bg:   var(--palette-lilac);
+      --sb-inactive-icon: #0F172A;
+    }
+    ha-card {
+      background: var(--card-background-color);
+      border-radius: var(--ha-card-border-radius, 16px);
+      box-shadow: var(--ha-card-box-shadow);
+      padding: 0;
+    }
+
 card:
   type: vertical-stack
   cards:
     - type: markdown
-      content: "**Core-only test** (should see two core buttons below)"
+      content: "**Diagnostic sidebar** — core buttons should show below."
+
+    # Core button (should always render)
     - type: button
-      name: Core Button 1
+      name: Core Button
       icon: mdi:home
       tap_action: { action: none }
-    - type: button
-      name: Core Button 2
-      icon: mdi:calendar
-      tap_action: { action: none }
+
+    # Minimal custom:button-card (this is the key test)
+    - type: custom:button-card
+      name: Custom Button (button-card)
+      icon: mdi:flash
+      show_name: true
+      show_icon: true
+      styles:
+        card:
+          - height: 64px
+          - background: var(--sb-inactive-bg)
+          - color: var(--sb-inactive-icon)
+          - place-items: center
+          - padding: 0
+        icon:
+          - width: 28px
+          - height: 28px
+
     - type: markdown
-      content: "_Sidebar loaded (core-only marker)._"
+      content: "_Sidebar loaded (diagnostic marker)._"
