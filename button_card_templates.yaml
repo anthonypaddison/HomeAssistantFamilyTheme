@@ -31,7 +31,7 @@ sb_icon_only:
       ]]]
   styles:
     card:
-      - width: 100px
+      # - width: 100px
       - height: 65px
       - border-radius: 0
       - box-shadow: none

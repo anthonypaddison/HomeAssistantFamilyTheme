@@ -15,7 +15,8 @@ card_mod:
       background-color: black !important;
       position: sticky !important;
       height: 100vh !important;
-      width: 150px !important;
+      # width: 150px !important;
+      inline-size: 100%;
     }
 
     ha-card {
@@ -24,6 +25,7 @@ card_mod:
       box-shadow: var(--ha-card-box-shadow);
       padding: 0;
       overflow: visible;
+      inline-size: 100%;
     }
 
 card:
