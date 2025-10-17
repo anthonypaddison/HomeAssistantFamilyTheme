@@ -44,7 +44,7 @@
 #       - !include /config/sidebar_menu_test.yaml
 
 title: Family
-theme: FamilyBoard-Base
+# theme: FamilyBoard-Base
 button_card_templates: !include button_card_templates.yaml
 
 views:
