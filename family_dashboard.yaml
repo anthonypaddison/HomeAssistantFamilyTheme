@@ -1,48 +1,66 @@
+# title: Family
+# theme: FamilyBoard-Base
+# button_card_templates: !include /config/button_card_templates.yaml
+# views:
+#   - title: Family
+#     path: family
+#     # panel: true        # ← Optional: I'd remove this when using custom:grid-layout
+#     type: custom:grid-layout
+#     card_mod:
+#       style: |
+#         :host {
+#           height: calc(100vh - var(--header-height));
+#           block-size: calc(100vh - var(--header-height));
+#           width: 100vw;
+#           margin: 0 !important;
+#           padding: 0 !important;
+#           background: green !important;
+#         }
+#         hui-view {
+#           height: 100% !important;
+#           padding: 0 !important;
+#           margin: 0 !important;
+#         }
+#         #root, .layout, .grid, .horizontal, .vertical {
+#           height: 100% !important;
+#           margin: 0 !important;
+#           padding: 0 !important;
+#         }
+#     layout:
+#       margin: 0px
+#       padding: 0px
+#       grid-template-columns: 6% 1fr
+#       grid-template-rows: auto auto 1fr
+#       grid-template-areas: |
+#         "sidebar heading"
+#         "sidebar chips"
+#         "sidebar main"
+#       gap: 0px
+#       column-gap: 0px
+#       row-gap: 0px
+
+#     cards:
+#       # - !include /config/sidebar_menu.yaml
+#       - !include /config/sidebar_menu_test.yaml
+
+
 title: Family
 theme: FamilyBoard-Base
-button_card_templates: !include /config/button_card_templates.yaml
+button_card_templates: !include button_card_templates.yaml
+
 views:
   - title: Family
     path: family
-    # panel: true        # ← Optional: I'd remove this when using custom:grid-layout
     type: custom:grid-layout
-    card_mod:
-      style: |
-        :host {
-          height: calc(100vh - var(--header-height));
-          block-size: calc(100vh - var(--header-height));
-          width: 100vw;
-          margin: 0 !important;
-          padding: 0 !important;
-          background: green !important;
-        }
-        hui-view {
-          height: 100% !important;
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-        #root, .layout, .grid, .horizontal, .vertical {
-          height: 100% !important;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
     layout:
-      margin: 0px
-      padding: 0px
-      grid-template-columns: 6% 1fr
-      grid-template-rows: auto auto 1fr
+      grid-template-columns: 120px 1fr
       grid-template-areas: |
-        "sidebar heading"
-        "sidebar chips"
         "sidebar main"
-      gap: 0px
-      column-gap: 0px
-      row-gap: 0px
-
     cards:
-      # - !include /config/sidebar_menu.yaml
-      - !include /config/sidebar_menu_test.yaml
-
+      - !include sidebar_menu.yaml
+      - type: markdown
+        view_layout: { grid-area: main }
+        content: "Main area"
 
 # # 2) HEADING ROW
 # - !include /config/heading_row.yaml
