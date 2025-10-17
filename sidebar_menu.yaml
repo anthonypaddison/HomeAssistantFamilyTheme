@@ -12,10 +12,9 @@ card_mod:
 
       --family-heading-height: 48px;
       --family-chips-height:   56px;
-      background: black !important;
-      position: sticky;
-      top: 8px;
-      z-index: 2;
+      background-color: black !important;
+      position: sticky !important;
+      height: 100vh !important;
     }
 
     /* Hide the sidebar when your grid collapses at <=900px */
