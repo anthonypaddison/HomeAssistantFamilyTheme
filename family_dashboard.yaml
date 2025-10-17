@@ -46,7 +46,24 @@
 
 title: Family
 theme: FamilyBoard-Base
-button_card_templates: !include button_card_templates.yaml
+
+# Existing external include
+# button_card_templates: !include button_card_templates.yaml
+
+# TEMP: Add one inline template to prove visibility from this dashboard
+button_card_templates:
+  debug_inline_icon:
+    show_name: false
+    show_icon: true
+    styles:
+      card:
+        - height: 64px
+        - background: "#B9FBC0"   # mint
+        - color: "#0F172A"
+        - place-items: center
+      icon:
+        - width: 36px
+        - height: 36px
 
 views:
   - title: Family
