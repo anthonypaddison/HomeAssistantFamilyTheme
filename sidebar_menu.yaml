@@ -1,89 +1,58 @@
-# ---- Sidebar wrapper (scoped styles & variables) ----
+# sidebar_menu_diag_v3.yaml
+# Purpose:
+#  - Prove button-card renders (raw button)
+#  - Prove template engine is active (intentional missing template -> red error)
+#  - Prove your templates file is loaded and valid (templated button)
+
 type: custom:mod-card
 view_layout: { grid-area: sidebar }
+
 card_mod:
   style: |
-    # :host {
-    #   /* Local tokens for this sidebar only */
-    #   --sb-inactive-bg:   var(--palette-lilac);
-    #   --sb-inactive-icon: #0F172A;
-    #   --sb-active-bg:     var(--family-background);
-    #   --sb-active-icon:   #0F172A;
-
-    #   --family-heading-height: 48px;
-    #   --family-chips-height:   56px;
-    #   background-color: black !important;
-    #   position: sticky !important;
-    #   height: 100vh !important;
-    #   width: 150px !important;
-    # }
-
     :host {
-      background-color: black !important;
-      position: sticky !important;
-      height: 100vh !important;
-      width: 150px !important;
-      position: sticky;
-      top: 8px;      /* keep it pinned under the header */
-      z-index: 2;
-    }
+      /* Tokens used by templated button if templates load */
+      --sb-inactive-bg:   var(--palette-lilac);
+      --sb-inactive-icon: #0F172A;
+      --sb-active-bg:     var(--family-background);
+      --sb-active-icon:   #0F172A;
 
+      position: sticky; top: 8px; z-index: 2;
+    }
     ha-card {
       background: var(--card-background-color);
       border-radius: var(--ha-card-border-radius, 16px);
       box-shadow: var(--ha-card-box-shadow);
       padding: 0;
-      overflow: visible;
     }
 
 card:
   type: vertical-stack
-  card_mod:
-    style: |
-      ha-card {
-        background: transparent;
-        box-shadow: none;
-        border: 0;
-        padding: 0;
-      }
-      .card-content #root > * {
-        margin: 0 !important;  /* no gaps between buttons */
-      }
-
   cards:
-    # Top button — simplest/safest behaviour: navigate to your home view
+    - type: markdown
+      content: "**Sidebar diagnostics v3**"
+
+    # 1) Raw custom button — must render if button-card is loaded
+    - type: custom:button-card
+      name: Raw custom button (no template)
+      icon: mdi:flash
+      show_icon: true
+      show_name: true
+      styles:
+        card:
+          - height: 64px
+          - place-items: center
+
+    # 2) Intentional missing template — should show a red error card
+    - type: custom:button-card
+      name: Should show a red error if templates are active
+      template: does_not_exist
+
+    # 3) Templated button — only renders if your templates file is loaded & valid
     - type: custom:button-card
       template: family_icon
       icon: mdi:home-heart
       tap_action:
-        action: navigate
-        navigation_path: /lovelace   # adjust to your landing view
+        action: none
 
-    # Calendar
-    - type: custom:button-card
-      template: sb_icon_only
-      icon: mdi:calendar
-      styles:
-        card:
-          - margin-top: "calc(var(--family-heading-height,56px) + var(--family-chips-height,56px))"
-      variables:
-        section: Calendar
-        badge_entity: input_number.events_today
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        data: { option: Calendar }
-
-    # Chores
-    - type: custom:button-card
-      template: sb_icon_only
-      icon: mdi:broom
-      variables:
-        section: Chores
-        badge_entity: sensor.chores_incomplete_total
-      tap_action:
-        action: call-service
-        service: input_select.select_option
-        target: { entity_id: input_select.family_section }
-        data: { option: Chores }
+    - type: markdown
+      content: "_End of diagnostics._"
