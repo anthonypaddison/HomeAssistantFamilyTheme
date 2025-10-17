@@ -46,7 +46,8 @@ sb_icon_only:
       ]]]
   styles:
     card:
-      - width: 100% !important
+      # - width: 100% !important
+      - width: 100px !important
       - height: 75px
       - border-radius: 0
       - box-shadow: none
