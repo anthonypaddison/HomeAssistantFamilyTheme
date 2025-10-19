@@ -5,19 +5,25 @@ card_mod:
   style: |
     :host {
       /* Local tokens for this sidebar only */
+
       --sb-inactive-bg:   var(--palette-lilac);
       --sb-inactive-icon: #0F172A;
+
       --sb-active-bg:     var(--family-background);
       --sb-active-icon:   #0F172A;
+
       --masonry-view-card-margin: 0px !important;
+
       --family-heading-height: 48px;
       --family-chips-height:   56px;
+
+      margin: 0 !important;
+      padding: 0 !important;
       background: black !important;
       position: sticky !important;
       height: 100vh !important;
-      # width: 150px !important;
-      inline-size: 100%;
-      z-index: 10;
+      inline-size: 100% !important;
+      z-index: 10 !important;
     }
 
     ha-card {
