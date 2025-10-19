@@ -1,5 +1,6 @@
 title: Family
 theme: FamilyBoard
+
 button_card_templates: !include button_card_templates.yaml
 views:
   - title: Family
