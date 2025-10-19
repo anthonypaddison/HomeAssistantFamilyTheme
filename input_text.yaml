@@ -1,18 +1,18 @@
 completed_family_today_md:
   name: Completed Family Today (MD)
-  max: 4000
+  max: 255
 
 completed_anthony_today_md:
   name: Completed Anthony Today (MD)
-  max: 4000
+  max: 255
 
 shopping_md:
   name: Shopping (Markdown)
-  max: 8000
+  max: 255
 
 leaderboard_md:
   name: Leaderboard (Markdown)
-  max: 4000
+  max: 255
 
 backend_heartbeat:
   name: Backend Heartbeat ISO
