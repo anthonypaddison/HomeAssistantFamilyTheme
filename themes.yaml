@@ -94,6 +94,7 @@ FamilyBoard-Base:
   cal-color-toby:    var(--family-color-toby)
 
   masonry-view-card-margin: 0px
+  header-height: 100px
   # NOTE:
   # - No card-mod hooks here on purpose (avoid global bleed).
   #   Use per-view or per-card card_mod for layout tweaks. (See sidebar.yaml)

@@ -14,7 +14,7 @@ sb_icon_only:
       ]]]
   styles:
     card:
-      - height: 65px
+      - height: 75px
       - border-radius: 0
       - box-shadow: none
       - background: var(--sb-inactive-bg) !important
