@@ -21,7 +21,7 @@ card_mod:
     }
 
     ha-card {
-      background: var(--card-background-color);
+      background: var(--app-header-background-color);
       border-radius: var(--ha-card-border-radius, 16px);
       box-shadow: var(--ha-card-box-shadow);
       padding: 0;
