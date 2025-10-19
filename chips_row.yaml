@@ -4,13 +4,15 @@ card_mod:
   style: |
     ha-card {
       box-sizing: border-box;
-      width: 100%;
+      width: 100% !important;
       background: var(--app-header-background-color) !important;
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 6px 12px !important;
       min-height: var(--family-chips-height, 56px);
-      display: flex; align-items: center;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: stretch !important;
     }
 card:
   type: grid
