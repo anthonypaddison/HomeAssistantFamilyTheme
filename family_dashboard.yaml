@@ -11,8 +11,8 @@ views:
       style: |
         :host {
           /* full height minus the HA header bar */
-          height: calc(100vh - var(--header-height));
-          block-size: calc(100vh - var(--header-height));
+          height: calc(100vh - var(--family-heading-height));
+          block-size: calc(100vh - var(--family-heading-height));
           width: 100vw;
           margin: 0 !important;
           padding: 0 !important;

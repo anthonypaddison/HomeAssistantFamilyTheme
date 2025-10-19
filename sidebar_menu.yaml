@@ -6,11 +6,11 @@ card_mod:
     :host {
       /* Local tokens for this sidebar only */
 
-      --sb-inactive-bg:   var(--palette-lilac);
+      --sb-inactive-bg:   var(--app-header-background-color);
       --sb-inactive-icon: var(--family-background);
 
       --sb-active-bg:     var(--family-background);
-      --sb-active-icon:   var(--palette-lilac);
+      --sb-active-icon:   var(--app-header-background-color);
 
       --family-heading-height: 48px;
       --family-chips-height:   56px;
