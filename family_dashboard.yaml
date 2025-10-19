@@ -24,7 +24,7 @@ views:
         }
         /* grid-layout container */
         #root, .layout, .grid, .horizontal, .vertical {
-          height: 100% !important;
+          height: 100vh !important;
           margin: 0 !important;
           padding: 0 !important;
         }
