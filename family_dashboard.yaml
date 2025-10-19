@@ -48,8 +48,8 @@ views:
       # 2) HEADING ROW
       - !include /config/heading_row.yaml
 
-# # 3) CHIPS ROW
-# - !include /config/chips_row.yaml
+      # 3) CHIPS ROW
+      - !include /config/chips_row.yaml
 
 # # 4) MAIN AREA (conditional sections)
 # - type: vertical-stack
