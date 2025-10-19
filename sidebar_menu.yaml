@@ -34,7 +34,7 @@ card:
   card_mod:
     style: |
       ha-card {
-        background: transparent;
+        background: black important;
         box-shadow: none;
         border: 0;
         padding: 0;
