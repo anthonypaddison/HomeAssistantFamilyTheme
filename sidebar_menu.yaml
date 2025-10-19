@@ -9,7 +9,7 @@ card_mod:
       --sb-inactive-icon: #0F172A;
       --sb-active-bg:     var(--family-background);
       --sb-active-icon:   #0F172A;
-
+      --masonry-view-card-margin: 0px !important;
       --family-heading-height: 48px;
       --family-chips-height:   56px;
       background: black !important;
