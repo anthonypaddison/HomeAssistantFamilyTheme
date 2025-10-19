@@ -31,7 +31,7 @@ sb_icon_only:
         - position: absolute
         - bottom: 3px
         - right: 3px
-        - min-width: 12px
+        - min-width: 15px
         - height: 12px
         - border-radius: 15px
         - background: white
