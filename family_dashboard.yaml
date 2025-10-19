@@ -5,7 +5,7 @@ button_card_templates: !include button_card_templates.yaml
 views:
   - title: Family
     path: family
-    # panel: true        # ← Optional: I'd remove this when using custom:grid-layout
+    panel: true
     type: custom:grid-layout
     card_mod:
       style: |
