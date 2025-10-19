@@ -6,14 +6,14 @@ card_mod:
     :host {
       /* Local tokens for this sidebar only */
 
-      --sb-inactive-bg:   var(--app-header-background-color);
-      --sb-inactive-icon: var(--family-background);
+      --sb-inactive-bg:   var(--app-header-background-color) !important;
+      --sb-inactive-icon: var(--family-background) !important;
 
-      --sb-active-bg:     var(--family-background);
-      --sb-active-icon:   var(--app-header-background-color);
+      --sb-active-bg:     var(--family-background) !important;
+      --sb-active-icon:   var(--app-header-background-color) !important;
 
-      --family-heading-height: 48px;
-      --family-chips-height:   56px;
+      --family-heading-height: 48px !important;
+      --family-chips-height:   56px !important;
 
       background: black !important;
       position: sticky !important;
@@ -37,9 +37,9 @@ card:
     style: |
       ha-card {
         background: var(--app-header-background-color) important;
-        box-shadow: none;
-        border: 0;
-        padding: 0;
+        box-shadow: none !important;
+        border: 0 !important;
+        padding: 0 !important;
       }
       .card-content #root > * {
         margin: 0 !important;  /* no gaps between buttons */
