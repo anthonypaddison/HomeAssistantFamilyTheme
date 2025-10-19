@@ -20,7 +20,7 @@ sb_icon_only:
       - background: var(--sb-inactive-bg) !important
       - color: var(--sb-inactive-icon) !important
       - place-items: center
-      - padding: 4px
+      - padding: 8px 4px
       - transition: transform .05s ease
       - overflow: visible
     icon:
