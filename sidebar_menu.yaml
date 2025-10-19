@@ -12,7 +12,7 @@ card_mod:
 
       --family-heading-height: 48px;
       --family-chips-height:   56px;
-      background-color: black !important;
+      background: black !important;
       position: sticky !important;
       height: 100vh !important;
       # width: 150px !important;
@@ -44,14 +44,6 @@ card:
       }
 
   cards:
-    # Top button — simplest/safest behaviour: navigate to your home view
-    - type: custom:button-card
-      template: family_icon
-      icon: mdi:home-heart
-      tap_action:
-        action: navigate
-        navigation_path: /lovelace   # adjust to your landing view
-
     # Calendar
     - type: custom:button-card
       template: sb_icon_only

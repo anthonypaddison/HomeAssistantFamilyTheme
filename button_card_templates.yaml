@@ -1,21 +1,4 @@
-family_icon:
-  show_name: false
-  show_icon: true
-  styles:
-    card:
-      - width: 56px
-      - height: 56px
-      - border-radius: 12px
-      - box-shadow: none
-      - background: var(--sb-inactive-bg)
-      - color: var(--sb-inactive-icon)
-      - place-items: center
-      - position: relative
-      - padding: 0
-    icon:
-      - width: 28px
-      - height: 28px
-
+# Side Bar Button Template
 sb_icon_only:
   variables:
     section: ""
@@ -31,19 +14,18 @@ sb_icon_only:
       ]]]
   styles:
     card:
-      # - width: 100px
       - height: 65px
       - border-radius: 0
       - box-shadow: none
       - background: var(--sb-inactive-bg) !important
       - color: var(--sb-inactive-icon) !important
       - place-items: center
-      - padding: 10px
+      - padding: 4px
       - transition: transform .05s ease
       - overflow: visible
     icon:
-      - width: 28px
-      - height: 28px
+      - width: 58px
+      - height: 58px
     custom_fields:
       badge:
         - position: absolute
@@ -70,6 +52,7 @@ sb_icon_only:
           - background: var(--sb-active-bg)
           - color: var(--sb-active-icon)
 
+# Top heading sections aka Chips
 due_today_progress_chip:
   show_icon: true
   show_name: true
