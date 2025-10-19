@@ -9,8 +9,8 @@ sb_icon_only:
     badge: >
       [[[
         const e = variables.badge_entity ? states[variables.badge_entity] : null;
-        const n = e ? Number(e.state ?? 0) : 0;
-        return n > 0 ? `${n}` : '';
+        const n = e && e.state ? Number(e.state) : 0;
+        return n > 0 ? `${n}` : null;
       ]]]
   styles:
     card:
