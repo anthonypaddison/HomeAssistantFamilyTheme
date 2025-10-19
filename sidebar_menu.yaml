@@ -12,13 +12,9 @@ card_mod:
       --sb-active-bg:     var(--family-background);
       --sb-active-icon:   #0F172A;
 
-      --masonry-view-card-margin: 0px !important;
-
       --family-heading-height: 48px;
       --family-chips-height:   56px;
 
-      margin: 0 !important;
-      padding: 0 !important;
       background: black !important;
       position: sticky !important;
       height: 100vh !important;
