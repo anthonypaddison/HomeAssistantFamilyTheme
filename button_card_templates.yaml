@@ -29,11 +29,11 @@ sb_icon_only:
     custom_fields:
       badge:
         - position: absolute
-        - bottom: 6px
-        - right: 6px
-        - min-width: 20px
-        - height: 20px
-        - border-radius: 10px
+        - bottom: 3px
+        - right: 3px
+        - min-width: 12px
+        - height: 12px
+        - border-radius: 15px
         - background: white
         - color: "#0F172A"
         - font-weight: 800
@@ -41,9 +41,8 @@ sb_icon_only:
         - display: flex
         - align-items: center
         - justify-content: center
-        - border: 2px solid #0F172A
+        - border: 1px solid #0F172A
         - overflow: visible
-        - margin: 2px
   state:
     - operator: template
       value: '[[[ return states["input_select.family_section"]?.state === variables.section; ]]]'

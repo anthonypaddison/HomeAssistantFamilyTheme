@@ -7,10 +7,10 @@ card_mod:
       /* Local tokens for this sidebar only */
 
       --sb-inactive-bg:   var(--palette-lilac);
-      --sb-inactive-icon: #0F172A;
+      --sb-inactive-icon: var(--family-background);
 
       --sb-active-bg:     var(--family-background);
-      --sb-active-icon:   #0F172A;
+      --sb-active-icon:   var(--palette-lilac);
 
       --family-heading-height: 48px;
       --family-chips-height:   56px;
