@@ -3,6 +3,7 @@ view_layout: { grid-area: heading }
 card_mod:
   style: |
     ha-card {
+      height: var(--family-heading-height, 50px) !important;
       box-sizing: border-box;
       width: 100%;
       background: var(--app-header-background-color) !important;

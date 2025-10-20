@@ -6,6 +6,7 @@ card_mod:
       /* Make the chips row fill the grid column */
       display: inline !important;
       width: 100% !important;
+      height: var(--family-chips-height, 80px) !important;
     }
 
     /* Outer shell styling */
