@@ -1,71 +1,71 @@
 type: vertical-stack
 cards:
-  # # Calendar View Toggle
-  # - type: custom:mod-card
-  #   card_mod:
-  #     style: |
-  #       ha-card {
-  #         background: transparent;
-  #         box-shadow: none;
-  #         padding: 0;
-  #       }
-  #       .card-content {
-  #         # display: flex;
-  #         # justify-content: flex-end;
-  #         gap: 8px;
-  #       }
-  #   card:
-  #     type: horizontal-stack
-  #     cards:
-  #       - type: custom:button-card
-  #         name: Day
-  #         icon: mdi:calendar-today
-  #         tap_action:
-  #           action: call-service
-  #           service: input_select.select_option
-  #           target: { entity_id: input_select.calendar_view }
-  #           data: { option: Day }
-  #         styles:
-  #           card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-  #           name: [ font-size: 12px, font-weight: 700 ]
-  #           icon: [ width: 16px, height: 16px ]
-  #       - type: custom:button-card
-  #         name: 5-Day
-  #         icon: mdi:calendar-range
-  #         tap_action:
-  #           action: call-service
-  #           service: input_select.select_option
-  #           target: { entity_id: input_select.calendar_view }
-  #           data: { option: 5-Day }
-  #         styles:
-  #           card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-  #           name: [ font-size: 12px, font-weight: 700 ]
-  #           icon: [ width: 16px, height: 16px ]
-  #       - type: custom:button-card
-  #         name: Month
-  #         icon: mdi:calendar-month
-  #         tap_action:
-  #           action: call-service
-  #           service: input_select.select_option
-  #           target: { entity_id: input_select.calendar_view }
-  #           data: { option: Month }
-  #         styles:
-  #           card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-  #           name: [ font-size: 12px, font-weight: 700 ]
-  #           icon: [ width: 16px, height: 16px ]
-  # # Calendar Views
-  # # - type: conditional
-  # #   conditions:
-  # #     - entity: input_select.calendar_view
-  # #       state: Day
-  # #   card: !include /config/calendar_day.yaml
-  # # - type: conditional
-  # #   conditions:
-  # #     - entity: input_select.calendar_view
-  # #       state: 5-Day
-  # #   card: !include /config/calendar_5day.yaml
-  # # - type: conditional
-  # #   conditions:
-  # #     - entity: input_select.calendar_view
-  # #       state: Month
-  # #   card: !include /config/calendar_month.yaml
+  # Calendar View Toggle
+  - type: custom:mod-card
+    card_mod:
+      style: |
+        ha-card {
+          background: transparent;
+          box-shadow: none;
+          padding: 0;
+        }
+        .card-content {
+          # display: flex;
+          # justify-content: flex-end;
+          gap: 8px;
+        }
+    card:
+      type: horizontal-stack
+      cards:
+        - type: custom:button-card
+          name: Day
+          icon: mdi:calendar-today
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.calendar_view }
+            data: { option: Day }
+          styles:
+            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+            name: [ font-size: 12px, font-weight: 700 ]
+            icon: [ width: 16px, height: 16px ]
+        - type: custom:button-card
+          name: 5-Day
+          icon: mdi:calendar-range
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.calendar_view }
+            data: { option: 5-Day }
+          styles:
+            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+            name: [ font-size: 12px, font-weight: 700 ]
+            icon: [ width: 16px, height: 16px ]
+        - type: custom:button-card
+          name: Month
+          icon: mdi:calendar-month
+          tap_action:
+            action: call-service
+            service: input_select.select_option
+            target: { entity_id: input_select.calendar_view }
+            data: { option: Month }
+          styles:
+            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+            name: [ font-size: 12px, font-weight: 700 ]
+            icon: [ width: 16px, height: 16px ]
+  # Calendar Views
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: Day
+  #   card: !include /config/calendar_day.yaml
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: 5-Day
+  #   card: !include /config/calendar_5day.yaml
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: Month
+  #   card: !include /config/calendar_month.yaml
