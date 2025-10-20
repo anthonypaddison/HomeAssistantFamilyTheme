@@ -1,25 +1,19 @@
-
 type: custom:mod-card
 view_layout: { grid-area: chips }
-
 card_mod:
   style: |
     :host {
-      display: block;
-      inline-size: 100%;
-      align-self: stretch;
-      justify-self: stretch;
+      display: inline !important;
+      width: 100% !important;
+      height: var(--family-chips-height, 72px) !important;
     }
     ha-card {
       background: var(--app-header-background-color);
       border-radius: 0;
       margin: 0;
       padding: 8px;
-      min-height: var(--family-chips-height, 56px);
-      display: flex;
-      align-items: center;
+      min-height: var(--family-chips-height, 72px);
     }
-
 card:
   type: grid
   columns: 5
@@ -30,7 +24,6 @@ card:
         --masonry-view-card-margin: 0;
         --grid-card-gap: 8px;
       }
-
   cards:
     - type: custom:button-card
       template: due_today_progress_chip
