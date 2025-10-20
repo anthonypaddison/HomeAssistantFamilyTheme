@@ -12,8 +12,6 @@ card_mod:
       --sb-active-bg:     var(--family-background) !important;
       --sb-active-icon:   var(--app-header-background-color) !important;
 
-
-
       background: black !important;
       position: sticky !important;
       height: 100vh !important;

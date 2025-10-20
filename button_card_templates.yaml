@@ -64,6 +64,8 @@ due_today_progress_chip:
     color: var(--primary-color)
     completed: ""
     outstanding: ""
+  name: '[[[ return variables.name || ""; ]]]'
+  icon: '[[[ return variables.icon || "mdi:checkbox-marked-circle"; ]]]'
   styles:
     card:
       - padding: 6px 10px
@@ -79,11 +81,13 @@ due_today_progress_chip:
     img_cell:
       - align-self: center
       - justify-self: start
+      - grid-area: i
     icon:
       - width: 18px
       - height: 18px
       - color: '#0F172A'
     name:
+      - grid-area: n
       - align-self: center
       - justify-self: start
       - font-weight: '800'
@@ -92,12 +96,14 @@ due_today_progress_chip:
       - line-height: 16px
     custom_fields:
       v:
+        - grid-area: v
         - align-self: center
         - justify-self: end
         - font-size: 12px
         - font-weight: 800
         - color: '#0F172A'
       bar:
+        - grid-area: bar
         - width: 100%
         - height: 4px
         - border-radius: 2px
