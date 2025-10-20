@@ -8,13 +8,12 @@ card_mod:
       width: 100% !important;
       height: var(--family-chips-height, 78px) !important;
     }
-
     /* Outer shell styling */
     ha-card {
       background: var(--app-header-background-color);
       border-radius: 0;
       margin: 0;
-      padding: 6px 12px;
+      padding: 8px;
     }
 card:
   type: grid
