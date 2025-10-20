@@ -10,8 +10,8 @@ card_mod:
       margin: 0 !important;
       padding: 8px 12px !important;
       color: var(--primary-text-color) !important;
-      height: 100%;
-      display: flex; align-items: center;
+      display: flex;
+      align-items: center;
     }
 show_icon: false
 show_name: false

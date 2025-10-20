@@ -9,13 +9,11 @@ card_mod:
 
     /* Outer shell styling */
     ha-card {
-      box-sizing: border-box;
       background: var(--app-header-background-color);
+      width: 100% !important;
       border-radius: 0;
       margin: 0;
       padding: 6px 12px;
-      /* Use a concrete height token instead of 100% */
-      min-height: var(--family-chips-height, 56px);
       display: flex;
       align-items: center;
     }
