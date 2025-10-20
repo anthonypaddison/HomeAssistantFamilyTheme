@@ -42,8 +42,8 @@ views:
       row-gap: 0px
 
     cards:
+      # 1) SIDE BAR COLUMN
       - !include /config/sidebar_menu.yaml
-
 
       # 2) HEADING ROW
       - !include /config/heading_row.yaml
