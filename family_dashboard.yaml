@@ -53,23 +53,23 @@ views:
       # 3) CHIPS ROW
       - !include /config/chips_row.yaml
 
-      # # 4) MAIN AREA (conditional sections)
-      # - type: vertical-stack
-      #   view_layout: { grid-area: main }
-      #   cards:
-      #     # Calendar Section
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Calendar
-      #       card: !include /config/calendar_section.yaml
+      # 4) MAIN AREA (conditional sections)
+      - type: vertical-stack
+        view_layout: { grid-area: main }
+        cards:
+          # Calendar Section
+          - type: conditional
+            conditions:
+              - entity: input_select.family_section
+                state: Calendar
+            card: !include /config/calendar_section.yaml
 
-      #     # Chores Section
-      #     - type: conditional
-      #       conditions:
-      #         - entity: input_select.family_section
-      #           state: Chores
-      #       card: !include /config/chores_section.yaml
+          # # Chores Section
+          # - type: conditional
+          #   conditions:
+          #     - entity: input_select.family_section
+          #       state: Chores
+          #   card: !include /config/chores_section.yaml
 
 # # 5) FAB BUTTON (always present)
 # - !include /config/fab_button.yaml
