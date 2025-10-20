@@ -12,10 +12,13 @@ card_mod:
       --sb-active-bg:     var(--family-background) !important;
       --sb-active-icon:   var(--app-header-background-color) !important;
 
-      background: black !important;
+      display: block;
+      inline-size: 100%;
+      block-size: 100%;
+      align-self: stretch;
+      justify-self: stretch;
+
       position: sticky !important;
-      height: 100vh !important;
-      inline-size: 100% !important;
       z-index: 10 !important;
     }
 
