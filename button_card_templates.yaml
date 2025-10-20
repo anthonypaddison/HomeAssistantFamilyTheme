@@ -21,7 +21,6 @@ sb_icon_only:
       - color: var(--sb-inactive-icon) !important
       - place-items: center
       - padding: 8px 4px
-      - transition: transform .05s ease
       - overflow: visible
     icon:
       - width: 58px
