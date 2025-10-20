@@ -43,11 +43,17 @@ styles:
       - grid-area: center
       - justify-self: center
       - align-self: center
-      - font-weight: 800
-      - font-size: 28px
-      - line-height: 32px
-      - min-width: 4ch
-      - letter-spacing: 0.5px
+      - display: flex
+      - flex-direction: column
+      - align-items: center
+      - line-height: 1.1
+      - --h-time-size: 32px
+      - --h-time-weight: 800
+      - --h-date-size: 12px
+      - --h-date-weight: 700
+      - --h-date-opacity: 0.85
+      - font-size: var(--h-time-size)
+
     right:
       - grid-area: right
       - justify-self: end
@@ -66,8 +72,20 @@ custom_fields:
   left: >
     [[[ return 'Panogu Family'; ]]]
   center: >
-    [[[ const d = new Date(); return d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }); ]]]
+    [[[
+      const time = states['sensor.family_clock']?.state || '';
+      const date = states['sensor.family_clock']?.attributes?.date_long || '';
+      // Two lines: time (big), date (smaller)
+      return `
+        <div style="font-size:var(--h-time-size); font-weight:var(--h-time-weight);">
+          ${time}
+        </div>
+        <div style="font-size:var(--h-date-size); font-weight:var(--h-date-weight); opacity:var(--h-date-opacity);">
+          ${date}
+        </div>
+      `;
+    ]]]
   right: >
     [[[ return 'DEMO'; ]]]  # Replace with your real logic or dummy
 triggers_update:
-  - sensor.time
+  - sensor.family_clock
