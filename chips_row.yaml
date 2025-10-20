@@ -6,7 +6,7 @@ card_mod:
       /* Make the chips row fill the grid column */
       display: inline !important;
       width: 100% !important;
-      height: var(--family-chips-height, 78px) !important;
+      height: var(--family-chips-height, 72px) !important;
     }
     /* Outer shell styling */
     ha-card {
@@ -20,7 +20,6 @@ card:
   type: grid
   columns: 5
   square: false
-  # Optional polish: control gaps in the grid
   card_mod:
     style: |
       :host {
