@@ -1,7 +1,8 @@
 title: Family
-theme: FamilyBoard
+theme: FamilyBoard-Base
 
 button_card_templates: !include button_card_templates.yaml
+
 views:
   - title: Family
     path: family
@@ -10,10 +11,9 @@ views:
     card_mod:
       style: |
         :host {
-          /* full height minus the HA header bar */
-          height: calc(100vh - var(--family-heading-height)) !important;
-          block-size: calc(100vh - var(--family-heading-height)) !important;
-          width: 100vw  !important;
+          height: calc(100vh - var(--header-height)) !important;
+          block-size: calc(100vh - var(--header-height)) !important;
+          width: 100vw !important;
           margin: 0 !important;
           padding: 0 !important;
         }
@@ -22,17 +22,19 @@ views:
           padding: 0 !important;
           margin: 0 !important;
         }
-        /* grid-layout container */
         #root, .layout, .grid, .horizontal, .vertical {
-          height: 100vh !important;
+          height: 100% !important;
           margin: 0 !important;
           padding: 0 !important;
         }
     layout:
       margin: 0px
       padding: 0px
-      grid-template-columns: 6% 1fr
-      grid-template-rows: auto auto minmax(0, 1fr)
+      grid-template-columns: 8% 1fr
+      grid-template-rows:
+        - var(--family-heading-height, 48px)
+        - var(--family-chips-height, 72px)
+        - 1fr
       grid-template-areas: |
         "sidebar heading"
         "sidebar chips"
