@@ -67,6 +67,7 @@ due_today_progress_chip:
   styles:
     card:
       - padding: 6px 10px
+      - width: 100%
       - border-radius: 14px
       - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
       - min-height: 36px

@@ -2,23 +2,12 @@ type: custom:mod-card
 view_layout: { grid-area: chips }
 card_mod:
   style: |
-    :host {
-      display: block;
-      inline-size: 100%;
-      block-size: auto;
-      align-self: stretch;
-      justify-self: stretch;
-    }
     ha-card {
-      box-sizing: border-box;
       background: var(--app-header-background-color) !important;
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 6px 12px !important;
       min-height: var(--family-chips-height, 56px);
-      display: flex !important;
-      align-items: center !important;
-      justify-content: stretch !important;
     }
 card:
   type: grid
