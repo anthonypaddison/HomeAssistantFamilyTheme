@@ -2,8 +2,12 @@ type: custom:mod-card
 view_layout: { grid-area: chips }
 card_mod:
   style: |
-    grid-card {
-      width: 100% !important;
+    :host {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+      align-self: stretch;
+      justify-self: stretch;
     }
     ha-card {
       box-sizing: border-box;
