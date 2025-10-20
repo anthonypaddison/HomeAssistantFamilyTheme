@@ -5,12 +5,12 @@ card_mod:
     :host {
       /* Make the chips row fill the grid column */
       display: inline !important;
+      width: 100% !important;
     }
 
     /* Outer shell styling */
     ha-card {
       background: var(--app-header-background-color);
-      width: 100% !important;
       border-radius: 0;
       margin: 0;
       padding: 6px 12px;
