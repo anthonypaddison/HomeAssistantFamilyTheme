@@ -5,9 +5,6 @@ card_mod:
     :host {
       /* Make the chips row fill the grid column */
       display: inline !important;
-      inline-size: 100%;
-      align-self: stretch;
-      justify-self: stretch;
     }
 
     /* Outer shell styling */
