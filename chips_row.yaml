@@ -2,6 +2,10 @@ type: custom:mod-card
 view_layout: { grid-area: chips }
 card_mod:
   style: |
+    :host {
+      /* Local tokens for this chips row only */
+      width: 100% !important;
+    }
     ha-card {
       box-sizing: border-box;
       width: 100% !important;
