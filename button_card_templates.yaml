@@ -67,7 +67,6 @@ due_today_progress_chip:
   styles:
     card:
       - padding: 6px 10px
-      - width: 100%
       - border-radius: 14px
       - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
       - min-height: 36px
@@ -109,14 +108,14 @@ due_today_progress_chip:
     v: >
       [[[
         const done = Number(states[variables.completed]?.state ?? 0);
-        const rem = Number(states[variables.outstanding]?.state ?? 0);
+        const rem  = Number(states[variables.outstanding]?.state ?? 0);
         const total = Math.max(0, done + rem);
         return `${done}/${total}`;
       ]]]
     bar: >
       [[[
         const done = Number(states[variables.completed]?.state ?? 0);
-        const rem = Number(states[variables.outstanding]?.state ?? 0);
+        const rem  = Number(states[variables.outstanding]?.state ?? 0);
         const total = Math.max(0, done + rem);
         const pct = total ? Math.min(100, Math.round(done / total * 100)) : 0;
         return `<div style="position:absolute;inset:0;background:rgba(255,255,255,.85);transform-origin:left;transform:scaleX(${pct/100});"></div>`;

@@ -2,13 +2,16 @@ type: custom:mod-card
 view_layout: { grid-area: chips }
 card_mod:
   style: |
+    :host {
+      /* Local tokens for this chips row only */
+      display: inline !important;
+    }
     ha-card {
       background: var(--app-header-background-color) !important;
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 6px 12px !important;
-      min-height: var(--family-chips-height, 56px);
-      width: 100% !important;
+      min-height: 100%;
     }
 card:
   type: grid
