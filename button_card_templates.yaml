@@ -68,8 +68,8 @@ due_today_progress_chip:
   icon: '[[[ return variables.icon || "mdi:checkbox-marked-circle"; ]]]'
   styles:
     card:
-      - padding: 6px 10px
-      - border-radius: 14px
+      - padding: 13px
+      - border-radius: 10px
       - background: '[[[ return variables.color ?? "var(--primary-color)"; ]]]'
       - min-height: 36px
       - box-shadow: none
