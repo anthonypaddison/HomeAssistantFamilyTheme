@@ -4,8 +4,16 @@ cards:
   - type: custom:mod-card
     card_mod:
       style: |
-        ha-card { background: transparent; box-shadow: none; padding: 0; }
-        .card-content { display: flex; justify-content: flex-end; gap: 8px; }
+        ha-card {
+          background: transparent;
+          box-shadow: none;
+          padding: 0;
+        }
+        .card-content {
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+        }
     card:
       type: horizontal-stack
       cards:
@@ -46,18 +54,18 @@ cards:
             name: [ font-size: 12px, font-weight: 700 ]
             icon: [ width: 16px, height: 16px ]
   # Calendar Views
-  - type: conditional
-    conditions:
-      - entity: input_select.calendar_view
-        state: Day
-    card: !include /config/calendar_day.yaml
-  - type: conditional
-    conditions:
-      - entity: input_select.calendar_view
-        state: 5-Day
-    card: !include /config/calendar_5day.yaml
-  - type: conditional
-    conditions:
-      - entity: input_select.calendar_view
-        state: Month
-    card: !include /config/calendar_month.yaml
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: Day
+  #   card: !include /config/calendar_day.yaml
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: 5-Day
+  #   card: !include /config/calendar_5day.yaml
+  # - type: conditional
+  #   conditions:
+  #     - entity: input_select.calendar_view
+  #       state: Month
+  #   card: !include /config/calendar_month.yaml
