@@ -10,7 +10,7 @@ card_mod:
       margin: 0 !important;
       padding: 8px 12px !important;
       color: var(--primary-text-color) !important;
-      min-height: var(--family-heading-height, 56px);
+      height: 100%;
       display: flex; align-items: center;
     }
 show_icon: false
