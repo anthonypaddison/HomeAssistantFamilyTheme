@@ -83,17 +83,19 @@ due_today_progress_chip:
       - justify-self: start
       - grid-area: i
     icon:
-      - width: 18px
-      - height: 18px
+      - width: 30px
+      - height: 30px
       - color: '#0F172A'
+      - padding: 3px
     name:
       - grid-area: n
       - align-self: center
       - justify-self: start
       - font-weight: '800'
       - color: '#0F172A'
-      - font-size: 13px
-      - line-height: 16px
+      - font-size: 15px
+      - line-height: 19px
+      - padding: 3px
     custom_fields:
       v:
         - grid-area: v
@@ -102,6 +104,7 @@ due_today_progress_chip:
         - font-size: 12px
         - font-weight: 800
         - color: '#0F172A'
+        - margin: 3px
       bar:
         - grid-area: bar
         - width: 100%
@@ -110,6 +113,7 @@ due_today_progress_chip:
         - background: 'rgba(0,0,0,.15)'
         - position: relative
         - overflow: hidden
+        - margin: 3px
   custom_fields:
     v: >
       [[[

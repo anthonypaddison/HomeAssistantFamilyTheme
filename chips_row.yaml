@@ -4,11 +4,10 @@ card_mod:
   style: |
     :host {
       /* Make the chips row fill the grid column */
-      display: block;
+      display: inline !important;
       inline-size: 100%;
       align-self: stretch;
       justify-self: stretch;
-      /* If you want it to stick under the header, you can add position: sticky; top: Xpx */
     }
 
     /* Outer shell styling */
@@ -20,7 +19,7 @@ card_mod:
       padding: 6px 12px;
       /* Use a concrete height token instead of 100% */
       min-height: var(--family-chips-height, 56px);
-      display: flex;           /* Let inner grid take full width */
+      display: flex;
       align-items: center;
     }
 card:
