@@ -14,21 +14,22 @@ card_mod:
 
       display: block;
       inline-size: 100%;
-      block-size: 100%;
-      align-self: stretch;
-      justify-self: stretch;
+      block-size: calc(100vh - var(--header-height));
+      position: sticky;
+      top: var(--header-height);
+      z-index: 10;
 
-      position: sticky !important;
-      z-index: 10 !important;
     }
 
     ha-card {
+      inline-size: 100%;
+      block-size: 100%;
+      box-sizing: border-box;
       background: var(--app-header-background-color);
       border-radius: var(--ha-card-border-radius, 16px);
       box-shadow: var(--ha-card-box-shadow);
       padding: 0;
-      overflow: visible;
-      inline-size: 100%;
+      overflow: hidden;
     }
 
 card:

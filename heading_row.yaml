@@ -67,7 +67,6 @@ styles:
       - border-radius: 999px
       - text-transform: uppercase
       - letter-spacing: 0.6px
-
 custom_fields:
   left: >
     [[[ return 'Panogu Family'; ]]]
@@ -75,17 +74,13 @@ custom_fields:
     [[[
       const time = states['sensor.family_clock']?.state || '';
       const date = states['sensor.family_clock']?.attributes?.date_long || '';
-      // Two lines: time (big), date (smaller)
       return `
-        <div style="font-size:var(--h-time-size); font-weight:var(--h-time-weight);">
-          ${time}
-        </div>
-        <div style="font-size:var(--h-date-size); font-weight:var(--h-date-weight); opacity:var(--h-date-opacity);">
-          ${date}
-        </div>
+        <div style="font-size:var(--h-time-size); font-weight:var(--h-time-weight);">${time}</div>
+        <div style="font-size:var(--h-date-size); font-weight:var(--h-date-weight); opacity:var(--h-date-opacity);">${date}</div>
       `;
     ]]]
   right: >
-    [[[ return 'DEMO'; ]]]  # Replace with your real logic or dummy
+    [[[ return 'DEMO'; ]]]
+
 triggers_update:
   - sensor.family_clock
