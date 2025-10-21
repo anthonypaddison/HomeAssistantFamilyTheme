@@ -83,8 +83,8 @@ class FullCalendarRow extends HTMLElement {
         right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
       },
       allDaySlot: true,
-      slotMinTime: "01:00:00",
-      slotMaxTime: "23:00:00",
+      slotMinTime: "07:00:00",
+      slotMaxTime: "21:00:00",
       hiddenDays: [],
       nowIndicator: true,
       // asset loading
@@ -111,9 +111,9 @@ class FullCalendarRow extends HTMLElement {
 
       // Load CSS (recommended) and JS
       if (cfg.cdn) {
-        await this._loadScript("https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js");
+        await this._loadScript("/local/fullcalendar/fullcalendar.min.js");
       } else {
-        await this._loadScript(cfg.fcJsUrl || "/local/fullcalendar/index.global.min.js");
+        await this._loadScript(cfg.fcJsUrl || "/local/fullcalendar/fullcalendar.min.js");
       }
 
       // Retry up to ~500ms for global to attach (prevents false negatives)
