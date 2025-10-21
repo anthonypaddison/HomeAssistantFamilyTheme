@@ -21,8 +21,13 @@ card:
   card_mod:
     style: |
       :host {
-        --masonry-view-card-margin: 0;
-        --grid-card-gap: 8px;
+        --masonry-view-card-margin: 0 !important;
+        --grid-card-gap: 8px !important;
+      }
+      ha-icon {
+        width: 40px !important;
+        margin: 0px !important;
+        padding: 0px !important;
       }
   cards:
     - type: custom:button-card

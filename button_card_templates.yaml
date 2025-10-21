@@ -84,8 +84,8 @@ due_today_progress_chip:
     icon:
       - color: '#0F172A'
       - padding: 3px
-      - width: 60px
-      - height: 60px
+      - width: 20px
+      - height: 20px
     name:
       - grid-area: n
       - align-self: center
