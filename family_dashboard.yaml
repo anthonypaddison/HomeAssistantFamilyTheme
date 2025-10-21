@@ -22,11 +22,6 @@ views:
           padding: 0 !important;
           margin: 0 !important;
         }
-        #root, .layout, .grid, .horizontal, .vertical {
-          height: 100% !important;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
     layout:
       margin: 0px
       padding: 0px
@@ -57,17 +52,22 @@ views:
       - type: custom:fullcalendar-row
         view_layout: { grid-area: main }
         card_mod:
-            style: |
-              ha-card {
-                margin: 0 !important;
-                height: 100%;
-              }
+          style: |
+            ha-card {
+              margin: 0 !important;
+              height: 100% !important;
+              overflow: hidden;
+            }
+            .fc, .fc-view-harness, .fc-scrollgrid, .fc-scroller {
+              height: 100% !important;
+              max-height: 100% !important;
+            }
         initialView: timeGridWeek
         hiddenDays: [0, 6]
         allDaySlot: true
         nowIndicator: true
         cdn: false
-        fcJsUrl:  /local/fullcalendar/fullcalendar.min.js
+        fcJsUrl: /local/fullcalendar/fullcalendar.min.js
         entities:
           - entity: calendar.family
             color: var(--family-color-family)

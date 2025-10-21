@@ -1,12 +1,12 @@
 // fullcalendar-row.js
-// Lovelace custom card embedding FullCalendar v6 (global build).
-// - Event-driven single-flight loader (no await in hass path) to prevent hangs.
-// - No CSS loading (intentionally omitted per your requirement).
-// - Autodiscovery for HA calendar.* entities.
-// - ResizeObserver for layout correctness in dashboards.
-// - Locale / first day / 24h time mapped from Home Assistant.
-// - Safe window.open (noopener,noreferrer).
-// - Robust against race conditions in events loading.
+// Lovelace custom card embedding FullCalendar v6 (global build only).
+// - Event-driven single-flight JS loader (no await in hass path).
+// - No CSS loading (intentionally omitted).
+// - Auto discovery for HA calendar.* entities.
+// - ResizeObserver keeps layout correct.
+// - Locale / first-day / 24h time mapped from HA.
+// - Safe window.open (noopener,no referrer).
+// - Guards against race conditions while fetching events.
 
 let _fcLoader = {
   status: "idle",   // idle | loading | loaded | error
@@ -16,7 +16,6 @@ let _fcLoader = {
 
 // Queue a callback to run when FullCalendar global is ready
 function onFullCalendarReady(srcResolver, onReady, onError) {
-  // Already loaded?
   if (window.FullCalendar?.Calendar) {
     onReady();
     return;
@@ -26,30 +25,29 @@ function onFullCalendarReady(srcResolver, onReady, onError) {
     return;
   }
 
-  // Enqueue
   _fcLoader.waiters.push({ onReady, onError });
 
-  // Kick off loading if not already
   if (_fcLoader.status !== "loading") {
     const src = srcResolver();
     _fcLoader.status = "loading";
     _fcLoader.src = src;
 
-    // If script with same src already exists, attach listeners
     const abs = new URL(src, location.href).href;
     const existing = [...document.scripts].find((s) => s.src === abs);
 
-    const done = () => {
-      if (window.FullCalendar?.Calendar) {
-        _fcLoader.status = "loaded";
-        const toRun = _fcLoader.waiters.splice(0);
-        toRun.forEach(w => { try { w.onReady && w.onReady(); } catch {} });
-      } else {
-        // Global didn't attach—treat as error and allow retry later
-        _fcLoader.status = "error";
-        const toRun = _fcLoader.waiters.splice(0);
-        toRun.forEach(w => { try { w.onError && w.onError(new Error("FullCalendar global not available")); } catch {} });
-      }
+    const finish = () => {
+      // small defer to allow global to attach
+      setTimeout(() => {
+        if (window.FullCalendar?.Calendar) {
+          _fcLoader.status = "loaded";
+          const toRun = _fcLoader.waiters.splice(0);
+          toRun.forEach(w => { try { w.onReady && w.onReady(); } catch {} });
+        } else {
+          _fcLoader.status = "error";
+          const toRun = _fcLoader.waiters.splice(0);
+          toRun.forEach(w => { try { w.onError && w.onError(new Error("FullCalendar global not available")); } catch {} });
+        }
+      }, 0);
     };
 
     const fail = (err) => {
@@ -59,17 +57,16 @@ function onFullCalendarReady(srcResolver, onReady, onError) {
     };
 
     if (existing) {
-      // If it's already in the DOM, wait for onload if possible; otherwise poll briefly
       if (existing.dataset._fcHooked !== "1") {
         existing.dataset._fcHooked = "1";
-        existing.addEventListener("load", () => setTimeout(done, 0));
+        existing.addEventListener("load", finish);
         existing.addEventListener("error", () => fail(new Error("FullCalendar script error")));
       }
-      // Fallback: short poll in case load already fired before we hooked listeners
+      // Fallback poll in case load already fired
       let tries = 0;
       const poll = () => {
-        if (window.FullCalendar?.Calendar) return done();
-        if (++tries > 30) return done(); // give up; will mark error if still missing
+        if (window.FullCalendar?.Calendar) return finish();
+        if (++tries > 30) return finish(); // will mark error if still missing
         setTimeout(poll, 25);
       };
       poll();
@@ -78,10 +75,7 @@ function onFullCalendarReady(srcResolver, onReady, onError) {
       s.src = src;
       s.async = true;
       s.dataset._fcHooked = "1";
-      s.addEventListener("load", () => {
-        // Give the global a moment to attach
-        setTimeout(done, 0);
-      });
+      s.addEventListener("load", finish);
       s.addEventListener("error", () => fail(new Error(`Script load failed: ${src}`)));
       document.head.appendChild(s);
     }
@@ -125,7 +119,6 @@ class FullCalendarRow extends HTMLElement {
       else this._card.removeAttribute("header");
     }
 
-    // Re-render if HA already provided and FC ready
     if (this._hass && this._calendarReady) {
       this._renderCalendar();
     }
@@ -134,7 +127,6 @@ class FullCalendarRow extends HTMLElement {
   set hass(hass) {
     this._hass = hass;
 
-    // Use event-driven loader (no await)
     if (!this._calendarReady) {
       onFullCalendarReady(
         () => this._resolveFcSrc(),
@@ -145,7 +137,6 @@ class FullCalendarRow extends HTMLElement {
         (err) => {
           console.error("FullCalendar load failed", err);
           this._showError("Failed to load FullCalendar JS (see console). Retrying...");
-          // Soft retry later
           setTimeout(() => {
             if (!this._calendarReady) {
               onFullCalendarReady(
@@ -179,7 +170,7 @@ class FullCalendarRow extends HTMLElement {
   _normalizeConfig(raw) {
     const defaults = {
       title: "",
-      entities: [], // [{ entity: 'calendar.x', color: '#hex' }, ...] or "calendar.x"
+      entities: [], // [{ entity: 'calendar.x', color: '#hex', textColor?: '#fff' }, ...] or "calendar.x"
       initialView: "timeGridDay",
       headerToolbar: {
         left: "prev,next today",
@@ -197,9 +188,8 @@ class FullCalendarRow extends HTMLElement {
       stickyHeaderDates: true,
       moreLinkClick: "popover",
       // Asset loading
-      cdn: true,
-      // IMPORTANT: FullCalendar v6 global build filename
-      fcJsUrl: "/local/fullcalendar/index.global.min.js",
+      cdn: false, // default to local (you already host the file)
+      fcJsUrl: "/local/fullcalendar/index.global.min.js", // v6 global build
     };
     const cfg = { ...defaults, ...raw };
     cfg.entities = (cfg.entities || []).map((e) => (typeof e === "string" ? { entity: e } : e));
@@ -208,12 +198,9 @@ class FullCalendarRow extends HTMLElement {
 
   _resolveFcSrc() {
     const cfg = this._config || {};
-    if (cfg.cdn) {
-      // Official CDN global build for v6
-      return "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js";
-    }
-    // Local path override (must be the global build)
-    return cfg.fcJsUrl || "/local/fullcalendar/index.global.min.js";
+    return cfg.cdn
+      ? "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"
+      : (cfg.fcJsUrl || "/local/fullcalendar/index.global.min.js");
   }
 
   async _autoDiscoverCalendars() {
@@ -279,6 +266,7 @@ class FullCalendarRow extends HTMLElement {
               "get",
               `calendars/${encodeURIComponent(entityId)}?start=${encodeURIComponent(startISO)}&end=${encodeURIComponent(endISO)}`
             );
+
             return (list || []).map((ev) => {
               const isAllDay =
                 !!ev.all_day ||
@@ -307,8 +295,9 @@ class FullCalendarRow extends HTMLElement {
           })
         );
 
+        const flat = results.flat();
         if (this._eventsNonce === myNonce) {
-          success(results.flat());
+          success(Array.isArray(flat) ? flat : []);
         }
       } catch (err) {
         console.error("fullcalendar-row: Events load error", err);
@@ -346,6 +335,7 @@ class FullCalendarRow extends HTMLElement {
     this._lastLocaleKey = lo.localeKey;
 
     this._calendar = new FC.Calendar(this._calendarDiv, {
+      // Locale/time
       locale: lo.lang,
       direction: lo.dir,
       firstDay: lo.firstDay,
@@ -353,11 +343,13 @@ class FullCalendarRow extends HTMLElement {
       eventTimeFormat: lo.eventTimeFormat,
       timeZone: "local",
 
+      // View & toolbar
       initialView: cfg.initialView,
       headerToolbar: cfg.headerToolbar,
       stickyHeaderDates: cfg.stickyHeaderDates,
       weekNumbers: cfg.weekNumbers,
 
+      // Day/time grid
       allDaySlot: cfg.allDaySlot,
       nowIndicator: cfg.nowIndicator,
       hiddenDays: cfg.hiddenDays,
@@ -367,10 +359,13 @@ class FullCalendarRow extends HTMLElement {
       expandRows: cfg.expandRows,
       moreLinkClick: cfg.moreLinkClick,
 
+      // Sizing
       height: "100%",
 
+      // Data
       events: this._eventsSource(),
 
+      // UX
       loading: (isLoading) => {
         if (isLoading) this._container.setAttribute("aria-busy", "true");
         else this._container.removeAttribute("aria-busy");
@@ -430,9 +425,7 @@ class FullCalendarRow extends HTMLElement {
 
   // Lovelace layout hints
   getCardSize() { return 7; }
-  getGridOptions() {
-    return { rows: 8, columns: 12, min_rows: 4, max_rows: 12 };
-  }
+  getGridOptions() { return { rows: 8, columns: 12, min_rows: 4, max_rows: 12 }; }
 }
 
 customElements.define("fullcalendar-row", FullCalendarRow);
