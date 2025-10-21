@@ -10,18 +10,13 @@ views:
     type: custom:grid-layout
     card_mod:
       style: |
-        # :host {
-        #   height: calc(100vh - var(--header-height)) !important;
-        #   block-size: calc(100vh - var(--header-height)) !important;
-        #   width: 100vw !important;
-        #   margin: 0 !important;
-        #   padding: 0 !important;
-        # }
-        # hui-view {
-        #   height: 100% !important;
-        #   padding: 0 !important;
-        #   margin: 0 !important;
-        # }
+        :host {
+          # height: calc(100vh - var(--header-height)) !important;
+          # block-size: calc(100vh - var(--header-height)) !important;
+          # width: 100vw !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
     layout:
       margin: 0px
       padding: 0px
