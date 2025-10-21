@@ -1,29 +1,49 @@
+# ---- Sidebar wrapper (scoped styles & variables) ----
 type: custom:mod-card
-view_layout: { grid-area: chips }
+view_layout: { grid-area: sidebar }
 card_mod:
   style: |
     :host {
-      display: block !important;
-      inline-size: 100% !important;
-      block-size: var(--family-chips-height, 72px) !important;
+      /* Local tokens for this sidebar only */
+
+      --sb-inactive-bg:   var(--app-header-background-color) !important;
+      --sb-inactive-icon: var(--family-background) !important;
+
+      --sb-active-bg:     var(--family-background) !important;
+      --sb-active-icon:   var(--app-header-background-color) !important;
+
+      display: block;
+      inline-size: 100%;
+      block-size: calc(100vh - var(--header-height));
+      position: sticky;
+      top: var(--header-height);
+      z-index: 10;
+
     }
+
     ha-card {
-      background: var(--app-header-background-color) !important;
-      border-radius: 0;
-      margin: 0;
-      padding: 8px;
-      height: var(--family-chips-height, 72px) !important;
+      inline-size: 100%;
+      block-size: 100%;
       box-sizing: border-box;
+      background: var(--app-header-background-color);
+      border-radius: var(--ha-card-border-radius, 16px);
+      box-shadow: var(--ha-card-box-shadow);
+      padding: 0;
       overflow: hidden;
     }
+
 card:
-  type: grid
-  columns: 5
-  square: false
+  type: vertical-stack
   card_mod:
     style: |
-      :host {
-        height: 100% !important;
+      ha-card {
+        background: var(--app-header-background-color) important;
+        box-shadow: none !important;
+        border: 0 !important;
+        padding: 0 !important;
+      }
+      .card-content #root > * {
+        margin: 0 !important;  /* no gaps between buttons */
       }
   cards:
     # Calendar
