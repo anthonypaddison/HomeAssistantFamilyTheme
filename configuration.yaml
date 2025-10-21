@@ -16,6 +16,8 @@ lovelace:
       type: module
     - url: /hacsfiles/week-planner-card/week-planner-card.js
       type: module
+    - url: /config/fullcalendar-panel.js
+      type: module
   dashboards:
     family-dashboard:
       mode: yaml
