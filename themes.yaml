@@ -14,11 +14,12 @@ FamilyBoard-Base:
   accent-color:  var(--palette-lilac)
 
   # --- Brand / Family colours ---
-  family-color-family:  "#36B37E"
-  family-color-anthony: "#7E57C2"
-  family-color-joy:     "#F4B400"
-  family-color-lizzie:  "#EC407A"
-  family-color-toby:    "#42A5F5"
+  family-color-family:     "#36B37E"
+  family-color-anthony:    "#7E57C2"
+  family-color-joy:        "#F4B400"
+  family-color-lizzie:     "#EC407A"
+  family-color-toby:       "#42A5F5"
+  family-color-routine:    "#b2fd7fff"
 
   # --- FAB colours per section (global tokens; usage is optional) ---
   fab-color-calendar: var(--palette-mint)
@@ -85,13 +86,6 @@ FamilyBoard-Base:
   # mush-chip-height: 36px
   # mush-chip-padding: 0 0.6em
   # mush-chip-spacing: 8px
-
-  # --- Calendar / family accent tokens ---
-  cal-color-family:  var(--family-color-family)
-  cal-color-anthony: var(--family-color-anthony)
-  cal-color-joy:     var(--family-color-joy)
-  cal-color-lizzie:  var(--family-color-lizzie)
-  cal-color-toby:    var(--family-color-toby)
 
   masonry-view-card-margin: 0px
   header-height: 100px

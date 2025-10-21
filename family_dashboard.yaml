@@ -70,11 +70,17 @@ views:
         fcJsUrl:  /local/fullcalendar/fullcalendar.min.js
         entities:
           - entity: calendar.family
-            color: "#6a7f73"
-          - entity: calendar.kids
-            color: "#f39c12"
-          - entity: calendar.work
-            color: "#9aa6a0"
+            color: var(--family-color-family)
+          - entity: calendar.anthony
+            color: var(--family-color-anthony)
+          - entity: calendar.joy
+            color: var(--family-color-joy)
+          - entity: calendar.lizzie
+            color: var(--family-color-lizzie)
+          - entity: calendar.toby
+            color: var(--family-color-toby)
+          - entity: calendar.routine
+            color: var(--family-color-routine)
         headerToolbar:
           left: prev,next today
           center: title
