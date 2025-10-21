@@ -56,14 +56,18 @@ views:
 
       - type: custom:fullcalendar-panel
         view_layout: { grid-area: main }
-        title: Week at a Glance
+        card_mod:
+            style: |
+              ha-card {
+                margin: 0 !important;
+                height: 100%;
+              }
         initialView: timeGridWeek
         hiddenDays: [0, 6]
         allDaySlot: false
         nowIndicator: true
         cdn: false
-        fcJsUrl:  /local/fullcalendar/index.global.min.js
-        fcCssUrl: /local/fullcalendar/main.min.css
+        fcJsUrl:  /local/fullcalendar/fullcalendar.min.js
         entities:
           - entity: calendar.family
             color: "#6a7f73"
