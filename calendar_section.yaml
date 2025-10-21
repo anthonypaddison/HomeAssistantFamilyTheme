@@ -4,16 +4,16 @@ cards:
   - type: custom:mod-card
     card_mod:
       style: |
-        ha-card {
-          background: transparent;
-          box-shadow: none;
-          padding: 0;
-        }
-        .card-content {
-          # display: flex;
-          # justify-content: flex-end;
-          gap: 8px;
-        }
+        # ha-card {
+        #   background: transparent;
+        #   box-shadow: none;
+        #   padding: 0;
+        # }
+        # .card-content {
+        #   # display: flex;
+        #   # justify-content: flex-end;
+        #   gap: 8px;
+        # }
     card:
       type: horizontal-stack
       cards:
@@ -25,10 +25,10 @@ cards:
             service: input_select.select_option
             target: { entity_id: input_select.calendar_view }
             data: { option: Day }
-          styles:
-            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-            name: [ font-size: 12px, font-weight: 700 ]
-            icon: [ width: 16px, height: 16px ]
+          # styles:
+          #   card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+          #   name: [ font-size: 12px, font-weight: 700 ]
+          #   icon: [ width: 16px, height: 16px ]
         - type: custom:button-card
           name: 5-Day
           icon: mdi:calendar-range
@@ -37,10 +37,10 @@ cards:
             service: input_select.select_option
             target: { entity_id: input_select.calendar_view }
             data: { option: 5-Day }
-          styles:
-            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-            name: [ font-size: 12px, font-weight: 700 ]
-            icon: [ width: 16px, height: 16px ]
+          # styles:
+          #   card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+          #   name: [ font-size: 12px, font-weight: 700 ]
+          #   icon: [ width: 16px, height: 16px ]
         - type: custom:button-card
           name: Month
           icon: mdi:calendar-month
@@ -49,10 +49,10 @@ cards:
             service: input_select.select_option
             target: { entity_id: input_select.calendar_view }
             data: { option: Month }
-          styles:
-            card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
-            name: [ font-size: 12px, font-weight: 700 ]
-            icon: [ width: 16px, height: 16px ]
+          # styles:
+          #   card: [ height: 36px, padding: 4px 10px, border-radius: 10px, background: var(--card-background-color) ]
+          #   name: [ font-size: 12px, font-weight: 700 ]
+          #   icon: [ width: 16px, height: 16px ]
   # Calendar Views
   # - type: conditional
   #   conditions:
