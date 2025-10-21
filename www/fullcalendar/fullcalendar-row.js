@@ -1,10 +1,10 @@
-// fullcalendar-panel.js
+// fullcalendar-row.js
 // Lovelace custom card embedding FullCalendar v6 with hour-by-hour views.
 //
-// Requires a Lovelace resource entry pointing to /local/fullcalendar-panel.js.
+// Requires a Lovelace resource entry pointing to /local/fullcalendar-row.js.
 // Usage example in a dashboard:
 //
-// type: custom:fullcalendar-panel
+// type: custom:fullcalendar-row
 // entities:
 //   - entity: calendar.family
 //     color: '#6a7f73'
@@ -231,4 +231,4 @@ class FullCalendarCard extends HTMLElement {
 }
 
 // Register the custom element
-customElements.define("fullcalendar-panel", FullCalendarCard);
+customElements.define("fullcalendar-row", FullCalendarCard);

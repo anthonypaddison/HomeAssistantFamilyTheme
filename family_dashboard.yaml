@@ -53,8 +53,8 @@ views:
       # 3) CHIPS ROW
       - !include /config/chips_row.yaml
 
-
-      - type: custom:fullcalendar-panel
+      # 3) FULL CALENDAR ROW
+      - type: custom:fullcalendar-row
         view_layout: { grid-area: main }
         card_mod:
             style: |
@@ -64,7 +64,7 @@ views:
               }
         initialView: timeGridWeek
         hiddenDays: [0, 6]
-        allDaySlot: false
+        allDaySlot: true
         nowIndicator: true
         cdn: false
         fcJsUrl:  /local/fullcalendar/fullcalendar.min.js
