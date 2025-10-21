@@ -81,11 +81,11 @@ due_today_progress_chip:
       - align-self: center
       - justify-self: start
       - grid-area: i
-      - width: 40px
-      - height: 40px
     icon:
       - color: '#0F172A'
       - padding: 3px
+      - width: 60px
+      - height: 60px
     name:
       - grid-area: n
       - align-self: center
