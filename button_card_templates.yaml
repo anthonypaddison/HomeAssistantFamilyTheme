@@ -23,8 +23,8 @@ sb_icon_only:
       - padding: 8px 4px
       - overflow: visible
     icon:
-      - width: 58px
-      - height: 58px
+      - width: 50px
+      - height: 50px
     custom_fields:
       badge:
         - position: absolute
@@ -81,9 +81,9 @@ due_today_progress_chip:
       - align-self: center
       - justify-self: start
       - grid-area: i
-    icon:
       - width: 40px
       - height: 40px
+    icon:
       - color: '#0F172A'
       - padding: 3px
     name:
