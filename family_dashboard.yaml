@@ -58,6 +58,10 @@ views:
               height: 100% !important;
               max-height: 100% !important;
             }
+            .fc-agenda .fc-event {
+              min-height: 18px;
+            }
+
         initialView: agendaWeek
         hiddenDays: [0, 6]
         allDaySlot: true
@@ -81,6 +85,9 @@ views:
           right: month,agendaWeek,agendaDay
         minTime: '06:00:00'
         maxTime: '22:00:00'
+        slotDuration: '01:00:00'
+        forceEventDuration: true
+        slotEventOverlap: true
         titleFormat:
           month: 'MMMM'
           week: 'MMMM Do'

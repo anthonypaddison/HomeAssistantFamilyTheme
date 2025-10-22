@@ -392,8 +392,8 @@ class FullCalendarRow extends HTMLElement {
         if(rawStart.dateTime !== undefined) {
             starttime = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
             endtime = new Date(rawEnd.dateTime).toTimeString().slice(0, 5);
-            startdate = new Date(rawStart.dateTime).toDateString();
-            enddate = new Date(rawEnd.dateTime).toDateString();
+            startdate = (rawStart.dateTime).split("T")[0];
+            enddate = (rawEnd.dateTime).split("T")[0];
             startdate = startdate + 'T' + starttime;
             enddate = enddate + 'T' + endtime;
         }
