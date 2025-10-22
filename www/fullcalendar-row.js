@@ -7,23 +7,29 @@
 // - Supports: entities (HA calendars), colors, hiddenDays, allDaySlot,
 //   header toolbars (v5 names auto-mapped), min/max time, height 100%.
 // - nowIndicator is not supported in FC v2 (ignored with console warning).
+// - Fixes:
+//   * Robust date parsing for HA events (timed vs all-day) with moment/moment-timezone.
+//   * Refetch throttle and entity-change detection to avoid UI flashing.
 
 class FullCalendarRow extends HTMLElement {
 
-    constructor() {
-        super();
-        this._lastRefetchAt = 0;
-        this._prevEntityChangeKeys = {};
-    }
+  constructor() {
+    super();
+    this._lastRefetchAt = 0;
+    this._prevEntityChangeKeys = {};
+  }
 
   static getStubConfig() {
     return {
       cdn: false,
-      // Use your own local files by default; set cdn:true to use CDN
+      // Local defaults (your existing paths); set cdn: true to load from CDN instead
       fcJsUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.js',
       fcCssUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.css',
       jqueryUrl: '/local/fullcalendar-2.1.1/jquery.min.js',
       momentUrl: '/local/fullcalendar-2.1.1/moment.min.js',
+      // Optional: add moment-timezone for rock-solid DST handling
+      momentTzUrl: null, // e.g. '/local/fullcalendar-2.1.1/moment-timezone-with-data.min.js'
+      timezone: null,    // e.g. 'Europe/London' (used for parsing; FC option stays 'local')
 
       initialView: 'agendaWeek', // v2 names: 'month' | 'agendaWeek' | 'agendaDay' | 'basicWeek' | 'basicDay'
       hiddenDays: [0, 6],
@@ -35,7 +41,11 @@ class FullCalendarRow extends HTMLElement {
       },
       minTime: '06:00:00',
       maxTime: '20:00:00',
-      entities: []
+      entities: [],
+
+      // Anti-flash controls
+      refetchCooldownMs: 30000,
+      debug: false,
     };
   }
 
@@ -76,10 +86,11 @@ class FullCalendarRow extends HTMLElement {
     }
 
     // Load assets then init
-    this._ensureAssets().then(() => this._initCalendar()).catch((e) => {
-      // eslint-disable-next-line no-console
-      console.error('fullcalendar-row (v2): failed to load assets', e);
-    });
+    this._ensureAssets()
+      .then(() => this._initCalendar())
+      .catch((e) => {
+        console.error('fullcalendar-row (v2): failed to load assets', e);
+      });
   }
 
   set hass(hass) {
@@ -92,41 +103,48 @@ class FullCalendarRow extends HTMLElement {
 
   getCardSize() { return 6; }
 
-    _watchedEntityIds() {
-        return (this._config.entities || [])
-        .map(e => (typeof e === 'string' ? e : e.entity))
-        .filter(Boolean);
-    }
+  // ---------- Helpers for change detection / throttling ----------
+  _watchedEntityIds() {
+    return (this._config.entities || [])
+      .map(e => (typeof e === 'string' ? e : e.entity))
+      .filter(Boolean);
+  }
 
-    _shouldRefetchForHassChange(hass) {
-        const cfg = this._config || {};
-        const cooldown = Number(cfg.refetchCooldownMs || 30000);
-        const now = Date.now();
-        if (now - this._lastRefetchAt < cooldown) {
-        if (cfg.debug) console.debug('[fullcalendar-row v2] skip refetch: cooldown');
-        return false;
-        }
-        // Build a cheap change-key per watched entity using last_changed + state len
-        let changed = false;
-        for (const eid of this._watchedEntityIds()) {
-        const st = hass.states?.[eid];
-        const key = st ? `${st.last_changed}|${st.state?.length || 0}` : 'missing';
-        if (this._prevEntityChangeKeys[eid] !== key) {
-            changed = true;
-        }
-        this._prevEntityChangeKeys[eid] = key;
-        }
-        if (!changed && cfg.debug) {
-        console.debug('[fullcalendar-row v2] no calendar entity change detected');
-        }
-        return changed;
+  _shouldRefetchForHassChange(hass) {
+    const cfg = this._config || {};
+    const cooldown = Number(cfg.refetchCooldownMs || 30000);
+    const now = Date.now();
+    if (now - this._lastRefetchAt < cooldown) {
+      if (cfg.debug) console.debug('[fullcalendar-row v2] skip refetch: cooldown');
+      return false;
     }
+    // Build a cheap change-key per watched entity using last_changed + state length
+    let changed = false;
+    for (const eid of this._watchedEntityIds()) {
+      const st = hass.states?.[eid];
+      const key = st ? `${st.last_changed}|${st.state?.length || 0}` : 'missing';
+      if (this._prevEntityChangeKeys[eid] !== key) {
+        changed = true;
+      }
+      this._prevEntityChangeKeys[eid] = key;
+    }
+    if (!changed && cfg.debug) {
+      console.debug('[fullcalendar-row v2] no calendar entity change detected');
+    }
+    return changed;
+  }
 
   // ---------- Asset loading ----------
   async _ensureAssets() {
+
     const jqueryUrl = '/local/fullcalendar-2.1.1/jquery.min.js';
+
     const momentUrl = '/local/fullcalendar-2.1.1/moment.min.js';
+
+    const momentTzUrl = '/local/fullcalendar-2.1.1/moment-timezone.min.js';
+
     const fcJsUrl  = '/local/fullcalendar-2.1.1/fullcalendar.min.js';
+
     const fcCssUrl = '/local/fullcalendar-2.1.1/fullcalendar.min.css';
 
     // 1) jQuery
@@ -138,6 +156,11 @@ class FullCalendarRow extends HTMLElement {
     // 2) Moment
     if (!window.moment) {
       await this._loadScript(momentUrl);
+    }
+
+    // 2b) Moment-timezone (optional but recommended)
+    if (momentTzUrl && !window.moment.tz) {
+      await this._loadScript(momentTzUrl);
     }
 
     // 3) FullCalendar v2
@@ -164,7 +187,6 @@ class FullCalendarRow extends HTMLElement {
 
   _loadCss(href, intoShadow = false) {
     return new Promise((resolve, reject) => {
-      // If we want the CSS to style shadow DOM content, we must place a <link> in the shadow root.
       if (intoShadow && this._root) {
         const exists = [...this._root.querySelectorAll('link[rel="stylesheet"]')].some(l => l.href === href);
         if (exists) return resolve();
@@ -229,7 +251,6 @@ class FullCalendarRow extends HTMLElement {
     const initialView = mapView(cfg.initialView || 'agendaWeek');
 
     if (cfg.nowIndicator) {
-      // eslint-disable-next-line no-console
       console.warn('fullcalendar-row (v2): nowIndicator is not supported in FullCalendar v2. Ignoring.');
     }
 
@@ -240,10 +261,13 @@ class FullCalendarRow extends HTMLElement {
         id: entity,
         color: color,
         events: (start, end, timezone, callback) => {
+          if (this._config.debug) console.debug('[fullcalendar-row v2] fetching', entity, start.toISOString(), end.toISOString());
           this._fetchHaEvents(entity, start.toISOString(), end.toISOString())
-            .then(events => callback(events.map(e => this._mapHaEventToFc(e))))
+            .then(events => {
+              const mapped = events.map(e => this._mapHaEventToFc(e)).filter(Boolean);
+              callback(mapped);
+            })
             .catch(err => {
-              // eslint-disable-next-line no-console
               console.error('fullcalendar-row (v2): event fetch failed', err);
               callback([]);
             });
@@ -260,6 +284,7 @@ class FullCalendarRow extends HTMLElement {
       defaultView: initialView,
       editable: false,
       selectable: false,
+      lazyFetching: true,
       eventLimit: true,
       weekNumbers: false,
 
@@ -268,7 +293,7 @@ class FullCalendarRow extends HTMLElement {
       minTime: cfg.minTime || cfg.slotMinTime || '06:00:00', // v2 uses minTime/maxTime
       maxTime: cfg.maxTime || cfg.slotMaxTime || '20:00:00',
       hiddenDays: cfg.hiddenDays || [],
-      timezone: 'local',
+      timezone: 'local', // keep FC in local; we handle parsing with optional moment.tz
       height: 'auto',
       contentHeight: 'auto',
       handleWindowResize: true,
@@ -278,9 +303,8 @@ class FullCalendarRow extends HTMLElement {
 
       // Formatting similar to v5 'eventTimeFormat'
       timeFormat: 'HH:mm', // 24h; change to 'h(:mm)a' for 12h
-
-      // Re-fetch when navigating
-      viewRender: () => {}, // v2 calls events again on nav; no-op here
+      // Re-fetch when navigating (FC v2 will call events() with new range automatically)
+      viewRender: () => {},
     });
 
     this._calendarReady = true;
@@ -289,13 +313,13 @@ class FullCalendarRow extends HTMLElement {
   async _refetchEvents() {
     const $ = window.jQuery;
     if (this._calendarReady) {
-        try {
-            $(this._calEl).fullCalendar('refetchEvents');
-            this._lastRefetchAt = Date.now();
-            if (this._config.debug) console.debug('[fullcalendar-row v2] events refetched');
-        } catch (e) {
-            console.error('fullcalendar-row (v2): refetch failed', e);
-        }
+      try {
+        $(this._calEl).fullCalendar('refetchEvents');
+        this._lastRefetchAt = Date.now();
+        if (this._config.debug) console.debug('[fullcalendar-row v2] events refetched');
+      } catch (e) {
+        console.error('fullcalendar-row (v2): refetch failed', e);
+      }
     }
   }
 
@@ -306,15 +330,62 @@ class FullCalendarRow extends HTMLElement {
     return await this._hass.callApi('GET', path);
   }
 
+  // Robust HA -> FullCalendar mapping with moment / moment-timezone
   _mapHaEventToFc(ev) {
+    // ev from HA: { start, end, summary, description, location, all_day? }
+    const rawStart = ev.start;
+    const rawEnd = ev.end;
+
+    // date-only string?
+    const isDateOnly = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+
+    // Determine all-day: explicit flag or both dates are date-only
+    const isAllDay = (ev.all_day === true) || (isDateOnly(rawStart) && (!rawEnd || isDateOnly(rawEnd)));
+
+    // Use configured TZ for parsing if moment-timezone is available; else fallback to moment(s)
+    const tz = this._config.timezone || 'local';
+    const useTz = (window.moment && window.moment.tz && tz && tz !== 'local');
+
+    const parse = (s, allDay) => {
+      if (!s) return null;
+      if (useTz) {
+        // If all-day and date-only, interpret at start of day in TZ
+        const m = allDay && isDateOnly(s) ? window.moment.tz(s, tz) : window.moment.tz(s, tz);
+        return m.isValid() ? m.toDate() : null;
+      } else {
+        // Let moment parse ISO (with offsets) or date-only
+        const m = window.moment(s);
+        return m.isValid() ? m.toDate() : null;
+      }
+    };
+
+    let start = parse(rawStart, isAllDay);
+    let end = parse(rawEnd, isAllDay);
+
+    // If parsing failed, drop event (better than rendering today incorrectly)
+    if (!start) {
+      console.warn('[fullcalendar-row v2] invalid event start from HA:', ev);
+      return null;
+    }
+
+    // For all-day without end, provide +1 day so it displays as a single-day all-day
+    if (isAllDay && !end) {
+      if (useTz) {
+        const m = window.moment.tz(rawStart, tz).add(1, 'day');
+        end = m.toDate();
+      } else {
+        const m = window.moment(rawStart).add(1, 'day');
+        end = m.toDate();
+      }
+    }
+
     const title = ev.summary || ev.title || 'Busy';
     return {
-      id: ev.uid || ev.id || `${ev.start}-${title}`,
-      title: title,
-      start: ev.start, // ISO
-      end: ev.end,     // ISO
-      allDay: !!ev.all_day,
-      // You can add more props if you later want popovers/tooltips:
+      id: ev.uid || ev.id || `${rawStart}-${title}`,
+      title,
+      start,
+      end: end || null,
+      allDay: !!isAllDay,
       location: ev.location,
       description: ev.description,
     };
@@ -325,6 +396,6 @@ customElements.define('fullcalendar-row', FullCalendarRow);
 window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'fullcalendar-row',
-  name: 'FullCalendar Row',
-  description: 'A FullCalendar row card for Home Assistant calendars',
+  name: 'FullCalendar Row (v2.1.1)',
+  description: 'A FullCalendar v2.1.1-based row card for Home Assistant calendars',
 });

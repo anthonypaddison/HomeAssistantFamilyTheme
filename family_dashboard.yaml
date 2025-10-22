@@ -76,7 +76,7 @@ views:
         headerToolbar:
           left: prev,next today
           center: title
-          right: dayGridMonth,timeGridWeek,timeGridDay,listWeek
+          right: dayGridMonth,timeGridWeek,timeGridDay
         minTime: '06:00:00'
         maxTime: '22:00:00'
         refetchCooldownMs: 300000
