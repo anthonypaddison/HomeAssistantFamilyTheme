@@ -342,7 +342,7 @@ class FullCalendarRow extends HTMLElement {
         console.log('isDateOnly');
         console.log(isDateOnly);
         // Determine all-day: explicit flag or both dates are date-only
-        const isAllDay = (ev.all_day === true) || (isDateOnly(rawStart) && (!rawEnd || isDateOnly(rawEnd)));
+        let isAllDay = (ev.all_day === true) || (isDateOnly(rawStart) && (!rawEnd || isDateOnly(rawEnd)));
         console.log('isAllDay');
         console.log(isAllDay);
         // Use configured TZ for parsing if moment-timezone is available; else fallback to moment(s)
@@ -385,21 +385,30 @@ class FullCalendarRow extends HTMLElement {
         console.log(end);
 
         console.log('returned event');
-        let time = 'All Day';
+        let starttime = 'All Day';
+        let endtime = '';
+        let startdate = '';
+        let enddate = '';
         if(rawStart.dateTime !== undefined) {
-            time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+            starttime = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+            endtime = new Date(rawEnd.dateTime).toTimeString().slice(0, 5);
+            startdate = new Date(rawStart.dateTime).toDateString();
+            enddate = new Date(rawEnd.dateTime).toDateString();
+            startdate = startdate + 'T' + starttime;
+            enddate = enddate + 'T' + endtime;
         }
         else {
             if(rawStart.date !== undefined) {
                 isAllDay = true;
+                startdate = rawStart.date;
             }
         }
 
         console.log({
-            id: `${time} - ${title}`,
+            id: `${starttime} - ${title}`,
             title,
-            start: start.dateTime,
-            end: end.dateTime || null,
+            start: startdate,
+            end: enddate || null,
             allDay: !!isAllDay,
             location: ev.location,
             description: ev.description,
