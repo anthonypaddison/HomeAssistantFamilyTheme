@@ -361,8 +361,8 @@ class FullCalendarRow extends HTMLElement {
       }
     };
 
-    let start = parse(rawStart, isAllDay);
-    let end = parse(rawEnd, isAllDay);
+    let start = rawStart;
+    let end = rawEnd;
     console.log(start);
     console.log(end);
 
