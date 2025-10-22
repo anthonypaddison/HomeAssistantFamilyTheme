@@ -386,20 +386,20 @@ class FullCalendarRow extends HTMLElement {
 
         console.log('returned event');
         console.log({
-            id: `${rawStart}-${title}`,
+            id: `${rawStart.dateTime}-${title}`,
             title,
-            start,
-            end: end || null,
+            start: start.dateTime,
+            end: end.dateTime || null,
             allDay: !!isAllDay,
             location: ev.location,
             description: ev.description,
         });
 
         return {
-            id: `${rawStart}-${title}`,
+            id: `${rawStart.dateTime}-${title}`,
             title,
-            start,
-            end: end || null,
+            start: start.dateTime,
+            end: end.dateTime || null,
             allDay: !!isAllDay,
             location: ev.location,
             description: ev.description,
