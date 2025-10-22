@@ -385,8 +385,14 @@ class FullCalendarRow extends HTMLElement {
         console.log(end);
 
         console.log('returned event');
-
-        const time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+        if(rawStart.dateTime !== undefined) {
+            const time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+        }
+        else {
+            if(rawStart.date !== undefined) {
+                isAllDay = true;
+            }
+        }
 
         console.log({
             id: `${time} - ${title}`,

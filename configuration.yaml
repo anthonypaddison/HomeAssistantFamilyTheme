@@ -16,7 +16,7 @@ lovelace:
       type: module
     - url: /hacsfiles/week-planner-card/week-planner-card.js
       type: module
-    - url: /local/fullcalendar-row.js?9
+    - url: /local/fullcalendar-row.js?10
       type: module
   dashboards:
     family-dashboard:
@@ -33,3 +33,14 @@ sensor: !include sensor.yaml
 input_select: !include input_select.yaml
 input_number: !include input_number.yaml
 input_text: !include input_text.yaml
+
+# TODO
+# click a chip and if it is calendar it only shows their items
+# click a chip and if it is chores it only shows their chores
+#
+#
+#
+#
+#
+#
+#
