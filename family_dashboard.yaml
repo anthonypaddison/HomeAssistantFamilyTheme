@@ -60,6 +60,7 @@ views:
         initialView: timeGridWeek
         hiddenDays: [0, 6]
         allDaySlot: true
+        timezone: Europe/London
         entities:
           - entity: calendar.family
             color: var(--family-color-family)
@@ -76,9 +77,9 @@ views:
         headerToolbar:
           left: prev,next today
           center: title
-          right: dayGridMonth,timeGridWeek,timeGridDay
+          right: dayGridMonth,timeGridWeek,timeGridDay,listWeek
         minTime: '06:00:00'
-        maxTime: '22:00:00'
+        maxTime: '20:00:00'
         refetchCooldownMs: 300000
         debug: false
 
