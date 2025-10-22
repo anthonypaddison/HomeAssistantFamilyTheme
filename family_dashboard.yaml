@@ -83,7 +83,7 @@ views:
         maxTime: '22:00:00'
         titleFormat:
           month: 'MMMM'
-          week: 'MMMM Do - Do'
+          week: 'MMMM Do'
           day: 'MMMM Do'
         refetchCooldownMs: 300000
         debug: true

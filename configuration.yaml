@@ -16,7 +16,7 @@ lovelace:
       type: module
     - url: /hacsfiles/week-planner-card/week-planner-card.js
       type: module
-    - url: /local/fullcalendar-row.js?10
+    - url: /local/fullcalendar-row.js?11
       type: module
   dashboards:
     family-dashboard:
@@ -37,9 +37,9 @@ input_text: !include input_text.yaml
 # TODO
 # click a chip and if it is calendar it only shows their items
 # click a chip and if it is chores it only shows their chores
-#
-#
-#
+# heading: move the time to the left next to the name
+# style the shit out of full calendar now I have it
+# find something to do todoist like full calendar
 #
 #
 #

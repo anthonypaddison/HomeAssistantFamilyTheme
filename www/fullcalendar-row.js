@@ -37,7 +37,7 @@ class FullCalendarRow extends HTMLElement {
             },
             titleFormat: {
                 month: 'MMMM',
-                week: 'MMMM Do - Do',
+                week: 'MMMM Do',
                 day: 'MMMM Do'
             },
             minTime: '06:00:00',
@@ -286,7 +286,7 @@ class FullCalendarRow extends HTMLElement {
             weekNumbers: false,
             titleFormat: cfg.titleFormat || {
                 month: 'MMMM',
-                week: 'MMMM Do - Do',
+                week: 'MMMM Do',
                 day: 'MMMM Do'
             },
             allDaySlot: cfg.allDaySlot !== false,
@@ -385,8 +385,9 @@ class FullCalendarRow extends HTMLElement {
         console.log(end);
 
         console.log('returned event');
+        let time = 'All Day';
         if(rawStart.dateTime !== undefined) {
-            const time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+            time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
         }
         else {
             if(rawStart.date !== undefined) {
