@@ -264,6 +264,8 @@ class FullCalendarRow extends HTMLElement {
           if (this._config.debug) console.debug('[fullcalendar-row v2] fetching', entity, start.toISOString(), end.toISOString());
           this._fetchHaEvents(entity, start.toISOString(), end.toISOString())
             .then(events => {
+                console.log(events);
+
               const mapped = events.map(e => this._mapHaEventToFc(e)).filter(Boolean);
               callback(mapped);
             })

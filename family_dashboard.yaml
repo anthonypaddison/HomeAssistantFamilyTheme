@@ -81,7 +81,7 @@ views:
         minTime: '06:00:00'
         maxTime: '20:00:00'
         refetchCooldownMs: 300000
-        debug: false
+        debug: true
 
       # 4) MAIN AREA (conditional sections)
       # - type: vertical-stack
