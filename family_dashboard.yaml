@@ -61,6 +61,16 @@ views:
             .fc-agenda .fc-event {
               min-height: 18px !important;
             }
+            .fc-slats .fc-minor td {
+                border-top-style: none !important;
+            }
+            .fc-day.fc-mon,
+            .fc-day.fc-fri,
+            .fc-day-header.fc-mon,
+            .fc-day-header.fc-fri {
+                border-left: none !important;
+                border-right: none !important;
+            }
 
         initialView: agendaWeek
         hiddenDays: [0, 6]
