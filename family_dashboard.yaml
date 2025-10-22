@@ -81,6 +81,10 @@ views:
           right: month,agendaWeek,agendaDay
         minTime: '06:00:00'
         maxTime: '22:00:00'
+        titleFormat:
+          month: 'MMMM'
+          week: 'MMMM Do - Do'
+          day: 'MMMM Do'
         refetchCooldownMs: 300000
         debug: true
 

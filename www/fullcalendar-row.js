@@ -21,32 +21,36 @@ class FullCalendarRow extends HTMLElement {
 
     static getStubConfig() {
         return {
-        cdn: false,
-        fcJsUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.js',
-        fcCssUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.css',
-        jqueryUrl: '/local/fullcalendar-2.1.1/jquery.min.js',
-        momentUrl: '/local/fullcalendar-2.1.1/moment.min.js',
-        momentTzUrl: '/local/fullcalendar-2.1.1/moment-timezone.min.js',
-        timezone: 'Europe/London',
-        initialView: 'agendaWeek',
-        hiddenDays: [0, 6],
-        allDaySlot: true,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-        },
-        minTime: '06:00:00',
-        maxTime: '22:00:00',
-        entities: [],
-        refetchCooldownMs: 300000,
-        debug: false,
+            fcJsUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.js',
+            fcCssUrl: '/local/fullcalendar-2.1.1/fullcalendar.min.css',
+            jqueryUrl: '/local/fullcalendar-2.1.1/jquery.min.js',
+            momentUrl: '/local/fullcalendar-2.1.1/moment.min.js',
+            momentTzUrl: '/local/fullcalendar-2.1.1/moment-timezone.min.js',
+            timezone: 'Europe/London',
+            initialView: 'agendaWeek',
+            hiddenDays: [0, 6],
+            allDaySlot: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            titleFormat: {
+                month: 'MMMM',
+                week: 'MMMM Do - Do',
+                day: 'MMMM Do'
+            },
+            minTime: '06:00:00',
+            maxTime: '22:00:00',
+            entities: [],
+            refetchCooldownMs: 300000,
+            debug: false,
         };
     }
 
     setConfig(config) {
         if (!config || !config.entities || !Array.isArray(config.entities) || config.entities.length === 0) {
-        throw new Error('Configure at least one calendar entity under `entities:`');
+            throw new Error('Configure at least one calendar entity under `entities:`');
         }
 
         this._config = Object.assign({}, FullCalendarRow.getStubConfig(), config);
@@ -61,19 +65,19 @@ class FullCalendarRow extends HTMLElement {
             // Style to force full height
             const style = document.createElement('style');
             style.textContent = `:host {
-                                        display: block; height: 100%;
-                                    }
-                                    ha-card {
-                                        height: 100%;
-                                    }
-                                    #calendar {
-                                        height: 100%;
-                                        padding: 15px;
-                                    }
-                                    .fc, .fc-view, .fc-view > table, .fc-view > .fc-scroller {
-                                        height: 100% !important;
-                                        max-height: 100% !important;
-                                    }`;
+                                    display: block; height: 100%;
+                                }
+                                ha-card {
+                                    height: 100%;
+                                }
+                                #calendar {
+                                    height: 100%;
+                                    padding: 15px;
+                                }
+                                .fc, .fc-view, .fc-view > table, .fc-view > .fc-scroller {
+                                    height: 100% !important;
+                                    max-height: 100% !important;
+                                }`;
 
             // Calendar mount point
             this._calEl = document.createElement('div');
@@ -110,7 +114,7 @@ class FullCalendarRow extends HTMLElement {
 
     _shouldRefetchForHassChange(hass) {
         const cfg = this._config || {};
-        const cooldown = Number(cfg.refetchCooldownMs || 30000);
+        const cooldown = Number(cfg.refetchCooldownMs || 300000);
         const now = Date.now();
         if (now - this._lastRefetchAt < cooldown) {
             if (cfg.debug) console.debug('[fullcalendar-row v2] skip refetch: cooldown');
@@ -211,7 +215,6 @@ class FullCalendarRow extends HTMLElement {
         const $ = window.jQuery;
         if (!this._calEl || !$.fn || !$.fn.fullCalendar) return;
 
-        // Destroy previous instance
         if (this._calendarReady) {
             $(this._calEl).fullCalendar('destroy');
             this._calendarReady = false;
@@ -219,52 +222,46 @@ class FullCalendarRow extends HTMLElement {
 
         const cfg = this._config;
 
-        // Map possible v5+ view names to v2 equivalents
-        const mapView = (name) => {
-            const m = {
-                dayGridMonth: 'month',
-                timeGridWeek: 'agendaWeek',
-                timeGridDay: 'agendaDay',
-                listWeek: 'basicWeek',
-                listDay: 'basicDay',
-            };
-            return m[name] || name;
-        };
-
-        const mapToolbarStr = (str) => {
-            if (!str) return '';
-            // tokens separated by commas, spaces allowed
-            return str.split(',').map(s => s.trim()).map(mapView).join(',');
-        };
-
-        const headerFromToolbar = (tb) => {
-            if (!tb) return false;
-            return {
-                left: mapToolbarStr(tb.left || ''),
-                center: mapToolbarStr(tb.center || ''),
-                right: mapToolbarStr(tb.right || ''),
-            };
-        };
-
-        const initialView = mapView(cfg.initialView || 'agendaWeek');
-
+        const initialView = cfg.initialView || 'agendaWeek';
+        console.log('initialView');
+        console.log(initialView);
         if (cfg.nowIndicator) {
             console.warn('fullcalendar-row (v2): nowIndicator is not supported in FullCalendar v2. Ignoring.');
         }
 
         const eventSources = (cfg.entities || []).map(item => {
+            console.log('item');
+            console.log(item);
+
             const entity = (typeof item === 'string') ? item : item.entity;
+            console.log('entity');
+            console.log(entity);
             const color  = (typeof item === 'object') ? item.color : undefined;
+            console.log('color');
+            console.log(color);
+
             return {
                 id: entity,
                 color: color,
                 events: (start, end, timezone, callback) => {
-                    if (this._config.debug) {
+                    console.log('start, end');
+                    console.log(start, end);
+
+                    if (cfg.debug) {
                         console.debug('[fullcalendar-row v2] fetching', entity, start.toISOString(), end.toISOString());
                     }
                     this._fetchHaEvents(entity, start.toISOString(), end.toISOString())
                         .then(events => {
+                            console.log('events');
+                            console.log(events);
+
                             const mapped = events.map(e => this._mapHaEventToFc(e)).filter(Boolean);
+                            console.log('mapped');
+                            console.log(mapped);
+
+                            console.log('callback');
+                            console.log(callback);
+
                             callback(mapped);
                         })
                         .catch(err => {
@@ -276,7 +273,7 @@ class FullCalendarRow extends HTMLElement {
         });
 
         $(this._calEl).fullCalendar({
-            header: headerFromToolbar(cfg.headerToolbar) || {
+            header: cfg.headerToolbar || {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
@@ -287,23 +284,22 @@ class FullCalendarRow extends HTMLElement {
             lazyFetching: true,
             eventLimit: true,
             weekNumbers: false,
-
-            // Times & layout
+            titleFormat: cfg.titleFormat || {
+                month: 'MMMM',
+                week: 'MMMM Do - Do',
+                day: 'MMMM Do'
+            },
             allDaySlot: cfg.allDaySlot !== false,
-            minTime: cfg.minTime || cfg.slotMinTime || '06:00:00', // v2 uses minTime/maxTime
-            maxTime: cfg.maxTime || cfg.slotMaxTime || '20:00:00',
+            minTime: cfg.minTime || cfg.slotMinTime || '06:00:00',
+            maxTime: cfg.maxTime || cfg.slotMaxTime || '22:00:00',
             hiddenDays: cfg.hiddenDays || [],
-            timezone: 'local', // keep FC in local; we handle parsing with optional moment.tz
+            timezone: 'Europe/London',
             height: 'auto',
             contentHeight: 'auto',
             handleWindowResize: true,
 
-            // Events
             eventSources,
-
-            // Formatting similar to v5 'eventTimeFormat'
-            timeFormat: 'HH:mm', // 24h; change to 'h(:mm)a' for 12h
-            // Re-fetch when navigating (FC v2 will call events() with new range automatically)
+            timeFormat: 'HH:mm',
             viewRender: () => {},
         });
 
@@ -332,25 +328,39 @@ class FullCalendarRow extends HTMLElement {
 
     // Robust HA -> FullCalendar mapping with moment / moment-timezone
     _mapHaEventToFc(ev) {
-        console.log(ev);
-
         // ev from HA: { start, end, summary, description, location, all_day? }
         const rawStart = ev.start;
+        console.log('rawStart');
+        console.log(rawStart);
+
         const rawEnd = ev.end;
+        console.log('rawEnd');
+        console.log(rawEnd);
 
         // date-only string?
         const isDateOnly = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
-
+        console.log('isDateOnly');
+        console.log(isDateOnly);
         // Determine all-day: explicit flag or both dates are date-only
         const isAllDay = (ev.all_day === true) || (isDateOnly(rawStart) && (!rawEnd || isDateOnly(rawEnd)));
-
+        console.log('isAllDay');
+        console.log(isAllDay);
         // Use configured TZ for parsing if moment-timezone is available; else fallback to moment(s)
-        const tz = this._config.timezone || 'local';
-        const useTz = (window.moment && window.moment.tz && tz && tz !== 'local');
+        const tz = this._config.timezone || 'Europe/London';
+        console.log('tz');
+        console.log(tz);
+
+        const useTz = (window.moment && window.moment.tz && tz && tz !== 'Europe/London');
+        console.log('useTz');
+        console.log(useTz);
 
         let start = rawStart;
-        let end = rawEnd;
+        console.log('start');
+        console.log(start);
 
+        let end = rawEnd;
+        console.log('end');
+        console.log(end);
         // If parsing failed, drop event (better than rendering today incorrectly)
         if (!start) {
             console.warn('[fullcalendar-row v2] invalid event start from HA:', ev);
@@ -367,8 +377,14 @@ class FullCalendarRow extends HTMLElement {
                 end = m.toDate();
             }
         }
+        console.log('end after check');
+        console.log(end);
 
         const title = ev.summary || ev.title || 'Busy';
+        console.log('title');
+        console.log(end);
+
+        console.log('returned event');
         console.log({
             id: `${rawStart}-${title}`,
             title,
