@@ -264,8 +264,6 @@ class FullCalendarRow extends HTMLElement {
           if (this._config.debug) console.debug('[fullcalendar-row v2] fetching', entity, start.toISOString(), end.toISOString());
           this._fetchHaEvents(entity, start.toISOString(), end.toISOString())
             .then(events => {
-                console.log(events);
-
               const mapped = events.map(e => this._mapHaEventToFc(e)).filter(Boolean);
               callback(mapped);
             })
@@ -365,6 +363,8 @@ class FullCalendarRow extends HTMLElement {
 
     let start = parse(rawStart, isAllDay);
     let end = parse(rawEnd, isAllDay);
+    console.log(start);
+    console.log(end);
 
     // If parsing failed, drop event (better than rendering today incorrectly)
     if (!start) {
@@ -385,7 +385,7 @@ class FullCalendarRow extends HTMLElement {
 
     const title = ev.summary || ev.title || 'Busy';
     console.log({
-      id: ev.uid || ev.id || `${rawStart}-${title}`,
+      id: `${rawStart}-${title}`,
       title,
       start,
       end: end || null,
@@ -395,7 +395,7 @@ class FullCalendarRow extends HTMLElement {
     });
 
     return {
-      id: ev.uid || ev.id || `${rawStart}-${title}`,
+      id: `${rawStart}-${title}`,
       title,
       start,
       end: end || null,
