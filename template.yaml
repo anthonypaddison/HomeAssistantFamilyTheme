@@ -48,11 +48,11 @@
 
 - trigger:
     - platform: time_pattern
-      seconds: "/1"     # update every second
+      minutes: "/1"       # every minute instead of every second
   sensor:
     - name: "Family Clock"
       unique_id: family_clock
-      state: "{{ now().strftime('%H:%M:%S') }}"
+      state: "{{ now().strftime('%H:%M') }}"
       attributes:
-        date_long: "{{ now().strftime('%A, %d %B %Y') }}"   # e.g., Monday, 20 October 2025
-        date_short: "{{ now().strftime('%Y-%m-%d') }}"      # e.g., 2025-10-20
+        date_long: "{{ now().strftime('%A, %d %B %Y') }}"
+        date_short: "{{ now().strftime('%Y-%m-%d') }}"

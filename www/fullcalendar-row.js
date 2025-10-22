@@ -9,6 +9,13 @@
 // - nowIndicator is not supported in FC v2 (ignored with console warning).
 
 class FullCalendarRow extends HTMLElement {
+
+    constructor() {
+        super();
+        this._lastRefetchAt = 0;
+        this._prevEntityChangeKeys = {};
+    }
+
   static getStubConfig() {
     return {
       cdn: false,
@@ -77,12 +84,43 @@ class FullCalendarRow extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
-    if (this._calendarReady) {
+    // Only refetch if calendar entities changed AND cooldown passed
+    if (this._calendarReady && this._shouldRefetchForHassChange(hass)) {
       this._refetchEvents();
     }
   }
 
   getCardSize() { return 6; }
+
+    _watchedEntityIds() {
+        return (this._config.entities || [])
+        .map(e => (typeof e === 'string' ? e : e.entity))
+        .filter(Boolean);
+    }
+
+    _shouldRefetchForHassChange(hass) {
+        const cfg = this._config || {};
+        const cooldown = Number(cfg.refetchCooldownMs || 30000);
+        const now = Date.now();
+        if (now - this._lastRefetchAt < cooldown) {
+        if (cfg.debug) console.debug('[fullcalendar-row v2] skip refetch: cooldown');
+        return false;
+        }
+        // Build a cheap change-key per watched entity using last_changed + state len
+        let changed = false;
+        for (const eid of this._watchedEntityIds()) {
+        const st = hass.states?.[eid];
+        const key = st ? `${st.last_changed}|${st.state?.length || 0}` : 'missing';
+        if (this._prevEntityChangeKeys[eid] !== key) {
+            changed = true;
+        }
+        this._prevEntityChangeKeys[eid] = key;
+        }
+        if (!changed && cfg.debug) {
+        console.debug('[fullcalendar-row v2] no calendar entity change detected');
+        }
+        return changed;
+    }
 
   // ---------- Asset loading ----------
   async _ensureAssets() {
@@ -251,7 +289,13 @@ class FullCalendarRow extends HTMLElement {
   async _refetchEvents() {
     const $ = window.jQuery;
     if (this._calendarReady) {
-      $(this._calEl).fullCalendar('refetchEvents');
+        try {
+            $(this._calEl).fullCalendar('refetchEvents');
+            this._lastRefetchAt = Date.now();
+            if (this._config.debug) console.debug('[fullcalendar-row v2] events refetched');
+        } catch (e) {
+            console.error('fullcalendar-row (v2): refetch failed', e);
+        }
     }
   }
 
