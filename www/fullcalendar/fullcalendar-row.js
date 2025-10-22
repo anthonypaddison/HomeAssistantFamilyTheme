@@ -170,7 +170,7 @@ class FullCalendarRow extends HTMLElement {
   _normalizeConfig(raw) {
     const defaults = {
       title: "",
-      entities: [], // [{ entity: 'calendar.x', color: '#hex', textColor?: '#fff' }, ...] or "calendar.x"
+      entities: [],
       initialView: "timeGridDay",
       headerToolbar: {
         left: "prev,next today",
@@ -187,9 +187,8 @@ class FullCalendarRow extends HTMLElement {
       weekNumbers: false,
       stickyHeaderDates: true,
       moreLinkClick: "popover",
-      // Asset loading
-      cdn: false, // default to local (you already host the file)
-      fcJsUrl: "/local/fullcalendar/index.global.min.js", // v6 global build
+      cdn: false,
+      fcJsUrl: "/local/fullcalendar/fullcalendar.min.js",
     };
     const cfg = { ...defaults, ...raw };
     cfg.entities = (cfg.entities || []).map((e) => (typeof e === "string" ? { entity: e } : e));
@@ -199,8 +198,8 @@ class FullCalendarRow extends HTMLElement {
   _resolveFcSrc() {
     const cfg = this._config || {};
     return cfg.cdn
-      ? "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"
-      : (cfg.fcJsUrl || "/local/fullcalendar/index.global.min.js");
+      ? "/local/fullcalendar/fullcalendar.min.js"
+      : (cfg.fcJsUrl || "/local/fullcalendar/fullcalendar.min.js");
   }
 
   async _autoDiscoverCalendars() {
@@ -429,3 +428,13 @@ class FullCalendarRow extends HTMLElement {
 }
 
 customElements.define("fullcalendar-row", FullCalendarRow);
+
+function loadAssets() {
+    if ($('#fullcalendar-js').length === 0) {
+        $('<script>', {
+            id: 'fullcalendar-js',
+            src: '/local/fullcalendar/fullcalendar.min.js',
+            type: 'text/javascript',
+        }).appendTo('body');
+    }
+}
