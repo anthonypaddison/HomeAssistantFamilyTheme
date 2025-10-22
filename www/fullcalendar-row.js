@@ -334,6 +334,8 @@ class FullCalendarRow extends HTMLElement {
 
   // Robust HA -> FullCalendar mapping with moment / moment-timezone
   _mapHaEventToFc(ev) {
+    console.log(ev);
+
     // ev from HA: { start, end, summary, description, location, all_day? }
     const rawStart = ev.start;
     const rawEnd = ev.end;
@@ -382,6 +384,16 @@ class FullCalendarRow extends HTMLElement {
     }
 
     const title = ev.summary || ev.title || 'Busy';
+    console.log({
+      id: ev.uid || ev.id || `${rawStart}-${title}`,
+      title,
+      start,
+      end: end || null,
+      allDay: !!isAllDay,
+      location: ev.location,
+      description: ev.description,
+    });
+
     return {
       id: ev.uid || ev.id || `${rawStart}-${title}`,
       title,
