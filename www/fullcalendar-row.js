@@ -385,8 +385,11 @@ class FullCalendarRow extends HTMLElement {
         console.log(end);
 
         console.log('returned event');
+
+        const time = new Date(rawStart.dateTime).toTimeString().slice(0, 5);
+
         console.log({
-            id: `${rawStart.dateTime}-${title}`,
+            id: `${time} - ${title}`,
             title,
             start: start.dateTime,
             end: end.dateTime || null,
