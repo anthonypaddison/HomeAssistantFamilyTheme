@@ -278,6 +278,11 @@ class FullCalendarRow extends HTMLElement {
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
+            contentHeight: cfg.contentHeight || 650,
+            forceEventDuration: cfg.forceEventDuration || true,
+            slotDuration: cfg.slotDuration || '01:00:00',
+            slotEventOverlap: cfg.slotEventOverlap || true,
+            scrollTime: '07:00:00',
             defaultView: initialView,
             editable: false,
             selectable: false,
@@ -289,13 +294,12 @@ class FullCalendarRow extends HTMLElement {
                 week: 'MMMM Do',
                 day: 'MMMM Do'
             },
-            allDaySlot: cfg.allDaySlot !== false,
-            minTime: cfg.minTime || cfg.slotMinTime || '06:00:00',
-            maxTime: cfg.maxTime || cfg.slotMaxTime || '22:00:00',
+            allDaySlot: cfg.allDaySlot || true,
+            minTime: cfg.minTime || '06:00:00',
+            maxTime: cfg.maxTime || '22:00:00',
             hiddenDays: cfg.hiddenDays || [],
             timezone: 'Europe/London',
             height: 'auto',
-            contentHeight: 'auto',
             handleWindowResize: true,
 
             eventSources,

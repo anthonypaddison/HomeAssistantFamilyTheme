@@ -59,7 +59,7 @@ views:
               max-height: 100% !important;
             }
             .fc-agenda .fc-event {
-              min-height: 18px;
+              min-height: 18px !important;
             }
 
         initialView: agendaWeek
