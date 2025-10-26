@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ruleset name="standard"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
+                             http://pmd.sf.net/ruleset_xml_schema.xsd"
+          xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+  <!-- Discourages use of eval(), which is dangerous and hard to debug -->
+  <rule ref="rulesets/design.xml/EvalExpression"/>
+
+  <!-- Flags use of goto, which harms readability and maintainability -->
+  <rule ref="rulesets/design.xml/GotoStatement"/>
+
+  <!-- Limits the number of child classes to reduce inheritance complexity -->
+  <rule ref="rulesets/design.xml/NumberOfChildren"/>
+
+  <!-- Restricts deep inheritance trees to encourage composition over inheritance -->
+  <rule ref="rulesets/design.xml/DepthOfInheritance"/>
+
+  <!-- Controls class coupling to reduce interdependencies and improve testability -->
+  <rule ref="rulesets/design.xml/CouplingBetweenObjects"/>
+
+  <!-- Flags classes that are too long, encouraging smaller, focused classes -->
+  <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
+
+  <!-- Limits the number of parameters in methods to improve readability and testability -->
+  <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+
+  <!-- Flags classes with too many public members, which may indicate poor encapsulation -->
+  <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+
+  <!-- Limits the number of fields in a class to encourage cohesion -->
+  <rule ref="rulesets/codesize.xml/TooManyFields"/>
+
+  <!-- Flags classes with too many methods, suggesting they may be doing too much -->
+  <rule ref="rulesets/codesize.xml/TooManyMethods"/>
+
+  <!-- Enables detection of unused code (e.g. variables, methods, classes) -->
+  <rule ref="rulesets/unusedcode.xml" />
+
+  <!-- Enforces a minimum variable name length, with exceptions for common loop counters -->
+  <rule ref="rulesets/naming.xml/ShortVariable">
+    <properties>
+        <property name="minimum" value="2"/>
+        <property name="exceptions" value="i,e" />
+    </properties>
+  </rule>
+
+  <!-- Enforces a maximum variable name length to avoid overly verbose names -->
+  <rule ref="rulesets/naming.xml/LongVariable">
+    <properties>
+        <property name="maximum" value="32"/>
+    </properties>
+  </rule>
+
+  <!-- Flags methods with high cyclomatic complexity (too many branches/conditions) -->
+  <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+    <properties>
+      <property name="reportLevel" value="10"/>
+    </properties>
+  </rule>
+
+  <!-- Limits nested blocks to improve readability and reduce cognitive load -->
+  <rule ref="rulesets/codesize.xml/TooManyNestedBlocks">
+    <properties>
+      <property name="maxNesting" value="3"/>
+    </properties>
+  </rule>
+
+  <!-- Discourages static access to non-static members, which can lead to design issues -->
+  <rule ref="rulesets/design.xml/StaticAccess"/>
+
+  <!-- Flags method names that are too short to be meaningful -->
+  <rule ref="rulesets/naming.xml/ShortMethodName"/>
+
+  <!-- Prevents constructors from having the same name as the class (legacy PHP4 style) -->
+  <rule ref="rulesets/naming.xml/ConstructorWithNameAsEnclosingClass"/>
+
+  <!-- Enforces naming conventions for constants (e.g. ALL_CAPS) -->
+  <rule ref="rulesets/naming.xml/ConstantNamingConventions"/>
+
+  <!-- Ensures boolean getters use "is"/"has" prefixes for clarity -->
+  <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
+</ruleset>

@@ -1,29 +1,28 @@
 title: Family
 theme: FamilyBoard-Base
 views:
-  - title: Family
-    path: family
-    panel: true
-    cards:
-      - type: custom:family-board
-        title: Panogu Family
-        calendars:
-          - entity: calendar.family
-            color: var(--family-color-family)
-          - entity: calendar.anthony_2
-            color: var(--family-color-anthony)
-          - entity: calendar.joy_2
-            color: var(--family-color-joy)
-          - entity: calendar.lizzie_2
-            color: var(--family-color-lizzie)
-          - entity: calendar.toby_2
-            color: var(--family-color-toby)
-          - entity: calendar.routine
-            color: var(--family-color-routine)
-        todos:
-          family: todo.family
-          anthony: todo.anthony
-          joy: todo.joy
-          lizzie: todo.lizzie
-          toby: todo.toby
-
+    - title: Family
+      path: family
+      panel: true
+      cards:
+          - type: custom:family-board-jq
+            title: Panogu Family
+            calendars:
+                - entity: calendar.family
+                  color: var(--family-color-family)
+                - entity: calendar.anthony_2
+                  color: var(--family-color-anthony)
+                - entity: calendar.joy_2
+                  color: var(--family-color-joy)
+                - entity: calendar.lizzie_2
+                  color: var(--family-color-lizzie)
+                - entity: calendar.toby_2
+                  color: var(--family-color-toby)
+                - entity: calendar.routine
+                  color: var(--family-color-routine)
+            todos:
+                family: todo.family
+                anthony: todo.anthony
+                joy: todo.joy
+                lizzie: todo.lizzie
+                toby: todo.toby

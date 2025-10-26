@@ -69,3 +69,5 @@ rgba
 minmax
 datetime
 fld
+jq
+diag

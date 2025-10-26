@@ -1,29 +1,28 @@
 default_config:
 
 # frontend:
-  # themes: !include themes.yaml
+# themes: !include themes.yaml
 
 lovelace:
-  mode: yaml
-  resources:
-    - url: /local/family-board/family-dashboard-controller.js?v=1
-      type: module
-    - url: /local/family-board/family-board.js?v=1
-      type: module
-  dashboards:
-    family-dashboard:
-      mode: yaml
-      title: Family
-      icon: mdi:home-heart
-      show_in_sidebar: true
-      filename: family_dashboard.yaml
+    mode: yaml
+    resources:
+        - url: /local/family-board/family-dashboard-controller.js?v=1
+          type: module
+        - url: /local/family-board/family-board-jq.js?v=1
+          type: module
 
+    dashboards:
+        family-dashboard:
+            mode: yaml
+            title: Family
+            icon: mdi:home-heart
+            show_in_sidebar: true
+            filename: family_dashboard.yaml
 
 automation: !include automations.yaml
 script: !include scripts.yaml
 template: !include template.yaml
 sensor: !include sensor.yaml
-
 # TODO
 # click a chip and if it is calendar it only shows their items
 # click a chip and if it is chores it only shows their chores
