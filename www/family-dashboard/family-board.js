@@ -1,4 +1,4 @@
-// Family Board — single custom card rendering header + sidebar + chips + main.
+// Family Board - single custom card rendering header + sidebar + chips + main.
 // Vanilla Web Component, no external libs required.
 // Reads HA state via this.hass and calls services via this.hass.callService/this.hass.callApi.
 
@@ -337,7 +337,7 @@ class FamilyBoard extends HTMLElement {
     const title = ev.summary || ev.title || 'Busy';
     const when  = allDay
       ? 'All day'
-      : `${new Date(startIso).toTimeString().slice(0,5)}–${endIso ? new Date(endIso).toTimeString().slice(0,5) : ''}`;
+      : `${new Date(startIso).toTimeString().slice(0,5)}-${endIso ? new Date(endIso).toTimeString().slice(0,5) : ''}`;
     const startTs = new Date(hasSDT ? s.dateTime : `${s.date}T00:00:00Z`).getTime();
     return { id: ev.uid || `${startIso}-${title}`, title, startIso, endIso, allDay, where: ev.location, when, startTs };
   }

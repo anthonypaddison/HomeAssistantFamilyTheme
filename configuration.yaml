@@ -10,6 +10,13 @@ lovelace:
       type: module
     - url: /local/family-board/family-board.js
       type: module
+  dashboards:
+    family-dashboard:
+      mode: yaml
+      title: Family
+      icon: mdi:home-heart
+      show_in_sidebar: true
+      filename: family_dashboard.yaml
 
 
 automation: !include automations.yaml
