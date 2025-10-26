@@ -1,21 +1,21 @@
 // /config/www/family-board/family-board-jq.js
-// Family Board (jQuery edition) — all-in-one Lovelace card.
-// - Loads jQuery from a local file (set PATHS.jqueryUrl).
-// - Renders header, sidebar, chips, and main (Calendar/Chores/Lists/Photos) with jQuery.
-// - Fetches HA data via this.hass.callApi and this.hass.states (no HACS needed).
+// Family Board (jQuery + FullCalendar v2)
+// - Calendar section renders FullCalendar agenda (Mon–Fri).
+// - Set local library paths in PATHS below (served via /local/...).
+// - No HACS required.
 
-/* ====== EDIT THESE PATHS FOR YOUR LOCAL FILE NAMES ====== */
 const PATHS = {
-    // Put your jQuery file under /config/www/... and reference it here via /local/...
+    // REQUIRED: jQuery (place under /config/www/... and reference via /local/...)
     jqueryUrl: '/local/family-board/vendor/jquery-3.7.1.min.js',
 
-    // Optional future libs (e.g., FullCalendar v2 jQuery plugin).
-    // Leave empty '' to skip loading:
+    // RECOMMENDED for correct date handling with FC v2:
+    momentUrl: '/local/family-board/vendor/moment.min.js',
+    momentTzUrl: '/local/family-board/vendor/moment-timezone.min.js',
 
+    // REQUIRED: FullCalendar v2 (jQuery plugin)
     fcCssUrl: '/local/family-board/vendor/fullcalendar.min.css',
     fcJsUrl: '/local/family-board/vendor/fullcalendar.min.js',
 };
-/* ======================================================== */
 
 class FamilyBoardJQ extends HTMLElement {
     static getStubConfig() {
@@ -23,7 +23,7 @@ class FamilyBoardJQ extends HTMLElement {
             title: 'Panogu Family',
             timezone: 'Europe/London',
             calendars: [
-                // Adjust to your actual entity IDs (e.g., calendar.anthony_2 if that’s what you have)
+                // Change these to your actual entity IDs (use *_2 if that’s what you have)
                 { entity: 'calendar.family', color: 'var(--family-color-family, #36B37E)' },
                 { entity: 'calendar.anthony', color: 'var(--family-color-anthony, #7E57C2)' },
                 { entity: 'calendar.joy', color: 'var(--family-color-joy, #F4B400)' },
@@ -33,6 +33,7 @@ class FamilyBoardJQ extends HTMLElement {
             ],
             sections: ['Calendar', 'Chores', 'Lists', 'Photos'],
             defaultSection: 'Calendar',
+            // Chip metrics (optional)
             metrics: {
                 family: {
                     done: 'input_number.completed_due_today_family',
@@ -62,6 +63,22 @@ class FamilyBoardJQ extends HTMLElement {
                 lizzie: 'todo.lizzie',
                 toby: 'todo.toby',
             },
+            // FullCalendar defaults
+            fc: {
+                initialView: 'agendaWeek',
+                hiddenDays: [0, 6], // Sun, Sat hidden
+                allDaySlot: true,
+                minTime: '06:00:00',
+                maxTime: '22:00:00',
+                slotDuration: '01:00:00',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay',
+                },
+                titleFormat: { month: 'MMMM', week: 'MMMM Do', day: 'MMMM Do' },
+                timeFormat: 'HH:mm',
+            },
         };
     }
 
@@ -70,7 +87,6 @@ class FamilyBoardJQ extends HTMLElement {
         this._state = {
             section: this._config.defaultSection || 'Calendar',
             personFocus: 'Family',
-            rangeDays: 7,
         };
         this._ensureRoot();
         this._ensureAssets()
@@ -89,7 +105,12 @@ class FamilyBoardJQ extends HTMLElement {
         this._updateHeader();
         this._updateChips();
         this._updateSidebarBadge();
-        if (this._state.section === 'Calendar') this._loadCalendar();
+
+        // If calendar is visible, refresh events (throttled by FullCalendar’s own lazy fetch).
+        if (this._state.section === 'Calendar' && this._fcReady) {
+            this._refetchFullCalendar(); // safe no-op if not yet mounted
+        }
+
         if (this._state.section === 'Chores') this._renderChoresIfVisible();
     }
 
@@ -100,15 +121,19 @@ class FamilyBoardJQ extends HTMLElement {
     /* ---------------- Assets ---------------- */
 
     async _ensureAssets() {
-        // Load jQuery if missing
-        if (!window.jQuery) {
-            await this._loadScript(PATHS.jqueryUrl);
-        }
+        // jQuery
+        if (!window.jQuery) await this._loadScript(PATHS.jqueryUrl);
         this.$ = (sel, ctx) => window.jQuery(sel, ctx || this._root);
         this._$ = window.jQuery;
-        // Optional: FullCalendar jQuery plugin
-        if (PATHS.fcCssUrl) await this._loadCss(PATHS.fcCssUrl, true);
-        if (PATHS.fcJsUrl) await this._loadScript(PATHS.fcJsUrl);
+
+        // moment (+timezone) first, then FullCalendar
+        if (PATHS.momentUrl && !window.moment) await this._loadScript(PATHS.momentUrl);
+        if (PATHS.momentTzUrl && window.moment && !window.moment.tz)
+            await this._loadScript(PATHS.momentTzUrl);
+
+        if (PATHS.fcCssUrl) await this._loadCss(PATHS.fcCssUrl, true /*into Shadow*/);
+        if (PATHS.fcJsUrl && !(this._$.fn && this._$.fn.fullCalendar))
+            await this._loadScript(PATHS.fcJsUrl);
     }
 
     _loadScript(src) {
@@ -215,18 +240,15 @@ class FamilyBoardJQ extends HTMLElement {
       .chip .bar > div { position:absolute; inset:0; background: rgba(255,255,255,.85); transform-origin:left; }
       main { grid-area: main; height: 100%; overflow: hidden; }
       .main-pad { height:100%; padding: 12px; overflow:auto; background: #F8FAFC; }
-      .row { display:flex; align-items:center; gap:8px; }
-      .pill { background: rgba(0,0,0,.06); padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px; }
-      .range-select { margin-left:auto; display:flex; gap:6px; }
-      .range-select button { padding:4px 8px; border-radius:8px; border:1px solid var(--divider-color); background:#fff; cursor:pointer; }
-      .range-select button.active { background:var(--primary-color,#B9FBC0); color:#0F172A; border-color:transparent; }
-      .diag { margin:10px 0; padding:8px; background:#fff; border:1px solid var(--divider-color); border-radius:8px; }
-      .diag h4 { margin:0 0 6px 0; font-size:13px; }
-      .diag .list { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; white-space:pre-line; }
-      .err { color: #b00020; font-weight:700; }
-      .event-row { display:grid; grid-template-columns: 90px 1fr; gap:8px; align-items:center; }
-      .event-time { text-align:right; color:var(--secondary-text-color,#475569); font-weight:700; }
-      .dot { width:10px; height:10px; border-radius:999px; display:inline-block; }
+      /* FullCalendar should occupy all remaining height */
+      #fc-wrap, #fc {
+        height: 100%;
+      }
+      /* Force FullCalendar to fill height inside the shadow root */
+      .fc, .fc-view, .fc-view > table, .fc-view > .fc-scroller {
+        height: 100% !important;
+        max-height: 100% !important;
+      }
     `;
 
         const card = document.createElement('ha-card');
@@ -239,19 +261,18 @@ class FamilyBoardJQ extends HTMLElement {
             <div class="time" id="h-time">--:--</div>
             <div class="date" id="h-date">—</div>
           </div>
-          <div id="mode-pill" class="pill">FAMILY</div>
+          <div id="mode-pill" style="background: rgba(0,0,0,.06); padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px;">FAMILY</div>
         </header>
         <div class="chips" id="chips"></div>
         <main><div class="main-pad" id="main"></div></main>
       </div>
     `;
-        this._root.innerHTML = ''; // reset
+
+        this._root.innerHTML = '';
         this._root.append(style, card);
 
-        // jQuery handles within shadow root (use context)
-        const $ = this.$;
-
         // Sidebar
+        const $ = this.$;
         const $aside = $('<div/>');
         $('#sidebar').append($aside);
         const ICONS = {
@@ -321,7 +342,7 @@ class FamilyBoardJQ extends HTMLElement {
             $chip.on('click', () => {
                 this._state.personFocus = p.name;
                 $('#mode-pill').text(p.name.toUpperCase());
-                if (this._state.section === 'Calendar') this._loadCalendar(true);
+                if (this._state.section === 'Calendar') this._rebuildFullCalendar(); // swap sources & refetch
             });
             $chips.append($chip);
         });
@@ -355,36 +376,12 @@ class FamilyBoardJQ extends HTMLElement {
         const $pad = $('#pad');
 
         if (this._state.section === 'Calendar') {
-            const $row = $(`
-        <div class="row" style="margin-bottom:8px;">
-          <ha-icon icon="mdi:calendar-range"></ha-icon>
-          <strong>${this._state.personFocus} · Upcoming</strong>
-          <div class="range-select">
-            <button data-d="1">Today</button>
-            <button data-d="7" class="active">7d</button>
-            <button data-d="14">14d</button>
-            <button data-d="30">30d</button>
-          </div>
+            $pad.html(`
+        <div id="fc-wrap" style="height:100%;">
+          <div id="fc"></div>
         </div>
       `);
-            $row.find('button').on('click', (e) => {
-                $row.find('button').removeClass('active');
-                const $btn = $(e.currentTarget).addClass('active');
-                this._state.rangeDays = Number($btn.data('d'));
-                this._loadCalendar(true);
-            });
-            $pad.append($row);
-
-            $pad.append(`
-        <div class="diag">
-          <h4>Calendar sources</h4>
-          <div class="list" id="diag-sources"></div>
-          <div class="list err" id="diag-errors" style="display:none"></div>
-        </div>
-        <div id="cal-list" style="display:grid; gap:6px;"></div>
-      `);
-
-            this._loadCalendar(true);
+            this._initFullCalendar();
             return;
         }
 
@@ -438,89 +435,117 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    /* ---------------- Calendar ---------------- */
+    /* ---------------- FullCalendar ---------------- */
 
-    async _loadCalendar(force = false) {
-        if (!this._hass) return;
-        const $ = this.$;
-        const $diagSrc = $('#diag-sources');
-        const $diagErr = $('#diag-errors');
-        const $list = $('#cal-list');
-        if (!$list.length) return;
-
+    _eventSourcesForFocus() {
         const focus = (this._state.personFocus || 'Family').toLowerCase();
-        const sources = (this._config.calendars || []).filter(
+        const cfgSources = this._config.calendars || [];
+        const filtered = cfgSources.filter(
             (s) => focus === 'family' || s.entity.toLowerCase().includes(focus)
         );
+        return filtered.map((src) => ({
+            id: src.entity,
+            color: src.color,
+            events: (start, end, tz, callback) => {
+                // FullCalendar v2 passes moment objects; convert to ISO
+                const startISO = start.toISOString();
+                const endISO = end.toISOString();
+                const path = `calendars/${src.entity}?start=${encodeURIComponent(
+                    startISO
+                )}&end=${encodeURIComponent(endISO)}`;
+                this._hass
+                    .callApi('GET', path)
+                    .then((events) => {
+                        const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
+                        callback(mapped);
+                    })
+                    .catch((err) => {
+                        console.error('[family-board-jq] calendar fetch failed', src.entity, err);
+                        callback([]);
+                    });
+            },
+        }));
+    }
 
-        // Show which entities exist
-        const lines = sources.map((s) => {
-            const exists = !!this._hass.states?.[s.entity];
-            return `${s.entity} ${exists ? '✓' : '✗ (not in hass.states)'}`;
-        });
-        $diagSrc.text(lines.length ? lines.join('\n') : '(no calendar entities selected)');
-
-        // Range
-        const start = new Date();
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(start);
-        end.setDate(end.getDate() + (this._state.rangeDays || 7));
-        const startISO = start.toISOString(),
-            endISO = end.toISOString();
-
-        // Fetch
-        const all = [];
-        const errors = [];
-        for (const src of sources) {
-            const path = `calendars/${src.entity}?start=${encodeURIComponent(
-                startISO
-            )}&end=${encodeURIComponent(endISO)}`;
-            try {
-                const events = await this._hass.callApi('GET', path);
-                const mapped = events
-                    .map((ev) => this._mapHaEvent(ev))
-                    .filter(Boolean)
-                    .map((e) => ({ ...e, color: src.color }));
-                all.push(...mapped);
-            } catch (e) {
-                errors.push(`GET /api/${path} → ${e?.code || e?.status || 'error'}`);
-            }
-        }
-
-        if (errors.length) {
-            $diagErr.show().text(errors.join('\n'));
-        } else {
-            $diagErr.hide().text('');
-        }
-
-        // Render list
-        all.sort((a, b) => (a.startTs || 0) - (b.startTs || 0));
-        if (!all.length) {
-            $list.html(
-                `<div class="diag"><strong>No events found</strong> for ${this._state.personFocus} in next ${this._state.rangeDays} days.</div>`
+    _initFullCalendar() {
+        const $ = this.$;
+        const $fc = $('#fc');
+        if (!($fc.length && this._$.fn && this._$.fn.fullCalendar)) {
+            $fc.html(
+                '<div style="padding:8px;color:#b00020">FullCalendar not loaded. Check PATHS.fcJsUrl/fcCssUrl.</div>'
             );
             return;
         }
-        $list.html(
-            all
-                .map(
-                    (e) => `
-      <div class="event-row">
-        <div class="event-time">${e.when}</div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="dot" style="background:${e.color};"></span>
-          <div><strong>${e.title}</strong>${
-                        e.where ? ` · <span style="color:#64748B">${e.where}</span>` : ''
-                    }</div>
-        </div>
-      </div>
-    `
-                )
-                .join('')
-        );
+        // Destroy any previous instance to avoid double-init in shadow root
+        try {
+            $fc.fullCalendar('destroy');
+        } catch (_) {}
+
+        const fcCfg = this._config.fc || {};
+        const tz = this._config.timezone || 'local';
+
+        $fc.fullCalendar({
+            header: fcCfg.headerToolbar || {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay',
+            },
+            defaultView: fcCfg.initialView || 'agendaWeek',
+            timezone: tz,
+            allDaySlot: fcCfg.allDaySlot !== false,
+            minTime: fcCfg.minTime || '06:00:00',
+            maxTime: fcCfg.maxTime || '22:00:00',
+            slotDuration: fcCfg.slotDuration || '01:00:00',
+            hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
+            timeFormat: fcCfg.timeFormat || 'HH:mm',
+            titleFormat: fcCfg.titleFormat || { month: 'MMMM', week: 'MMMM Do', day: 'MMMM Do' },
+            // Behavior
+            height: 'auto',
+            handleWindowResize: true,
+            editable: false,
+            selectable: false,
+            lazyFetching: true,
+            eventLimit: true,
+            weekNumbers: false,
+
+            // Data
+            eventSources: this._eventSourcesForFocus(),
+
+            // When view changes (prev/next/today/change view), FC will refetch automatically.
+            viewRender: () => {},
+        });
+
+        this._fcReady = true;
     }
 
-    _mapHaEvent(ev) {
+    _rebuildFullCalendar() {
+        const $ = this.$;
+        const $fc = $('#fc');
+        if (!($fc.length && this._fcReady)) {
+            this._initFullCalendar();
+            return;
+        }
+        // Replace event sources (since person focus changed)
+        try {
+            const sources = $fc.fullCalendar('getEventSources') || [];
+            sources.forEach((src) => src.remove());
+            this._eventSourcesForFocus().forEach((src) => $fc.fullCalendar('addEventSource', src));
+            this._refetchFullCalendar();
+        } catch (e) {
+            console.warn('[family-board-jq] rebuild failed, reinitializing', e);
+            this._initFullCalendar();
+        }
+    }
+
+    _refetchFullCalendar() {
+        const $ = this.$;
+        try {
+            $('#fc').fullCalendar('refetchEvents');
+        } catch (_) {}
+    }
+
+    _mapHaEventToFc(ev) {
+        // ev = { start: {dateTime}|{date}, end: {dateTime}|{date}, summary, location, description, all_day? }
         const s = ev?.start || {},
             e = ev?.end || {};
         const hasSDT = typeof s.dateTime === 'string',
@@ -528,30 +553,29 @@ class FamilyBoardJQ extends HTMLElement {
         const hasSD = typeof s.date === 'string',
             hasED = typeof e.date === 'string';
         if (!hasSDT && !hasSD) return null;
-        const allDay = !!ev.all_day || (hasSD && (hasED || !hasEDT));
-        let startIso = hasSDT ? s.dateTime : s.date;
-        let endIso = hasEDT ? e.dateTime : hasED ? e.date : null;
-        if (allDay && !endIso && hasSD) {
+
+        const isAllDay = !!ev.all_day || (hasSD && (hasED || !hasEDT));
+
+        // Build start/end strings acceptable by FC v2:
+        let startStr = hasSDT ? s.dateTime : s.date; // 'YYYY-MM-DDTHH:mm:ssZ' or 'YYYY-MM-DD'
+        let endStr = hasEDT ? e.dateTime : hasED ? e.date : null;
+
+        // All-day with no end: make it single-day exclusive-end
+        if (isAllDay && !endStr && hasSD) {
             const d = new Date(`${s.date}T00:00:00Z`);
             d.setUTCDate(d.getUTCDate() + 1);
-            endIso = d.toISOString().slice(0, 10);
+            endStr = d.toISOString().slice(0, 10); // keep 'YYYY-MM-DD'
         }
+
         const title = ev.summary || ev.title || 'Busy';
-        const when = allDay
-            ? 'All day'
-            : `${new Date(startIso).toTimeString().slice(0, 5)}–${
-                  endIso ? new Date(endIso).toTimeString().slice(0, 5) : ''
-              }`;
-        const startTs = new Date(hasSDT ? s.dateTime : `${s.date}T00:00:00Z`).getTime();
         return {
-            id: ev.uid || `${startIso}-${title}`,
+            id: ev.uid || `${startStr}-${title}`.replace(/\s+/g, '_'),
             title,
-            startIso,
-            endIso,
-            allDay,
-            where: ev.location,
-            when,
-            startTs,
+            start: startStr,
+            end: endStr || null,
+            allDay: !!isAllDay,
+            location: ev.location,
+            description: ev.description,
         };
     }
 
@@ -576,7 +600,7 @@ class FamilyBoardJQ extends HTMLElement {
           <div style="padding:0 10px 10px 10px;display:grid;gap:6px;">
             ${
                 items.length
-                    ? items.map((it) => `<div>- ${it.summary}</div>`).join('')
+                    ? items.map((it) => `<div>• ${it.summary}</div>`).join('')
                     : `<div style="color:#64748B">Nothing pending</div>`
             }
           </div>
@@ -591,6 +615,6 @@ customElements.define('family-board-jq', FamilyBoardJQ);
 window.customCards = window.customCards || [];
 window.customCards.push({
     type: 'family-board-jq',
-    name: 'Family Board (jQuery)',
-    description: 'All-in-one family dashboard rendered with jQuery',
+    name: 'Family Board (jQuery + FullCalendar)',
+    description: 'All-in-one family dashboard; Calendar uses FullCalendar v2.',
 });
