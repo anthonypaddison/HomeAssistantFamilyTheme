@@ -1,14 +1,14 @@
-// Family Board - single custom card rendering header + sidebar + chips + main.
-// Vanilla Web Component, no external libs required.
-// Reads HA state via this.hass and calls services via this.hass.callService/this.hass.callApi.
+// Family Board — all-in-one Lovelace card with Calendar diagnostics.
+// Anthony-ready: clear logs, visible errors, robust event mapping, quick range selector.
 
 class FamilyBoard extends HTMLElement {
+  /* ---------- Default config ---------- */
   static getStubConfig() {
     return {
       title: 'Panogu Family',
       timezone: 'Europe/London',
-      // Calendar sources: HA calendar entities and their colors (use your theme vars)
       calendars: [
+        // Make sure these match your real entities. You can override in dashboard YAML.
         { entity: 'calendar.family',  color: 'var(--family-color-family, #36B37E)' },
         { entity: 'calendar.anthony', color: 'var(--family-color-anthony, #7E57C2)' },
         { entity: 'calendar.joy',     color: 'var(--family-color-joy, #F4B400)' },
@@ -16,14 +16,13 @@ class FamilyBoard extends HTMLElement {
         { entity: 'calendar.toby',    color: 'var(--family-color-toby, #42A5F5)' },
         { entity: 'calendar.routine', color: 'var(--family-color-routine, #b2fd7fff)' },
       ],
-      // Sections available on the board
       sections: ['Calendar','Chores','Lists','Photos'],
       defaultSection: 'Calendar',
       minTime: '06:00:00',
       maxTime: '22:00:00',
-      hiddenDays: [0,6],            // Sun/Sat hidden by default (work-week view)
+      hiddenDays: [0,6],
       slotDuration: '01:00:00',
-      // Optional: chip math entities (if you already compute these in helpers)
+      // Chip metrics (optional; leave empty to disable)
       metrics: {
         family:  { done: 'input_number.completed_due_today_family',  todo: 'input_number.outstanding_family_today' },
         anthony:{ done: 'input_number.completed_due_today_anthony', todo: 'input_number.outstanding_anthony_today' },
@@ -42,32 +41,33 @@ class FamilyBoard extends HTMLElement {
     };
   }
 
+  /* ---------- Lifecycle ---------- */
   setConfig(cfg) {
     this._config = { ...FamilyBoard.getStubConfig(), ...cfg };
+    this._state = {
+      section: this._config.defaultSection || 'Calendar',
+      personFocus: 'Family',
+      rangeDays: 7,   // default fetch horizon
+      lastErrors: [], // visible diagnostics
+    };
     this._renderOnce();
   }
 
   set hass(hass) {
     this._hass = hass;
-    // Update reactive bits cheaply
     this._updateHeader();
     this._updateChips();
-    this._maybeRefreshCalendar();
-    this._renderChoresIfVisible();
+    this._updateSidebarBadges();
+    if (this._state.section === 'Calendar') this._loadCalendarRange();
+    if (this._state.section === 'Chores') this._renderChoresIfVisible();
   }
 
   getCardSize() { return 6; }
 
-  // -------------- Rendering --------------
-
+  /* ---------- One-time DOM ---------- */
   _renderOnce() {
     if (this._root) return;
-    this._state = {
-      section: this._config.defaultSection,
-      personFocus: 'Family'
-    };
     this._root = this.attachShadow({ mode: 'open' });
-
     const style = document.createElement('style');
     style.textContent = `
       :host { display:block; }
@@ -132,12 +132,21 @@ class FamilyBoard extends HTMLElement {
       main { grid-area: main; height: 100%; overflow: hidden; }
       .main-pad { height:100%; padding: 12px; overflow:auto; background: #F8FAFC; }
 
-      /* FAB */
-      .fab {
-        position: fixed; right: 24px; bottom: 24px; width: 56px; height:56px; border-radius:28px;
-        background: var(--fab-color-default, var(--primary-color, #B9FBC0)); color:#0F172A;
-        display:grid; place-items:center; box-shadow: 0 8px 24px rgba(0,0,0,.22); cursor:pointer; z-index: 1000;
-      }
+      .row { display:flex; align-items:center; gap:8px; }
+      .pill { background: rgba(0,0,0,.06); padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px; }
+
+      .range-select { margin-left:auto; display:flex; gap:6px; }
+      .range-select button { padding:4px 8px; border-radius:8px; border:1px solid var(--divider-color); background:#fff; cursor:pointer; }
+      .range-select button.active { background:var(--primary-color,#B9FBC0); color:#0F172A; border-color:transparent; }
+
+      .diag { margin:10px 0; padding:8px; background:#fff; border:1px solid var(--divider-color); border-radius:8px; }
+      .diag h4 { margin:0 0 6px 0; font-size:13px; }
+      .diag .list { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; }
+      .err { color: #b00020; font-weight:700; }
+
+      .event-row { display:grid; grid-template-columns: 90px 1fr; gap:8px; align-items:center; }
+      .event-time { text-align:right; color:var(--secondary-text-color,#475569); font-weight:700; }
+      .dot { width:10px; height:10px; border-radius:999px; display:inline-block; }
     `;
 
     const card = document.createElement('ha-card');
@@ -145,42 +154,36 @@ class FamilyBoard extends HTMLElement {
       <div class="layout">
         <aside id="sidebar"></aside>
         <header>
-          <div style="font-weight:800">Panogu Family</div>
+          <div style="font-weight:800">${this._config.title || 'Family'}</div>
           <div style="text-align:center">
             <div class="time" id="h-time">--:--</div>
             <div class="date" id="h-date">—</div>
           </div>
-          <div id="mode-pill" style="background: rgba(0,0,0,.06); padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px;">FAMILY</div>
+          <div id="mode-pill" class="pill">FAMILY</div>
         </header>
         <div class="chips" id="chips"></div>
         <main><div class="main-pad" id="main"></div></main>
       </div>
-      <button class="fab" id="fab" title="Add"><ha-icon icon="mdi:plus"></ha-icon></button>
     `;
 
     this._root.append(style, card);
     this._buildSidebar();
     this._buildChips();
-    this._bindFab();
-    this._renderMain();
+    this._renderMain(); // initial
   }
 
-  // -------------- Header / Time --------------
-
+  /* ---------- Header ---------- */
   _updateHeader() {
     if (!this._hass) return;
     const timeEl = this._root.getElementById('h-time');
     const dateEl = this._root.getElementById('h-date');
     const now = new Date();
-    const opts = this._hass?.locale || { language: 'en-GB' };
-    const h = now.toLocaleTimeString(opts.language || 'en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
-    const d = now.toLocaleDateString(opts.language || 'en-GB', { weekday:'long', day:'numeric', month:'long' });
-    timeEl.textContent = h;
-    dateEl.textContent = d;
+    const lang = this._hass?.locale?.language || 'en-GB';
+    timeEl.textContent = now.toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit', hour12: false });
+    dateEl.textContent = now.toLocaleDateString(lang, { weekday:'long', day:'numeric', month:'long' });
   }
 
-  // -------------- Sidebar --------------
-
+  /* ---------- Sidebar ---------- */
   _buildSidebar() {
     const sections = this._config.sections;
     const aside = this._root.getElementById('sidebar');
@@ -195,12 +198,10 @@ class FamilyBoard extends HTMLElement {
       btn.addEventListener('click', () => { this._state.section = sec; this._renderMain(); this._buildSidebar(); });
       aside.appendChild(btn);
     });
-    // Example badge for "Calendar events today"
     this._updateSidebarBadges();
   }
 
   _updateSidebarBadges() {
-    // If you already populate input_number.events_today, show it; else hide
     const badge = this._root.querySelector('.sb-badge[data-sec="Calendar"]');
     if (!badge || !this._hass) return;
     const val = Number(this._hass.states?.['input_number.events_today']?.state || 0);
@@ -208,17 +209,16 @@ class FamilyBoard extends HTMLElement {
     badge.textContent = val;
   }
 
-  // -------------- Chips --------------
-
+  /* ---------- Chips ---------- */
   _buildChips() {
     const chips = this._root.getElementById('chips');
     chips.innerHTML = '';
     const persons = [
-      { key:'family',  name:'Family',  icon:'mdi:account-group',  color:'var(--family-color-family, #36B37E)'},
-      { key:'anthony', name:'Anthony', icon:'mdi:laptop',         color:'var(--family-color-anthony, #7E57C2)'},
+      { key:'family',  name:'Family',  icon:'mdi:account-group',     color:'var(--family-color-family, #36B37E)'},
+      { key:'anthony', name:'Anthony', icon:'mdi:laptop',            color:'var(--family-color-anthony, #7E57C2)'},
       { key:'joy',     name:'Joy',     icon:'mdi:book-open-variant', color:'var(--family-color-joy, #F4B400)'},
-      { key:'lizzie',  name:'Lizzie',  icon:'mdi:teddy-bear',     color:'var(--family-color-lizzie, #EC407A)'},
-      { key:'toby',    name:'Toby',    icon:'mdi:soccer',         color:'var(--family-color-toby, #42A5F5)'},
+      { key:'lizzie',  name:'Lizzie',  icon:'mdi:teddy-bear',        color:'var(--family-color-lizzie, #EC407A)'},
+      { key:'toby',    name:'Toby',    icon:'mdi:soccer',            color:'var(--family-color-toby, #42A5F5)'},
     ];
     persons.forEach(p => {
       const el = document.createElement('div');
@@ -230,7 +230,12 @@ class FamilyBoard extends HTMLElement {
         <div class="v" id="chip-v-${p.key}">0/0</div>
         <div class="bar"><div id="chip-bar-${p.key}" style="transform:scaleX(0)"></div></div>
       `;
-      el.addEventListener('click', () => { this._state.personFocus = p.name; this._renderMain(); });
+      el.addEventListener('click', () => {
+        this._state.personFocus = p.name;
+        const mode = this._root.getElementById('mode-pill');
+        if (mode) mode.textContent = p.name.toUpperCase();
+        if (this._state.section === 'Calendar') this._loadCalendarRange(/*force*/true);
+      });
       chips.appendChild(el);
     });
     this._updateChips();
@@ -239,8 +244,7 @@ class FamilyBoard extends HTMLElement {
   _updateChips() {
     if (!this._hass) return;
     const m = this._config.metrics || {};
-    const keys = Object.keys(m);
-    keys.forEach(k => {
+    Object.keys(m).forEach(k => {
       const done = Number(this._hass.states?.[m[k].done]?.state || 0);
       const todo = Number(this._hass.states?.[m[k].todo]?.state || 0);
       const total = Math.max(0, done + todo);
@@ -252,69 +256,127 @@ class FamilyBoard extends HTMLElement {
     });
   }
 
-  // -------------- Main sections --------------
-
+  /* ---------- Main ---------- */
   _renderMain() {
     const mount = this._root.getElementById('main');
     mount.innerHTML = '';
+
     if (this._state.section === 'Calendar') {
-      this._renderCalendar(mount);
-    } else if (this._state.section === 'Chores') {
-      this._renderChores(mount);
-    } else if (this._state.section === 'Lists') {
-      this._renderLists(mount);
-    } else if (this._state.section === 'Photos') {
-      this._renderPhotos(mount);
+      const wrapper = document.createElement('div');
+      // header row with range buttons
+      wrapper.innerHTML = `
+        <div class="row" style="margin-bottom:8px;">
+          <ha-icon icon="mdi:calendar-range"></ha-icon>
+          <strong>${this._state.personFocus} · Upcoming</strong>
+          <div class="range-select">
+            <button data-d="1">Today</button>
+            <button data-d="7" class="active">7d</button>
+            <button data-d="14">14d</button>
+            <button data-d="30">30d</button>
+          </div>
+        </div>
+        <div class="diag">
+          <h4>Calendar sources</h4>
+          <div class="list" id="diag-sources"></div>
+          <div class="list err" id="diag-errors" style="display:none"></div>
+        </div>
+        <div id="cal-list" style="display:grid; gap:6px;"></div>
+      `;
+      mount.appendChild(wrapper);
+
+      // bind range buttons
+      wrapper.querySelectorAll('.range-select button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          wrapper.querySelectorAll('.range-select button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          this._state.rangeDays = Number(btn.dataset.d);
+          this._loadCalendarRange(/*force*/true);
+        });
+      });
+
+      // initial load
+      this._loadCalendarRange(/*force*/true);
+      return;
+    }
+
+    if (this._state.section === 'Chores') {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;" id="chores"></div>`;
+      mount.appendChild(wrap);
+      this._renderChoresIfVisible();
+      return;
+    }
+
+    if (this._state.section === 'Lists') {
+      mount.innerHTML = `<ha-card><div style="padding:12px">Lists: wire your shopping/project aggregates here.</div></ha-card>`;
+      return;
+    }
+
+    if (this._state.section === 'Photos') {
+      mount.innerHTML = `<ha-card><div style="padding:12px">Photos: render Local Photos album grid here.</div></ha-card>`;
+      return;
     }
   }
 
-  // ---- Calendar (simple proof, fetch via HA REST, render minimal list; swap later for your FullCalendar UI) ----
-  async _renderCalendar(mount) {
-    const el = document.createElement('div');
-    el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-        <ha-icon icon="mdi:calendar-range"></ha-icon>
-        <strong>${this._state.personFocus} · This Week</strong>
-      </div>
-      <div id="cal-list" style="display:grid; gap:6px;"></div>
-    `;
-    mount.appendChild(el);
-    await this._loadCalendarRange(el.querySelector('#cal-list'));
-  }
+  /* ---------- Calendar loading + diagnostics ---------- */
+  async _loadCalendarRange(force=false) {
+    if (!this._hass || this._state.section !== 'Calendar') return;
+    const listEl = this._root.getElementById('cal-list');
+    const diagSrc = this._root.getElementById('diag-sources');
+    const diagErr = this._root.getElementById('diag-errors');
+    if (!listEl || !diagSrc) return;
 
-  async _loadCalendarRange(listEl) {
-    if (!this._hass) return;
-    const tz = this._config.timezone || 'Europe/London';
-    const start = new Date();
-    start.setHours(0,0,0,0);
-    const end = new Date(start); end.setDate(end.getDate()+7);
-    const startISO = start.toISOString(); const endISO = end.toISOString();
-
-    // Filter which calendars to fetch by person focus (Family shows all)
+    // Show what we will query and whether entity exists in hass.states
     const focus = (this._state.personFocus || 'Family').toLowerCase();
-    const sources = this._config.calendars.filter(s => focus === 'family' || s.entity.toLowerCase().includes(focus));
+    const sources = (this._config.calendars || []).filter(s =>
+      focus === 'family' || s.entity.toLowerCase().includes(focus)
+    );
 
-    // Fetch events per source
+    const lines = sources.map(s => {
+      const exists = !!this._hass.states?.[s.entity];
+      return `${s.entity} ${exists ? '✓' : '✗ (not in hass.states)'}`;
+    });
+    diagSrc.textContent = lines.length ? lines.join('\n') : '(no calendar entities selected)';
+
+    // Range
+    const start = new Date(); start.setHours(0,0,0,0);
+    const end = new Date(start); end.setDate(end.getDate() + (this._state.rangeDays || 7));
+    const startISO = start.toISOString(), endISO = end.toISOString();
+
+    // Fetch
     const all = [];
+    const errors = [];
     for (const src of sources) {
+      const path = `calendars/${src.entity}?start=${encodeURIComponent(startISO)}&end=${encodeURIComponent(endISO)}`;
       try {
-        const path = `calendars/${src.entity}?start=${encodeURIComponent(startISO)}&end=${encodeURIComponent(endISO)}`;
         const events = await this._hass.callApi('GET', path);
-        // Map safely (supports all-day and timed)
         const mapped = events.map(ev => this._mapHaEvent(ev)).filter(Boolean).map(e => ({...e, color: src.color}));
         all.push(...mapped);
       } catch (e) {
-        console.error('Calendar fetch failed', src.entity, e);
+        errors.push(`GET /api/${path} → ${e?.code || e?.status || 'error'}`);
       }
     }
-    // Sort by start
+
+    // Show any errors
+    if (errors.length) {
+      diagErr.style.display = 'block';
+      diagErr.textContent = errors.join('\n');
+    } else {
+      diagErr.style.display = 'none';
+      diagErr.textContent = '';
+    }
+
+    // Sort + render
     all.sort((a,b) => (a.startTs||0) - (b.startTs||0));
-    // Render simple rows
+    if (!all.length) {
+      listEl.innerHTML = `<div class="diag"><strong>No events found</strong> for ${this._state.personFocus} in next ${this._state.rangeDays} days.</div>`;
+      return;
+    }
     listEl.innerHTML = all.map(e => `
-      <div style="display:grid;grid-template-columns: 90px 1fr; gap:8px; align-items:center;">
-        <div style="text-align:right; color:var(--secondary-text-color,#475569); font-weight:700;">${e.when}</div>
+      <div class="event-row">
+        <div class="event-time">${e.when}</div>
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="width:10px;height:10px;border-radius:999px;background:${e.color};display:inline-block"></span>
+          <span class="dot" style="background:${e.color};"></span>
           <div><strong>${e.title}</strong>${e.where ? ` · <span style="color:#64748B">${e.where}</span>` : ''}</div>
         </div>
       </div>
@@ -330,25 +392,18 @@ class FamilyBoard extends HTMLElement {
     let startIso = hasSDT ? s.dateTime : s.date;
     let endIso   = hasEDT ? e.dateTime : (hasED ? e.date : null);
     if (allDay && !endIso && hasSD) {
-      // exclusive end for all-day single day
       const d = new Date(`${s.date}T00:00:00Z`); d.setUTCDate(d.getUTCDate()+1);
       endIso = d.toISOString().slice(0,10);
     }
     const title = ev.summary || ev.title || 'Busy';
     const when  = allDay
       ? 'All day'
-      : `${new Date(startIso).toTimeString().slice(0,5)}-${endIso ? new Date(endIso).toTimeString().slice(0,5) : ''}`;
+      : `${new Date(startIso).toTimeString().slice(0,5)}–${endIso ? new Date(endIso).toTimeString().slice(0,5) : ''}`;
     const startTs = new Date(hasSDT ? s.dateTime : `${s.date}T00:00:00Z`).getTime();
     return { id: ev.uid || `${startIso}-${title}`, title, startIso, endIso, allDay, where: ev.location, when, startTs };
   }
 
-  // ---- Chores (simple list render from HA native todo.* entities) ----
-  _renderChores(mount) {
-    const wrap = document.createElement('div');
-    wrap.innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;" id="chores"></div>`;
-    mount.appendChild(wrap);
-    this._renderChoresIfVisible();
-  }
+  /* ---------- Chores (basic) ---------- */
   _renderChoresIfVisible() {
     if (this._state.section !== 'Chores' || !this._hass) return;
     const root = this._root.getElementById('chores');
@@ -368,104 +423,6 @@ class FamilyBoard extends HTMLElement {
         </ha-card>`;
     }).join('');
   }
-
-  // ---- Lists placeholder ----
-  _renderLists(mount) {
-    mount.innerHTML = `<ha-card><div style="padding:12px">Lists: hook up your Todoist/Shopping aggregates here.</div></ha-card>`;
-  }
-
-  // ---- Photos placeholder ----
-  _renderPhotos(mount) {
-    mount.innerHTML = `<ha-card><div style="padding:12px">Photos: show Local Photos album or a grid here.</div></ha-card>`;
-  }
-
-  // -------------- FAB (contextual) --------------
-
-  _bindFab() {
-    const fab = this._root.getElementById('fab');
-    fab.addEventListener('click', () => this._openAddDialog());
-  }
-
-  _openAddDialog() {
-    // Minimal built-in dialog using ha-dialog
-    const host = this._root;
-    let dlg = host.getElementById('fb-dialog');
-    if (!dlg) {
-      dlg = document.createElement('ha-dialog');
-      dlg.setAttribute('id', 'fb-dialog');
-      dlg.innerHTML = `
-        <style>
-          ha-dialog { --mdc-dialog-min-width: 320px; }
-          .fld { display:grid; gap:6px; margin-bottom:12px; }
-          input, select { padding:8px; border-radius:8px; border:1px solid var(--divider-color); }
-          .row { display:flex; gap:8px; justify-content:flex-end; }
-          .row button { padding:6px 12px; border-radius:8px; border:0; font-weight:700; }
-          .row .ok { background: var(--primary-color); color:#0F172A; }
-        </style>
-        <h2>Add ${this._state.section === 'Chores' ? 'Chore' : 'Event'}</h2>
-        <div class="fld"><label>Title</label><input id="f-title" placeholder="Title"></div>
-        <div id="cal-fields">
-          <div class="fld"><label>Start</label><input id="f-start" type="datetime-local"></div>
-          <div class="fld"><label>End</label><input id="f-end" type="datetime-local"></div>
-          <div class="fld">
-            <label>Calendar</label>
-            <select id="f-cal">
-              ${(this._config.calendars||[]).map(c=>`<option value="${c.entity}">${c.entity.split('.').pop()}</option>`).join('')}
-            </select>
-          </div>
-        </div>
-        <div id="todo-fields" style="display:none">
-          <div class="fld"><label>List</label>
-            <select id="f-list">
-              ${Object.entries(this._config.todos||{}).map(([k,v])=>`<option value="${v}">${k}</option>`).join('')}
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <button class="ok" id="ok">Create</button>
-          <button id="cancel">Cancel</button>
-        </div>
-      `;
-      host.appendChild(dlg);
-      dlg.querySelector('#cancel').addEventListener('click', ()=> dlg.close());
-      dlg.querySelector('#ok').addEventListener('click', ()=> this._submitDialog(dlg));
-    }
-    const isChores = this._state.section === 'Chores';
-    dlg.querySelector('#cal-fields').style.display = isChores ? 'none' : 'block';
-    dlg.querySelector('#todo-fields').style.display = isChores ? 'block' : 'none';
-    dlg.open();
-  }
-
-  async _submitDialog(dlg) {
-    const title = dlg.querySelector('#f-title').value?.trim();
-    if (!title || !this._hass) return;
-    if (this._state.section === 'Chores') {
-      const ent = dlg.querySelector('#f-list').value;
-      await this._hass.callService('todo', 'add_item', { entity_id: ent, item: title });
-    } else {
-      const cal  = dlg.querySelector('#f-cal').value;
-      const sRaw = dlg.querySelector('#f-start').value;
-      const eRaw = dlg.querySelector('#f-end').value;
-      const start = sRaw ? new Date(sRaw) : new Date();
-      const end   = eRaw ? new Date(eRaw) : new Date(Date.now()+60*60*1000);
-      await this._hass.callService('calendar', 'create_event', {
-        entity_id: cal,
-        summary: title,
-        start_date_time: start.toISOString(),
-        end_date_time: end.toISOString(),
-      });
-    }
-    dlg.close();
-  }
-
-  // -------------- Calendar refresh heuristic --------------
-
-  _maybeRefreshCalendar() {
-    // In this simple list-based calendar render, we reload whenever Calendar section is visible.
-    // In your FullCalendar port, call refetch on entity changes or on an interval.
-    if (this._state.section !== 'Calendar') return;
-    // No-op here; _renderCalendar loads per render.
-  }
 }
 
 customElements.define('family-board', FamilyBoard);
@@ -473,5 +430,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: 'family-board',
   name: 'Family Board',
-  description: 'All-in-one family dashboard (header/sidebar/chips/main).'
+  description: 'All-in-one family dashboard with calendar diagnostics.'
 });

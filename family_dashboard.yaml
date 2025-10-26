@@ -2,22 +2,21 @@ title: Family
 theme: FamilyBoard-Base
 views:
   - title: Family
-    path: family               # <-- matches controller's routeContains '/family'
+    path: family
     panel: true
     cards:
       - type: custom:family-board
         title: Panogu Family
-        default_section: Calendar
         calendars:
           - entity: calendar.family
             color: var(--family-color-family)
-          - entity: calendar.anthony
+          - entity: calendar.anthony_2
             color: var(--family-color-anthony)
-          - entity: calendar.joy
+          - entity: calendar.joy_2
             color: var(--family-color-joy)
-          - entity: calendar.lizzie
+          - entity: calendar.lizzie_2
             color: var(--family-color-lizzie)
-          - entity: calendar.toby
+          - entity: calendar.toby_2
             color: var(--family-color-toby)
           - entity: calendar.routine
             color: var(--family-color-routine)
