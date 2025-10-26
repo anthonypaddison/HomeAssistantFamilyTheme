@@ -2,7 +2,7 @@
 // Family Board (jQuery + FullCalendar v2/3) with diagnostics and safer sizing.
 
 const PATHS = {
-    jqueryUrl: '/local/family-board/vendor/jquery-3.7.1.min.js',
+    jqueryUrl: '/local/family-board/vendor/jquery.min.3.7.1.js',
     momentUrl: '/local/family-board/vendor/moment.min.js',
     momentTzUrl: '/local/family-board/vendor/moment-timezone.min.js',
     fcCssUrl: '/local/family-board/vendor/fullcalendar.min.css',
