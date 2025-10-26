@@ -2,7 +2,7 @@
 // Family Board (jQuery + FullCalendar v2/3) with diagnostics and safer sizing.
 
 const PATHS = {
-    jqueryUrl: '/local/family-board/vendor/jquery.min.3.7.1.js',
+    jqueryUrl: '/local/family-board/vendor/jquery.min.3.7.1.js', // <-- match your actual file name!
     momentUrl: '/local/family-board/vendor/moment.min.js',
     momentTzUrl: '/local/family-board/vendor/moment-timezone.min.js',
     fcCssUrl: '/local/family-board/vendor/fullcalendar.min.css',
@@ -15,6 +15,7 @@ class FamilyBoardJQ extends HTMLElement {
             title: 'Panogu Family',
             timezone: 'Europe/London',
             calendars: [
+                // Change these to *_2 if your entities are suffixed
                 { entity: 'calendar.family', color: 'var(--family-color-family, #36B37E)' },
                 { entity: 'calendar.anthony', color: 'var(--family-color-anthony, #7E57C2)' },
                 { entity: 'calendar.joy', color: 'var(--family-color-joy, #F4B400)' },
@@ -72,7 +73,6 @@ class FamilyBoardJQ extends HTMLElement {
         return 6;
     }
 
-    /* ---------------- Utilities ---------------- */
     _fatal(msg) {
         console.error('[family-board-jq] ' + msg);
         this._root.innerHTML = `<ha-card><div style="padding:12px;color:#b00020">${msg}</div></ha-card>`;
@@ -83,23 +83,17 @@ class FamilyBoardJQ extends HTMLElement {
         console.log('[family-board-jq]', msg);
     }
 
-    /* ---------------- Assets ---------------- */
     async _ensureAssets() {
         if (!window.jQuery) await this._loadScript(PATHS.jqueryUrl);
         this.$ = (sel, ctx) => window.jQuery(sel, ctx || this._root);
         this._$ = window.jQuery;
-
-        // Moment before FC (for v2/v3)
         if (PATHS.momentUrl && !window.moment) await this._loadScript(PATHS.momentUrl);
         if (PATHS.momentTzUrl && window.moment && !window.moment.tz)
             await this._loadScript(PATHS.momentTzUrl);
-
         if (PATHS.fcCssUrl) await this._loadCss(PATHS.fcCssUrl, true);
         if (!(this._$.fn && this._$.fn.fullCalendar)) {
             await this._loadScript(PATHS.fcJsUrl);
         }
-
-        // Final check
         if (!(this._$.fn && this._$.fn.fullCalendar)) {
             throw new Error(
                 'FullCalendar jQuery plugin not detected. Ensure fcJsUrl points to v2/v3 build.'
@@ -144,7 +138,6 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    /* ---------------- Shell ---------------- */
     _ensureRoot() {
         if (!this._root) this._root = this.attachShadow({ mode: 'open' });
     }
@@ -180,11 +173,9 @@ class FamilyBoardJQ extends HTMLElement {
       .chip .bar > div { position:absolute; inset:0; background: rgba(255,255,255,.85); transform-origin:left; }
       main { grid-area: main; height: 100%; overflow: hidden; }
       .main-pad { height:100%; padding: 12px; overflow:auto; background: #F8FAFC; }
-      /* FullCalendar area: ensure visible height */
       #fc-wrap { height:100%; }
       #fc { height:100%; min-height: 640px; }
       .fc, .fc-view, .fc-view > table, .fc-view > .fc-scroller { height: 100% !important; max-height: 100% !important; }
-      /* Diagnostics pane */
       #diag-pane { margin-top:10px; padding:8px; background:#fff; border:1px solid var(--divider-color); border-radius:8px; font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; white-space:pre-wrap; }
     `;
 
@@ -196,7 +187,7 @@ class FamilyBoardJQ extends HTMLElement {
           <div style="font-weight:800">${this._config.title || 'Family'}</div>
           <div style="text-align:center">
             <div class="time" id="h-time">--:--</div>
-            <div class="date" id="h-date">—</div>
+            <div class="date" id="h-date">-</div>
           </div>
           <div id="mode-pill" style="background: rgba(0,0,0,.06); padding:4px 8px; border-radius:999px; font-weight:700; font-size:12px;">FAMILY</div>
         </header>
@@ -390,7 +381,7 @@ class FamilyBoardJQ extends HTMLElement {
         const $ = this.$;
         const $fc = $('#fc');
         if (!($fc.length && this._$?.fn?.fullCalendar)) {
-            this._diag('FullCalendar not detected—check PATHS.fcJsUrl and that it is v2/v3.');
+            this._diag('FullCalendar not detected-check PATHS.fcJsUrl and that it is v2/v3.');
             $fc.html('<div style="padding:8px;color:#b00020">FullCalendar not loaded.</div>');
             return;
         }
