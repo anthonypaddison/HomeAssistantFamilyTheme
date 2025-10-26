@@ -1,38 +1,21 @@
 default_config:
 
-frontend:
-  themes: !include themes.yaml
-  extra_module_url:
-    - /hacsfiles/lovelace-card-mod/card-mod.js
+# frontend:
+  # themes: !include themes.yaml
 
 lovelace:
   mode: yaml
   resources:
-    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+    - url: /local/family-board/family-dashboard-controller.js
       type: module
-    - url: /hacsfiles/button-card/button-card.js
+    - url: /local/family-board/family-board.js
       type: module
-    - url: /hacsfiles/lovelace-layout-card/layout-card.js
-      type: module
-    - url: /hacsfiles/week-planner-card/week-planner-card.js
-      type: module
-    - url: /local/fullcalendar-row.js?15
-      type: module
-  dashboards:
-    family-dashboard:
-      mode: yaml
-      title: Family
-      icon: mdi:home-heart
-      show_in_sidebar: true
-      filename: family_dashboard.yaml
+
 
 automation: !include automations.yaml
 script: !include scripts.yaml
 template: !include template.yaml
 sensor: !include sensor.yaml
-input_select: !include input_select.yaml
-input_number: !include input_number.yaml
-input_text: !include input_text.yaml
 
 # TODO
 # click a chip and if it is calendar it only shows their items

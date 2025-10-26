@@ -1,0 +1,127 @@
+title: Family
+theme: FamilyBoard-Base
+
+button_card_templates: !include button_card_templates.yaml
+
+views:
+  - title: Family
+    path: family
+    # panel: true
+    type: custom:grid-layout
+    card_mod:
+      style: |
+        :host {
+          # height: calc(100vh - var(--header-height)) !important;
+          # block-size: calc(100vh - var(--header-height)) !important;
+          # width: 100vw !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+    layout:
+      margin: 0px
+      padding: 0px
+      grid-template-columns: 8% 1fr
+      grid-template-rows:
+        - var(--family-heading-height, 48px)
+        - var(--family-chips-height, 72px)
+        - 1fr
+      grid-template-areas: |
+        "sidebar heading"
+        "sidebar chips"
+        "sidebar main"
+      gap: 0px
+      column-gap: 0px
+      row-gap: 0px
+
+    cards:
+      # 1) SIDE BAR COLUMN
+      - !include /config/sidebar_menu.yaml
+
+      # 2) HEADING ROW
+      - !include /config/heading_row.yaml
+
+      # 3) CHIPS ROW
+      - !include /config/chips_row.yaml
+
+      # 3) FULL CALENDAR ROW
+      - type: custom:fullcalendar-row
+        view_layout: { grid-area: main }
+        card_mod:
+          style: |
+            ha-card {
+              # margin: 0 !important;
+              # height: 100% !important;
+              # overflow: hidden !important;
+              # padding: 15px !important;
+            }
+            .fc, .fc-view, .fc-view > table, .fc-view > .fc-scroller {
+              height: 100% !important;
+              max-height: 100% !important;
+            }
+            # .fc-agenda .fc-event {
+            #   min-height: 18px !important;
+            # }
+            # .fc-slats .fc-minor td {
+            #     border-top-style: none !important;
+            # }
+            # .fc-day.fc-mon,
+            # .fc-day.fc-fri,
+            # .fc-day-header.fc-mon,
+            # .fc-day-header.fc-fri {
+            #     border-left: none !important;
+            #     border-right: none !important;
+            # }
+
+        initialView: agendaWeek
+        hiddenDays: [0, 6]
+        allDaySlot: true
+        timezone: Europe/London
+        entities:
+          - entity: calendar.family
+            color: var(--family-color-family)
+          - entity: calendar.anthony_2
+            color: var(--family-color-anthony)
+          - entity: calendar.joy_2
+            color: var(--family-color-joy)
+          - entity: calendar.lizzie_2
+            color: var(--family-color-lizzie)
+          - entity: calendar.toby_2
+            color: var(--family-color-toby)
+          - entity: calendar.routine
+            color: var(--family-color-routine)
+        headerToolbar:
+          left: prev,next today
+          center: title
+          right: month,agendaWeek,agendaDay
+        minTime: '06:00:00'
+        maxTime: '22:00:00'
+        slotDuration: '01:00:00'
+        forceEventDuration: true
+        slotEventOverlap: true
+        titleFormat:
+          month: 'MMMM'
+          week: 'MMMM Do'
+          day: 'MMMM Do'
+        refetchCooldownMs: 300000
+        debug: true
+
+      # 4) MAIN AREA (conditional sections)
+      # - type: vertical-stack
+      #   view_layout: { grid-area: main }
+      #   cards:
+      #     # Calendar Section
+      #     - type: conditional
+      #       conditions:
+      #         - entity: input_select.family_section
+      #           state: Calendar
+      #       card: !include /config/calendar_section.yaml
+
+          # # Chores Section
+          # - type: conditional
+          #   conditions:
+          #     - entity: input_select.family_section
+          #       state: Chores
+          #   card: !include /config/chores_section.yaml
+
+# # 5) FAB BUTTON (always present)
+# - !include /config/fab_button.yaml
