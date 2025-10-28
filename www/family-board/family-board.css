@@ -340,3 +340,27 @@ main {
         margin: 0;
     }
 }
+
+/* /config/www/family-board/family-board.css */
+:host {
+    display: block;
+    /* Fallback if controller hasn't kicked in yet */
+    --fb-bg: #ffffff;
+    --fb-surface: #ffffff;
+    --fb-surface-2: #ffffff;
+    --fb-text: #0f172a;
+    --fb-muted: #475569;
+    --fb-accent: #cfbaf0;
+    --fb-grid: #e5e7eb;
+    --fb-today: #f6f7ff;
+    --fb-weekend: rgba(15, 23, 42, 0.04);
+    --fb-pill-text: #ffffff;
+    --fb-print-text: #111;
+    --fb-radius: 12px;
+}
+
+ha-card {
+    height: 100%;
+    background: var(--family-background, var(--fb-bg));
+    color: var(--fb-text);
+}

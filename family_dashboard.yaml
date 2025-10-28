@@ -1,5 +1,4 @@
 title: Family
-theme: FamilyBoard-Base
 views:
     - title: Family
       path: family
