@@ -6,9 +6,9 @@ default_config:
 lovelace:
     mode: yaml
     resources:
-        - url: /local/family-board/family-dashboard-controller.js?v=13
+        - url: /local/family-board/family-dashboard-controller.js?v=14
           type: module
-        - url: /local/family-board/family-board-jq.js?v=13
+        - url: /local/family-board/family-board-jq.js?v=14
           type: module
     dashboards:
         family-dashboard:
