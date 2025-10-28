@@ -1,15 +1,13 @@
 title: Family
-# theme: FamilyBoard-Base   # optional; comment out if you don't have this theme
+theme: FamilyBoard-Base
 views:
     - title: Family
       path: family
       panel: true
       cards:
           - type: custom:family-board-jq
-            mode: dashboard # << the full layout (sidebar + headers + main)
             title: Panogu Family
             timezone: Europe/London
-            # Chips control To-dos focus; Calendar can optionally filter by chip (toggle in JS below)
             calendars:
                 - entity: calendar.family
                   color: var(--family-color-family)
@@ -23,33 +21,33 @@ views:
                   color: var(--family-color-toby)
                 - entity: calendar.routine
                   color: var(--family-color-routine)
+            todos:
+                family: todo.family
+                anthony: todo.anthony
+                joy: todo.joy
+                lizzie: todo.lizzie
+                toby: todo.toby
             fc:
-                firstDay: 1
                 defaultView: month
                 header:
-                    left: 'prev,next today'
-                    center: 'title'
-                    right: 'month,agendaWeek,agendaDay' # commas for FC v2/3
-                contentHeight: auto
+                    left: prev,next today
+                    center: title
+                    right: month,agendaWeek,agendaDay
                 timeFormat: 'HH:mm'
                 views:
                     month:
                         fixedWeekCount: false
                         eventLimit: true
+                        hiddenDays: [] # keep weekends visible in Month
                     agendaWeek:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
+                        hiddenDays: [] # change to [0,6] if you want Mon–Fri only
                     agendaDay:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
-            # Optional: define todo entities here if names differ
-            # todos:
-            #   family: todo.family
-            #   anthony: todo.anthony
-            #   joy: todo.joy
-            #   lizzie: todo.lizzie
-            #   toby: todo.toby
+                        hiddenDays: []
