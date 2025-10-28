@@ -1,12 +1,11 @@
 title: Family
-theme: FamilyBoard-Base
 views:
     - title: Family
       path: family
       panel: true
       cards:
           - type: custom:family-board-jq
-            mode: simple-calendar
+            mode: dashboard
             title: Panogu Family
             timezone: Europe/London
             calendars:
@@ -26,9 +25,9 @@ views:
                 firstDay: 1
                 defaultView: month
                 header:
-                    left: 'prev next today'
+                    left: 'prev,next today'
                     center: 'title'
-                    right: 'month agendaWeek agendaDay'
+                    right: 'month,agendaWeek,agendaDay'
                 contentHeight: auto
                 timeFormat: 'HH:mm'
                 views:
