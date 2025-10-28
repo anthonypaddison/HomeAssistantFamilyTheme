@@ -6,6 +6,7 @@ views:
       panel: true
       cards:
           - type: custom:family-board-jq
+            mode: simple-calendar
             title: Panogu Family
             timezone: Europe/London
             calendars:
@@ -21,33 +22,26 @@ views:
                   color: var(--family-color-toby)
                 - entity: calendar.routine
                   color: var(--family-color-routine)
-            todos:
-                family: todo.family
-                anthony: todo.anthony
-                joy: todo.joy
-                lizzie: todo.lizzie
-                toby: todo.toby
             fc:
+                firstDay: 1
                 defaultView: month
                 header:
-                    left: prev,next today
+                    left: prev
                     center: title
-                    right: month,agendaWeek,agendaDay
+                    right: next
+                contentHeight: auto
                 timeFormat: 'HH:mm'
                 views:
                     month:
                         fixedWeekCount: false
                         eventLimit: true
-                        hiddenDays: [] # keep weekends visible in Month
                     agendaWeek:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
-                        hiddenDays: [] # change to [0,6] if you want Mon–Fri only
                     agendaDay:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
-                        hiddenDays: []
