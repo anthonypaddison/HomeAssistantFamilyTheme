@@ -26,9 +26,9 @@ views:
                 firstDay: 1
                 defaultView: month
                 header:
-                    left: prev
-                    center: title
-                    right: next
+                    left: 'prev next today'
+                    center: 'title'
+                    right: 'month agendaWeek agendaDay'
                 contentHeight: auto
                 timeFormat: 'HH:mm'
                 views:

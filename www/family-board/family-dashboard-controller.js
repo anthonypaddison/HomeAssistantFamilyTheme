@@ -1,31 +1,28 @@
+// /config/www/family-board/family-dashboard-controller.js
 // Family Dashboard Controller
-// - Adds/removes a document-level class when you are on the Family dashboard.
-// - Injects CSS once; styles apply only while that class is present.
-// - No HACS required.
+// - Adds/removes a document-level class when the /family route is active
+// - Injects only small page-wide "kiosk" tweaks (header/sidebar/full-bleed)
+// - All theme/calendar styling now lives in /local/family-board/family-board.css (loaded by the card)
 
 (() => {
     const CFG = {
-        // Adjust this to match your dashboard path.
-        // If you use /lovelace/family or /family-dashboard/family, both will work with the contains check.
         routeContains: '/family', // substring to detect your Family board route
-        className: 'family-board-active', // toggled on <html> element
+        className: 'family-board-active', // toggled on <html>
         options: {
             hideAppHeader: true,
-            collapseSidebar: true, // icon-only sidebar
-            fullBleedView: true, // stretch content
-            setVars: true, // page-level CSS variables
+            collapseSidebar: true,
+            fullBleedView: true,
+            setVars: true,
         },
     };
 
-    // ---- CSS injected once ----
+    // Minimal kiosk CSS (scoped by html.family-board-active)
     const css = `
-  /* Scoped to our route by .family-board-active on <html> */
   html.${CFG.className} {
-    --family-kiosk-bg: var(--family-background, #FFFFFF);
-    --family-kiosk-text: var(--primary-text-color, #0F172A);
+    --family-background: var(--primary-background-color, #0b1020);
+    --family-text: var(--primary-text-color, #e6eaf6);
   }
-
-  /* Optional: hide the top HA header (app chrome) */
+  /* Hide top HA header */
   ${
       CFG.options.hideAppHeader
           ? `
@@ -33,38 +30,31 @@
   html.${CFG.className} ha-top-app-bar-fixed { display: none !important; }`
           : ''
   }
-
-  /* Optional: collapse left sidebar to icons only (still usable) */
+  /* Collapse left sidebar to icons only */
   ${
       CFG.options.collapseSidebar
           ? `
-  html.${CFG.className} ha-sidebar {
-    --mdc-drawer-width: 72px !important;
-  }`
+  html.${CFG.className} ha-sidebar { --mdc-drawer-width: 72px !important; }`
           : ''
   }
-
-  /* Optional: make the content area full-bleed and remove extra gaps */
+  /* Full-bleed view area */
   ${
       CFG.options.fullBleedView
           ? `
   html.${CFG.className} #view,
   html.${CFG.className} hui-view,
   html.${CFG.className} hui-panel-view {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: var(--family-kiosk-bg);
-    color: var(--family-kiosk-text);
+    padding: 0 !important; margin: 0 !important;
+    background: var(--family-background); color: var(--family-text);
   }`
           : ''
   }
-
-  /* Example: tweak Lovelace card defaults while active */
+  /* Card default tweaks (subtle) */
   ${
       CFG.options.setVars
           ? `
   html.${CFG.className} {
-    --ha-card-border-radius: 0px;
+    --ha-card-border-radius: 10px;
     --ha-card-box-shadow: none;
     --masonry-view-card-margin: 0px;
   }`
@@ -87,12 +77,10 @@
         root.classList.toggle(CFG.className, active);
     }
 
-    // Observe URL changes (works for HA's client-side routing)
     function start() {
         injectCssOnce();
         onRouteChange();
-
-        // Monkey-patch pushState/replaceState to detect in-app nav
+        // Patch pushState/replaceState to catch HA client-side navigation
         const { pushState, replaceState } = history;
         history.pushState = function (...a) {
             const r = pushState.apply(this, a);
