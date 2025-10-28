@@ -1,6 +1,6 @@
 // /config/www/family-board/family-dashboard-controller.js
 // Scoped theming + layout controls for the Family dashboard only.
-// Applies when the current route contains `/family` by toggling a class on <html>.
+// Becomes active when the route contains `/family`.
 
 (() => {
     const CFG = {
@@ -15,54 +15,45 @@
     };
 
     // All variables below are LOCAL to /family (no global theme needed).
-    // Tweak colours/radius here to taste.
+    // Tweaks requested by Anthony:
+    // - Chips, header, and sidebar surface: palette-lilac #CFBAF0
+    // - Main view background: white
+    // - Sidebar buttons: transparent when inactive, white when active
+    // - HA app header: palette-lilac #CFBAF0
     const css = `
   /* ======== FAMILY DASHBOARD SCOPE ======== */
   html.${CFG.className} {
 
-    /* --- Local palette (lifted from your previous theme) --- */
-    --palette-mint:     #B9FBC0;
-    --palette-aqua:     #98F5E1;
-    --palette-cyan:     #8EECF5;
-    --palette-sky:      #90DBF4;
-    --palette-bluegrey: #A3C4F3;
+    /* --- Local palette (minimal, we only need lilac here) --- */
     --palette-lilac:    #CFBAF0;
-    --palette-rose:     #FFCFD2;
-    --palette-vanilla:  #FBF8CC;
-
-    /* --- Core colours --- */
-    --primary-color:        var(--palette-mint);
-    --accent-color:         var(--palette-lilac);
     --primary-text-color:   #0F172A;
     --secondary-text-color: #475569;
     --divider-color:        #E5E7EB;
 
-    /* --- Base surfaces for this dashboard --- */
-    --family-background: #FFFFFF;  /* page background */
-    --family-surface:    #FFFFFF;  /* header/sidebar/card surface */
+    /* --- Surfaces for this dashboard --- */
+    --family-background: #FFFFFF;          /* MAIN view background (calendar area) */
+    --family-surface:    var(--palette-lilac); /* Header, chips bar, in-card sidebar background */
 
     /* --- Variables consumed by the custom card CSS --- */
-    --fb-bg:         var(--family-background);
-    --fb-surface:    var(--family-surface);
-    --fb-surface-2:  var(--family-surface);
+    --fb-bg:         var(--family-background);  /* main area white */
+    --fb-surface:    var(--family-surface);     /* header + chips + in-card sidebar lilac */
+    --fb-surface-2:  var(--family-background);  /* calendar body surface under toolbar */
     --fb-text:       var(--primary-text-color);
     --fb-muted:      var(--secondary-text-color);
-    --fb-accent:     var(--accent-color);
+    --fb-accent:     var(--palette-lilac);      /* FC toolbar buttons default to lilac */
     --fb-grid:       var(--divider-color);
     --fb-today:      #F6F7FF;
     --fb-weekend:    rgba(15, 23, 42, 0.04);
     --fb-pill-text:  #FFFFFF;
     --fb-print-text: #111;
 
-    /* --- Corner radius (single source of truth for the board) --- */
+    /* --- Corner radius (single source of truth) --- */
     --fb-radius: 12px;
-
-    /* Reflect radius/spacing to HA cards IN THIS VIEW ONLY */
     --ha-card-border-radius: var(--fb-radius);
     --ha-card-box-shadow: none;
     --masonry-view-card-margin: 0px;
 
-    /* --- Per-person colours used by chips & calendar events --- */
+    /* --- Per-person colours used by chips & events --- */
     --family-color-family:  #36B37E;
     --family-color-anthony: #7E57C2;
     --family-color-joy:     #F4B400;
@@ -70,24 +61,24 @@
     --family-color-toby:    #42A5F5;
     --family-color-routine: #b2fd7f;
 
-    /* --- OVERRIDE HA APP CHROME (header + sidebar) LOCALLY --- */
-    --app-header-background-color: var(--family-surface);
+    /* --- OVERRIDE HA APP CHROME (header + left HA sidebar) LOCALLY --- */
+    --app-header-background-color: var(--palette-lilac);   /* HA app header lilac */
     --app-header-text-color:       var(--primary-text-color);
     --app-header-border-bottom:    0;
 
-    --sidebar-background-color:    var(--family-surface);
+    --sidebar-background-color:    var(--palette-lilac);   /* HA left sidebar lilac */
     --sidebar-text-color:          var(--primary-text-color);
     --sidebar-icon-color:          var(--secondary-text-color);
     --sidebar-selected-text-color: var(--primary-text-color);
-    --sidebar-selected-icon-color: var(--primary-color);
+    --sidebar-selected-icon-color: var(--primary-text-color);
 
-    /* Ensure HA components that read only primary bg pick up our background */
+    /* Some HA components still read this for page bg – keep it white here */
     --primary-background-color:    var(--family-background);
   }
 
   /* ======== LAYOUT/CHROME ENFORCEMENT (still scoped) ======== */
 
-  /* Full-bleed background for the entire app shell while on /family */
+  /* Ensure the page shell is white where it should be */
   html.${CFG.className} body,
   html.${CFG.className} home-assistant,
   html.${CFG.className} ha-main,
@@ -99,7 +90,7 @@
     color: var(--primary-text-color);
   }
 
-  /* Header styling (in case you unhide it) */
+  /* HA Header (if visible) */
   html.${CFG.className} app-header,
   html.${CFG.className} ha-top-app-bar-fixed {
     background: var(--app-header-background-color) !important;
@@ -107,7 +98,7 @@
     border-bottom: var(--app-header-border-bottom, 0) !important;
   }
 
-  /* Sidebar surface + icons */
+  /* HA Left Sidebar (chrome) */
   html.${CFG.className} ha-sidebar {
     background: var(--sidebar-background-color) !important;
     color: var(--sidebar-text-color) !important;
@@ -123,7 +114,7 @@
     color: var(--sidebar-selected-icon-color) !important;
   }
 
-  /* Remove default paddings/margins in the panel view for true full-bleed */
+  /* Remove default paddings/margins in the panel view */
   html.${CFG.className} #view,
   html.${CFG.className} hui-view,
   html.${CFG.className} hui-panel-view {
@@ -149,6 +140,7 @@
   }
 
   `; // end css
+
     function injectCssOnce() {
         if (document.getElementById('family-dashboard-controller-style')) return;
         const style = document.createElement('style');
