@@ -1,3 +1,5 @@
+# family_dashboard.yaml
+
 title: Family
 views:
     - title: Family
@@ -7,26 +9,43 @@ views:
           - type: custom:family-board-jq
             title: Panogu Family
             timezone: Europe/London
+
+            # Tag each calendar with the 'owner' used by chip filters.
             calendars:
                 - entity: calendar.family
                   color: var(--family-color-family)
+                  owner: family
+                  label: Family
                 - entity: calendar.anthony_2
                   color: var(--family-color-anthony)
+                  owner: anthony
+                  label: Anthony
                 - entity: calendar.joy_2
                   color: var(--family-color-joy)
+                  owner: joy
+                  label: Joy
                 - entity: calendar.lizzie_2
                   color: var(--family-color-lizzie)
+                  owner: lizzie
+                  label: Lizzie
                 - entity: calendar.toby_2
                   color: var(--family-color-toby)
+                  owner: toby
+                  label: Toby
                 - entity: calendar.routine
                   color: var(--family-color-routine)
+                  owner: family
+                  label: Routine
+
             todos:
                 family: todo.family
                 anthony: todo.anthony
                 joy: todo.joy
                 lizzie: todo.lizzie
                 toby: todo.toby
+
             fc:
+                firstDay: 1
                 defaultView: month
                 header:
                     left: prev,next today
@@ -37,16 +56,13 @@ views:
                     month:
                         fixedWeekCount: false
                         eventLimit: true
-                        hiddenDays: [] # keep weekends visible in Month
                     agendaWeek:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
-                        hiddenDays: [] # change to [0,6] if you want Mon–Fri only
                     agendaDay:
                         allDaySlot: true
                         slotDuration: '00:30:00'
                         minTime: '06:00:00'
                         maxTime: '22:00:00'
-                        hiddenDays: []

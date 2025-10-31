@@ -1,44 +1,27 @@
 /* /config/www/family-board/family-board.css */
-/* (same structure you uploaded) */
+/* CSS Variables: fallback values if controller isn't active */
 :host {
     display: block !important;
-}
-ha-card {
-    height: 100% !important;
-    background: var(--family-background, #0b1020) !important;
-    color: var(--fb-text, #e6eaf6) !important;
-}
-#wrap {
-    padding: 12px !important;
-}
-#title {
-    font-weight: 800 !important;
-    margin-bottom: 8px !important;
-}
-#calendar,
-#fc {
-    min-height: 640px !important;
-}
-.fc,
-.fc-view,
-.fc-view > table,
-.fc-view > .fc-scroller {
-    height: 100% !important;
-    max-height: 100% !important;
+    /* Fallback palette (light theme) */
+    --fb-bg: #ffffff !important;
+    --fb-surface: #ffffff !important;
+    --fb-surface-2: #ffffff !important;
+    --fb-text: #0f172a !important;
+    --fb-muted: #475569 !important;
+    --fb-accent: #cfbaf0 !important;
+    --fb-grid: #e5e7eb !important;
+    --fb-today: #f6f7ff !important;
+    --fb-weekend: rgba(15, 23, 42, 0.04) !important;
+    --fb-pill-text: #ffffff !important;
+    --fb-print-text: #111 !important;
+    --fb-radius: 12px !important;
 }
 
-:host {
-    --fb-bg: #0b1020 !important;
-    --fb-surface: #11172d !important;
-    --fb-surface-2: #0e1427 !important;
-    --fb-text: #e6eaf6 !important;
-    --fb-muted: #9aa3b2 !important;
-    --fb-accent: #7c9cff !important;
-    --fb-grid: rgba(255, 255, 255, 0.06) !important;
-    --fb-today: #1a2240 !important;
-    --fb-weekend: rgba(124, 156, 255, 0.06) !important;
-    --fb-pill-text: #0b1020 !important;
-    --fb-print-text: #111 !important;
+/* Card styling */
+ha-card {
+    height: 100% !important;
+    background: var(--fb-bg) !important;
+    color: var(--fb-text) !important;
 }
 
 /* Layout grid */
@@ -50,9 +33,8 @@ ha-card {
     height: calc(100vh - var(--header-height, 0px)) !important;
     background: var(--fb-bg) !important;
 }
-.fb-title {
-    font-weight: 800 !important;
-}
+
+/* Header */
 header {
     grid-area: header !important;
     display: flex !important;
@@ -71,6 +53,9 @@ header .date {
     opacity: 0.85 !important;
     font-weight: 700 !important;
 }
+.fb-title {
+    font-weight: 800 !important;
+}
 .fb-pill {
     background: rgba(255, 255, 255, 0.06) !important;
     padding: 4px 8px !important;
@@ -79,6 +64,7 @@ header .date {
     font-size: 12px !important;
 }
 
+/* Sidebar */
 aside#sidebar {
     grid-area: sidebar !important;
     display: flex !important;
@@ -104,6 +90,7 @@ aside#sidebar {
     background: #fff !important;
 }
 
+/* Chips */
 .chips {
     grid-area: chips !important;
     display: grid !important;
@@ -126,13 +113,9 @@ aside#sidebar {
     display: grid !important;
     place-items: center !important;
 }
-.chip .n {
-    grid-area: n !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-}
+.chip .n,
 .chip .v {
-    grid-area: v !important;
+    grid-area: n !important;
     font-weight: 800 !important;
     color: #0f172a !important;
 }
@@ -150,7 +133,11 @@ aside#sidebar {
     background: rgba(255, 255, 255, 0.85) !important;
     transform-origin: left !important;
 }
+.chip.active {
+    outline: 2px solid var(--fb-accent) !important;
+}
 
+/* Main area */
 main {
     grid-area: main !important;
     height: 100% !important;
@@ -160,8 +147,10 @@ main {
     height: 100% !important;
     padding: 12px !important;
     overflow: auto !important;
-    background: #0b1020 !important;
+    background: var(--fb-bg) !important;
 }
+
+/* Chores grid/cards */
 .fb-chores-grid {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -209,6 +198,22 @@ main {
     color: var(--fb-text) !important;
 }
 
+/* Loading skeleton */
+.fb-skeleton {
+    border-radius: 10px;
+    background: linear-gradient(90deg, #eee, #f5f5f5, #eee);
+    background-size: 200% 100%;
+    animation: fbShimmer 1.2s infinite;
+}
+@keyframes fbShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 /* FullCalendar styling */
 .fc {
     --radius: 10px !important;
@@ -222,7 +227,7 @@ main {
     gap: 12px !important;
     padding: 10px 12px !important;
     background: var(--fb-surface) !important;
-    border-radius: var(--radius) !important;
+    border-radius: var(--fb-radius) !important;
     margin: 12px !important;
 }
 .fc-left,
@@ -253,7 +258,7 @@ main {
 .fc-view-container {
     background: var(--fb-surface-2) !important;
     margin: 12px !important;
-    border-radius: var(--radius) !important;
+    border-radius: var(--fb-radius) !important;
     overflow: hidden !important;
     border: 1px solid var(--fb-grid) !important;
 }
@@ -325,6 +330,30 @@ main {
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
     z-index: 1000 !important;
 }
+
+/* Mobile responsiveness */
+@media (max-width: 760px) {
+    .fb-layout {
+        grid-template-columns: 64px 1fr !important;
+        grid-template-rows: 48px 64px 1fr !important;
+    }
+    .chips {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    .sb-btn {
+        width: 48px !important;
+        height: 64px !important;
+    }
+    .fc-toolbar {
+        padding: 6px 8px !important;
+        margin: 8px !important;
+    }
+    .fc-view-container {
+        margin: 8px !important;
+    }
+}
+
+/* Print styles */
 @media print {
     body {
         background: #fff !important;
@@ -339,28 +368,4 @@ main {
         border: 0 !important;
         margin: 0 !important;
     }
-}
-
-/* /config/www/family-board/family-board.css */
-:host {
-    display: block !important;
-    /* Fallback if controller hasn't kicked in yet */
-    --fb-bg: #ffffff !important;
-    --fb-surface: #ffffff !important;
-    --fb-surface-2: #ffffff !important;
-    --fb-text: #0f172a !important;
-    --fb-muted: #475569 !important;
-    --fb-accent: #cfbaf0 !important;
-    --fb-grid: #e5e7eb !important;
-    --fb-today: #f6f7ff !important;
-    --fb-weekend: rgba(15, 23, 42, 0.04) !important;
-    --fb-pill-text: #ffffff !important;
-    --fb-print-text: #111 !important;
-    --fb-radius: 12px !important;
-}
-
-ha-card {
-    height: 100% !important;
-    background: var(--family-background, var(--fb-bg)) !important;
-    color: var(--fb-text) !important;
 }

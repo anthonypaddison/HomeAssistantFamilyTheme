@@ -1,15 +1,16 @@
-default_config:
+# configuration.yaml
 
+default_config:
 # frontend:
-# themes: !include themes.yaml
+#   themes: !include themes.yaml
 
 lovelace:
     mode: yaml
     resources:
-        - url: /local/family-board/family-dashboard-controller.js?v=18
-          type: module
-        - url: /local/family-board/family-board-jq.js?v=18
-          type: module
+        - url: /local/family-board/family-dashboard-controller.js?v=20
+          type: js
+        - url: /local/family-board/family-board-jq.js?v=20
+          type: js
     dashboards:
         family-dashboard:
             mode: yaml
@@ -26,9 +27,5 @@ sensor: !include sensor.yaml
 # click a chip and if it is calendar it only shows their items
 # click a chip and if it is chores it only shows their chores
 # heading: move the time to the left next to the name
-# style the shit out of full calendar now I have it
-# find something to do todoist like full calendar
-# obviously we want to make the buttons nicer on the calendar
-#
-#
-#
+# style FullCalendar
+# add Todoist-like features
