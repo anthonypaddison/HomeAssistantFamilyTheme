@@ -369,3 +369,33 @@ main {
         margin: 0 !important;
     }
 }
+
+/* Sidebar (in-card) */
+aside#sidebar {
+    grid-area: sidebar !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    background: var(--fb-surface) !important; /* lilac */
+    padding: 8px 0 !important;
+    gap: 8px !important;
+}
+
+/* Make buttons dark on lilac so they are visible */
+.sb-btn {
+    width: 56px !important;
+    height: 72px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    color: var(--fb-text) !important; /* << was #fff; now dark text/icons */
+}
+
+/* Active: invert to white pill with lilac text */
+.sb-btn.active {
+    background: #fff !important;
+    color: var(--fb-surface) !important; /* lilac on white */
+}
