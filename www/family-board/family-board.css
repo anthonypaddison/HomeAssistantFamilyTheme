@@ -1,5 +1,14 @@
 /* /config/www/family-board/family-board.css */
 /* CSS Variables: fallback values if controller isn't active */
+# --- Palette ---
+  palette-mint:     "#B9FBC0"
+  palette-aqua:     "#98F5E1"
+  palette-cyan:     "#8EECF5"
+  palette-sky:      "#90DBF4"
+  palette-bluegrey: "#A3C4F3"
+  palette-lilac:    "#CFBAF0"
+  palette-rose:     "#FFCFD2"
+  palette-vanilla:  "#FBF8CC"
 :host {
     display: block !important;
     /* Fallback palette (light theme) */
@@ -15,6 +24,7 @@
     --fb-pill-text: #ffffff !important;
     --fb-print-text: #111 !important;
     --fb-radius: 12px !important;
+    --utility-bar-background: var(--palette-lilac) !important;
 }
 
 /* Card styling */
@@ -376,7 +386,7 @@ aside#sidebar {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    background: var(--fb-surface) !important; /* lilac */
+    background: var(--utility-bar-background) !important;
     padding: 8px 0 !important;
     gap: 8px !important;
 }
