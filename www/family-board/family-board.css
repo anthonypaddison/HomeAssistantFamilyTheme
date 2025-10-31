@@ -51,7 +51,7 @@ header {
     align-items: center !important;
     justify-content: space-between !important;
     padding: 8px 12px !important;
-    background: var(--fb-surface) !important;
+    background: var(--utility-bar-background) !important;
     color: var(--fb-text) !important;
 }
 header .time {
@@ -80,7 +80,7 @@ aside#sidebar {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    background: var(--fb-surface) !important;
+    background: var(--utility-bar-background) !important;
     padding: 8px 0 !important;
     gap: 8px !important;
 }
@@ -96,7 +96,7 @@ aside#sidebar {
     color: #fff !important;
 }
 .sb-btn.active {
-    color: var(--fb-surface) !important;
+    color: var(--utility-bar-background) !important;
     background: #fff !important;
 }
 
@@ -107,7 +107,7 @@ aside#sidebar {
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
     padding: 8px !important;
-    background: var(--fb-surface) !important;
+    background: var(--utility-bar-background) !important;
 }
 .chip {
     display: grid !important;
@@ -236,7 +236,7 @@ main {
     align-items: center !important;
     gap: 12px !important;
     padding: 10px 12px !important;
-    background: var(--fb-surface) !important;
+    background: var(--utility-bar-background) !important;
     border-radius: var(--fb-radius) !important;
     margin: 12px !important;
 }
@@ -407,7 +407,7 @@ aside#sidebar {
 /* Active: invert to white pill with lilac text */
 .sb-btn.active {
     background: #fff !important;
-    color: var(--fb-surface) !important; /* lilac on white */
+    color: var(--utility-bar-background) !important; /* lilac on white */
 }
 
 /* === Family view icon visibility fixes (local scope) === */
