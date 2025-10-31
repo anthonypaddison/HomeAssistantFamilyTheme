@@ -1,6 +1,5 @@
-// /config/www/family-board/family-dashboard-controller.js (v23)
+// /config/www/family-board/family-dashboard-controller.js (v24)
 // Minimal, route-scoped variable overrides for Family dashboard.
-// Adds icon/text variables so icons don't disappear.
 
 (() => {
     const CFG = {
@@ -24,24 +23,23 @@
         '--sidebar-icon-color',
         '--sidebar-selected-text-color',
         '--sidebar-selected-icon-color',
-        '--text-primary-color', // NEW
-        '--toolbar-text-color', // NEW
-        '--mdc-theme-primary', // NEW
-        '--mdc-theme-on-primary', // NEW
+        '--text-primary-color',
+        '--toolbar-text-color',
+        '--mdc-theme-primary',
+        '--mdc-theme-on-primary',
         '--mdc-drawer-width',
     ];
 
     function setVars(active) {
         const s = document.documentElement.style;
         if (active) {
-            // Base shells
+            // App shell
             s.setProperty('--primary-background-color', CFG.bgMain);
-
-            // App header + icons
             s.setProperty('--app-header-background-color', CFG.paletteLilac);
             s.setProperty('--app-header-text-color', CFG.textPrimary);
             s.setProperty('--app-header-border-bottom', '0');
-            // Extra text/icon vars used by some HA builds/themes
+
+            // Text/icon fallbacks some builds use
             s.setProperty('--text-primary-color', CFG.textPrimary);
             s.setProperty('--toolbar-text-color', CFG.textPrimary);
             s.setProperty('--mdc-theme-primary', CFG.textPrimary);
@@ -60,13 +58,13 @@
         }
     }
 
+    // Family Board variables used by the custom card (must be on :root for shadow DOM inheritance)
     const css = `
   html.${CFG.className} {
-    /* Family Board variables consumed by the card */
     --fb-bg: ${CFG.bgMain};
-    --fb-surface: ${CFG.paletteLilac};
+    --fb-surface: ${CFG.paletteLilac}; /* header/chips/in-card sidebar background */
     --fb-surface-2: ${CFG.bgMain};
-    --fb-text: ${CFG.textPrimary};
+    --fb-text: ${CFG.textPrimary};     /* dark text/icons on lilac */
     --fb-muted: ${CFG.textSecondary};
     --fb-accent: ${CFG.paletteLilac};
     --fb-grid: #E5E7EB;
@@ -77,7 +75,7 @@
     --fb-radius: 12px;
   }
 
-  /* Keep the Family panel surface white */
+  /* keep Family view canvas white */
   html.${CFG.className} body,
   html.${CFG.className} home-assistant,
   html.${CFG.className} ha-main,
@@ -87,14 +85,6 @@
   html.${CFG.className} hui-panel-view {
     background: var(--fb-bg) !important;
     color: var(--fb-text);
-  }
-
-  /* Ensure icons remain visible (header + in-card) */
-  html.${CFG.className} app-header ha-icon,
-  html.${CFG.className} ha-top-app-bar-fixed ha-icon,
-  html.${CFG.className} .fb-layout ha-icon {
-    color: var(--fb-text) !important;
-    fill: var(--fb-text) !important;
   }
   `;
 
@@ -120,7 +110,6 @@
     function start() {
         ensureStyle();
         apply();
-
         const { pushState, replaceState } = history;
         history.pushState = function (...a) {
             const r = pushState.apply(this, a);
@@ -133,7 +122,7 @@
             return r;
         };
         window.addEventListener('popstate', apply);
-        setTimeout(apply, 300); // after theme/components mount
+        setTimeout(apply, 300); // after theme mounts
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

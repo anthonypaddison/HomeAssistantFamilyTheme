@@ -1,10 +1,9 @@
-/* /config/www/family-board/family-board.css */
-/* CSS Variables: fallback values if controller isn't active */
+/* /config/www/family-board/family-board.css (v24) */
+/* Fallback variables if controller isn't active */
 :host {
     display: block !important;
-    /* Fallback palette (light theme) */
     --fb-bg: #ffffff !important;
-    --fb-surface: #ffffff !important;
+    --fb-surface: #ffffff !important; /* overridden to lilac by controller */
     --fb-surface-2: #ffffff !important;
     --fb-text: #0f172a !important;
     --fb-muted: #475569 !important;
@@ -12,19 +11,19 @@
     --fb-grid: #e5e7eb !important;
     --fb-today: #f6f7ff !important;
     --fb-weekend: rgba(15, 23, 42, 0.04) !important;
-    --fb-pill-text: #ffffff !important;
+    --fb-pill-text: #111 !important;
     --fb-print-text: #111 !important;
     --fb-radius: 12px !important;
 }
 
-/* Card styling */
+/* Card */
 ha-card {
     height: 100% !important;
     background: var(--fb-bg) !important;
     color: var(--fb-text) !important;
 }
 
-/* Layout grid */
+/* Layout */
 .fb-layout {
     display: grid !important;
     grid-template-columns: 80px 1fr !important;
@@ -34,15 +33,15 @@ ha-card {
     background: var(--fb-bg) !important;
 }
 
-/* Header */
+/* Header (FIX: enforce lilac bg + dark content) */
 header {
     grid-area: header !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     padding: 8px 12px !important;
-    background: var(--fb-surface) !important;
-    color: var(--fb-text) !important;
+    background: var(--fb-surface) !important; /* lilac */
+    color: var(--fb-text) !important; /* dark text on lilac */
 }
 header .time {
     font-size: 28px !important;
@@ -57,20 +56,21 @@ header .date {
     font-weight: 800 !important;
 }
 .fb-pill {
-    background: rgba(255, 255, 255, 0.06) !important;
+    background: rgba(255, 255, 255, 0.35) !important; /* more contrast on lilac */
     padding: 4px 8px !important;
     border-radius: 999px !important;
     font-weight: 700 !important;
     font-size: 12px !important;
+    color: var(--fb-text) !important;
 }
 
-/* Sidebar */
+/* In‑card sidebar (FIX: lilac background + visible icons) */
 aside#sidebar {
     grid-area: sidebar !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    background: var(--fb-surface) !important;
+    background: var(--fb-surface) !important; /* lilac */
     padding: 8px 0 !important;
     gap: 8px !important;
 }
@@ -83,21 +83,25 @@ aside#sidebar {
     border: 0 !important;
     cursor: pointer !important;
     position: relative !important;
-    color: #fff !important;
+    color: var(--fb-text) !important; /* dark on lilac */
+}
+.sb-btn ha-icon {
+    color: var(--fb-text) !important;
+    fill: var(--fb-text) !important;
 }
 .sb-btn.active {
-    color: var(--fb-surface) !important;
-    background: #fff !important;
+    background: #fff !important; /* white pill */
+    color: var(--fb-surface) !important; /* lilac text/icons on white */
 }
 
-/* Chips */
+/* Chips row (FIX: lilac background) */
 .chips {
     grid-area: chips !important;
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
     padding: 8px !important;
-    background: var(--fb-surface) !important;
+    background: var(--fb-surface) !important; /* lilac */
 }
 .chip {
     display: grid !important;
@@ -107,22 +111,26 @@ aside#sidebar {
     border-radius: 10px !important;
     padding: 6px 8px !important;
     cursor: pointer !important;
+    color: #0f172a !important; /* ensure text readable on colored chip */
 }
 .chip .i {
     grid-area: i !important;
     display: grid !important;
     place-items: center !important;
 }
+.chip .i ha-icon {
+    color: currentColor !important;
+    fill: currentColor !important;
+}
 .chip .n,
 .chip .v {
     grid-area: n !important;
     font-weight: 800 !important;
-    color: #0f172a !important;
 }
 .chip .bar {
     grid-area: bar !important;
     height: 8px !important;
-    background: rgba(0, 0, 0, 0.1) !important;
+    background: rgba(0, 0, 0, 0.12) !important;
     border-radius: 999px !important;
     position: relative !important;
     overflow: hidden !important;
@@ -137,7 +145,7 @@ aside#sidebar {
     outline: 2px solid var(--fb-accent) !important;
 }
 
-/* Main area */
+/* Main */
 main {
     grid-area: main !important;
     height: 100% !important;
@@ -150,7 +158,7 @@ main {
     background: var(--fb-bg) !important;
 }
 
-/* Chores grid/cards */
+/* Chores */
 .fb-chores-grid {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -214,7 +222,7 @@ main {
     }
 }
 
-/* FullCalendar styling */
+/* FullCalendar (FIX: toolbar readability) */
 .fc {
     --radius: 10px !important;
     color: var(--fb-text) !important;
@@ -226,9 +234,10 @@ main {
     align-items: center !important;
     gap: 12px !important;
     padding: 10px 12px !important;
-    background: var(--fb-surface) !important;
+    background: var(--fb-surface) !important; /* lilac */
     border-radius: var(--fb-radius) !important;
     margin: 12px !important;
+    color: var(--fb-text) !important; /* dark title in center */
 }
 .fc-left,
 .fc-right {
@@ -239,7 +248,10 @@ main {
 .fc-center h2 {
     font-weight: 800 !important;
     letter-spacing: 0.2px !important;
+    color: var(--fb-text) !important;
 }
+
+/* Buttons: white text on lilac for contrast */
 .fc button {
     background: var(--fb-accent) !important;
     color: #fff !important;
@@ -249,12 +261,19 @@ main {
     font-weight: 700 !important;
     box-shadow: none !important;
 }
+.fc button .fc-icon,
+.fc button ha-icon {
+    color: #fff !important;
+    fill: #fff !important;
+}
 .fc button:hover {
     filter: brightness(1.05) !important;
 }
 .fc-state-disabled {
     opacity: 0.6 !important;
 }
+
+/* View container */
 .fc-view-container {
     background: var(--fb-surface-2) !important;
     margin: 12px !important;
@@ -307,31 +326,20 @@ main {
     min-height: 38px !important;
 }
 .fc-more {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(0, 0, 0, 0.08) !important;
     color: var(--fb-text) !important;
     padding: 2px 6px !important;
     border-radius: 999px !important;
     font-weight: 800 !important;
 }
-.fc-event[title] {
-    position: relative !important;
-}
-.fc-event[title]:hover::after {
-    content: attr(title) !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 100% !important;
-    transform: translateY(6px) !important;
-    background: #fff !important;
-    color: var(--fb-pill-text) !important;
-    padding: 6px 8px !important;
-    border-radius: 8px !important;
-    white-space: nowrap !important;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
-    z-index: 1000 !important;
+
+/* Ensure icons inside this card always follow text color (FIX) */
+:host .fb-layout ha-icon {
+    color: currentColor !important;
+    fill: currentColor !important;
 }
 
-/* Mobile responsiveness */
+/* Mobile */
 @media (max-width: 760px) {
     .fb-layout {
         grid-template-columns: 64px 1fr !important;
@@ -353,7 +361,7 @@ main {
     }
 }
 
-/* Print styles */
+/* Print */
 @media print {
     body {
         background: #fff !important;
@@ -368,55 +376,4 @@ main {
         border: 0 !important;
         margin: 0 !important;
     }
-}
-
-/* Sidebar (in-card) */
-aside#sidebar {
-    grid-area: sidebar !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    background: var(--fb-surface) !important; /* lilac */
-    padding: 8px 0 !important;
-    gap: 8px !important;
-}
-
-/* Make buttons dark on lilac so they are visible */
-.sb-btn {
-    width: 56px !important;
-    height: 72px !important;
-    display: grid !important;
-    place-items: center !important;
-    background: transparent !important;
-    border: 0 !important;
-    cursor: pointer !important;
-    position: relative !important;
-    color: var(--fb-text) !important; /* << was #fff; now dark text/icons */
-}
-
-/* Active: invert to white pill with lilac text */
-.sb-btn.active {
-    background: #fff !important;
-    color: var(--fb-surface) !important; /* lilac on white */
-}
-
-/* === Family view icon visibility fixes (local scope) === */
-:host .fb-layout ha-icon {
-    color: var(--fb-text) !important;
-    fill: var(--fb-text) !important;
-}
-
-/* FullCalendar toolbar/controls – ensure button text/icons are visible */
-.fc button {
-    color: #fff !important; /* already set, keep it explicit */
-}
-.fc button .fc-icon,
-.fc button ha-icon {
-    color: #fff !important; /* if any icon glyphs appear inside buttons */
-    fill: #fff !important;
-}
-
-/* Chips were ok, but make sure their icons follow currentColor */
-.chip .i ha-icon {
-    color: currentColor !important;
 }
