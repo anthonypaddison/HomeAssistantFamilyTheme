@@ -46,7 +46,7 @@ ha-card {
 .fb-layout {
     display: grid !important;
     grid-template-columns: 80px 1fr !important;
-    grid-template-rows: 48px 72px 1fr !important;
+    grid-template-rows: 75px 100px 1fr !important;
     grid-template-areas: 'sidebar header' 'sidebar chips' 'sidebar main' !important;
     height: calc(100vh - var(--header-height, 0px)) !important;
     background: var(--fb-bg) !important;
@@ -61,7 +61,6 @@ header {
     padding: 8px 12px !important;
     background: var(--utility-bar-background) !important;
     color: var(--fb-text) !important;
-    padding-top: 40px !important;
 }
 header .time {
     font-size: 28px !important;
@@ -98,9 +97,8 @@ header .date {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
-    padding: 40px 8px !important;
+    padding: 8px !important;
     background: var(--utility-bar-background) !important;
-    height: 100px !important;
 }
 .chip {
     display: grid !important;
