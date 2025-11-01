@@ -104,42 +104,78 @@ header .date {
     padding: 8px !important;
     background: var(--utility-bar-background) !important;
 }
+/* CHIP LAYOUT: icon | title | "left today" count, then progress bar */
 .chip {
     display: grid !important;
-    grid-template-areas: 'i n v' 'bar bar bar' !important;
+    grid-template-areas:
+        'i n cnt'
+        'bar bar bar' !important;
     grid-template-columns: 24px 1fr auto !important;
-    grid-template-rows: auto 6px !important;
+    grid-template-rows: auto 8px !important;
     border-radius: 10px !important;
     padding: 6px 8px !important;
     cursor: pointer !important;
+    align-items: center !important;
+    column-gap: 8px !important;
 }
+
+/* icon */
 .chip .i {
     grid-area: i !important;
     display: grid !important;
     place-items: center !important;
 }
-.chip .n,
-.chip .v {
+
+/* title */
+.chip .n {
     grid-area: n !important;
     font-weight: 800 !important;
-    color: !important;
+    color: #0f172a !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
+
+/* "left today" count pill */
+.chip .cnt {
+    grid-area: cnt !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    padding: 4px 8px !important;
+    border-radius: 999px !important;
+    background: #fff !important;
+    color: var(--fb-text, #0f172a) !important;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15) !important;
+}
+
+/* progress track + fill */
 .chip .bar {
     grid-area: bar !important;
     height: 8px !important;
-    background: rgba(0, 0, 0, 0.1) !important;
+    background: rgba(0, 0, 0, 0.12) !important;
     border-radius: 999px !important;
     position: relative !important;
     overflow: hidden !important;
+    margin-top: 6px !important;
 }
-.chip .bar > div {
+
+.chip .bar > .bar-fill {
     position: absolute !important;
     inset: 0 !important;
-    background: rgba(255, 255, 255, 0.85) !important;
-    transform-origin: left !important;
+    transform-origin: left center !important;
+    background: rgba(255, 255, 255, 0.85) !important; /* looks good on person color bg */
+    transition: transform 180ms ease !important;
 }
+
+/* keep active outline behavior */
 .chip.active {
     outline: 2px solid var(--fb-accent) !important;
+}
+
+/* ensure icons render with currentColor when needed */
+.chip .i ha-icon {
+    color: currentColor !important;
 }
 
 /* Main area */

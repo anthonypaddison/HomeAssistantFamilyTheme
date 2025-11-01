@@ -310,19 +310,19 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'family',
                 name: 'Family',
                 icon: 'mdi:account-group',
-                color: 'var(--family-color-family, #36B37E)',
+                color: 'var(--family-color-family,  #36B37E)',
             },
             {
                 key: 'anthony',
                 name: 'Anthony',
                 icon: 'mdi:laptop',
-                color: 'var(--family-color-anthony, #7E57C2)',
+                color: 'var(--family-color-anthony,#7E57C2)',
             },
             {
                 key: 'joy',
                 name: 'Joy',
                 icon: 'mdi:book-open-variant',
-                color: 'var(--family-color-joy, #F4B400)',
+                color: 'var(--family-color-joy,    #F4B400)',
             },
             {
                 key: 'lizzie',
@@ -334,44 +334,69 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'toby',
                 name: 'Toby',
                 icon: 'mdi:soccer',
-                color: 'var(--family-color-toby, #42A5F5)',
+                color: 'var(--family-color-toby,   #42A5F5)',
             },
         ];
-        const $chips = $('#chips').empty();
 
+        const $chips = $('#chips').empty();
         people.forEach((p) => {
             const isActive = (this._state.personFocus || 'Family').toLowerCase() === p.key;
+
+            // CHIP MARKUP:
+            // - .i   → icon
+            // - .n   → name (title)
+            // - .cnt → "left today" (placeholder 0)
+            // - .bar → background track
+            // - .bar-fill → progress for today (completed/total)
             const $chip = $(`
-        <div class="chip ${isActive ? 'active' : ''}" data-key="${this._escapeAttr(
-                p.key
-            )}" role="button" tabindex="0" aria-pressed="${isActive}" style="background:${p.color}">
-          <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
-          <div class="n">${this._escapeHtml(p.name)}</div>
-          <div class="v" id="chip-v-${this._escapeAttr(p.key)}"></div>
-          <div class="bar"><div id="chip-bar-${this._escapeAttr(
+      <div class="chip ${isActive ? 'active' : ''}"
+           data-key="${this._escapeAttr(p.key)}"
+           role="button" tabindex="0"
+           aria-pressed="${isActive}"
+           style="background:${p.color}">
+        <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
+        <div class="n">${this._escapeHtml(p.name)}</div>
+        <div class="cnt" id="chip-today-${this._escapeAttr(p.key)}"
+             title="Tasks left today"
+             aria-label="Tasks left today">0</div>
+        <div class="bar"
+             role="progressbar"
+             aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
+             aria-label="${this._escapeAttr(p.name)} progress today">
+          <div class="bar-fill" id="chip-progress-${this._escapeAttr(
               p.key
-          )}" style="transform:scaleX(0)"></div></div>
+          )}" style="transform:scaleX(0)"></div>
         </div>
-      `);
+      </div>
+    `);
+
             const activate = () => {
                 this._state.personFocus = p.name;
                 localStorage.setItem('fb.person', this._state.personFocus);
                 this.$('.chip').removeClass('active').attr('aria-pressed', 'false');
                 $chip.addClass('active').attr('aria-pressed', 'true');
-                // debounce calendar rebuild to avoid thrash
-                if (this._state.section === 'Calendar' && CHIP_FILTERS_CALENDAR) {
+
+                // Use your existing behavior:
+                if (
+                    this._state.section === 'Calendar' &&
+                    typeof CHIP_FILTERS_CALENDAR !== 'undefined' &&
+                    CHIP_FILTERS_CALENDAR
+                ) {
                     clearTimeout(this._rebuildTimer);
                     this._rebuildTimer = setTimeout(() => this._rebuildFullCalendar(), 120);
                 }
                 if (this._state.section === 'Chores') this._renderChores();
             };
+
             $chip.on('click', activate);
             $chip.on('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') activate();
             });
+
             $chips.append($chip);
         });
 
+        // Keep your existing aggregate count updater (optional/independent of "today" UI)
         this._updateChipCounts();
     }
 
@@ -764,6 +789,55 @@ class FamilyBoardJQ extends HTMLElement {
     }
     _escapeAttr(s) {
         return this._escapeHtml(String(s)).replace(/`/g, '&#96;');
+    }
+
+    /**
+     * Update a single chip's "today" counters and progress.
+     * @param {('family'|'anthony'|'joy'|'lizzie'|'toby')} key
+     * @param {{completed:number,total:number}} totals
+     */
+    setChipTodayTotals(key, totals) {
+        if (!key) return;
+        const k = String(key).toLowerCase();
+        const completed = Math.max(0, Number(totals?.completed ?? 0));
+        const total = Math.max(0, Number(totals?.total ?? 0));
+        const left = Math.max(0, total - completed);
+        const ratio = total > 0 ? Math.min(completed / total, 1) : 0;
+
+        // Update the "left today" numeric pill
+        const $left = this.$(`#chip-today-${k}`);
+        if ($left.length) {
+            $left.text(String(left));
+            $left.attr('title', `${left} left today (of ${total})`);
+        }
+
+        // Update progress bar fill
+        const $fill = this.$(`#chip-progress-${k}`);
+        if ($fill.length) {
+            $fill.css('transform', `scaleX(${ratio})`);
+        }
+
+        // Update ARIA on the track
+        const $bar = this.$(`.chip[data-key="${k}"] .bar`);
+        if ($bar.length) {
+            $bar.attr({
+                'aria-valuemin': 0,
+                'aria-valuemax': total,
+                'aria-valuenow': completed,
+                'aria-label': `${k} progress today: ${completed}/${total}`,
+            });
+        }
+    }
+
+    /**
+     * Batch update: { anthony:{completed:2,total:5}, joy:{...}, ... }
+     * Missing people are ignored.
+     */
+    setAllChipTodayTotals(map) {
+        if (!map || typeof map !== 'object') return;
+        for (const [key, totals] of Object.entries(map)) {
+            this.setChipTodayTotals(key, totals);
+        }
     }
 }
 
