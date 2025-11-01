@@ -100,6 +100,7 @@ header .date {
     gap: 8px !important;
     padding: 40px 8px !important;
     background: var(--utility-bar-background) !important;
+    height: 100px !important;
 }
 .chip {
     display: grid !important;
