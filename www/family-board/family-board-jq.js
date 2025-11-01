@@ -1,5 +1,26 @@
 // /config/www/family-board/family-board-jq.js (v20)
 // Family Board (jQuery + FullCalendar v2/3)
+// -------- DEFAULT CONFIGURATION --------
+const DEFAULTS = {
+    title: 'Panogu Family',
+    timezone: 'Europe/London',
+    defaultSection: 'Calendar',
+    fcDefaultView: 'month',
+    fcFirstDay: 1,
+    fcTimeFormat: 'HH:mm',
+    fcContentHeight: 'auto',
+    fcMinTime: '06:00:00',
+    fcMaxTime: '22:00:00',
+    fcSlotDuration: '00:30:00',
+    layoutHideAppHeader: true,
+    layoutCollapseSidebar: true,
+    layoutFullBleedView: true,
+    layoutSetVars: true,
+    diagnosticsEnabled: false,
+    simpleLegend: false,
+    chipFiltersCalendar: true,
+};
+
 // Sidebar (views) + Header (title/time/section) + Chips (people) + Main (calendar/chores)
 
 const PATHS = {
@@ -8,7 +29,7 @@ const PATHS = {
     momentTzUrl: '/local/family-board/vendor/moment-timezone.min.js',
     fcCssUrl: '/local/family-board/vendor/fullcalendar.min.css',
     themeCssUrl: '/local/family-board/family-board.css',
-    fcJsUrl: '/local/family-board/vendor/fullcalendar.min.js', // jQuery build
+    fcJsUrl: '/local/family-board/vendor/fullcalendar.min.js',
 };
 
 // Toggle: should person chips also filter CALENDAR sources?
@@ -18,8 +39,9 @@ class FamilyBoardJQ extends HTMLElement {
     // runtime fields
     _clockIntervalId = null;
     _resizeObserver = null;
+    _onResizeBound = null;
     _rebuildTimer = null;
-    _lastEvents = {}; // cache per source for offline fallback
+    _lastEvents = {};
 
     static getStubConfig() {
         return {
@@ -80,23 +102,24 @@ class FamilyBoardJQ extends HTMLElement {
         };
     }
 
-    setConfig(cfg) {
-        // diag via ?diag=1
+    setConfig(config) {
+        // diagnosticsParam via ?diagnosticsParam=1
+        // Parse URL parameters for diagnostics
         const urlParams = new URLSearchParams(location.search);
-        const diag = urlParams.get('diag');
-        if (diag === '1') cfg = { ...cfg, diagnostics: { enabled: true } };
+        const diagnosticsParam = urlParams.get('diagnosticsParam');
+        if (diagnosticsParam === '1') config = { ...config, diagnostics: { enabled: true } };
 
-        this._config = { ...FamilyBoardJQ.getStubConfig(), ...cfg };
+        this._config = { ...FamilyBoardJQ.getStubConfig(), ...config };
         // Normalize header.right for FC v2/3
         if (this._config?.fc?.header?.right?.includes(' '))
             this._config.fc.header.right = this._config.fc.header.right.replace(/\s+/g, ',');
 
-        // restore persisted UI state
-        const lastSec = localStorage.getItem('fb.section');
-        const lastPer = localStorage.getItem('fb.person');
+        // Inside setConfig(config)
+        const lastSection = localStorage.getItem('fb.section');
+        const lastPerson = localStorage.getItem('fb.person');
         this._state = {
-            section: lastSec || this._config.defaultSection || 'Calendar',
-            personFocus: lastPer || 'Family',
+            section: lastSection ?? this._config.defaultSection ?? 'Calendar',
+            personFocus: lastPerson ?? 'Family',
         };
 
         this._ensureRoot();
@@ -427,7 +450,7 @@ class FamilyBoardJQ extends HTMLElement {
         if (!wrap.length) return;
         const legend = (this._config.calendars ?? [])
             .map((s) => {
-                const label = s.label || (s.entity || '').replace('calendar.', '');
+                const label = s.label ?? String(s.entity ?? '').replace(/^calendar\./, '');
                 return `
           <span class="fb-legend-item">
             <i class="fb-legend-swatch" style="background:${s.color}"></i>
@@ -525,9 +548,8 @@ class FamilyBoardJQ extends HTMLElement {
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
             eventRender: (event, element) => {
-                console.log(event.source.id);
-
-                if (event.color) element.css('backgroundColor', event.color);
+                const color = event.color || (event.source && event.source.color);
+                if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
@@ -647,15 +669,12 @@ class FamilyBoardJQ extends HTMLElement {
         const host = this.$('#main');
         if (!host.length) return;
         const existing = this.$('#fb-banner');
-        if (existing.length) {
-            existing.text(msg);
-            return;
-        }
-        host.prepend(
-            `<div id="fb-banner" style="padding:6px 12px;background:#fff;color:#b00020;border-radius:8px;margin:8px">${this._escapeHtml(
-                msg
-            )}</div>`
-        );
+        const html = `
+    <div id="fb-banner"
+         style="padding:6px 12px;background:var(--fb-surface, #fff);color:#b00020;border-radius:8px;margin:8px;border:1px solid var(--fb-grid,#e5e7eb)">
+      ${this._escapeHtml(msg)}
+    </div>`;
+        existing.length ? existing.replaceWith(html) : host.prepend(html);
     }
     _hideBanner() {
         this.$('#fb-banner').remove();
@@ -735,13 +754,16 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _escapeHtml(s) {
-        return String(s).replace(
-            /[&<>"']/g,
-            (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-        );
+        const str = String(s);
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
     _escapeAttr(s) {
-        return this._escapeHtml(s).replace(/`/g, '&#96;');
+        return this._escapeHtml(String(s)).replace(/`/g, '&#96;');
     }
 }
 
