@@ -191,6 +191,21 @@ class FamilyBoardJQ extends HTMLElement {
         if (!(this._$.fn && this._$.fn.fullCalendar)) await this._loadScript(PATHS.fcJsUrl);
         if (!(this._$.fn && this._$.fn.fullCalendar))
             throw new Error('FullCalendar jQuery build not detected.');
+
+        if (window.moment && !window.__fbMomentZoneShimApplied) {
+            const m = window.moment;
+            const origUtcOffset = m.fn.utcOffset;
+            // Replace .zone with a delegating function
+            m.fn.zone = function (input) {
+                if (typeof input === 'undefined') {
+                    // getter
+                    return origUtcOffset.call(this);
+                }
+                // Accept strings like "+00:00" or numbers (minutes)
+                return origUtcOffset.call(this, input);
+            };
+            window.__fbMomentZoneShimApplied = true;
+        }
     }
 
     _loadScript(src) {
@@ -797,7 +812,7 @@ class FamilyBoardJQ extends HTMLElement {
             };
         }
 
-        // Timed
+        // TIMED EVENTS
         if (hasSDT) {
             const startStr = s.dateTime;
             let endStr = hasEDT ? e.dateTime : null;
@@ -805,16 +820,19 @@ class FamilyBoardJQ extends HTMLElement {
                 const d = new Date(startStr);
                 endStr = new Date(d.getTime() + 3600000).toISOString();
             }
+
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             const start = new Date(startStr);
+            const end = new Date(endStr); // <-- build Date
+
             const hh = String(start.getHours()).padStart(2, '0');
             const mm = String(start.getMinutes()).padStart(2, '0');
-            const title = `${hh}:${mm} ${titleBase}`;
+
             return {
                 id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
-                title: this._escapeHtml(title),
-                start: startStr,
-                end: endStr,
+                title: this._escapeHtml(`${hh}:${mm} ${titleBase}`),
+                start, // <-- Date object, not ISO string
+                end, // <-- Date object
                 allDay: false,
                 location: ev.location,
                 description: ev.description,
