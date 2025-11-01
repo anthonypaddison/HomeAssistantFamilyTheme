@@ -180,7 +180,7 @@ class FamilyBoardJQ extends HTMLElement {
                     return res();
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
-                link.href = href;
+                link.href = href + '?' + Math.floor(Date.now() / 1000);
                 link.onload = res;
                 link.onerror = () => rej(new Error(`css load failed (shadow): ${href}`));
                 this._styleHost.appendChild(link);
