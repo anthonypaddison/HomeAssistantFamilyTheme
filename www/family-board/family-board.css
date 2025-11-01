@@ -29,6 +29,7 @@
     --fb-radius: 12px !important;
 
     --utility-bar-background: var(--palette-lilac) !important;
+    --app-header-background-color: var(--palette-lilac) !important;
 }
 
 :host {
