@@ -26,7 +26,14 @@ class FamilyBoardJQ extends HTMLElement {
             mode: 'dashboard',
             title: 'Panogu Family',
             timezone: 'Europe/London',
-            calendars: [], // [{ entity, color, owner?, label? }]
+            calendars: [
+                { entity: 'calendar.family', color: 'var(--family-color-family, #36B37E)' },
+                { entity: 'calendar.anthony', color: 'var(--family-color-anthony, #7E57C2)' },
+                { entity: 'calendar.joy', color: 'var(--family-color-joy, #F4B400)' },
+                { entity: 'calendar.lizzie', color: 'var(--family-color-lizzie, #EC407A)' },
+                { entity: 'calendar.toby', color: 'var(--family-color-toby, #42A5F5)' },
+                { entity: 'calendar.routine', color: 'var(--family-color-routine, #b2fd7fff)' },
+            ],
             sections: ['Calendar', 'Chores'],
             defaultSection: 'Calendar',
             todos: {
@@ -518,6 +525,8 @@ class FamilyBoardJQ extends HTMLElement {
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
             eventRender: (event, element) => {
+                console.log(event);
+
                 if (event.color) element.css('backgroundColor', event.color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
