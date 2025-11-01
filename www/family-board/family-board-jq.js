@@ -28,10 +28,10 @@ class FamilyBoardJQ extends HTMLElement {
             timezone: 'Europe/London',
             calendars: [
                 { entity: 'calendar.family', color: 'var(--family-color-family, #36B37E)' },
-                { entity: 'calendar.anthony', color: 'var(--family-color-anthony, #7E57C2)' },
-                { entity: 'calendar.joy', color: 'var(--family-color-joy, #F4B400)' },
-                { entity: 'calendar.lizzie', color: 'var(--family-color-lizzie, #EC407A)' },
-                { entity: 'calendar.toby', color: 'var(--family-color-toby, #42A5F5)' },
+                { entity: 'calendar.anthony_2', color: 'var(--family-color-anthony, #7E57C2)' },
+                { entity: 'calendar.joy_2', color: 'var(--family-color-joy, #F4B400)' },
+                { entity: 'calendar.lizzie_2', color: 'var(--family-color-lizzie, #EC407A)' },
+                { entity: 'calendar.toby_2', color: 'var(--family-color-toby, #42A5F5)' },
                 { entity: 'calendar.routine', color: 'var(--family-color-routine, #b2fd7fff)' },
             ],
             sections: ['Calendar', 'Chores'],
@@ -525,7 +525,7 @@ class FamilyBoardJQ extends HTMLElement {
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
             eventRender: (event, element) => {
-                console.log(event);
+                console.log(event.source.id);
 
                 if (event.color) element.css('backgroundColor', event.color);
                 if (event.textColor) element.css('color', event.textColor);
