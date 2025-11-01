@@ -61,7 +61,7 @@ header {
     padding: 8px 12px !important;
     background: var(--utility-bar-background) !important;
     color: var(--fb-text) !important;
-    padding-top: 20px !important;
+    padding-top: 40px !important;
 }
 header .time {
     font-size: 28px !important;
@@ -242,7 +242,7 @@ main {
 }
 .fc button {
     background: var(--fb-accent) !important;
-    /* color: #fff !important; */
+
     border: 0 !important;
     border-radius: 999px !important;
     padding: 6px 10px !important;
@@ -414,12 +414,12 @@ aside#sidebar {
 
 /* FullCalendar toolbar/controls – ensure button text/icons are visible */
 .fc button {
-    color: #fff !important; /* already set, keep it explicit */
+    color: var(--fb-text) !important; /* already set, keep it explicit */
 }
 .fc button .fc-icon,
 .fc button ha-icon {
-    color: #fff !important; /* if any icon glyphs appear inside buttons */
-    fill: #fff !important;
+    color: var(--fb-text) !important; /* already set, keep it explicit */
+    fill: var(--fb-text) !important; /* already set, keep it explicit */
 }
 
 /* Chips were ok, but make sure their icons follow currentColor */
