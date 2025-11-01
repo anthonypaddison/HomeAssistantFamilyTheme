@@ -135,11 +135,20 @@ class FamilyBoardJQ extends HTMLElement {
 
         this._updateHeader();
 
-        // If calendar is active and FC is ready, refetch (covers first time hass becomes available)
-        if (this._state.section === 'Calendar' && this._fcReady) this._refetchFullCalendar();
+        // Calendar: ensure we fetch when hass arrives or when FC becomes ready
+        if (this._state.section === 'Calendar') {
+            if (this._fcReady) {
+                // Rebuild to align sources with current person focus and fetch
+                this._rebuildFullCalendar();
+            } else {
+                // Defer a fetch for when init completes
+                clearTimeout(this._pendingRefetch);
+                this._pendingRefetch = setTimeout(() => this._refetchFullCalendar(), 250);
+            }
+        }
 
         if (this._state.section === 'Chores') this._renderChores();
-        this._updateChipCounts(); // show todo counts even while on calendar
+        this._updateChipCounts();
     }
 
     connectedCallback() {
@@ -431,6 +440,8 @@ class FamilyBoardJQ extends HTMLElement {
 
             const wrap = this._body.querySelector('#fc-wrap');
             if (wrap) this._resizeObserver.observe(wrap);
+
+            requestAnimationFrame(() => this._applyMeasuredHeight());
             return;
         }
 
@@ -461,6 +472,7 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     // ---------------- Chips: todo counts ----------------
+    // Replace the whole _updateChipCounts() in family-board-jq.js
     _updateChipCounts() {
         const lists = this._config.todos ?? {};
         const count = (ent) => {
@@ -475,9 +487,28 @@ class FamilyBoardJQ extends HTMLElement {
             lizzie: count(lists.lizzie),
             toby: count(lists.toby),
         };
+
+        // Update number pill + progress fill using the IDs created in renderChips()
         Object.entries(map).forEach(([k, v]) => {
-            this.$(`#chip-v-${k}`).text(v > 0 ? String(v) : '');
-            this.$(`#chip-bar-${k}`).css('transform', `scaleX(${Math.min(v / 10, 1)})`);
+            const left = Math.max(0, Number(v) || 0); // tasks left today
+            const ratio = Math.min(left / 10, 1); // simple visual scale (0..1)
+
+            // Number pill
+            this.$(`#chip-today-${k}`).text(String(left));
+
+            // Progress fill
+            this.$(`#chip-progress-${k}`).css('transform', `scaleX(${ratio})`);
+
+            // Progressbar ARIA on the bar container (keep max at 10 for now)
+            const $bar = this.$(`.chip[data-key="${k}"] .bar`);
+            if ($bar.length) {
+                $bar.attr({
+                    'aria-valuemin': 0,
+                    'aria-valuemax': 10,
+                    'aria-valuenow': Math.round(ratio * 10),
+                    'aria-label': `${k} progress today: ${Math.round(ratio * 10)}/10`,
+                });
+            }
         });
     }
 
@@ -570,7 +601,6 @@ class FamilyBoardJQ extends HTMLElement {
             $fc.html('<div class="fb-error">FullCalendar not loaded.</div>');
             return;
         }
-
         try {
             $fc.fullCalendar('destroy');
         } catch {}
@@ -589,10 +619,8 @@ class FamilyBoardJQ extends HTMLElement {
         $fc.fullCalendar({
             header,
             defaultView: initialView,
-
-            // Force local timezone; avoids named-zone path that triggers moment.zone
+            // Use local to avoid older moment.zone code paths
             timezone: 'local',
-
             // Agenda options
             allDaySlot: fcCfg.allDaySlot !== false,
             minTime: fcCfg.minTime ?? '06:00:00',
@@ -601,7 +629,7 @@ class FamilyBoardJQ extends HTMLElement {
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
 
-            // We set a numeric height ourselves
+            // Let us set numeric height after FC lays out
             contentHeight: null,
             height: null,
             handleWindowResize: false,
@@ -614,20 +642,16 @@ class FamilyBoardJQ extends HTMLElement {
             views: fcCfg.views ?? undefined,
 
             eventSources: this._eventSourcesForFocus(),
-
             eventRender: (event, element) => {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
-
             viewRender: (view) => {
                 if (view.name !== 'agendaDay') this._preferredWideView = view.name;
                 this._applyMeasuredHeight();
             },
-
-            // NEW: confirm how many events FC actually put in the view
             eventAfterAllRender: () => {
                 try {
                     const count = ($fc.fullCalendar('clientEvents') || []).length;
@@ -646,6 +670,8 @@ class FamilyBoardJQ extends HTMLElement {
                 } else if (!narrow && current === 'agendaDay') {
                     $fc.fullCalendar('changeView', this._preferredWideView || 'agendaWeek');
                 }
+                // IMPORTANT: force a render after size changes
+                $fc.fullCalendar('render');
                 this._applyMeasuredHeight();
             } catch {}
         };
@@ -655,8 +681,13 @@ class FamilyBoardJQ extends HTMLElement {
 
         this._fcReady = true;
 
-        // Ensure initial fetch fires
-        setTimeout(() => this._refetchFullCalendar(), 0);
+        requestAnimationFrame(() => {
+            try {
+                $fc.fullCalendar('render'); // draw week grid reliably
+                this._applyMeasuredHeight(); // set numeric height
+                this._rebuildFullCalendar(); // add sources + fetch now that FC is ready
+            } catch {}
+        });
     }
 
     _rebuildFullCalendar() {
@@ -856,6 +887,7 @@ class FamilyBoardJQ extends HTMLElement {
         console.log('[family-board-jq]', msg);
     }
 
+    // Replace escapeHtml() in family-board-jq.js
     _escapeHtml(s) {
         return String(s)
             .replace(/&/g, '&amp;')
