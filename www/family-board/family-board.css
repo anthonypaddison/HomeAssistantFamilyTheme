@@ -104,78 +104,94 @@ header .date {
     padding: 8px !important;
     background: var(--utility-bar-background) !important;
 }
-/* CHIP LAYOUT: icon | title | "left today" count, then progress bar */
+/* ==== CHIP: vertical alignment + larger progress bar ==== */
 .chip {
+    /* keep your grid layout but ensure vertical centering on the first row */
     display: grid !important;
     grid-template-areas:
         'i n cnt'
         'bar bar bar' !important;
     grid-template-columns: 24px 1fr auto !important;
-    grid-template-rows: auto 8px !important;
+    /* First row auto, second row is the (taller) progress bar */
+    grid-template-rows: auto 14px !important; /* ⟵ was 8px; now taller */
+    align-items: center !important; /* ⟵ vertical-align first row */
+    column-gap: 10px !important; /* small spacing polish */
+    row-gap: 6px !important;
     border-radius: 10px !important;
-    padding: 6px 8px !important;
+    padding: 8px 10px !important;
     cursor: pointer !important;
-    align-items: center !important;
-    column-gap: 8px !important;
 }
 
-/* icon */
+/* Icon cell: ensure the glyph is centered inside its 24x24 lane */
 .chip .i {
     grid-area: i !important;
     display: grid !important;
     place-items: center !important;
+    height: 24px !important;
 }
 
-/* title */
+/* Ensure the <ha-icon> itself aligns nicely */
+.chip .i ha-icon {
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    color: currentColor !important;
+}
+
+/* Title: keep baseline aligned and prevent overflow wrap */
 .chip .n {
     grid-area: n !important;
+    display: flex !important;
+    align-items: center !important; /* ⟵ vertical centering */
     font-weight: 800 !important;
     color: #0f172a !important;
+    min-height: 24px !important; /* align with icon lane */
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
 
-/* "left today" count pill */
+/* Count pill: vertically centered, consistent sizing */
 .chip .cnt {
     grid-area: cnt !important;
+    display: inline-flex !important;
+    align-items: center !important; /* ⟵ vertical centering */
+    justify-content: center !important;
+    min-width: 28px !important;
+    height: 22px !important; /* gives a balanced pill */
+    padding: 0 8px !important;
+    border-radius: 999px !important;
     font-weight: 800 !important;
     font-size: 12px !important;
     line-height: 1 !important;
-    padding: 4px 8px !important;
-    border-radius: 999px !important;
     background: #fff !important;
     color: var(--fb-text, #0f172a) !important;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15) !important;
 }
 
-/* progress track + fill */
+/* Progress track: taller + rounded + stronger contrast */
 .chip .bar {
     grid-area: bar !important;
-    height: 8px !important;
-    background: rgba(0, 0, 0, 0.12) !important;
+    height: 14px !important;
+    background: rgba(0, 0, 0, 0.18) !important; /* a touch darker for visibility */
     border-radius: 999px !important;
     position: relative !important;
     overflow: hidden !important;
-    margin-top: 6px !important;
 }
 
+/* Progress fill: keep smooth animation */
 .chip .bar > .bar-fill {
     position: absolute !important;
     inset: 0 !important;
     transform-origin: left center !important;
-    background: rgba(255, 255, 255, 0.85) !important; /* looks good on person color bg */
+    background: rgba(255, 255, 255, 0.9) !important; /* still readable over chip bg */
     transition: transform 180ms ease !important;
 }
 
-/* keep active outline behavior */
+/* Optional: on active chip, add a subtle focus ring and elevate */
 .chip.active {
     outline: 2px solid var(--fb-accent) !important;
-}
-
-/* ensure icons render with currentColor when needed */
-.chip .i ha-icon {
-    color: currentColor !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* Main area */
