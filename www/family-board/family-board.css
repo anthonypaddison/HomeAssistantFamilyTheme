@@ -83,6 +83,7 @@ aside#sidebar {
     background: var(--utility-bar-background) !important;
     padding: 8px 0 !important;
     gap: 8px !important;
+    padding-top: 200px
 }
 .sb-btn {
     width: 56px !important;
