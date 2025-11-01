@@ -413,9 +413,7 @@ class FamilyBoardJQ extends HTMLElement {
 
             if (!this._resizeObserver)
                 this._resizeObserver = new ResizeObserver(() => {
-                    try {
-                        this.$('#fc').fullCalendar('option', 'height', 'auto');
-                    } catch {}
+                    this._applyMeasuredHeight();
                 });
             const wrap = this._body.querySelector('#fc-wrap');
             if (wrap) this._resizeObserver.observe(wrap);
@@ -540,37 +538,49 @@ class FamilyBoardJQ extends HTMLElement {
             $fc.html('<div class="fb-error">FullCalendar not loaded.</div>');
             return;
         }
+
+        // Clean old instance
         try {
             $fc.fullCalendar('destroy');
         } catch {}
 
         const fcCfg = this._config.fc ?? {};
         const tz = this._config.timezone ?? 'local';
-        const isNarrow = () => (this._root.host?.offsetWidth || window.innerWidth) < 760;
+
+        // Remember the user’s preferred "wide" view (not agendaDay).
+        // We’ll update this in viewRender whenever the view is not agendaDay.
+        this._preferredWideView =
+            this._preferredWideView ?? fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek';
+
+        const isNarrow = () => (this._root.host?.offsetWidth ?? window.innerWidth) < 760;
+
+        // Build header safely (v2/v3 want commas, not spaces)
         const header = { ...fcCfg.header };
         if (header?.right?.includes(' ')) header.right = header.right.replace(/\s+/g, ',');
 
+        // Initial view: respect narrow vs wide
+        const initialView = isNarrow() ? 'agendaDay' : this._preferredWideView || 'agendaWeek';
+
         $fc.fullCalendar({
             header,
-            defaultView: isNarrow()
-                ? 'agendaDay'
-                : fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek',
+            defaultView: initialView,
             timezone: tz,
+            // Base agenda options (views overrides still apply)
             allDaySlot: fcCfg.allDaySlot !== false,
             minTime: fcCfg.minTime ?? '06:00:00',
             maxTime: fcCfg.maxTime ?? '22:00:00',
-            slotDuration: fcCfg.slotDuration ?? '01:00:00',
+            slotDuration: fcCfg.slotDuration ?? '00:30:00',
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
-            views: fcCfg.views ?? undefined,
-            contentHeight: fcCfg.contentHeight ?? 'auto',
-            height: 'auto',
-            handleWindowResize: true,
+            contentHeight: null, // we’ll set numeric height ourselves
+            height: null, // (important for agenda views)
+            handleWindowResize: false, // we’ll handle it better below
             editable: false,
             selectable: false,
             lazyFetching: true,
             eventLimit: true,
             weekNumbers: false,
+            views: fcCfg.views ?? undefined,
             eventSources: this._eventSourcesForFocus(),
             eventRender: (event, element) => {
                 const color = event.color || (event.source && event.source.color);
@@ -578,22 +588,33 @@ class FamilyBoardJQ extends HTMLElement {
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
-            viewRender: () => {
-                requestAnimationFrame(() => {
-                    try {
-                        $fc.fullCalendar('option', 'height', 'auto');
-                    } catch {}
-                });
+            // v2 "viewRender" fires when the view changes; keep preferred wide view
+            viewRender: (view /*, element */) => {
+                // If the user is on a wide view (not agendaDay), remember it
+                if (view.name !== 'agendaDay') this._preferredWideView = view.name;
+                // After each render, re-measure height for the visible view
+                this._applyMeasuredHeight();
             },
         });
 
-        // respond to window resizes with view change for mobile/desktop
+        // Responsive behaviour: only switch when crossing the narrow threshold.
         const onResize = () => {
             try {
-                const target = isNarrow() ? 'agendaDay' : fcCfg.defaultView ?? 'agendaWeek';
-                $fc.fullCalendar('changeView', target);
+                const narrow = isNarrow();
+                const current = $fc.fullCalendar('getView')?.name;
+
+                if (narrow && current !== 'agendaDay') {
+                    $fc.fullCalendar('changeView', 'agendaDay');
+                } else if (!narrow && current === 'agendaDay') {
+                    // Go back to user’s last non-day choice (week/month), defaulting to agendaWeek
+                    $fc.fullCalendar('changeView', this._preferredWideView || 'agendaWeek');
+                }
+                // Always re-apply height after layout shifts
+                this._applyMeasuredHeight();
             } catch {}
         };
+
+        // Rebind resize listener safely
         window.removeEventListener('resize', this._onResizeBound);
         this._onResizeBound = onResize;
         window.addEventListener('resize', onResize);
@@ -838,6 +859,32 @@ class FamilyBoardJQ extends HTMLElement {
         for (const [key, totals] of Object.entries(map)) {
             this.setChipTodayTotals(key, totals);
         }
+    }
+    /**
+     * Measure the available space and set a numeric height on FullCalendar.
+     * Keeps agendaWeek/agendaDay full height with a visible time axis.
+     */
+    _applyMeasuredHeight() {
+        const wrap = this._body.querySelector('#fc-wrap');
+        const $fc = this.$('#fc');
+        if (!wrap || !$fc.length) return;
+
+        // The wrapper occupies the main area. Deduct toolbar + legend.
+        const toolbar = this._body.querySelector('#fc-wrap .fc-toolbar');
+        const legend = this._body.querySelector('#fc-legend');
+
+        // Base height we can use
+        const wrapH = wrap.clientHeight || 0;
+
+        // Estimate reserved vertical space (toolbars have margins in your CSS)
+        const tbH = toolbar ? toolbar.offsetHeight + 24 : 0;
+        const lgH = legend ? legend.offsetHeight + 12 : 0;
+
+        const target = Math.max(360, wrapH - tbH - lgH); // never collapse below 360px
+
+        try {
+            $fc.fullCalendar('option', 'height', target);
+        } catch {}
     }
 }
 

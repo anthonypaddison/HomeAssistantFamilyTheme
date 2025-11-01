@@ -532,3 +532,20 @@ aside#sidebar {
 .fb-layout .sb-btn.active > ha-icon.sb-icon {
     color: var(--utility-bar-background) !important;
 }
+
+/* Make the time axis a bit bolder and readable on lilac header themes */
+.fc-agenda-view .fc-axis {
+    color: var(--fb-muted, #475569) !important;
+    font-weight: 700 !important;
+    width: 44px !important; /* a bit wider so '18:30' fits */
+}
+
+/* Reduce inner scroller border contrast */
+.fc-agenda-view .fc-scroller {
+    border-color: var(--fb-grid, #e5e7eb) !important;
+}
+
+/* Slightly larger slot height improves legibility */
+.fc-agenda-view .fc-slats td {
+    height: 2.2em !important;
+}
