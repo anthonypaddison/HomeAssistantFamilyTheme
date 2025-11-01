@@ -226,8 +226,7 @@ main {
 .fc-toolbar {
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important; /* ⟵ centers the whole toolbar block */
-    gap: 12px !important; /* space between left/center/right */
+    justify-content: space-between !important;
     flex-wrap: nowrap !important; /* keep on one line (see media query below) */
 
     /* Optional: match your existing look */
