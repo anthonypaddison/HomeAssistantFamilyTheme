@@ -1,6 +1,7 @@
-// /config/www/family-board/family-board-jq.js (v20)
+// /config/www/family-board/family-board-jq.js (v21)
 // Family Board (jQuery + FullCalendar v2/3)
-// -------- DEFAULT CONFIGURATION --------
+
+// ---------------- DEFAULT CONFIGURATION ----------------
 const DEFAULTS = {
     title: 'Panogu Family',
     timezone: 'Europe/London',
@@ -22,7 +23,6 @@ const DEFAULTS = {
 };
 
 // Sidebar (views) + Header (title/time/section) + Chips (people) + Main (calendar/chores)
-
 const PATHS = {
     jqueryUrl: '/local/family-board/vendor/jquery.min.3.7.1.js',
     momentUrl: '/local/family-board/vendor/moment.min.js',
@@ -42,6 +42,7 @@ class FamilyBoardJQ extends HTMLElement {
     _onResizeBound = null;
     _rebuildTimer = null;
     _lastEvents = {};
+    _preferredWideView = null;
 
     static getStubConfig() {
         return {
@@ -49,12 +50,12 @@ class FamilyBoardJQ extends HTMLElement {
             title: 'Panogu Family',
             timezone: 'Europe/London',
             calendars: [
-                { entity: 'calendar.family', color: 'var(--family-color-family, #36B37E)' },
-                { entity: 'calendar.anthony_2', color: 'var(--family-color-anthony, #7E57C2)' },
-                { entity: 'calendar.joy_2', color: 'var(--family-color-joy, #F4B400)' },
+                { entity: 'calendar.family', color: 'var(--family-color-family,  #36B37E)' },
+                { entity: 'calendar.anthony_2', color: 'var(--family-color-anthony,#7E57C2)' },
+                { entity: 'calendar.joy_2', color: 'var(--family-color-joy,    #F4B400)' },
                 { entity: 'calendar.lizzie_2', color: 'var(--family-color-lizzie, #EC407A)' },
-                { entity: 'calendar.toby_2', color: 'var(--family-color-toby, #42A5F5)' },
-                { entity: 'calendar.routine', color: 'var(--family-color-routine, #b2fd7fff)' },
+                { entity: 'calendar.toby_2', color: 'var(--family-color-toby,   #42A5F5)' },
+                { entity: 'calendar.routine', color: 'var(--family-color-routine,#b2fd7f)' },
             ],
             sections: ['Calendar', 'Chores'],
             defaultSection: 'Calendar',
@@ -104,17 +105,17 @@ class FamilyBoardJQ extends HTMLElement {
 
     setConfig(config) {
         // diagnosticsParam via ?diagnosticsParam=1
-        // Parse URL parameters for diagnostics
         const urlParams = new URLSearchParams(location.search);
         const diagnosticsParam = urlParams.get('diagnosticsParam');
         if (diagnosticsParam === '1') config = { ...config, diagnostics: { enabled: true } };
 
         this._config = { ...FamilyBoardJQ.getStubConfig(), ...config };
+
         // Normalize header.right for FC v2/3
         if (this._config?.fc?.header?.right?.includes(' '))
             this._config.fc.header.right = this._config.fc.header.right.replace(/\s+/g, ',');
 
-        // Inside setConfig(config)
+        // restore persisted UI state
         const lastSection = localStorage.getItem('fb.section');
         const lastPerson = localStorage.getItem('fb.person');
         this._state = {
@@ -131,8 +132,12 @@ class FamilyBoardJQ extends HTMLElement {
     set hass(hass) {
         this._hass = hass;
         if (!this._$) return;
+
         this._updateHeader();
+
+        // If calendar is active and FC is ready, refetch (covers first time hass becomes available)
         if (this._state.section === 'Calendar' && this._fcReady) this._refetchFullCalendar();
+
         if (this._state.section === 'Chores') this._renderChores();
         this._updateChipCounts(); // show todo counts even while on calendar
     }
@@ -159,7 +164,7 @@ class FamilyBoardJQ extends HTMLElement {
         return 6;
     }
 
-    // ---------- Shadow root shell ----------
+    // ---------------- Shadow root shell ----------------
     _ensureRoot() {
         if (this._root) return;
         this._root = this.attachShadow({ mode: 'open' });
@@ -170,7 +175,7 @@ class FamilyBoardJQ extends HTMLElement {
         this._root.append(this._styleHost, this._body);
     }
 
-    // ---------- Assets ----------
+    // ---------------- Assets ----------------
     async _ensureAssets() {
         if (!window.jQuery) await this._loadScript(PATHS.jqueryUrl);
         this.$ = (sel, ctx) => window.jQuery(sel, ctx ?? this._body);
@@ -226,7 +231,7 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    // ---------- Render entry ----------
+    // ---------------- Render entry ----------------
     _renderEntry() {
         this._renderShell();
         this._renderSidebar();
@@ -267,11 +272,11 @@ class FamilyBoardJQ extends HTMLElement {
         const $aside = $('<div class="sidebar-aside">').attr('style', 'width: 100% !important;');
         $('#sidebar').empty().append($aside);
 
-        (this._config.sections || []).forEach((sec) => {
+        (this._config.sections ?? []).forEach((sec) => {
             const $btn = $(`
-        <button class="sb-btn" title="${this._escapeAttr(
-            sec
-        )}" role="button" tabindex="0" aria-pressed="${this._state.section === sec}">
+        <button class="sb-btn" title="${this._escapeAttr(sec)}"
+                aria-label="Open ${this._escapeAttr(sec)} section"
+                role="button" tabindex="0" aria-pressed="${this._state.section === sec}">
           <ha-icon class="sb-icon" icon="${this._escapeAttr(ICON[sec] ?? 'mdi:circle')}"></ha-icon>
         </button>
       `);
@@ -310,7 +315,7 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'family',
                 name: 'Family',
                 icon: 'mdi:account-group',
-                color: 'var(--family-color-family,  #36B37E)',
+                color: 'var(--family-color-family, #36B37E)',
             },
             {
                 key: 'anthony',
@@ -322,19 +327,19 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'joy',
                 name: 'Joy',
                 icon: 'mdi:book-open-variant',
-                color: 'var(--family-color-joy,    #F4B400)',
+                color: 'var(--family-color-joy,   #F4B400)',
             },
             {
                 key: 'lizzie',
                 name: 'Lizzie',
                 icon: 'mdi:teddy-bear',
-                color: 'var(--family-color-lizzie, #EC407A)',
+                color: 'var(--family-color-lizzie,#EC407A)',
             },
             {
                 key: 'toby',
                 name: 'Toby',
                 icon: 'mdi:soccer',
-                color: 'var(--family-color-toby,   #42A5F5)',
+                color: 'var(--family-color-toby,  #42A5F5)',
             },
         ];
 
@@ -342,33 +347,27 @@ class FamilyBoardJQ extends HTMLElement {
         people.forEach((p) => {
             const isActive = (this._state.personFocus || 'Family').toLowerCase() === p.key;
 
-            // CHIP MARKUP:
-            // - .i   → icon
-            // - .n   → name (title)
-            // - .cnt → "left today" (placeholder 0)
-            // - .bar → background track
-            // - .bar-fill → progress for today (completed/total)
             const $chip = $(`
-      <div class="chip ${isActive ? 'active' : ''}"
-           data-key="${this._escapeAttr(p.key)}"
-           role="button" tabindex="0"
-           aria-pressed="${isActive}"
-           style="background:${p.color}">
-        <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
-        <div class="n">${this._escapeHtml(p.name)}</div>
-        <div class="cnt" id="chip-today-${this._escapeAttr(p.key)}"
-             title="Tasks left today"
-             aria-label="Tasks left today">0</div>
-        <div class="bar"
-             role="progressbar"
-             aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
-             aria-label="${this._escapeAttr(p.name)} progress today">
-          <div class="bar-fill" id="chip-progress-${this._escapeAttr(
-              p.key
-          )}" style="transform:scaleX(0)"></div>
+        <div class="chip ${isActive ? 'active' : ''}"
+             data-key="${this._escapeAttr(p.key)}"
+             role="button" tabindex="0"
+             aria-pressed="${isActive}"
+             style="background:${p.color}">
+          <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
+          <div class="n">${this._escapeHtml(p.name)}</div>
+          <div class="cnt" id="chip-today-${this._escapeAttr(p.key)}"
+               title="Tasks left today"
+               aria-label="Tasks left today">0</div>
+          <div class="bar"
+               role="progressbar"
+               aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
+               aria-label="${this._escapeAttr(p.name)} progress today">
+            <div class="bar-fill" id="chip-progress-${this._escapeAttr(
+                p.key
+            )}" style="transform:scaleX(0)"></div>
+          </div>
         </div>
-      </div>
-    `);
+      `);
 
             const activate = () => {
                 this._state.personFocus = p.name;
@@ -376,7 +375,6 @@ class FamilyBoardJQ extends HTMLElement {
                 this.$('.chip').removeClass('active').attr('aria-pressed', 'false');
                 $chip.addClass('active').attr('aria-pressed', 'true');
 
-                // Use your existing behavior:
                 if (
                     this._state.section === 'Calendar' &&
                     typeof CHIP_FILTERS_CALENDAR !== 'undefined' &&
@@ -396,7 +394,7 @@ class FamilyBoardJQ extends HTMLElement {
             $chips.append($chip);
         });
 
-        // Keep your existing aggregate count updater (optional/independent of "today" UI)
+        // Optional global pending counts (unrelated to "today" bar)
         this._updateChipCounts();
     }
 
@@ -415,6 +413,7 @@ class FamilyBoardJQ extends HTMLElement {
                 this._resizeObserver = new ResizeObserver(() => {
                     this._applyMeasuredHeight();
                 });
+
             const wrap = this._body.querySelector('#fc-wrap');
             if (wrap) this._resizeObserver.observe(wrap);
             return;
@@ -433,7 +432,7 @@ class FamilyBoardJQ extends HTMLElement {
         );
     }
 
-    // ---------- Header clock ----------
+    // ---------------- Header clock ----------------
     _updateHeader() {
         if (!this._hass) return;
         const now = new Date();
@@ -446,7 +445,7 @@ class FamilyBoardJQ extends HTMLElement {
         );
     }
 
-    // ---------- Chips: todo counts ----------
+    // ---------------- Chips: todo counts ----------------
     _updateChipCounts() {
         const lists = this._config.todos ?? {};
         const count = (ent) => {
@@ -467,7 +466,7 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    // ---------- Calendar ----------
+    // ---------------- Calendar ----------------
     _renderLegend(selector) {
         const wrap = this.$(selector);
         if (!wrap.length) return;
@@ -487,16 +486,15 @@ class FamilyBoardJQ extends HTMLElement {
     _eventSourcesForFocus() {
         if (!CHIP_FILTERS_CALENDAR)
             return (this._config.calendars ?? []).map((src) => this._srcToFc(src));
+
         const focus = (this._state.personFocus ?? 'Family').toLowerCase();
         const cfgSources = this._config.calendars ?? [];
-
         const match = (src, who) => {
             if (who === 'family') return true;
             if (src.owner) return String(src.owner).toLowerCase() === who;
-            const id = String(src.entity || '').toLowerCase();
+            const id = String(src.entity ?? '').toLowerCase();
             return id.startsWith(`calendar.${who}`) || id.includes(`_${who}`);
         };
-
         const filtered = cfgSources.filter((s) => match(s, focus));
         return (filtered.length ? filtered : cfgSources).map((src) => this._srcToFc(src));
     }
@@ -506,10 +504,11 @@ class FamilyBoardJQ extends HTMLElement {
             id: src.entity,
             color: src.color,
             events: (start, end, _tz, callback) => {
+                // ---- NEW: defer until hass exists (prevents first-load hang) ----
                 if (!this._hass || typeof this._hass.callApi !== 'function') {
                     this._showBanner('Waiting for Home Assistant…');
-                    setTimeout(() => this._refetchFullCalendar(), 150); // retry soon
-                    callback([]); // avoid hanging FullCalendar
+                    setTimeout(() => this._refetchFullCalendar(), 150);
+                    callback([]); // return quickly so FC doesn’t stall
                     return;
                 }
 
@@ -518,7 +517,7 @@ class FamilyBoardJQ extends HTMLElement {
                     startIso
                 )}&end=${encodeURIComponent(endIso)}`;
 
-                // --- DIAGNOSTIC: log range + counts by source/view ---
+                // Diagnostic
                 const viewName = (() => {
                     try {
                         return this.$('#fc').fullCalendar('getView')?.name;
@@ -529,7 +528,7 @@ class FamilyBoardJQ extends HTMLElement {
                 this._diag(`fetch ${src.entity} for ${viewName} :: ${startIso} → ${endIso}`);
 
                 this._hass
-                    ?.callApi('GET', path)
+                    .callApi('GET', path)
                     .then((events) => {
                         const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
                         this._lastEvents[src.entity] = mapped; // cache
@@ -581,39 +580,44 @@ class FamilyBoardJQ extends HTMLElement {
             header,
             defaultView: initialView,
             timezone: tz,
-            // Base agenda options (views overrides still apply)
+
+            // Agenda options
             allDaySlot: fcCfg.allDaySlot !== false,
             minTime: fcCfg.minTime ?? '06:00:00',
             maxTime: fcCfg.maxTime ?? '22:00:00',
             slotDuration: fcCfg.slotDuration ?? '00:30:00',
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
-            contentHeight: null, // we’ll set numeric height ourselves
-            height: null, // (important for agenda views)
-            handleWindowResize: false, // we’ll handle it better below
+
+            // We’ll measure height ourselves
+            contentHeight: null,
+            height: null,
+            handleWindowResize: false,
+
             editable: false,
             selectable: false,
             lazyFetching: true,
             eventLimit: true,
             weekNumbers: false,
             views: fcCfg.views ?? undefined,
+
             eventSources: this._eventSourcesForFocus(),
+
             eventRender: (event, element) => {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
-            // v2 "viewRender" fires when the view changes; keep preferred wide view
-            viewRender: (view /*, element */) => {
-                // If the user is on a wide view (not agendaDay), remember it
+
+            // Remember preferred "wide" view and keep height correct
+            viewRender: (view /*, element*/) => {
                 if (view.name !== 'agendaDay') this._preferredWideView = view.name;
-                // After each render, re-measure height for the visible view
                 this._applyMeasuredHeight();
             },
         });
-        setTimeout(() => this._refetchFullCalendar(), 0);
-        // Responsive behavior: only switch when crossing the narrow threshold.
+
+        // Responsive behaviour: only switch when crossing the narrow threshold.
         const onResize = () => {
             try {
                 const narrow = isNarrow();
@@ -622,20 +626,20 @@ class FamilyBoardJQ extends HTMLElement {
                 if (narrow && current !== 'agendaDay') {
                     $fc.fullCalendar('changeView', 'agendaDay');
                 } else if (!narrow && current === 'agendaDay') {
-                    // Go back to user’s last non-day choice (week/month), defaulting to agendaWeek
                     $fc.fullCalendar('changeView', this._preferredWideView || 'agendaWeek');
                 }
-                // Always re-apply height after layout shifts
                 this._applyMeasuredHeight();
             } catch {}
         };
 
-        // Rebind resize listener safely
         window.removeEventListener('resize', this._onResizeBound);
         this._onResizeBound = onResize;
         window.addEventListener('resize', onResize);
 
         this._fcReady = true;
+
+        // ---- NEW: ensure an initial fetch happens even if hass is already set ----
+        setTimeout(() => this._refetchFullCalendar(), 0);
     }
 
     _rebuildFullCalendar() {
@@ -660,7 +664,7 @@ class FamilyBoardJQ extends HTMLElement {
         } catch {}
     }
 
-    // ---------- Chores ----------
+    // ---------------- Chores ----------------
     _renderChores() {
         if (this._state.section !== 'Chores' || !this._hass) return;
         const $root = this.$('#chores');
@@ -678,22 +682,22 @@ class FamilyBoardJQ extends HTMLElement {
                 const ent = lists[k];
                 const st = this._hass.states?.[ent];
                 let items = (st?.attributes?.items ?? []).filter((it) => it.status !== 'completed');
+
                 // optional: sort by due then priority
                 items = items.sort(
                     (a, b) =>
-                        (a.due || '').localeCompare(b.due || '') ||
-                        (b.priority || 0) - (a.priority || 0)
+                        (a.due ?? '').localeCompare(b.due ?? '') ||
+                        (b.priority ?? 0) - (a.priority ?? 0)
                 );
 
                 const body = items.length
                     ? items
                           .map(
                               (it) => `
-            <button class="fb-chore" data-entity="${this._escapeAttr(
-                ent
-            )}" data-id="${this._escapeAttr(
-                                  String(it.uid || it.id || it.summary)
-                              )}" style="text-align:left;padding:4px;border:0;background:transparent;cursor:pointer">
+            <button class="fb-chore"
+                    data-entity="${this._escapeAttr(ent)}"
+                    data-id="${this._escapeAttr(String(it.uid ?? it.id ?? it.summary))}"
+                    style="text-align:left;padding:4px;border:0;background:transparent;cursor:pointer">
               – ${this._escapeHtml(String(it.summary ?? ''))}
             </button>`
                           )
@@ -716,7 +720,6 @@ class FamilyBoardJQ extends HTMLElement {
             const el = this.$(e.currentTarget);
             const entity_id = el.data('entity');
             const item = String(el.data('id'));
-            // Best-effort—adjust if your integration differs:
             this._hass
                 ?.callService('todo', 'update_item', { entity_id, item, status: 'completed' })
                 .then(() => this._renderChores())
@@ -726,23 +729,24 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    // ---------- Banners ----------
+    // ---------------- Banners ----------------
     _showBanner(msg) {
         const host = this.$('#main');
         if (!host.length) return;
         const existing = this.$('#fb-banner');
         const html = `
-    <div id="fb-banner"
-         style="padding:6px 12px;background:var(--fb-surface, #fff);color:#b00020;border-radius:8px;margin:8px;border:1px solid var(--fb-grid,#e5e7eb)">
-      ${this._escapeHtml(msg)}
-    </div>`;
+      <div id="fb-banner"
+           style="padding:6px 12px;background:var(--fb-surface, #fff);color:#b00020;border-radius:8px;margin:8px;border:1px solid var(--fb-grid,#e5e7eb)">
+        ${this._escapeHtml(msg)}
+      </div>`;
         existing.length ? existing.replaceWith(html) : host.prepend(html);
     }
+
     _hideBanner() {
         this.$('#fb-banner').remove();
     }
 
-    // ---------- Utils ----------
+    // ---------------- Utils ----------------
     _safeRangeToIso(start, end) {
         const toIso = (x) => {
             if (!x) return new Date().toISOString();
@@ -759,10 +763,8 @@ class FamilyBoardJQ extends HTMLElement {
 
     _mapHaEventToFc(ev) {
         // HA event shapes:
-        // - All-day: { start: {date: 'YYYY-MM-DD'}, end: {date: 'YYYY-MM-DD'}, ... }
-        //   end.date is exclusive (the day AFTER the last day)
-        // - Timed:   { start: {dateTime: '...'}, end: {dateTime: '...'}, ... }
-
+        // - All-day: { start:{date:'YYYY-MM-DD'}, end:{date:'YYYY-MM-DD'} }  (end.date exclusive)
+        // - Timed  : { start:{dateTime:'...'}, end:{dateTime:'...'} }
         if (!ev || !ev.start) return null;
 
         const s = ev.start || {};
@@ -773,24 +775,21 @@ class FamilyBoardJQ extends HTMLElement {
         const hasSDT = typeof s.dateTime === 'string';
         const hasEDT = typeof e.dateTime === 'string';
 
-        // 1) ALL-DAY EVENTS (prefer pure date strings, allDay=true)
+        // All-day: keep date-only strings; ensure exclusive end
         if (hasSD) {
-            const startDate = s.date; // YYYY-MM-DD
-            let endDate = hasED ? e.date : null; // YYYY-MM-DD or null
-
-            // If HA didn’t provide an end.date, create exclusive end = start + 1 day
+            const startDate = s.date;
+            let endDate = hasED ? e.date : null;
             if (!endDate) {
                 const d = new Date(`${startDate}T00:00:00Z`);
                 d.setUTCDate(d.getUTCDate() + 1);
-                endDate = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                endDate = d.toISOString().slice(0, 10);
             }
-
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             return {
                 id: ev.uid ?? `${startDate}-${titleBase}`.replace(/\s+/g, '_'),
                 title: this._escapeHtml(titleBase),
-                start: startDate, // KEEP date-only for all-day
-                end: endDate, // KEEP date-only (exclusive)
+                start: startDate, // date-only
+                end: endDate, // date-only (exclusive)
                 allDay: true,
                 location: ev.location,
                 description: ev.description,
@@ -798,23 +797,19 @@ class FamilyBoardJQ extends HTMLElement {
             };
         }
 
-        // 2) TIMED EVENTS
+        // Timed
         if (hasSDT) {
             const startStr = s.dateTime;
             let endStr = hasEDT ? e.dateTime : null;
-
-            // If missing end for timed event, assume +1h
             if (!endStr) {
                 const d = new Date(startStr);
                 endStr = new Date(d.getTime() + 3600000).toISOString();
             }
-
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             const start = new Date(startStr);
             const hh = String(start.getHours()).padStart(2, '0');
             const mm = String(start.getMinutes()).padStart(2, '0');
             const title = `${hh}:${mm} ${titleBase}`;
-
             return {
                 id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
                 title: this._escapeHtml(title),
@@ -827,7 +822,6 @@ class FamilyBoardJQ extends HTMLElement {
             };
         }
 
-        // No usable start
         return null;
     }
 
@@ -851,6 +845,7 @@ class FamilyBoardJQ extends HTMLElement {
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
     }
+
     _escapeAttr(s) {
         return this._escapeHtml(String(s)).replace(/`/g, '&#96;');
     }
@@ -868,20 +863,15 @@ class FamilyBoardJQ extends HTMLElement {
         const left = Math.max(0, total - completed);
         const ratio = total > 0 ? Math.min(completed / total, 1) : 0;
 
-        // Update the "left today" numeric pill
         const $left = this.$(`#chip-today-${k}`);
         if ($left.length) {
             $left.text(String(left));
             $left.attr('title', `${left} left today (of ${total})`);
         }
 
-        // Update progress bar fill
         const $fill = this.$(`#chip-progress-${k}`);
-        if ($fill.length) {
-            $fill.css('transform', `scaleX(${ratio})`);
-        }
+        if ($fill.length) $fill.css('transform', `scaleX(${ratio})`);
 
-        // Update ARIA on the track
         const $bar = this.$(`.chip[data-key="${k}"] .bar`);
         if ($bar.length) {
             $bar.attr({
@@ -893,38 +883,26 @@ class FamilyBoardJQ extends HTMLElement {
         }
     }
 
-    /**
-     * Batch update: { anthony:{completed:2,total:5}, joy:{...}, ... }
-     * Missing people are ignored.
-     */
+    /** Batch update: { anthony:{completed:2,total:5}, joy:{...}, ... } */
     setAllChipTodayTotals(map) {
         if (!map || typeof map !== 'object') return;
-        for (const [key, totals] of Object.entries(map)) {
-            this.setChipTodayTotals(key, totals);
-        }
+        for (const [key, totals] of Object.entries(map)) this.setChipTodayTotals(key, totals);
     }
-    /**
-     * Measure the available space and set a numeric height on FullCalendar.
-     * Keeps agendaWeek/agendaDay full height with a visible time axis.
-     */
+
+    /** Measure the available space and set a numeric height on FullCalendar. */
     _applyMeasuredHeight() {
         const wrap = this._body.querySelector('#fc-wrap');
         const $fc = this.$('#fc');
         if (!wrap || !$fc.length) return;
 
-        // The wrapper occupies the main area. Deduct toolbar + legend.
         const toolbar = this._body.querySelector('#fc-wrap .fc-toolbar');
         const legend = this._body.querySelector('#fc-legend');
 
-        // Base height we can use
         const wrapH = wrap.clientHeight || 0;
-
-        // Estimate reserved vertical space (toolbars have margins in your CSS)
         const tbH = toolbar ? toolbar.offsetHeight + 24 : 0;
         const lgH = legend ? legend.offsetHeight + 12 : 0;
 
-        const target = Math.max(360, wrapH - tbH - lgH); // never collapse below 360px
-
+        const target = Math.max(360, wrapH - tbH - lgH);
         try {
             $fc.fullCalendar('option', 'height', target);
         } catch {}
