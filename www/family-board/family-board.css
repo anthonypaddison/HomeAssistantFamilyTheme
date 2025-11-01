@@ -410,3 +410,11 @@ aside#sidebar {
 .chip .i ha-icon {
     color: currentColor !important;
 }
+
+.sb-btn.active > .sb-icon {
+    color: var(--utility-bar-background) !important;
+}
+
+.sb-btn > .sb-icon {
+    color: #fff !important;
+}

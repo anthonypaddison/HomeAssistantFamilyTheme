@@ -249,7 +249,7 @@ class FamilyBoardJQ extends HTMLElement {
         <button class="sb-btn" title="${this._escapeAttr(
             sec
         )}" role="button" tabindex="0" aria-pressed="${this._state.section === sec}">
-          <ha-icon icon="${this._escapeAttr(ICON[sec] ?? 'mdi:circle')}"></ha-icon>
+          <ha-icon class="sb-icon" icon="${this._escapeAttr(ICON[sec] ?? 'mdi:circle')}"></ha-icon>
         </button>
       `);
             if (this._state.section === sec) $btn.addClass('active');
