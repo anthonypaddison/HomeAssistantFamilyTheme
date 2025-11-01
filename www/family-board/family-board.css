@@ -46,7 +46,7 @@ ha-card {
 .fb-layout {
     display: grid !important;
     grid-template-columns: 80px 1fr !important;
-    grid-template-rows: 75px 100px 1fr !important;
+    grid-template-rows: 75px 80px 1fr !important;
     grid-template-areas: 'sidebar header' 'sidebar chips' 'sidebar main' !important;
     height: calc(100vh - var(--header-height, 0px)) !important;
     background: var(--fb-bg) !important;
@@ -222,23 +222,58 @@ main {
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial,
         'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji' !important;
 }
+/* Center FullCalendar toolbar horizontally + keep it on one line */
 .fc-toolbar {
+    display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    justify-content: center !important; /* ⟵ centers the whole toolbar block */
+    gap: 12px !important; /* space between left/center/right */
+    flex-wrap: nowrap !important; /* keep on one line (see media query below) */
+
+    /* Optional: match your existing look */
     padding: 10px 12px !important;
     background: var(--utility-bar-background) !important;
     border-radius: var(--fb-radius) !important;
     margin: 12px !important;
 }
-.fc-left,
-.fc-right {
+
+/* Kill legacy floats and make the three regions flex children */
+.fc-toolbar .fc-left,
+.fc-toolbar .fc-center,
+.fc-toolbar .fc-right {
+    float: none !important;
     display: flex !important;
-    gap: 8px !important;
     align-items: center !important;
+    gap: 8px !important;
 }
-.fc-center h2 {
+
+.fc-toolbar .fc-left {
+    order: 1;
+}
+.fc-toolbar .fc-center {
+    order: 2;
+}
+.fc-toolbar .fc-right {
+    order: 3;
+}
+
+/* The clearfix div is obsolete once flex is used */
+.fc-toolbar .fc-clear {
+    display: none !important;
+}
+
+/* Tidy the title spacing */
+.fc-toolbar .fc-center h2 {
+    margin: 0 !important;
     font-weight: 800 !important;
     letter-spacing: 0.2px !important;
+}
+
+/* Mobile fallback: allow wrapping when narrow */
+@media (max-width: 760px) {
+    .fc-toolbar {
+        flex-wrap: wrap !important;
+    }
 }
 .fc button {
     background: var(--fb-accent) !important;
