@@ -77,6 +77,7 @@ header .date {
 }
 
 .fb-clock {
+    text-align: center !important;
     align-items: center !important;
 }
 
@@ -99,6 +100,7 @@ header .date {
     gap: 8px !important;
     padding: 8px !important;
     background: var(--utility-bar-background) !important;
+    padding-top: 40px !important;
 }
 .chip {
     display: grid !important;
