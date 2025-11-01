@@ -98,9 +98,8 @@ header .date {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
     gap: 8px !important;
-    padding: 8px !important;
+    padding: 40px 8px !important;
     background: var(--utility-bar-background) !important;
-    padding-top: 40px !important;
 }
 .chip {
     display: grid !important;
