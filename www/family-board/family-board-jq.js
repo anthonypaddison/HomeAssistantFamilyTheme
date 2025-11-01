@@ -440,8 +440,6 @@ class FamilyBoardJQ extends HTMLElement {
 
             const wrap = this._body.querySelector('#fc-wrap');
             if (wrap) this._resizeObserver.observe(wrap);
-
-            requestAnimationFrame(() => this._applyMeasuredHeight());
             return;
         }
 
