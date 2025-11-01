@@ -83,10 +83,10 @@ aside#sidebar {
     background: var(--utility-bar-background) !important;
     padding: 8px 0 !important;
     gap: 8px !important;
-    padding-top: 200px
+    padding-top: 200px;
 }
 .sb-btn {
-    width: 56px !important;
+    width: 100% !important;
     height: 72px !important;
     display: grid !important;
     place-items: center !important;
@@ -99,6 +99,14 @@ aside#sidebar {
 .sb-btn.active {
     color: var(--utility-bar-background) !important;
     background: #fff !important;
+}
+
+.sb-btn.active ha-icon {
+    color: var(--utility-bar-background) !important;
+}
+
+.sb-btn.active {
+    color: #fff !important;
 }
 
 /* Chips */

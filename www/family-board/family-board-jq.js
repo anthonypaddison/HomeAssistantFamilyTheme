@@ -234,7 +234,7 @@ class FamilyBoardJQ extends HTMLElement {
             Lists: 'mdi:format-list-bulleted',
             Photos: 'mdi:image-multiple',
         };
-        const $aside = $('<div class="sidebar-aside">').attr('css', 'width: 100% !important;');
+        const $aside = $('<div class="sidebar-aside">').attr('style', 'width: 100% !important;');
         $('#sidebar').empty().append($aside);
 
         (this._config.sections || []).forEach((sec) => {
