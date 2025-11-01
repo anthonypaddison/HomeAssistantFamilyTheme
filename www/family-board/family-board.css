@@ -61,6 +61,7 @@ header {
     justify-content: space-between !important;
     padding: 8px 12px !important;
     background: var(--utility-bar-background) !important;
+    background-color: var(--utility-bar-background) !important;
     color: var(--fb-text) !important;
 }
 header .time {
