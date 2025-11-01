@@ -571,30 +571,27 @@ class FamilyBoardJQ extends HTMLElement {
             return;
         }
 
-        // Clean old instance
         try {
             $fc.fullCalendar('destroy');
         } catch {}
 
         const fcCfg = this._config.fc ?? {};
-        const tz = this._config.timezone ?? 'local';
-
         this._preferredWideView =
             this._preferredWideView ?? fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek';
 
         const isNarrow = () => (this._root.host?.offsetWidth ?? window.innerWidth) < 760;
 
-        // Build header safely (v2/v3 want commas, not spaces)
         const header = { ...fcCfg.header };
         if (header?.right?.includes(' ')) header.right = header.right.replace(/\s+/g, ',');
 
-        // Initial view: respect narrow vs wide
         const initialView = isNarrow() ? 'agendaDay' : this._preferredWideView || 'agendaWeek';
 
         $fc.fullCalendar({
             header,
             defaultView: initialView,
-            timezone: tz,
+
+            // Force local timezone; avoids named-zone path that triggers moment.zone
+            timezone: 'local',
 
             // Agenda options
             allDaySlot: fcCfg.allDaySlot !== false,
@@ -604,7 +601,7 @@ class FamilyBoardJQ extends HTMLElement {
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
 
-            // We’ll measure height ourselves
+            // We set a numeric height ourselves
             contentHeight: null,
             height: null,
             handleWindowResize: false,
@@ -625,19 +622,25 @@ class FamilyBoardJQ extends HTMLElement {
                 element.attr('title', this._escapeAttr(event.title));
             },
 
-            // Remember preferred "wide" view and keep height correct
-            viewRender: (view /*, element*/) => {
+            viewRender: (view) => {
                 if (view.name !== 'agendaDay') this._preferredWideView = view.name;
                 this._applyMeasuredHeight();
             },
+
+            // NEW: confirm how many events FC actually put in the view
+            eventAfterAllRender: () => {
+                try {
+                    const count = ($fc.fullCalendar('clientEvents') || []).length;
+                    this._diag(`eventAfterAllRender :: ${count} events in current view`);
+                } catch {}
+            },
         });
 
-        // Responsive behaviour: only switch when crossing the narrow threshold.
+        // Responsive only when crossing the narrow threshold
         const onResize = () => {
             try {
                 const narrow = isNarrow();
                 const current = $fc.fullCalendar('getView')?.name;
-
                 if (narrow && current !== 'agendaDay') {
                     $fc.fullCalendar('changeView', 'agendaDay');
                 } else if (!narrow && current === 'agendaDay') {
@@ -646,14 +649,13 @@ class FamilyBoardJQ extends HTMLElement {
                 this._applyMeasuredHeight();
             } catch {}
         };
-
         window.removeEventListener('resize', this._onResizeBound);
         this._onResizeBound = onResize;
         window.addEventListener('resize', onResize);
 
         this._fcReady = true;
 
-        // ---- NEW: ensure an initial fetch happens even if hass is already set ----
+        // Ensure initial fetch fires
         setTimeout(() => this._refetchFullCalendar(), 0);
     }
 
@@ -777,9 +779,6 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _mapHaEventToFc(ev) {
-        // HA event shapes:
-        // - All-day: { start:{date:'YYYY-MM-DD'}, end:{date:'YYYY-MM-DD'} }  (end.date exclusive)
-        // - Timed  : { start:{dateTime:'...'}, end:{dateTime:'...'} }
         if (!ev || !ev.start) return null;
 
         const s = ev.start || {};
@@ -790,15 +789,17 @@ class FamilyBoardJQ extends HTMLElement {
         const hasSDT = typeof s.dateTime === 'string';
         const hasEDT = typeof e.dateTime === 'string';
 
-        // All-day: keep date-only strings; ensure exclusive end
+        // 1) ALL-DAY (keep date-only strings; FC expects exclusive end)
         if (hasSD) {
-            const startDate = s.date;
-            let endDate = hasED ? e.date : null;
+            const startDate = s.date; // 'YYYY-MM-DD'
+            let endDate = hasED ? e.date : null; // 'YYYY-MM-DD' or null
+
             if (!endDate) {
                 const d = new Date(`${startDate}T00:00:00Z`);
                 d.setUTCDate(d.getUTCDate() + 1);
                 endDate = d.toISOString().slice(0, 10);
             }
+
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             return {
                 id: ev.uid ?? `${startDate}-${titleBase}`.replace(/\s+/g, '_'),
@@ -812,27 +813,27 @@ class FamilyBoardJQ extends HTMLElement {
             };
         }
 
-        // TIMED EVENTS
+        // 2) TIMED (use Date objects to dodge Moment parsing quirks)
         if (hasSDT) {
             const startStr = s.dateTime;
             let endStr = hasEDT ? e.dateTime : null;
             if (!endStr) {
                 const d = new Date(startStr);
-                endStr = new Date(d.getTime() + 3600000).toISOString();
+                endStr = new Date(d.getTime() + 3600000).toISOString(); // +1h fallback
             }
 
-            const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             const start = new Date(startStr);
-            const end = new Date(endStr); // <-- build Date
+            const end = new Date(endStr);
 
+            const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             const hh = String(start.getHours()).padStart(2, '0');
             const mm = String(start.getMinutes()).padStart(2, '0');
 
             return {
                 id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
                 title: this._escapeHtml(`${hh}:${mm} ${titleBase}`),
-                start, // <-- Date object, not ISO string
-                end, // <-- Date object
+                start, // Date object
+                end, // Date object
                 allDay: false,
                 location: ev.location,
                 description: ev.description,
