@@ -74,41 +74,6 @@ header .date {
     font-size: 12px !important;
 }
 
-/* Sidebar */
-aside#sidebar {
-    grid-area: sidebar !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    background: var(--utility-bar-background) !important;
-    padding: 8px 0 !important;
-    gap: 8px !important;
-    padding-top: 200px;
-}
-.sb-btn {
-    width: 100% !important;
-    height: 72px !important;
-    display: grid !important;
-    place-items: center !important;
-    background: transparent !important;
-    border: 0 !important;
-    cursor: pointer !important;
-    position: relative !important;
-    color: #fff !important;
-}
-.sb-btn.active {
-    color: var(--utility-bar-background) !important;
-    background: #fff !important;
-}
-
-.sb-btn.active ha-icon {
-    color: var(--utility-bar-background) !important;
-}
-
-.sb-btn.active {
-    color: #fff !important;
-}
-
 /* Chips */
 .chips {
     grid-area: chips !important;
@@ -389,7 +354,7 @@ main {
     }
 }
 
-/* Sidebar (in-card) */
+/* Sidebar */
 aside#sidebar {
     grid-area: sidebar !important;
     display: flex !important;
@@ -398,11 +363,11 @@ aside#sidebar {
     background: var(--utility-bar-background) !important;
     padding: 8px 0 !important;
     gap: 8px !important;
+    padding-top: 200px;
 }
 
-/* Make buttons dark on lilac so they are visible */
 .sb-btn {
-    width: 56px !important;
+    width: 100% !important;
     height: 72px !important;
     display: grid !important;
     place-items: center !important;
@@ -410,13 +375,19 @@ aside#sidebar {
     border: 0 !important;
     cursor: pointer !important;
     position: relative !important;
-    color: var(--fb-text) !important; /* << was #fff; now dark text/icons */
+    color: #fff !important;
+}
+.sb-btn.active {
+    color: var(--utility-bar-background) !important;
+    background: #fff !important;
 }
 
-/* Active: invert to white pill with lilac text */
+.sb-btn.active ha-icon {
+    color: var(--utility-bar-background) !important;
+}
+
 .sb-btn.active {
-    background: #fff !important;
-    color: var(--utility-bar-background) !important; /* lilac on white */
+    color: #fff !important;
 }
 
 /* === Family view icon visibility fixes (local scope) === */
