@@ -4,43 +4,42 @@
 
 /* Proper custom properties + defaults if the controller isn’t active */
 :host {
-  /* Optional palette tokens for future use */
-  --palette-mint: #B9FBC0;
-  --palette-aqua: #98F5E1;
-  --palette-cyan: #8EECF5;
-  --palette-sky: #90DBF4;
-  --palette-bluegrey: #A3C4F3;
-  --palette-lilac: #CFBAF0;
-  --palette-rose: #FFCFD2;
-  --palette-vanilla: #FBF8CC;
+    /* Optional palette tokens for future use */
+    --palette-mint: #b9fbc0;
+    --palette-aqua: #98f5e1;
+    --palette-cyan: #8eecf5;
+    --palette-sky: #90dbf4;
+    --palette-bluegrey: #a3c4f3;
+    --palette-lilac: #cfbaf0;
+    --palette-rose: #ffcfd2;
+    --palette-vanilla: #fbf8cc;
 
-  /* Fallback palette (light theme) */
-  --fb-bg: #ffffff !important;
-  --fb-surface: #ffffff !important;
-  --fb-surface-2: #ffffff !important;
-  --fb-text: #0f172a !important;
-  --fb-muted: #475569 !important;
-  --fb-accent: #cfbaf0 !important;
-  --fb-grid: #e5e7eb !important;
-  --fb-today: #f6f7ff !important;
-  --fb-weekend: rgba(15, 23, 42, 0.04) !important;
-  --fb-pill-text: #ffffff !important;
-  --fb-print-text: #111 !important;
-  --fb-radius: 12px !important;
+    /* Fallback palette (light theme) */
+    --fb-bg: #ffffff !important;
+    --fb-surface: #ffffff !important;
+    --fb-surface-2: #ffffff !important;
+    --fb-text: #0f172a !important;
+    --fb-muted: #475569 !important;
+    --fb-accent: #cfbaf0 !important;
+    --fb-grid: #e5e7eb !important;
+    --fb-today: #f6f7ff !important;
+    --fb-weekend: rgba(15, 23, 42, 0.04) !important;
+    --fb-pill-text: #ffffff !important;
+    --fb-print-text: #111 !important;
+    --fb-radius: 12px !important;
 
-  --utility-bar-background: var(--palette-lilac) !important;
+    --utility-bar-background: var(--palette-lilac) !important;
 }
 
 :host {
-  display: block !important;
+    display: block !important;
 }
-
 
 /* Card styling */
 ha-card {
     height: 100% !important;
     background: var(--fb-bg) !important;
-    color: var(--fb-text) !important;
+    /* color: var(--fb-text) !important; */
 }
 
 /* Layout grid */
@@ -62,6 +61,7 @@ header {
     padding: 8px 12px !important;
     background: var(--utility-bar-background) !important;
     color: var(--fb-text) !important;
+    padding-top: 20px !important;
 }
 header .time {
     font-size: 28px !important;
@@ -73,6 +73,14 @@ header .date {
     font-weight: 700 !important;
 }
 .fb-title {
+    font-weight: 800 !important;
+}
+
+.fb-clock {
+    align-items: center !important;
+}
+
+.fb-clock > .time {
     font-weight: 800 !important;
 }
 .fb-pill {
@@ -215,7 +223,6 @@ main {
         'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji' !important;
 }
 .fc-toolbar {
-    display: flex !important;
     align-items: center !important;
     gap: 12px !important;
     padding: 10px 12px !important;
@@ -235,7 +242,7 @@ main {
 }
 .fc button {
     background: var(--fb-accent) !important;
-    color: #fff !important;
+    /* color: #fff !important; */
     border: 0 !important;
     border-radius: 999px !important;
     padding: 6px 10px !important;
@@ -426,4 +433,12 @@ aside#sidebar {
 
 .sb-btn > .sb-icon {
     color: #fff !important;
+}
+
+.fb-layout .sb-btn > ha-icon.sb-icon {
+    color: #fff !important;
+}
+
+.fb-layout .sb-btn.active > ha-icon.sb-icon {
+    color: var(--utility-bar-background) !important;
 }
