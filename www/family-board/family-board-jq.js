@@ -506,6 +506,13 @@ class FamilyBoardJQ extends HTMLElement {
             id: src.entity,
             color: src.color,
             events: (start, end, _tz, callback) => {
+                if (!this._hass || typeof this._hass.callApi !== 'function') {
+                    this._showBanner('Waiting for Home Assistant…');
+                    setTimeout(() => this._refetchFullCalendar(), 150); // retry soon
+                    callback([]); // avoid hanging FullCalendar
+                    return;
+                }
+
                 const { startIso, endIso } = this._safeRangeToIso(start, end);
                 const path = `calendars/${src.entity}?start=${encodeURIComponent(
                     startIso
@@ -605,8 +612,8 @@ class FamilyBoardJQ extends HTMLElement {
                 this._applyMeasuredHeight();
             },
         });
-
-        // Responsive behaviour: only switch when crossing the narrow threshold.
+        setTimeout(() => this._refetchFullCalendar(), 0);
+        // Responsive behavior: only switch when crossing the narrow threshold.
         const onResize = () => {
             try {
                 const narrow = isNarrow();
@@ -837,8 +844,7 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _escapeHtml(s) {
-        const str = String(s);
-        return str
+        return String(s)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
