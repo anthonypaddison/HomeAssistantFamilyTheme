@@ -23,6 +23,12 @@
     --divider-color: #E5E7EB;
 
     --utility-bar-background: #cfbaf0 !important;
+    --family-color-family:     #36B37E !important;
+    --family-color-anthony:    #7E57C2 !important;
+    --family-color-joy:        #F4B400 !important;
+    --family-color-lizzie:     #EC407A !important;
+    --family-color-toby:       #42A5F5 !important;
+    --family-color-routine:    #b2fd7fff !important;
     /* Family Board variables */
     --family-background: #FFFFFF;
     --family-surface: var(--palette-lilac);
