@@ -46,7 +46,7 @@ views:
 
             fc:
                 firstDay: 1
-                defaultView: month
+                defaultView: agendaWeek
                 header:
                     left: prev,next today
                     center: title
@@ -59,8 +59,8 @@ views:
                     agendaWeek:
                         allDaySlot: true
                         slotDuration: '00:30:00'
-                        minTime: '06:00:00'
-                        maxTime: '22:00:00'
+                        minTime: '04:00:00'
+                        maxTime: '23:00:00'
                     agendaDay:
                         allDaySlot: true
                         slotDuration: '00:30:00'

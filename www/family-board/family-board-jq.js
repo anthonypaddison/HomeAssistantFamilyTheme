@@ -511,11 +511,22 @@ class FamilyBoardJQ extends HTMLElement {
                     startIso
                 )}&end=${encodeURIComponent(endIso)}`;
 
+                // --- DIAGNOSTIC: log range + counts by source/view ---
+                const viewName = (() => {
+                    try {
+                        return this.$('#fc').fullCalendar('getView')?.name;
+                    } catch {
+                        return 'unknown';
+                    }
+                })();
+                this._diag(`fetch ${src.entity} for ${viewName} :: ${startIso} → ${endIso}`);
+
                 this._hass
                     ?.callApi('GET', path)
                     .then((events) => {
                         const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
                         this._lastEvents[src.entity] = mapped; // cache
+                        this._diag(`→ ${src.entity} returned ${mapped.length} mapped events`);
                         callback(mapped);
                         this._hideBanner();
                     })
@@ -547,8 +558,6 @@ class FamilyBoardJQ extends HTMLElement {
         const fcCfg = this._config.fc ?? {};
         const tz = this._config.timezone ?? 'local';
 
-        // Remember the user’s preferred "wide" view (not agendaDay).
-        // We’ll update this in viewRender whenever the view is not agendaDay.
         this._preferredWideView =
             this._preferredWideView ?? fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek';
 
@@ -742,49 +751,77 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _mapHaEventToFc(ev) {
-        const s = ev?.start ?? {},
-            e = ev?.end ?? {};
-        const hasSDT = typeof s.dateTime === 'string';
-        const hasEDT = typeof e.dateTime === 'string';
+        // HA event shapes:
+        // - All-day: { start: {date: 'YYYY-MM-DD'}, end: {date: 'YYYY-MM-DD'}, ... }
+        //   end.date is exclusive (the day AFTER the last day)
+        // - Timed:   { start: {dateTime: '...'}, end: {dateTime: '...'}, ... }
+
+        if (!ev || !ev.start) return null;
+
+        const s = ev.start || {};
+        const e = ev.end || {};
+
         const hasSD = typeof s.date === 'string';
         const hasED = typeof e.date === 'string';
-        if (!hasSDT && !hasSD) return null;
+        const hasSDT = typeof s.dateTime === 'string';
+        const hasEDT = typeof e.dateTime === 'string';
 
-        const isAllDay = !!ev.all_day || (hasSD && !hasEDT);
-        let startStr = hasSDT ? s.dateTime : `${s.date}T00:00:00`;
-        let endStr = hasEDT ? e.dateTime : hasED ? `${e.date}T00:00:00` : null;
+        // 1) ALL-DAY EVENTS (prefer pure date strings, allDay=true)
+        if (hasSD) {
+            const startDate = s.date; // YYYY-MM-DD
+            let endDate = hasED ? e.date : null; // YYYY-MM-DD or null
 
-        if (isAllDay) {
-            if (!endStr && hasSD) {
-                const d = new Date(`${s.date}T00:00:00Z`);
+            // If HA didn’t provide an end.date, create exclusive end = start + 1 day
+            if (!endDate) {
+                const d = new Date(`${startDate}T00:00:00Z`);
                 d.setUTCDate(d.getUTCDate() + 1);
-                endStr = d.toISOString();
-            } else if (hasED) {
-                const d = new Date(`${e.date}T00:00:00Z`);
-                endStr = d.toISOString();
+                endDate = d.toISOString().slice(0, 10); // YYYY-MM-DD
             }
-        }
-        if (!isAllDay && hasSDT && !endStr) {
-            const d = new Date(startStr);
-            endStr = new Date(d.getTime() + 3600000).toISOString();
+
+            const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
+            return {
+                id: ev.uid ?? `${startDate}-${titleBase}`.replace(/\s+/g, '_'),
+                title: this._escapeHtml(titleBase),
+                start: startDate, // KEEP date-only for all-day
+                end: endDate, // KEEP date-only (exclusive)
+                allDay: true,
+                location: ev.location,
+                description: ev.description,
+                color: ev.color,
+            };
         }
 
-        const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
-        const start = new Date(startStr);
-        const hh = String(start.getHours()).padStart(2, '0');
-        const mm = String(start.getMinutes()).padStart(2, '0');
-        const title = isAllDay ? titleBase : `${hh}:${mm} ${titleBase}`;
+        // 2) TIMED EVENTS
+        if (hasSDT) {
+            const startStr = s.dateTime;
+            let endStr = hasEDT ? e.dateTime : null;
 
-        return {
-            id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
-            title: this._escapeHtml(title),
-            start: startStr,
-            end: endStr ?? null,
-            allDay: !!isAllDay,
-            location: ev.location,
-            description: ev.description,
-            color: ev.color,
-        };
+            // If missing end for timed event, assume +1h
+            if (!endStr) {
+                const d = new Date(startStr);
+                endStr = new Date(d.getTime() + 3600000).toISOString();
+            }
+
+            const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
+            const start = new Date(startStr);
+            const hh = String(start.getHours()).padStart(2, '0');
+            const mm = String(start.getMinutes()).padStart(2, '0');
+            const title = `${hh}:${mm} ${titleBase}`;
+
+            return {
+                id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
+                title: this._escapeHtml(title),
+                start: startStr,
+                end: endStr,
+                allDay: false,
+                location: ev.location,
+                description: ev.description,
+                color: ev.color,
+            };
+        }
+
+        // No usable start
+        return null;
     }
 
     _fatal(msg) {
