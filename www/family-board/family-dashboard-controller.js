@@ -22,6 +22,7 @@
     --secondary-text-color: #475569;
     --divider-color: #E5E7EB;
 
+    --utility-bar-background: #cfbaf0 !important;
     /* Family Board variables */
     --family-background: #FFFFFF;
     --family-surface: var(--palette-lilac);
