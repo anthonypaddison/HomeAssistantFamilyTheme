@@ -387,23 +387,6 @@ main#main {
     border-radius: 999px !important;
     font-weight: 800 !important;
 }
-.fc-event[title] {
-    position: relative !important;
-}
-.fc-event[title]:hover::after {
-    content: attr(title) !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 100% !important;
-    transform: translateY(6px) !important;
-    background: #fff !important;
-    color: var(--fb-pill-text) !important;
-    padding: 6px 8px !important;
-    border-radius: 8px !important;
-    white-space: nowrap !important;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35) !important;
-    z-index: 1000 !important;
-}
 
 /* Mobile responsiveness */
 @media (max-width: 760px) {

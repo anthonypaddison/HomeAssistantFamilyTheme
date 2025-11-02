@@ -732,17 +732,38 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _mapHaEventToFc(ev) {
+        console.log('maphaeventtofc');
+        console.log(ev);
+
         const s = ev?.start ?? {},
             e = ev?.end ?? {};
+        console.log('evstart');
+        console.log(s);
+        console.log('evend');
+        console.log(e);
         const hasSDT = typeof s.dateTime === 'string';
+        console.log('hassdt');
+        console.log(hasSDT);
         const hasEDT = typeof e.dateTime === 'string';
+        console.log('hasEDT');
+        console.log(hasEDT);
         const hasSD = typeof s.date === 'string';
+        console.log('hasSD');
+        console.log(hasSD);
         const hasED = typeof e.date === 'string';
+        console.log('hasED');
+        console.log(hasED);
         if (!hasSDT && !hasSD) return null;
 
         const isAllDay = !!ev.all_day || (hasSD && !hasEDT);
+        console.log('isAllDay');
+        console.log(isAllDay);
         let startStr = hasSDT ? s.dateTime : `${s.date}T00:00:00`;
+        console.log('startStr');
+        console.log(startStr);
         let endStr = hasEDT ? e.dateTime : hasED ? `${e.date}T00:00:00` : null;
+        console.log('endStr');
+        console.log(endStr);
 
         if (isAllDay) {
             if (!endStr && hasSD) {
@@ -759,11 +780,23 @@ class FamilyBoardJQ extends HTMLElement {
             endStr = new Date(d.getTime() + 3600000).toISOString();
         }
 
+        console.log('endStr');
+        console.log(endStr);
         const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
+        console.log('titleBase');
+        console.log(titleBase);
         const start = new Date(startStr);
+        console.log('start');
+        console.log(start);
         const hh = String(start.getHours()).padStart(2, '0');
+        console.log('hh');
+        console.log(hh);
         const mm = String(start.getMinutes()).padStart(2, '0');
+        console.log('mm');
+        console.log(mm);
         const title = isAllDay ? titleBase : `${hh}:${mm} ${titleBase}`;
+        console.log('title');
+        console.log(title);
         const array = {
             id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
             title: this._escapeHtml(title),
@@ -774,6 +807,7 @@ class FamilyBoardJQ extends HTMLElement {
             description: ev.description,
             color: ev.color,
         };
+        console.log('array');
         console.log(array);
 
         return array;
