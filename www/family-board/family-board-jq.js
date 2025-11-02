@@ -508,9 +508,6 @@ class FamilyBoardJQ extends HTMLElement {
             id: src.entity,
             color: src.color,
             events: (start, end, _tz, callback) => {
-                console.log('src to fc');
-                console.log(start, end, _tz, callback);
-
                 const { startIso, endIso } = this._safeRangeToIso(start, end);
                 const path = `calendars/${src.entity}?start=${encodeURIComponent(
                     startIso
@@ -519,6 +516,9 @@ class FamilyBoardJQ extends HTMLElement {
                 this._hass
                     ?.callApi('GET', path)
                     .then((events) => {
+                        console.log('events');
+                        console.log(events);
+
                         const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
                         this._lastEvents[src.entity] = mapped; // cache
                         callback(mapped);
