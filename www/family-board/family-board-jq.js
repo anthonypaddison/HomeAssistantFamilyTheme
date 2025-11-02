@@ -493,6 +493,8 @@ class FamilyBoardJQ extends HTMLElement {
         const cfgSources = this._config.calendars ?? [];
 
         const match = (src, who) => {
+            console.log(who);
+
             if (who === 'family') return true;
             if (src.owner) return String(src.owner).toLowerCase() === who;
             const id = String(src.entity || '').toLowerCase();
