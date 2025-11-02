@@ -494,11 +494,11 @@ class FamilyBoardJQ extends HTMLElement {
 
         const match = (src, who) => {
             console.log(who);
-
-            if (who === 'family') return true;
-            if (src.owner) return String(src.owner).toLowerCase() === who;
-            const id = String(src.entity || '').toLowerCase();
-            return id.startsWith(`calendar.${who}`) || id.includes(`_${who}`);
+            return true;
+            // if (who === 'family') return true;
+            // if (src.owner) return String(src.owner).toLowerCase() === who;
+            // const id = String(src.entity || '').toLowerCase();
+            // return id.startsWith(`calendar.${who}`) || id.includes(`_${who}`);
         };
 
         const filtered = cfgSources.filter((s) => match(s, focus));
