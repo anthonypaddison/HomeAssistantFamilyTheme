@@ -135,20 +135,11 @@ class FamilyBoardJQ extends HTMLElement {
 
         this._updateHeader();
 
-        // Calendar: ensure we fetch when hass arrives or when FC becomes ready
-        if (this._state.section === 'Calendar') {
-            if (this._fcReady) {
-                // Rebuild to align sources with current person focus and fetch
-                this._rebuildFullCalendar();
-            } else {
-                // Defer a fetch for when init completes
-                clearTimeout(this._pendingRefetch);
-                this._pendingRefetch = setTimeout(() => this._refetchFullCalendar(), 250);
-            }
-        }
+        // If calendar is active and FC is ready, refetch (covers first time hass becomes available)
+        if (this._state.section === 'Calendar' && this._fcReady) this._refetchFullCalendar();
 
         if (this._state.section === 'Chores') this._renderChores();
-        this._updateChipCounts();
+        this._updateChipCounts(); // show todo counts even while on calendar
     }
 
     connectedCallback() {
@@ -599,6 +590,7 @@ class FamilyBoardJQ extends HTMLElement {
             $fc.html('<div class="fb-error">FullCalendar not loaded.</div>');
             return;
         }
+
         try {
             $fc.fullCalendar('destroy');
         } catch {}
@@ -614,11 +606,14 @@ class FamilyBoardJQ extends HTMLElement {
 
         const initialView = isNarrow() ? 'agendaDay' : this._preferredWideView || 'agendaWeek';
 
+        const tz = this._config.timezone || 'local';
         $fc.fullCalendar({
             header,
             defaultView: initialView,
-            // Use local to avoid older moment.zone code paths
-            timezone: 'local',
+
+            // Force local timezone; avoids named-zone path that triggers moment.zone
+            timezone: tz, // was 'local'
+
             // Agenda options
             allDaySlot: fcCfg.allDaySlot !== false,
             minTime: fcCfg.minTime ?? '06:00:00',
@@ -627,7 +622,7 @@ class FamilyBoardJQ extends HTMLElement {
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
 
-            // Let us set numeric height after FC lays out
+            // We set a numeric height ourselves
             contentHeight: null,
             height: null,
             handleWindowResize: false,
@@ -640,16 +635,20 @@ class FamilyBoardJQ extends HTMLElement {
             views: fcCfg.views ?? undefined,
 
             eventSources: this._eventSourcesForFocus(),
+
             eventRender: (event, element) => {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
+
             viewRender: (view) => {
                 if (view.name !== 'agendaDay') this._preferredWideView = view.name;
                 this._applyMeasuredHeight();
             },
+
+            // NEW: confirm how many events FC actually put in the view
             eventAfterAllRender: () => {
                 try {
                     const count = ($fc.fullCalendar('clientEvents') || []).length;
@@ -668,8 +667,6 @@ class FamilyBoardJQ extends HTMLElement {
                 } else if (!narrow && current === 'agendaDay') {
                     $fc.fullCalendar('changeView', this._preferredWideView || 'agendaWeek');
                 }
-                // IMPORTANT: force a render after size changes
-                $fc.fullCalendar('render');
                 this._applyMeasuredHeight();
             } catch {}
         };
@@ -679,13 +676,8 @@ class FamilyBoardJQ extends HTMLElement {
 
         this._fcReady = true;
 
-        requestAnimationFrame(() => {
-            try {
-                $fc.fullCalendar('render'); // draw week grid reliably
-                this._applyMeasuredHeight(); // set numeric height
-                this._rebuildFullCalendar(); // add sources + fetch now that FC is ready
-            } catch {}
-        });
+        // Ensure initial fetch fires
+        setTimeout(() => this._refetchFullCalendar(), 1000);
     }
 
     _rebuildFullCalendar() {
