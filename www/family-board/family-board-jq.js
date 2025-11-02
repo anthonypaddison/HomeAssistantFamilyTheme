@@ -8,7 +8,6 @@ const DEFAULTS = {
     fcDefaultView: 'month',
     fcFirstDay: 1,
     fcTimeFormat: 'HH:mm',
-    fcContentHeight: 'auto',
     fcMinTime: '06:00:00',
     fcMaxTime: '22:00:00',
     fcSlotDuration: '00:30:00',
@@ -74,7 +73,6 @@ class FamilyBoardJQ extends HTMLElement {
                     right: 'month,agendaWeek,agendaDay',
                 },
                 timeFormat: 'HH:mm',
-                contentHeight: 'auto',
                 views: {
                     month: { fixedWeekCount: false, eventLimit: true },
                     agendaWeek: {
@@ -559,14 +557,16 @@ class FamilyBoardJQ extends HTMLElement {
                 : fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek',
             timezone: tz,
             allDaySlot: fcCfg.allDaySlot !== false,
+            // --- add:
+            allDaySlot: fcCfg.allDaySlot !== false, // you have this already
+            eventLimit: fcCfg.eventLimit !== false, // you have eventLimit: true
+            // --- force sensible fallbacks if per-view values are missing:
             minTime: fcCfg.minTime ?? '06:00:00',
             maxTime: fcCfg.maxTime ?? '22:00:00',
-            slotDuration: fcCfg.slotDuration ?? '01:00:00',
+            slotDuration: fcCfg.slotDuration ?? '00:30:00',
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
             views: fcCfg.views ?? undefined,
-            contentHeight: fcCfg.contentHeight ?? 'auto',
-            height: 'auto',
             handleWindowResize: true,
             editable: false,
             selectable: false,
@@ -581,7 +581,29 @@ class FamilyBoardJQ extends HTMLElement {
                 element.attr('title', this._escapeAttr(event.title));
             },
         });
+        const wrap = this._body.querySelector('#fc-wrap');
 
+        const applyHeight = () => {
+            // Use 70% of wrapper height for the calendar, with a floor
+            const h = Math.max((wrap?.clientHeight || 700) * 0.75, 560);
+            try {
+                $fc.fullCalendar('option', 'height', Math.round(h));
+            } catch {}
+        };
+
+        // initial
+        applyHeight();
+
+        // keep your existing ResizeObserver, but also set height on resize:
+        if (!this._resizeObserver) {
+            this._resizeObserver = new ResizeObserver(() => {
+                try {
+                    $fc.fullCalendar('option', 'height', 'auto'); // let FC recompute
+                } catch {}
+                applyHeight();
+            });
+        }
+        if (wrap) this._resizeObserver.observe(wrap);
         // respond to window resizes with view change for mobile/desktop
         const onResize = () => {
             try {
