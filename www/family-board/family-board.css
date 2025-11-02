@@ -195,9 +195,10 @@ header .date {
 }
 
 /* Main area */
-main {
+main#main {
     grid-area: main !important;
     height: 100% !important;
+    background: var(--fb-surface-2) !important;
 }
 .main-pad {
     height: 100% !important;
