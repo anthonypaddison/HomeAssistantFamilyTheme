@@ -575,24 +575,71 @@ class FamilyBoardJQ extends HTMLElement {
             eventLimit: true,
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
-            eventRender: (event, element) => {
-                console.log('event render');
-                console.log(event, element);
+            // Called whenever the visible date range or view changes
+            viewRender: function (view, element) {
+                // Option A: Just re-render existing events (cheap visual refresh)
+                // $('#calendar').fullCalendar('re-renderEvents');
+
+                // Option B (common): Dynamically refetch/replace events for the new range
+                // We'll clear and add a "dynamic" source based on the visible range:
+                var start = view.start; // moment
+                var end = view.end; // moment
+                // Remove previous dynamic source (if any)
+                $('#calendar').fullCalendar('removeEventSource', _rebuildFullCalendar);
+
+                // Add it and trigger a refetch to load events for the new view range
+                $('#calendar').fullCalendar('addEventSource', dynamicSource);
+                $('#calendar').fullCalendar('refetchEvents');
+            },
+
+            // Control how each event renders (optional)
+            eventRender: function (event, element, view) {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
-                element.attr('title', this._escapeAttr(event.title));
+                // element.attr('title', this._escapeAttr(event.title));
+                // Simple tooltip/title
+                element.attr('title', event.title);
+                // Add a small icon for timed vs allDay
+                if (!event.allDay) {
+                    element.prepend('<span style="margin-right:6px;">🕒</span>');
+                } else {
+                    element.prepend('<span style="margin-right:6px;">📌</span>');
+                }
             },
-            viewRender: (info) => {
-                console.log('view render');
-                console.log(info);
 
-                requestAnimationFrame(() => {
-                    try {
-                        $fc.fullCalendar('option', 'height', 'auto');
-                    } catch {}
-                });
+            // // Example: click handlers (optional, to show interactivity)
+            dayClick: function (date, jsEvent, view) {
+                alert('Clicked: ' + date.format() + ' (view: ' + view.name + ')');
             },
+            eventClick: function (calEvent, jsEvent, view) {
+                alert(
+                    'Event: ' +
+                        calEvent.title +
+                        '\nStarts: ' +
+                        moment(calEvent.start).format('YYYY-MM-DD HH:mm')
+                );
+            },
+
+            // old
+            // eventRender: (event, element) => {
+            //     console.log('event render');
+            //     console.log(event, element);
+            //     const color = event.color || (event.source && event.source.color);
+            //     if (color) element.css('backgroundColor', color);
+            //     if (event.textColor) element.css('color', event.textColor);
+            //     element.attr('title', this._escapeAttr(event.title));
+            // },
+            // viewRender: (info) => {
+            //     console.log('view render');
+            //     console.log(info);
+
+            //     requestAnimationFrame(() => {
+            //         try {
+            //             $fc.fullCalendar('option', 'height', 'auto');
+            //         } catch {}
+            //     });
+            // },
         });
 
         // respond to window resizes with view change for mobile/desktop
