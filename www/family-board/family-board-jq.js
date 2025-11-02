@@ -33,7 +33,7 @@ const PATHS = {
 };
 
 // Toggle: should person chips also filter CALENDAR sources?
-const CHIP_FILTERS_CALENDAR = true;
+const CHIP_FILTERS_CALENDAR = false;
 
 class FamilyBoardJQ extends HTMLElement {
     // runtime fields
