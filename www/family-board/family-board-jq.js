@@ -406,7 +406,7 @@ class FamilyBoardJQ extends HTMLElement {
 
         if (this._state.section === 'Calendar') {
             $main.append(
-                '<div id="fc-wrap"><div id="fc"><div class="fb-skeleton" style="height:420px;margin:12px"></div></div><div id="fc-legend" class="fb-legend"></div></div>'
+                '<div id="fc-wrap"><div id="fc"></div><div id="fc-legend" class="fb-legend"></div></div>'
             );
             this._initFullCalendar();
             this._renderLegend('#fc-legend');
