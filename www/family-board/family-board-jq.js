@@ -582,10 +582,14 @@ class FamilyBoardJQ extends HTMLElement {
 
                 // Option B (common): Dynamically refetch/replace events for the new range
                 // We'll clear and add a "dynamic" source based on the visible range:
-                var start = view.start; // moment
-                var end = view.end; // moment
                 // Remove previous dynamic source (if any)
-                $('#calendar').fullCalendar('removeEventSource', _rebuildFullCalendar);
+                $('#calendar').fullCalendar('removeEventSource', dynamicSource);
+
+                // Build a fresh dynamic source for this range
+                dynamicSource = function (startArg, endArg, timezone, callback) {
+                    // We ignore the args here and use the view's range (consistent for v2)
+                    _rebuildFullCalendar();
+                };
 
                 // Add it and trigger a refetch to load events for the new view range
                 $('#calendar').fullCalendar('addEventSource', dynamicSource);
