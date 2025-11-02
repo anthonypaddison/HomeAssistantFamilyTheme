@@ -809,6 +809,7 @@ class FamilyBoardJQ extends HTMLElement {
             description: ev.description || undefined,
             color: ev.color || undefined, // FullCalendar v2 supports 'color'
         };
+        console.log(mapped);
 
         return mapped;
     }
