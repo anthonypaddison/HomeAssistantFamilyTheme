@@ -509,7 +509,7 @@ class FamilyBoardJQ extends HTMLElement {
             color: src.color,
             events: (start, end, _tz, callback) => {
                 console.log('src to fc');
-                console.log(start, end, tz, callback);
+                console.log(start, end, _tz, callback);
 
                 const { startIso, endIso } = this._safeRangeToIso(start, end);
                 const path = `calendars/${src.entity}?start=${encodeURIComponent(
