@@ -508,6 +508,9 @@ class FamilyBoardJQ extends HTMLElement {
             id: src.entity,
             color: src.color,
             events: (start, end, _tz, callback) => {
+                console.log('src to fc');
+                console.log(start, end, tz, callback);
+
                 const { startIso, endIso } = this._safeRangeToIso(start, end);
                 const path = `calendars/${src.entity}?start=${encodeURIComponent(
                     startIso
@@ -573,12 +576,17 @@ class FamilyBoardJQ extends HTMLElement {
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
             eventRender: (event, element) => {
+                console.log('event render');
+                console.log(event, element);
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
-            viewRender: () => {
+            viewRender: (info) => {
+                console.log('view render');
+                console.log(info);
+
                 requestAnimationFrame(() => {
                     try {
                         $fc.fullCalendar('option', 'height', 'auto');
