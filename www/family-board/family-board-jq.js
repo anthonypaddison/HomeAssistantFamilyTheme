@@ -581,21 +581,21 @@ class FamilyBoardJQ extends HTMLElement {
                 $fc.fullCalendar('re-renderEvents');
             },
 
-            // Control how each event renders (optional)
-            eventRender: function (event, element, view) {
-                const color = event.color || (event.source && event.source.color);
-                if (color) element.css('backgroundColor', color);
-                if (event.textColor) element.css('color', event.textColor);
-                // element.attr('title', this._escapeAttr(event.title));
-                // Simple tooltip/title
-                element.attr('title', event.title);
-                // Add a small icon for timed vs allDay
-                if (!event.allDay) {
-                    element.prepend('<span style="margin-right:6px;">🕒</span>');
-                } else {
-                    element.prepend('<span style="margin-right:6px;">📌</span>');
-                }
-            },
+            // // Control how each event renders (optional)
+            // eventRender: function (event, element, view) {
+            //     const color = event.color || (event.source && event.source.color);
+            //     if (color) element.css('backgroundColor', color);
+            //     if (event.textColor) element.css('color', event.textColor);
+            //     // element.attr('title', this._escapeAttr(event.title));
+            //     // Simple tooltip/title
+            //     element.attr('title', event.title);
+            //     // Add a small icon for timed vs allDay
+            //     if (!event.allDay) {
+            //         element.prepend('<span style="margin-right:6px;">🕒</span>');
+            //     } else {
+            //         element.prepend('<span style="margin-right:6px;">📌</span>');
+            //     }
+            // },
 
             // // Example: click handlers (optional, to show interactivity)
             dayClick: function (date, jsEvent, view) {
