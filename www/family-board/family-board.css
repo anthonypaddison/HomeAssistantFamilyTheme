@@ -198,7 +198,6 @@ header .date {
 main {
     grid-area: main !important;
     height: 100% !important;
-    overflow: hidden !important;
 }
 .main-pad {
     height: 100% !important;
