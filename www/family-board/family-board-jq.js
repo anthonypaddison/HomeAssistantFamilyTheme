@@ -516,6 +516,9 @@ class FamilyBoardJQ extends HTMLElement {
                 this._hass
                     ?.callApi('GET', path)
                     .then((events) => {
+                        console.log('events');
+                        console.log(events);
+
                         const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
                         this._lastEvents[src.entity] = mapped; // cache
                         callback(mapped);
@@ -572,11 +575,21 @@ class FamilyBoardJQ extends HTMLElement {
             eventLimit: true,
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
+            // Called whenever the visible date range or view changes
+            viewRender: function (view, element) {
+                // Option A: Just re-render existing events (cheap visual refresh)
+                $fc.fullCalendar('re-renderEvents');
+            },
+
+            // Control how each event renders (optional)
             eventRender: function (event, element, view) {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
-                element.attr('title', this._escapeAttr(event.title));
+                // element.attr('title', this._escapeAttr(event.title));
+                // Simple tooltip/title
+                element.attr('title', event.title);
+                // Add a small icon for timed vs allDay
                 if (!event.allDay) {
                     element.prepend('<span style="margin-right:6px;">🕒</span>');
                 } else {
@@ -596,6 +609,26 @@ class FamilyBoardJQ extends HTMLElement {
                         moment(calEvent.start).format('YYYY-MM-DD HH:mm')
                 );
             },
+
+            // old
+            // eventRender: (event, element) => {
+            //     console.log('event render');
+            //     console.log(event, element);
+            //     const color = event.color || (event.source && event.source.color);
+            //     if (color) element.css('backgroundColor', color);
+            //     if (event.textColor) element.css('color', event.textColor);
+            //     element.attr('title', this._escapeAttr(event.title));
+            // },
+            // viewRender: (info) => {
+            //     console.log('view render');
+            //     console.log(info);
+
+            //     requestAnimationFrame(() => {
+            //         try {
+            //             $fc.fullCalendar('option', 'height', 'auto');
+            //         } catch {}
+            //     });
+            // },
         });
 
         // respond to window resizes with view change for mobile/desktop
@@ -732,103 +765,49 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _mapHaEventToFc(ev) {
-        // ---- Config: set this according to your source system ----
-        // If your source all-day end is EXCLUSIVE (e.g., Google Calendar), leave true.
-        // If it's INCLUSIVE (end is the last day included), set to false.
-        const ALL_DAY_END_IS_EXCLUSIVE_FROM_SOURCE = true;
-
-        // Expect either:
-        //  - ev.start.dateTime / ev.end.dateTime  (ISO string)
-        //  - ev.start.date / ev.end.date          (YYYY-MM-DD, all-day)
-        const s = ev && ev.start ? ev.start : {};
-        const e = ev && ev.end ? ev.end : {};
-
-        const hasSDT = typeof s.dateTime === 'string' && s.dateTime.trim() !== '';
-        const hasEDT = typeof e.dateTime === 'string' && e.dateTime.trim() !== '';
-        const hasSD = typeof s.date === 'string' && s.date.trim() !== '';
-        const hasED = typeof e.date === 'string' && e.date.trim() !== '';
-
-        // Must have a start
+        const s = ev?.start ?? {},
+            e = ev?.end ?? {};
+        const hasSDT = typeof s.dateTime === 'string';
+        const hasEDT = typeof e.dateTime === 'string';
+        const hasSD = typeof s.date === 'string';
+        const hasED = typeof e.date === 'string';
         if (!hasSDT && !hasSD) return null;
 
-        // Decide all-day
         const isAllDay = !!ev.all_day || (hasSD && !hasEDT);
-
-        let startStr = null;
-        let endStr = null;
+        let startStr = hasSDT ? s.dateTime : `${s.date}T00:00:00`;
+        let endStr = hasEDT ? e.dateTime : hasED ? `${e.date}T00:00:00` : null;
 
         if (isAllDay) {
-            // Use date-only strings for all-day – FullCalendar v2 handles this best.
-            const startDate = hasSD ? s.date : hasSDT ? s.dateTime.slice(0, 10) : null;
-            if (!startDate) return null;
-
-            startStr = startDate; // 'YYYY-MM-DD'
-
-            if (hasED) {
-                // Source has an all-day end date
-                // If the source provides exclusive end (Google-style), use it as-is.
-                // If inclusive, add +1 day to convert to exclusive for FullCalendar.
-                if (ALL_DAY_END_IS_EXCLUSIVE_FROM_SOURCE) {
-                    endStr = e.date; // already exclusive
-                } else {
-                    // inclusive -> make exclusive
-                    const d = new Date(e.date + 'T00:00:00Z');
-                    d.setUTCDate(d.getUTCDate() + 1);
-                    endStr = d.toISOString().slice(0, 10); // back to 'YYYY-MM-DD'
-                }
-            } else {
-                // No end -> single-day all-day event => end = start + 1 day (exclusive)
-                const d = new Date(startDate + 'T00:00:00Z');
+            if (!endStr && hasSD) {
+                const d = new Date(`${s.date}T00:00:00Z`);
                 d.setUTCDate(d.getUTCDate() + 1);
-                endStr = d.toISOString().slice(0, 10); // 'YYYY-MM-DD'
-            }
-        } else {
-            // Timed event: normalise to UTC ISO strings with Z for consistency
-            // (You can keep local times if you prefer, but keep them consistent for both start/end.)
-            startStr = hasSDT
-                ? new Date(s.dateTime).toISOString()
-                : new Date(s.date + 'T00:00:00Z').toISOString();
-            if (hasEDT) {
-                endStr = new Date(e.dateTime).toISOString();
+                endStr = d.toISOString();
             } else if (hasED) {
-                // Timed event but only all-day end given -> normalise to start + 1h
-                const d = new Date(startStr);
-                endStr = new Date(d.getTime() + 60 * 60 * 1000).toISOString();
-            } else {
-                // No end -> default 1h
-                const d = new Date(startStr);
-                endStr = new Date(d.getTime() + 60 * 60 * 1000).toISOString();
+                const d = new Date(`${e.date}T00:00:00Z`);
+                endStr = d.toISOString();
             }
         }
+        if (!isAllDay && hasSDT && !endStr) {
+            const d = new Date(startStr);
+            endStr = new Date(d.getTime() + 3600000).toISOString();
+        }
 
-        // Build title (let FullCalendar render time text to avoid duplication)
-        const title = String(ev.summary ?? ev.title ?? 'Busy');
+        const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
+        const start = new Date(startStr);
+        const hh = String(start.getHours()).padStart(2, '0');
+        const mm = String(start.getMinutes()).padStart(2, '0');
+        const title = isAllDay ? titleBase : `${hh}:${mm} ${titleBase}`;
 
-        // Stable id
-        const id =
-            ev.uid ||
-            (ev.id
-                ? String(ev.id)
-                : (title + '|' + startStr + '|' + (endStr || '')).replace(/\s+/g, '_'));
-
-        // Optional: simple HTML escaping if you are injecting into attributes/unsafe HTML
-        const safe = (s) =>
-            s == null
-                ? s
-                : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-        const mapped = {
-            id,
-            title: safe(title),
+        return {
+            id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
+            title: this._escapeHtml(title),
             start: startStr,
-            end: endStr || null,
+            end: endStr ?? null,
             allDay: !!isAllDay,
-            location: ev.location || undefined,
-            description: ev.description || undefined,
-            color: ev.color || undefined, // FullCalendar v2 supports 'color'
+            location: ev.location,
+            description: ev.description,
+            color: ev.color,
         };
-
-        return mapped;
     }
 
     _fatal(msg) {
