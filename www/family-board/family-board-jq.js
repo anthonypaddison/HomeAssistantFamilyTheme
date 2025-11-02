@@ -461,7 +461,6 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     // ---------------- Chips: todo counts ----------------
-    // Replace the whole _updateChipCounts() in family-board-jq.js
     _updateChipCounts() {
         const lists = this._config.todos ?? {};
         const count = (ent) => {
@@ -476,28 +475,9 @@ class FamilyBoardJQ extends HTMLElement {
             lizzie: count(lists.lizzie),
             toby: count(lists.toby),
         };
-
-        // Update number pill + progress fill using the IDs created in renderChips()
         Object.entries(map).forEach(([k, v]) => {
-            const left = Math.max(0, Number(v) || 0); // tasks left today
-            const ratio = Math.min(left / 10, 1); // simple visual scale (0..1)
-
-            // Number pill
-            this.$(`#chip-today-${k}`).text(String(left));
-
-            // Progress fill
-            this.$(`#chip-progress-${k}`).css('transform', `scaleX(${ratio})`);
-
-            // Progressbar ARIA on the bar container (keep max at 10 for now)
-            const $bar = this.$(`.chip[data-key="${k}"] .bar`);
-            if ($bar.length) {
-                $bar.attr({
-                    'aria-valuemin': 0,
-                    'aria-valuemax': 10,
-                    'aria-valuenow': Math.round(ratio * 10),
-                    'aria-label': `${k} progress today: ${Math.round(ratio * 10)}/10`,
-                });
-            }
+            this.$(`#chip-v-${k}`).text(v > 0 ? String(v) : '');
+            this.$(`#chip-bar-${k}`).css('transform', `scaleX(${Math.min(v / 10, 1)})`);
         });
     }
 
@@ -591,28 +571,30 @@ class FamilyBoardJQ extends HTMLElement {
             return;
         }
 
+        // Clean old instance
         try {
             $fc.fullCalendar('destroy');
         } catch {}
 
         const fcCfg = this._config.fc ?? {};
+        const tz = this._config.timezone ?? 'local';
+
         this._preferredWideView =
             this._preferredWideView ?? fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek';
 
         const isNarrow = () => (this._root.host?.offsetWidth ?? window.innerWidth) < 760;
 
+        // Build header safely (v2/v3 want commas, not spaces)
         const header = { ...fcCfg.header };
         if (header?.right?.includes(' ')) header.right = header.right.replace(/\s+/g, ',');
 
+        // Initial view: respect narrow vs wide
         const initialView = isNarrow() ? 'agendaDay' : this._preferredWideView || 'agendaWeek';
 
-        const tz = this._config.timezone || 'local';
         $fc.fullCalendar({
             header,
             defaultView: initialView,
-
-            // Force local timezone; avoids named-zone path that triggers moment.zone
-            timezone: tz, // was 'local'
+            timezone: tz,
 
             // Agenda options
             allDaySlot: fcCfg.allDaySlot !== false,
@@ -622,7 +604,7 @@ class FamilyBoardJQ extends HTMLElement {
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
 
-            // We set a numeric height ourselves
+            // We’ll measure height ourselves
             contentHeight: null,
             height: null,
             handleWindowResize: false,
@@ -643,25 +625,19 @@ class FamilyBoardJQ extends HTMLElement {
                 element.attr('title', this._escapeAttr(event.title));
             },
 
-            viewRender: (view) => {
+            // Remember preferred "wide" view and keep height correct
+            viewRender: (view /*, element*/) => {
                 if (view.name !== 'agendaDay') this._preferredWideView = view.name;
                 this._applyMeasuredHeight();
             },
-
-            // NEW: confirm how many events FC actually put in the view
-            eventAfterAllRender: () => {
-                try {
-                    const count = ($fc.fullCalendar('clientEvents') || []).length;
-                    this._diag(`eventAfterAllRender :: ${count} events in current view`);
-                } catch {}
-            },
         });
 
-        // Responsive only when crossing the narrow threshold
+        // Responsive behaviour: only switch when crossing the narrow threshold.
         const onResize = () => {
             try {
                 const narrow = isNarrow();
                 const current = $fc.fullCalendar('getView')?.name;
+
                 if (narrow && current !== 'agendaDay') {
                     $fc.fullCalendar('changeView', 'agendaDay');
                 } else if (!narrow && current === 'agendaDay') {
@@ -670,14 +646,15 @@ class FamilyBoardJQ extends HTMLElement {
                 this._applyMeasuredHeight();
             } catch {}
         };
+
         window.removeEventListener('resize', this._onResizeBound);
         this._onResizeBound = onResize;
         window.addEventListener('resize', onResize);
 
         this._fcReady = true;
 
-        // Ensure initial fetch fires
-        setTimeout(() => this._refetchFullCalendar(), 1000);
+        // ---- NEW: ensure an initial fetch happens even if hass is already set ----
+        setTimeout(() => this._refetchFullCalendar(), 0);
     }
 
     _rebuildFullCalendar() {
@@ -800,6 +777,9 @@ class FamilyBoardJQ extends HTMLElement {
     }
 
     _mapHaEventToFc(ev) {
+        // HA event shapes:
+        // - All-day: { start:{date:'YYYY-MM-DD'}, end:{date:'YYYY-MM-DD'} }  (end.date exclusive)
+        // - Timed  : { start:{dateTime:'...'}, end:{dateTime:'...'} }
         if (!ev || !ev.start) return null;
 
         const s = ev.start || {};
@@ -810,17 +790,15 @@ class FamilyBoardJQ extends HTMLElement {
         const hasSDT = typeof s.dateTime === 'string';
         const hasEDT = typeof e.dateTime === 'string';
 
-        // 1) ALL-DAY (keep date-only strings; FC expects exclusive end)
+        // All-day: keep date-only strings; ensure exclusive end
         if (hasSD) {
-            const startDate = s.date; // 'YYYY-MM-DD'
-            let endDate = hasED ? e.date : null; // 'YYYY-MM-DD' or null
-
+            const startDate = s.date;
+            let endDate = hasED ? e.date : null;
             if (!endDate) {
                 const d = new Date(`${startDate}T00:00:00Z`);
                 d.setUTCDate(d.getUTCDate() + 1);
                 endDate = d.toISOString().slice(0, 10);
             }
-
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
             return {
                 id: ev.uid ?? `${startDate}-${titleBase}`.replace(/\s+/g, '_'),
@@ -834,27 +812,27 @@ class FamilyBoardJQ extends HTMLElement {
             };
         }
 
-        // 2) TIMED (use Date objects to dodge Moment parsing quirks)
+        // TIMED EVENTS
         if (hasSDT) {
             const startStr = s.dateTime;
             let endStr = hasEDT ? e.dateTime : null;
             if (!endStr) {
                 const d = new Date(startStr);
-                endStr = new Date(d.getTime() + 3600000).toISOString(); // +1h fallback
+                endStr = new Date(d.getTime() + 3600000).toISOString();
             }
 
-            const start = new Date(startStr);
-            const end = new Date(endStr);
-
             const titleBase = String(ev.summary ?? ev.title ?? 'Busy');
+            const start = new Date(startStr);
+            const end = new Date(endStr); // <-- build Date
+
             const hh = String(start.getHours()).padStart(2, '0');
             const mm = String(start.getMinutes()).padStart(2, '0');
 
             return {
                 id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
                 title: this._escapeHtml(`${hh}:${mm} ${titleBase}`),
-                start, // Date object
-                end, // Date object
+                start, // <-- Date object, not ISO string
+                end, // <-- Date object
                 allDay: false,
                 location: ev.location,
                 description: ev.description,
@@ -877,7 +855,6 @@ class FamilyBoardJQ extends HTMLElement {
         console.log('[family-board-jq]', msg);
     }
 
-    // Replace escapeHtml() in family-board-jq.js
     _escapeHtml(s) {
         return String(s)
             .replace(/&/g, '&amp;')
