@@ -516,9 +516,6 @@ class FamilyBoardJQ extends HTMLElement {
                 this._hass
                     ?.callApi('GET', path)
                     .then((events) => {
-                        console.log('events');
-                        console.log(events);
-
                         const mapped = events.map((ev) => this._mapHaEventToFc(ev)).filter(Boolean);
                         this._lastEvents[src.entity] = mapped; // cache
                         callback(mapped);
@@ -575,26 +572,11 @@ class FamilyBoardJQ extends HTMLElement {
             eventLimit: true,
             weekNumbers: false,
             eventSources: this._eventSourcesForFocus(),
-            // Called whenever the visible date range or view changes
-            // viewRender: function (view, element) {
-            //     // Option A: Just re-render existing events (cheap visual refresh)
-            //     $fc.fullCalendar('re-renderEvents');
-            // },
-
-            // Control how each event renders (optional)
             eventRender: function (event, element, view) {
-                console.log('triggered event');
-                console.log(event);
-                console.log(element);
-                console.log(view);
-
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
-                // element.attr('title', this._escapeAttr(event.title));
-                // Simple tooltip/title
-                element.attr('title', event.title);
-                // Add a small icon for timed vs allDay
+                element.attr('title', this._escapeAttr(event.title));
                 if (!event.allDay) {
                     element.prepend('<span style="margin-right:6px;">🕒</span>');
                 } else {
@@ -614,26 +596,6 @@ class FamilyBoardJQ extends HTMLElement {
                         moment(calEvent.start).format('YYYY-MM-DD HH:mm')
                 );
             },
-
-            // old
-            // eventRender: (event, element) => {
-            //     console.log('event render');
-            //     console.log(event, element);
-            //     const color = event.color || (event.source && event.source.color);
-            //     if (color) element.css('backgroundColor', color);
-            //     if (event.textColor) element.css('color', event.textColor);
-            //     element.attr('title', this._escapeAttr(event.title));
-            // },
-            // viewRender: (info) => {
-            //     console.log('view render');
-            //     console.log(info);
-
-            //     requestAnimationFrame(() => {
-            //         try {
-            //             $fc.fullCalendar('option', 'height', 'auto');
-            //         } catch {}
-            //     });
-            // },
         });
 
         // respond to window resizes with view change for mobile/desktop
@@ -802,6 +764,18 @@ class FamilyBoardJQ extends HTMLElement {
         const hh = String(start.getHours()).padStart(2, '0');
         const mm = String(start.getMinutes()).padStart(2, '0');
         const title = isAllDay ? titleBase : `${hh}:${mm} ${titleBase}`;
+        console.log(this._escapeHtml(title));
+
+        console.log({
+            id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
+            title: this._escapeHtml(title),
+            start: startStr,
+            end: endStr ?? null,
+            allDay: !!isAllDay,
+            location: ev.location,
+            description: ev.description,
+            color: ev.color,
+        });
 
         return {
             id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
