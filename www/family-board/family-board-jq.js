@@ -578,22 +578,7 @@ class FamilyBoardJQ extends HTMLElement {
             // Called whenever the visible date range or view changes
             viewRender: function (view, element) {
                 // Option A: Just re-render existing events (cheap visual refresh)
-                // $('#calendar').fullCalendar('re-renderEvents');
-
-                // Option B (common): Dynamically refetch/replace events for the new range
-                // We'll clear and add a "dynamic" source based on the visible range:
-                // Remove previous dynamic source (if any)
-                $('#calendar').fullCalendar('removeEventSource', dynamicSource);
-
-                // Build a fresh dynamic source for this range
-                dynamicSource = function (startArg, endArg, timezone, callback) {
-                    // We ignore the args here and use the view's range (consistent for v2)
-                    _rebuildFullCalendar();
-                };
-
-                // Add it and trigger a refetch to load events for the new view range
-                $('#calendar').fullCalendar('addEventSource', dynamicSource);
-                $('#calendar').fullCalendar('refetchEvents');
+                $fc.fullCalendar('re-renderEvents');
             },
 
             // Control how each event renders (optional)
