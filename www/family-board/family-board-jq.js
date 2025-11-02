@@ -764,20 +764,7 @@ class FamilyBoardJQ extends HTMLElement {
         const hh = String(start.getHours()).padStart(2, '0');
         const mm = String(start.getMinutes()).padStart(2, '0');
         const title = isAllDay ? titleBase : `${hh}:${mm} ${titleBase}`;
-        console.log(this._escapeHtml(title));
-
-        console.log({
-            id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
-            title: this._escapeHtml(title),
-            start: startStr,
-            end: endStr ?? null,
-            allDay: !!isAllDay,
-            location: ev.location,
-            description: ev.description,
-            color: ev.color,
-        });
-
-        return {
+        const array = {
             id: ev.uid ?? `${startStr}-${titleBase}`.replace(/\s+/g, '_'),
             title: this._escapeHtml(title),
             start: startStr,
@@ -787,6 +774,9 @@ class FamilyBoardJQ extends HTMLElement {
             description: ev.description,
             color: ev.color,
         };
+        console.log(array);
+
+        return array;
     }
 
     _fatal(msg) {
