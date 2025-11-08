@@ -7,450 +7,221 @@
 
 /* Custom properties + fallbacks if the controller isn’t active */
 :host {
-    --palette-mint: #b9fbc0;
-    --palette-aqua: #98f5e1;
-    --palette-cyan: #8eecf5;
-    --palette-sky: #90dbf4;
-    --palette-bluegrey: #a3c4f3;
-    --palette-lilac: #cfbaf0;
-    --palette-rose: #ffcfd2;
-    --palette-vanilla: #fbf8cc;
+  --palette-mint:   #b9fbc0;
+  --palette-aqua:   #98f5e1;
+  --palette-cyan:   #8eecf5;
+  --palette-sky:    #90dbf4;
+  --palette-bluegrey:#a3c4f3;
+  --palette-lilac:  #cfbaf0;
+  --palette-rose:   #ffcfd2;
+  --palette-vanilla:#fbf8cc;
 
-    /* Fallback palette (light) */
-    --fb-bg: #ffffff !important;
-    --fb-surface: #ffffff !important;
-    --fb-surface-2: #ffffff !important;
-    --fb-muted: #475569 !important;
-    --fb-accent: #cfbaf0 !important;
-    --fb-grid: #e5e7eb !important;
-    --fb-today: #f6f7ff !important;
-    --fb-weekend: rgba(15, 23, 42, 0.04) !important;
-    --fb-pill-text: #ffffff !important;
-    --fb-print-text: #111 !important;
-    --fb-radius: 12px !important;
-    --fb-text: #0f172a !important;
-    --fb-icon: #ffffff !important;
-    --utility-bar-background: var(--palette-lilac) !important;
-    --app-header-background-color: var(--palette-lilac) !important;
+  /* Fallback palette (light) */
+  --fb-bg: #ffffff !important;
+  --fb-surface: #ffffff !important;
+  --fb-surface-2: #ffffff !important;
+  --fb-muted: #475569 !important;
+  --fb-accent: #cfbaf0 !important;
+  --fb-grid: #e5e7eb !important;
+  --fb-today: #f6f7ff !important;
+  --fb-weekend: rgba(15, 23, 42, 0.04) !important;
+  --fb-pill-text: #ffffff !important;
+  --fb-print-text: #111 !important;
+  --fb-radius: 12px !important;
+  --fb-text: #0f172a !important;
+  --fb-icon: #ffffff !important;
+  --utility-bar-background: var(--palette-lilac) !important;
+  --app-header-background-color: var(--palette-lilac) !important;
 }
 
-:host {
-    display: block !important;
-}
+:host { display: block !important; }
 
 /* Card container */
 ha-card {
-    height: 100% !important;
-    background: var(--fb-bg) !important;
+  height: 100% !important;
+  background: var(--fb-bg) !important;
 }
 
 /* ===== Layout grid ===== */
 .fb-layout {
-    display: grid !important;
-    grid-template-columns: 80px 1fr !important;
-    grid-template-rows: 75px 80px 1fr !important;
-    grid-template-areas:
-        'sidebar header'
-        'sidebar chips'
-        'sidebar main' !important;
-    height: calc(100vh - var(--header-height, 0px)) !important;
-    background: var(--fb-bg) !important;
+  display: grid !important;
+  grid-template-columns: 80px 1fr !important;
+  grid-template-rows: 75px 80px 1fr !important;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar chips"
+    "sidebar main" !important;
+  height: calc(100vh - var(--header-height, 0px)) !important;
+  background: var(--fb-bg) !important;
 }
 
 /* ===== Header ===== */
 header {
-    grid-area: header !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 8px 12px !important;
-    background: var(--utility-bar-background) !important;
-    color: var(--fb-text) !important;
+  grid-area: header !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 12px !important;
+  background: var(--utility-bar-background) !important;
+  color: var(--fb-text) !important;
 }
-header .time {
-    font-size: 28px !important;
-    line-height: 1 !important;
-}
-header .date {
-    font-size: 12px !important;
-    opacity: 0.85 !important;
-    font-weight: 700 !important;
-}
-.fb-title {
-    font-weight: 800 !important;
-}
-.fb-clock {
-    text-align: center !important;
-    align-items: center !important;
-}
-.fb-clock > .time {
-    font-weight: 800 !important;
-}
+header .time { font-size: 28px !important; line-height: 1 !important; }
+header .date { font-size: 12px !important; opacity: 0.85 !important; font-weight: 700 !important; }
+.fb-title { font-weight: 800 !important; }
+.fb-clock { text-align: center !important; align-items: center !important; }
+.fb-clock > .time { font-weight: 800 !important; }
 .fb-pill {
-    background: rgba(255, 255, 255, 0.06) !important;
-    padding: 4px 8px !important;
-    border-radius: 999px !important;
-    font-weight: 700 !important;
-    font-size: 12px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
 }
 
 /* ===== Chips ===== */
 .chips {
-    grid-area: chips !important;
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: 8px !important;
-    padding: 8px !important;
-    background: var(--utility-bar-background) !important;
+  grid-area: chips !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  background: var(--utility-bar-background) !important;
 }
 
 /* Chip layout (icon, name, count, progress) */
 .chip {
-    display: grid !important;
-    grid-template-areas:
-        'i n cnt'
-        'bar bar bar' !important;
-    grid-template-columns: 24px 1fr auto !important;
-    grid-template-rows: auto 14px !important;
-    align-items: center !important;
-    column-gap: 10px !important;
-    row-gap: 6px !important;
-    border-radius: 10px !important;
-    padding: 8px 10px !important;
-    cursor: pointer !important;
+  display: grid !important;
+  grid-template-areas:
+    "i n cnt"
+    "bar bar bar" !important;
+  grid-template-columns: 24px 1fr auto !important;
+  grid-template-rows: auto 14px !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+  row-gap: 6px !important;
+  border-radius: 10px !important;
+  padding: 8px 10px !important;
+  cursor: pointer !important;
 }
-.chip .i {
-    grid-area: i !important;
-    display: grid !important;
-    place-items: center !important;
-    height: 24px !important;
-}
-.chip .i ha-icon {
-    width: 20px !important;
-    height: 20px !important;
-    line-height: 20px !important;
-    color: currentColor !important;
-}
-.chip .n {
-    grid-area: n !important;
-    display: flex !important;
-    align-items: center !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-    min-height: 24px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
+.chip .i { grid-area: i !important; display: grid !important; place-items: center !important; height: 24px !important; }
+.chip .i ha-icon { width: 20px !important; height: 20px !important; line-height: 20px !important; color: currentColor !important; }
+.chip .n { grid-area: n !important; display: flex !important; align-items: center !important; font-weight: 800 !important; color: #0f172a !important; min-height: 24px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
 .chip .cnt {
-    grid-area: cnt !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 28px !important;
-    height: 22px !important;
-    padding: 0 8px !important;
-    border-radius: 999px !important;
-    font-weight: 800 !important;
-    font-size: 12px !important;
-    line-height: 1 !important;
-    background: #fff !important;
-    color: var(--fb-text, #0f172a) !important;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15) !important;
+  grid-area: cnt !important; display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  min-width: 28px !important; height: 22px !important; padding: 0 8px !important; border-radius: 999px !important;
+  font-weight: 800 !important; font-size: 12px !important; line-height: 1 !important;
+  background: #fff !important; color: var(--fb-text, #0f172a) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.15) !important;
 }
-.chip .bar {
-    grid-area: bar !important;
-    height: 14px !important;
-    background: rgba(0, 0, 0, 0.18) !important;
-    border-radius: 999px !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-.chip .bar > .bar-fill {
-    position: absolute !important;
-    inset: 0 !important;
-    transform-origin: left center !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    transition: transform 180ms ease !important;
-}
-.chip.active {
-    outline: 2px solid var(--fb-accent) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
-}
+.chip .bar { grid-area: bar !important; height: 14px !important; background: rgba(0,0,0,0.18) !important; border-radius: 999px !important; position: relative !important; overflow: hidden !important; }
+.chip .bar > .bar-fill { position: absolute !important; inset: 0 !important; transform-origin: left center !important; background: rgba(255,255,255,0.9) !important; transition: transform 180ms ease !important; }
+.chip.active { outline: 2px solid var(--fb-accent) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important; }
 
 /* ===== Main area ===== */
-main#main {
-    grid-area: main !important;
-    height: 100% !important;
-    background: var(--fb-surface-2) !important;
-}
-.main-pad {
-    height: 100% !important;
-    padding: 12px !important;
-    overflow: auto !important;
-    background: var(--fb-bg) !important;
-}
+main#main { grid-area: main !important; height: 100% !important; background: var(--fb-surface-2) !important; }
+.main-pad { height: 100% !important; padding: 12px !important; overflow: auto !important; background: var(--fb-bg) !important; }
 
 /* ===== Chores grid ===== */
-.fb-chores-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-}
-.fb-card-title {
-    padding: 10px !important;
-    font-weight: 800 !important;
-}
-.fb-card-body {
-    padding: 0 10px 10px 10px !important;
-    display: grid !important;
-    gap: 6px !important;
-}
-.fb-muted {
-    color: #64748b !important;
-}
-.fb-error {
-    padding: 12px !important;
-    color: #b00020 !important;
-    background: #fff !important;
-    border-radius: 8px !important;
-}
+.fb-chores-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0,1fr)) !important; gap: 12px !important; }
+.fb-card-title { padding: 10px !important; font-weight: 800 !important; }
+.fb-card-body { padding: 0 10px 10px 10px !important; display: grid !important; gap: 6px !important; }
+.fb-muted { color: #64748b !important; }
+.fb-error { padding: 12px !important; color: #b00020 !important; background: #fff !important; border-radius: 8px !important; }
 
 /* ===== Legend ===== */
-.fb-legend {
-    padding: 6px 12px !important;
-    color: var(--fb-muted) !important;
-}
-.fb-legend-item {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    margin-right: 12px !important;
-}
-.fb-legend-swatch {
-    width: 12px !important;
-    height: 12px !important;
-    border-radius: 3px !important;
-    display: inline-block !important;
-}
-.fb-legend-label {
-    font-weight: 700 !important;
-    font-size: 12px !important;
-    color: var(--fb-text) !important;
-}
+.fb-legend { padding: 6px 12px !important; color: var(--fb-muted) !important; }
+.fb-legend-item { display: inline-flex !important; align-items: center !important; gap: 6px !important; margin-right: 12px !important; }
+.fb-legend-swatch { width: 12px !important; height: 12px !important; border-radius: 3px !important; display: inline-block !important; }
+.fb-legend-label { font-weight: 700 !important; font-size: 12px !important; color: var(--fb-text) !important; }
 
 /* ===== FullCalendar styling ===== */
 .fc {
-    --radius: 10px !important;
-    color: var(--fb-text) !important;
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial,
-        'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji' !important;
+  --radius: 10px !important;
+  color: var(--fb-text) !important;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji' !important;
 }
 
 /* Toolbar layout */
 .fc-toolbar {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex-wrap: nowrap !important;
-    padding: 10px 12px !important;
-    background: var(--utility-bar-background) !important;
-    border-radius: var(--fb-radius) !important;
-    margin: 12px !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  padding: 10px 12px !important; background: var(--utility-bar-background) !important;
+  border-radius: var(--fb-radius) !important; margin: 12px !important;
 }
-.fc-toolbar .fc-left,
-.fc-toolbar .fc-center,
-.fc-toolbar .fc-right {
-    float: none !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-.fc-toolbar .fc-center h2 {
-    margin: 0 !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.2px !important;
-}
-.fc-toolbar .fc-clear {
-    display: none !important;
-}
+.fc-toolbar .fc-left, .fc-toolbar .fc-center, .fc-toolbar .fc-right { float: none !important; display: flex !important; align-items: center !important; gap: 8px !important; }
+.fc-toolbar .fc-center h2 { margin: 0 !important; font-weight: 800 !important; letter-spacing: 0.2px !important; }
+.fc-toolbar .fc-clear { display: none !important; }
 
 /* Buttons */
-.fc button {
-    background: var(--fb-accent) !important;
-    border: 0 !important;
-    border-radius: 999px !important;
-    padding: 6px 10px !important;
-    font-weight: 700 !important;
-    box-shadow: none !important;
-    color: var(--fb-text) !important;
-}
-.fc button:hover {
-    filter: brightness(1.05) !important;
-}
-.fc-state-disabled {
-    opacity: 0.6 !important;
-}
+.fc button { background: var(--fb-accent) !important; border: 0 !important; border-radius: 999px !important; padding: 6px 10px !important; font-weight: 700 !important; box-shadow: none !important; color: var(--fb-text) !important; }
+.fc button:hover { filter: brightness(1.05) !important; }
+.fc-state-disabled { opacity: 0.6 !important; }
 
 /* View container: allow popovers to overflow (critical fix) */
 .fc-view-container {
-    background: var(--fb-surface-2) !important;
-    margin: 12px !important;
-    border-radius: var(--fb-radius) !important;
-    /* FIX: must be visible so "+N more" popover isn't clipped */
-    overflow: visible !important;
-    border: 1px solid var(--fb-grid) !important;
+  background: var(--fb-surface-2) !important;
+  margin: 12px !important;
+  border-radius: var(--fb-radius) !important;
+  /* FIX: must be visible so "+N more" popover isn't clipped */
+  overflow: visible !important;
+  border: 1px solid var(--fb-grid) !important;
 }
 
 /* Ensure popover always on top */
-.fc-popover,
-.fc-more-popover {
-    z-index: 9999 !important;
+.fc-popover, .fc-more-popover {
+  z-index: 9999 !important;
 }
 
 /* Grid + day numbering */
-.fc .fc-widget-header,
-.fc .fc-widget-content {
-    border-color: var(--fb-grid) !important;
-}
-.fc-day-header {
-    padding: 10px 6px !important;
-    color: var(--fb-muted) !important;
-    font-weight: 700 !important;
-    background: transparent !important;
-}
-.fc-day-number {
-    color: var(--fb-muted) !important;
-    font-weight: 700 !important;
-    padding: 2px 6px !important;
-}
-.fc-today {
-    background: var(--fb-today) !important;
-}
-.fc-sat,
-.fc-sun {
-    background: var(--fb-weekend) !important;
-}
-.fc-other-month {
-    opacity: 0.5 !important;
-}
+.fc .fc-widget-header, .fc .fc-widget-content { border-color: var(--fb-grid) !important; }
+.fc-day-header { padding: 10px 6px !important; color: var(--fb-muted) !important; font-weight: 700 !important; background: transparent !important; }
+.fc-day-number { color: var(--fb-muted) !important; font-weight: 700 !important; padding: 2px 6px !important; }
+.fc-today { background: var(--fb-today) !important; }
+.fc-sat, .fc-sun { background: var(--fb-weekend) !important; }
+.fc-other-month { opacity: 0.5 !important; }
 
 /* Events */
 .fc-event {
-    border: 0 !important;
-    border-radius: 8px !important;
-    padding: 2px 6px !important;
-    margin: 2px 2px !important;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15) !important;
-    font-weight: 700 !important;
-    font-size: 12px !important;
+  border: 0 !important; border-radius: 8px !important; padding: 2px 6px !important; margin: 2px 2px !important;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15) !important; font-weight: 700 !important; font-size: 12px !important;
 }
-.fc-event .fc-time {
-    font-weight: 800 !important;
-    opacity: 0.9 !important;
-}
-.fc-event:hover {
-    filter: brightness(1.05) !important;
-}
+.fc-event .fc-time { font-weight: 800 !important; opacity: 0.9 !important; }
+.fc-event:hover { filter: brightness(1.05) !important; }
 
-.fc-agenda .fc-agenda-allday .fc-day-content {
-    min-height: 38px !important;
-}
-.fc-more {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: var(--fb-text) !important;
-    padding: 2px 6px !important;
-    border-radius: 999px !important;
-    font-weight: 800 !important;
-}
+.fc-agenda .fc-agenda-allday .fc-day-content { min-height: 38px !important; }
+.fc-more { background: rgba(255, 255, 255, 0.1) !important; color: var(--fb-text) !important; padding: 2px 6px !important; border-radius: 999px !important; font-weight: 800 !important; }
 
 /* Sidebar */
 aside#sidebar {
-    grid-area: sidebar !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    background: var(--utility-bar-background) !important;
-    padding: 8px 0 !important;
-    gap: 8px !important;
-    padding-top: 200px !important;
+  grid-area: sidebar !important;
+  display: flex !important; flex-direction: column !important; align-items: center !important;
+  background: var(--utility-bar-background) !important;
+  padding: 8px 0 !important; gap: 8px !important; padding-top: 200px !important;
 }
-.sb-btn {
-    width: 100% !important;
-    height: 72px !important;
-    display: grid !important;
-    place-items: center !important;
-    background: transparent !important;
-    border: 0 !important;
-    cursor: pointer !important;
-    position: relative !important;
-    color: #fff !important;
-}
-.sb-btn.active {
-    color: var(--utility-bar-background) !important;
-    background: #fff !important;
-}
-.sb-btn.active ha-icon {
-    color: var(--utility-bar-background) !important;
-}
+.sb-btn { width: 100% !important; height: 72px !important; display: grid !important; place-items: center !important; background: transparent !important; border: 0 !important; cursor: pointer !important; position: relative !important; color: #fff !important; }
+.sb-btn.active { color: var(--utility-bar-background) !important; background: #fff !important; }
+.sb-btn.active ha-icon { color: var(--utility-bar-background) !important; }
 
 /* Icon color safety inside the card */
-:host .fb-layout ha-icon {
-    color: var(--fb-text) !important;
-    fill: var(--fb-text) !important;
-}
-.fc button .fc-icon,
-.fc button ha-icon {
-    color: var(--fb-icon) !important;
-    fill: var(--fb-icon) !important;
-}
-.chip .i ha-icon {
-    color: var(--fb-icon) !important;
-}
-.sb-btn > .sb-icon {
-    color: #fff !important;
-}
-.fb-layout .sb-btn > ha-icon.sb-icon {
-    color: #fff !important;
-}
-.fb-layout .sb-btn.active > ha-icon.sb-icon {
-    color: var(--utility-bar-background) !important;
-}
+:host .fb-layout ha-icon { color: var(--fb-text) !important; fill: var(--fb-text) !important; }
+.fc button .fc-icon, .fc button ha-icon { color: var(--fb-icon) !important; fill: var(--fb-icon) !important; }
+.chip .i ha-icon { color: var(--fb-icon) !important; }
+.sb-btn > .sb-icon { color: #fff !important; }
+.fb-layout .sb-btn > ha-icon.sb-icon { color: #fff !important; }
+.fb-layout .sb-btn.active > ha-icon.sb-icon { color: var(--utility-bar-background) !important; }
 
 /* Mobile */
 @media (max-width: 760px) {
-    .fb-layout {
-        grid-template-columns: 64px 1fr !important;
-        grid-template-rows: 48px 64px 1fr !important;
-    }
-    .chips {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-    .sb-btn {
-        height: 64px !important;
-    }
-    .fc-toolbar {
-        padding: 6px 8px !important;
-        margin: 8px !important;
-    }
-    .fc-view-container {
-        margin: 8px !important;
-    }
+  .fb-layout { grid-template-columns: 64px 1fr !important; grid-template-rows: 48px 64px 1fr !important; }
+  .chips { grid-template-columns: repeat(3, 1fr) !important; }
+  .sb-btn { height: 64px !important; }
+  .fc-toolbar { padding: 6px 8px !important; margin: 8px !important; }
+  .fc-view-container { margin: 8px !important; }
 }
 
 /* Print */
 @media print {
-    body {
-        background: #fff !important;
-    }
-    .fc {
-        color: var(--fb-print-text) !important;
-    }
-    .fc-toolbar {
-        display: none !important;
-    }
-    .fc-view-container {
-        border: 0 !important;
-        margin: 0 !important;
-    }
+  body { background: #fff !important; }
+  .fc { color: var(--fb-print-text) !important; }
+  .fc-toolbar { display: none !important; }
+  .fc-view-container { border: 0 !important; margin: 0 !important; }
 }

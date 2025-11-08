@@ -3,17 +3,17 @@
 // Notes: Pure CSS injection + route detection. No changes needed for the calendar issues, but left here fully.
 
 (() => {
-    const CFG = {
-        routeContains: '/family', // matches /lovelace/family etc.
-        className: 'family-board-active',
-        options: {
-            hideAppHeader: false, // keep header visible (recolored)
-            collapseSidebar: true, // compact HA sidebar width on this view
-        },
-    };
+  const CFG = {
+    routeContains: '/family', // matches /lovelace/family etc.
+    className: 'family-board-active',
+    options: {
+      hideAppHeader: false,   // keep header visible (recolored)
+      collapseSidebar: true,  // compact HA sidebar width on this view
+    },
+  };
 
-    // CSS variables and chrome overrides that scope to this dashboard only
-    const css = `
+  // CSS variables and chrome overrides that scope to this dashboard only
+  const css = `
   /* ======== FAMILY DASHBOARD SCOPE ======== */
   html.${CFG.className} {
     /* Palette */
@@ -83,13 +83,9 @@
     color: var(--sidebar-text-color) !important;
   }
 
-  ${
-      CFG.options.collapseSidebar
-          ? `
+  ${ CFG.options.collapseSidebar ? `
   html.${CFG.className} ha-sidebar { --mdc-drawer-width: 72px !important; }
-  `
-          : ''
-  }
+  ` : '' }
 
   /* View background & spacing */
   html.${CFG.className} #view,
@@ -102,61 +98,37 @@
   }
   `;
 
-    function ensureStyle() {
-        let style = document.getElementById('family-dashboard-controller-style');
-        if (!style) {
-            style = document.createElement('style');
-            style.id = 'family-dashboard-controller-style';
-            document.head.appendChild(style);
-        }
-        if (style.textContent !== css) style.textContent = css;
+  function ensureStyle() {
+    let style = document.getElementById('family-dashboard-controller-style');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'family-dashboard-controller-style';
+      document.head.appendChild(style);
     }
-    function isActiveRoute() {
-        const path = (location.pathname + location.hash).toLowerCase();
-        return path.includes(CFG.routeContains);
-    }
-    function applyScope() {
-        document.documentElement.classList.toggle(CFG.className, isActiveRoute());
-    }
-    function hookHistory() {
-        const { pushState, replaceState } = history;
-        history.pushState = function (...a) {
-            const r = pushState.apply(this, a);
-            queueMicrotask(applyScope);
-            return r;
-        };
-        history.replaceState = function (...a) {
-            const r = replaceState.apply(this, a);
-            queueMicrotask(applyScope);
-            return r;
-        };
-        window.addEventListener('popstate', applyScope);
-    }
-    function observeShell() {
-        const mo = new MutationObserver(() => {
-            ensureStyle();
-            applyScope();
-        });
-        mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true });
-    }
-    function start() {
-        ensureStyle();
-        applyScope();
-        hookHistory();
-        observeShell();
-        window.addEventListener(
-            'settheme',
-            () => {
-                ensureStyle();
-                applyScope();
-            },
-            { passive: true }
-        );
-        setTimeout(() => {
-            ensureStyle();
-            applyScope();
-        }, 800);
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
-    else start();
+    if (style.textContent !== css) style.textContent = css;
+  }
+  function isActiveRoute() {
+    const path = (location.pathname + location.hash).toLowerCase();
+    return path.includes(CFG.routeContains);
+  }
+  function applyScope() {
+    document.documentElement.classList.toggle(CFG.className, isActiveRoute());
+  }
+  function hookHistory() {
+    const { pushState, replaceState } = history;
+    history.pushState = function(...a) { const r = pushState.apply(this, a); queueMicrotask(applyScope); return r; };
+    history.replaceState = function(...a) { const r = replaceState.apply(this, a); queueMicrotask(applyScope); return r; };
+    window.addEventListener('popstate', applyScope);
+  }
+  function observeShell() {
+    const mo = new MutationObserver(() => { ensureStyle(); applyScope(); });
+    mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true });
+  }
+  function start() {
+    ensureStyle(); applyScope(); hookHistory(); observeShell();
+    window.addEventListener('settheme', () => { ensureStyle(); applyScope(); }, { passive: true });
+    setTimeout(() => { ensureStyle(); applyScope(); }, 800);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();
