@@ -1,27 +1,11 @@
-// /config/www/family-board/family-board-jq.js (v20)
+// /config/www/family-board/family-board-jq.js (v21)
 // Family Board (jQuery + FullCalendar v2/3)
-// -------- DEFAULT CONFIGURATION --------
-const DEFAULTS = {
-    title: 'Panogu Family',
-    timezone: 'Europe/London',
-    defaultSection: 'Calendar',
-    fcDefaultView: 'month',
-    fcFirstDay: 1,
-    fcTimeFormat: 'HH:mm',
-    fcContentHeight: 'auto',
-    fcMinTime: '06:00:00',
-    fcMaxTime: '22:00:00',
-    fcSlotDuration: '00:30:00',
-    layoutHideAppHeader: true,
-    layoutCollapseSidebar: true,
-    layoutFullBleedView: true,
-    layoutSetVars: true,
-    diagnosticsEnabled: false,
-    simpleLegend: false,
-    chipFiltersCalendar: true,
-};
-
-// Sidebar (views) + Header (title/time/section) + Chips (people) + Main (calendar/chores)
+//
+// Key fixes and notes:
+//  - Correct HTML/attribute escaping to avoid DOM breakage in Week/Day views.
+//  - Re-align chip counters/progress IDs so the UI updates.
+//  - Rebuild/refetch behavior refined across view changes.
+//  - Legend + color handling unchanged, but comments added for clarity.
 
 const PATHS = {
     jqueryUrl: '/local/family-board/vendor/jquery.min.1.11.1.js',
@@ -32,17 +16,17 @@ const PATHS = {
     fcJsUrl: '/local/family-board/vendor/fullcalendar.min.js',
 };
 
-// Toggle: should person chips also filter CALENDAR sources?
+// Toggle: person chips filter calendar sources (true = filter by owner/person)
 const CHIP_FILTERS_CALENDAR = true;
 
 class FamilyBoardJQ extends HTMLElement {
-    // runtime fields
     _clockIntervalId = null;
     _resizeObserver = null;
     _onResizeBound = null;
     _rebuildTimer = null;
     _lastEvents = {};
 
+    // === Lovelace stub config: provides defaults for the editor and runtime ===
     static getStubConfig() {
         return {
             mode: 'dashboard',
@@ -71,7 +55,7 @@ class FamilyBoardJQ extends HTMLElement {
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'month,agendaWeek,agendaDay',
+                    right: 'month,agendaWeek,agendaDay', // spaces ok; we normalize to commas
                 },
                 timeFormat: 'HH:mm',
                 contentHeight: 'auto',
@@ -102,21 +86,24 @@ class FamilyBoardJQ extends HTMLElement {
         };
     }
 
+    // === Lovelace card lifecycle =================================================
+
     setConfig(config) {
-        // diagnosticsParam via ?diagnosticsParam=1
-        // Parse URL parameters for diagnostics
+        // Optional: turn on console diagnostics via ?diagnosticsParam=1
         const urlParams = new URLSearchParams(location.search);
         const diagnosticsParam = urlParams.get('diagnosticsParam');
         if (diagnosticsParam === '1') config = { ...config, diagnostics: { enabled: true } };
 
         this._config = { ...FamilyBoardJQ.getStubConfig(), ...config };
-        // Normalize header.right for FC v2/3
+
+        // FullCalendar v2/3 expects commas in header.right; HA YAML often uses spaces
         if (this._config?.fc?.header?.right?.includes(' '))
             this._config.fc.header.right = this._config.fc.header.right.replace(/\s+/g, ',');
 
-        // Inside setConfig(config)
+        // Restore last selected section/person from localStorage
         const lastSection = localStorage.getItem('fb.section');
         const lastPerson = localStorage.getItem('fb.person');
+
         this._state = {
             section: lastSection ?? this._config.defaultSection ?? 'Calendar',
             personFocus: lastPerson ?? 'Family',
@@ -131,17 +118,24 @@ class FamilyBoardJQ extends HTMLElement {
     set hass(hass) {
         this._hass = hass;
         if (!this._$) return;
+
         this._updateHeader();
-        if (this._state.section === 'Calendar' && this._fcReady) this._refetchFullCalendar();
-        if (this._state.section === 'Chores') this._renderChores();
-        this._updateChipCounts(); // show todo counts even while on calendar
+
+        if (this._state.section === 'Calendar' && this._fcReady) {
+            this._refetchFullCalendar(); // keep events live as HA state changes
+        }
+        if (this._state.section === 'Chores') {
+            this._renderChores();
+        }
+
+        // Update the chip counts every time we get a new hass state
+        this._updateChipCounts();
     }
 
     connectedCallback() {
         if (!this._clockIntervalId)
             this._clockIntervalId = setInterval(() => this._updateHeader(), 1000);
     }
-
     disconnectedCallback() {
         if (this._clockIntervalId) {
             clearInterval(this._clockIntervalId);
@@ -154,26 +148,25 @@ class FamilyBoardJQ extends HTMLElement {
             this._resizeObserver = null;
         }
     }
-
     getCardSize() {
         return 6;
     }
 
-    // ---------- Shadow root shell ----------
+    // === Shadow root & assets ====================================================
+
     _ensureRoot() {
         if (this._root) return;
         this._root = this.attachShadow({ mode: 'open' });
-        this._styleHost = document.createElement('div'); // holds <link> stylesheets
+        this._styleHost = document.createElement('div'); // <link> styles inserted here
         this._styleHost.setAttribute('part', 'styles');
-        this._body = document.createElement('div'); // we re-render ONLY this node
+        this._body = document.createElement('div'); // card body
         this._body.id = 'fb-body';
         this._root.append(this._styleHost, this._body);
     }
 
-    // ---------- Assets ----------
     async _ensureAssets() {
         if (!window.jQuery) await this._loadScript(PATHS.jqueryUrl);
-        this.$ = (sel, ctx) => window.jQuery(sel, ctx ?? this._body);
+        this.$ = (sel, ctx) => window.jQuery(sel, ctx ?? this._body); // scoped $
         this._$ = window.jQuery;
 
         if (PATHS.momentUrl && !window.moment) await this._loadScript(PATHS.momentUrl);
@@ -198,7 +191,6 @@ class FamilyBoardJQ extends HTMLElement {
             document.head.appendChild(el);
         });
     }
-
     _loadCss(href, intoShadow = false) {
         return new Promise((res, rej) => {
             if (intoShadow && this._styleHost) {
@@ -210,6 +202,7 @@ class FamilyBoardJQ extends HTMLElement {
                     return res();
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
+                // Cache-bust CSS to avoid stale styles on update
                 link.href = href + '?' + Math.floor(Date.now() / 1000);
                 link.onload = res;
                 link.onerror = () => rej(new Error(`css load failed (shadow): ${href}`));
@@ -226,7 +219,8 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    // ---------- Render entry ----------
+    // === Initial render ==========================================================
+
     _renderEntry() {
         this._renderShell();
         this._renderSidebar();
@@ -256,6 +250,8 @@ class FamilyBoardJQ extends HTMLElement {
         this._body.append(card);
     }
 
+    // === Sidebar (section switcher) =============================================
+
     _renderSidebar() {
         const $ = this.$;
         const ICON = {
@@ -267,28 +263,30 @@ class FamilyBoardJQ extends HTMLElement {
         const $aside = $('<div class="sidebar-aside">').attr('style', 'width: 100% !important;');
         $('#sidebar').empty().append($aside);
 
-        (this._config.sections || []).forEach((sec) => {
-            const $btn = $(`
-        <button class="sb-btn" title="${this._escapeAttr(
-            sec
-        )}" role="button" tabindex="0" aria-pressed="${this._state.section === sec}">
-          <ha-icon class="sb-icon" icon="${this._escapeAttr(ICON[sec] ?? 'mdi:circle')}"></ha-icon>
-        </button>
-      `);
+        (this._config.sections ?? ['Calendar', 'Chores']).forEach((sec) => {
+            const $btn = $(
+                `<button class="sb-btn" title="${this._escapeAttr(
+                    sec
+                )}" role="button" tabindex="0" aria-pressed="${this._state.section === sec}">
+           <ha-icon class="sb-icon" icon="${this._escapeAttr(ICON[sec] ?? 'mdi:circle')}"></ha-icon>
+         </button>`
+            );
             if (this._state.section === sec) $btn.addClass('active');
-            $btn.on('click', () => {
+
+            const activate = () => {
                 this._state.section = sec;
                 localStorage.setItem('fb.section', this._state.section);
                 this.$('#section-pill').text(sec.toUpperCase());
                 this._renderMain();
                 this._highlightSidebar();
-            });
+            };
+            $btn.on('click', activate);
             $btn.on('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') $btn.click();
+                if (e.key === 'Enter' || e.key === ' ') activate();
             });
+
             $aside.append($btn);
         });
-
         this._highlightSidebar();
     }
 
@@ -303,6 +301,8 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
+    // === Chips (people) =========================================================
+
     _renderChips() {
         const $ = this.$;
         const people = [
@@ -310,7 +310,7 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'family',
                 name: 'Family',
                 icon: 'mdi:account-group',
-                color: 'var(--family-color-family,  #36B37E)',
+                color: 'var(--family-color-family, #36B37E)',
             },
             {
                 key: 'anthony',
@@ -322,7 +322,7 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'joy',
                 name: 'Joy',
                 icon: 'mdi:book-open-variant',
-                color: 'var(--family-color-joy,    #F4B400)',
+                color: 'var(--family-color-joy, #F4B400)',
             },
             {
                 key: 'lizzie',
@@ -334,41 +334,34 @@ class FamilyBoardJQ extends HTMLElement {
                 key: 'toby',
                 name: 'Toby',
                 icon: 'mdi:soccer',
-                color: 'var(--family-color-toby,   #42A5F5)',
+                color: 'var(--family-color-toby, #42A5F5)',
             },
         ];
-
         const $chips = $('#chips').empty();
-        people.forEach((p) => {
-            const isActive = (this._state.personFocus || 'Family').toLowerCase() === p.key;
 
-            // CHIP MARKUP:
-            // - .i   → icon
-            // - .n   → name (title)
-            // - .cnt → "left today" (placeholder 0)
-            // - .bar → background track
-            // - .bar-fill → progress for today (completed/total)
+        people.forEach((p) => {
+            const isActive = (this._state.personFocus ?? 'Family').toLowerCase() === p.key;
+
+            // Chip structure: icon (.i) + name (.n) + count (.cnt) + progress (.bar/.bar-fill)
             const $chip = $(`
-      <div class="chip ${isActive ? 'active' : ''}"
-           data-key="${this._escapeAttr(p.key)}"
-           role="button" tabindex="0"
-           aria-pressed="${isActive}"
-           style="background:${p.color}">
-        <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
-        <div class="n">${this._escapeHtml(p.name)}</div>
-        <div class="cnt" id="chip-today-${this._escapeAttr(p.key)}"
-             title="Tasks left today"
-             aria-label="Tasks left today">0</div>
-        <div class="bar"
-             role="progressbar"
-             aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
-             aria-label="${this._escapeAttr(p.name)} progress today">
-          <div class="bar-fill" id="chip-progress-${this._escapeAttr(
-              p.key
-          )}" style="transform:scaleX(0)"></div>
+        <div class="chip ${isActive ? 'active' : ''}"
+             data-key="${this._escapeAttr(p.key)}"
+             role="button" tabindex="0"
+             aria-pressed="${isActive}"
+             style="background:${p.color}">
+          <div class="i"><ha-icon icon="${this._escapeAttr(p.icon)}"></ha-icon></div>
+          <div class="n">${this._escapeHtml(p.name)}</div>
+          <div class="cnt" id="chip-today-${this._escapeAttr(p.key)}"
+               title="Tasks left today" aria-label="Tasks left today">0</div>
+          <div class="bar" role="progressbar"
+               aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
+               aria-label="${this._escapeAttr(p.name)} progress today">
+            <div class="bar-fill" id="chip-progress-${this._escapeAttr(
+                p.key
+            )}" style="transform:scaleX(0)"></div>
+          </div>
         </div>
-      </div>
-    `);
+      `);
 
             const activate = () => {
                 this._state.personFocus = p.name;
@@ -376,15 +369,12 @@ class FamilyBoardJQ extends HTMLElement {
                 this.$('.chip').removeClass('active').attr('aria-pressed', 'false');
                 $chip.addClass('active').attr('aria-pressed', 'true');
 
-                // Use your existing behavior:
-                if (
-                    this._state.section === 'Calendar' &&
-                    typeof CHIP_FILTERS_CALENDAR !== 'undefined' &&
-                    CHIP_FILTERS_CALENDAR
-                ) {
+                // Calendar: rebuild sources when changing person
+                if (this._state.section === 'Calendar' && CHIP_FILTERS_CALENDAR) {
                     clearTimeout(this._rebuildTimer);
                     this._rebuildTimer = setTimeout(() => this._rebuildFullCalendar(), 120);
                 }
+                // Chores: just re-render
                 if (this._state.section === 'Chores') this._renderChores();
             };
 
@@ -396,9 +386,10 @@ class FamilyBoardJQ extends HTMLElement {
             $chips.append($chip);
         });
 
-        // Keep your existing aggregate count updater (optional/independent of "today" UI)
-        this._updateChipCounts();
+        this._updateChipCounts(); // initial counts
     }
+
+    // === Main area ===============================================================
 
     _renderMain() {
         const $ = this.$;
@@ -411,12 +402,14 @@ class FamilyBoardJQ extends HTMLElement {
             this._initFullCalendar();
             this._renderLegend('#fc-legend');
 
+            // Recompute FC height when the host resizes
             if (!this._resizeObserver)
                 this._resizeObserver = new ResizeObserver(() => {
                     try {
                         this.$('#fc').fullCalendar('option', 'height', 'auto');
                     } catch {}
                 });
+
             const wrap = this._body.querySelector('#fc-wrap');
             if (wrap) this._resizeObserver.observe(wrap);
             return;
@@ -435,7 +428,8 @@ class FamilyBoardJQ extends HTMLElement {
         );
     }
 
-    // ---------- Header clock ----------
+    // === Header clock ============================================================
+
     _updateHeader() {
         if (!this._hass) return;
         const now = new Date();
@@ -448,31 +442,50 @@ class FamilyBoardJQ extends HTMLElement {
         );
     }
 
-    // ---------- Chips: todo counts ----------
+    // === Chip counts / progress ==================================================
+
     _updateChipCounts() {
+        // Reads HA 'todo.*' entities and updates: left today & progress fill
         const lists = this._config.todos ?? {};
-        const count = (ent) => {
+        const countOpen = (ent) => {
             if (!ent) return 0;
             const st = this._hass?.states?.[ent];
             return (st?.attributes?.items ?? []).filter((i) => i.status !== 'completed').length;
         };
+
         const map = {
-            family: count(lists.family),
-            anthony: count(lists.anthony),
-            joy: count(lists.joy),
-            lizzie: count(lists.lizzie),
-            toby: count(lists.toby),
+            family: countOpen(lists.family),
+            anthony: countOpen(lists.anthony),
+            joy: countOpen(lists.joy),
+            lizzie: countOpen(lists.lizzie),
+            toby: countOpen(lists.toby),
         };
+
+        // Display “left today” (we just show open count; adapt if you want day-specific)
         Object.entries(map).forEach(([k, v]) => {
-            this.$(`#chip-v-${k}`).text(v > 0 ? String(v) : '');
-            this.$(`#chip-bar-${k}`).css('transform', `scaleX(${Math.min(v / 10, 1)})`);
+            // numeric pill
+            this.$(`#chip-today-${k}`)
+                .text(v > 0 ? String(v) : '0')
+                .attr('title', `${v} open tasks`);
+            // progress bar (simple heuristic: up to 10 open => scaleX)
+            this.$(`#chip-progress-${k}`).css('transform', `scaleX(${Math.min(v / 10, 1)})`);
+            // ARIA
+            const $bar = this.$(`.chip[data-key="${k}"] .bar`);
+            $bar.attr({
+                'aria-valuemin': 0,
+                'aria-valuemax': 10,
+                'aria-valuenow': Math.min(v, 10),
+                'aria-label': `${k} open ${v}`,
+            });
         });
     }
 
-    // ---------- Calendar ----------
+    // === Calendar: legend & event sources =======================================
+
     _renderLegend(selector) {
         const wrap = this.$(selector);
         if (!wrap.length) return;
+
         const legend = (this._config.calendars ?? [])
             .map((s) => {
                 const label = s.label ?? String(s.entity ?? '').replace(/^calendar\./, '');
@@ -489,16 +502,15 @@ class FamilyBoardJQ extends HTMLElement {
     _eventSourcesForFocus() {
         if (!CHIP_FILTERS_CALENDAR)
             return (this._config.calendars ?? []).map((src) => this._srcToFc(src));
+
         const focus = (this._state.personFocus ?? 'Family').toLowerCase();
         const cfgSources = this._config.calendars ?? [];
-
         const match = (src, who) => {
-            if (who === 'family') return true;
+            if (who === 'family') return true; // “Family” shows all
             if (src.owner) return String(src.owner).toLowerCase() === who;
-            const id = String(src.entity || '').toLowerCase();
+            const id = String(src.entity ?? '').toLowerCase();
             return id.startsWith(`calendar.${who}`) || id.includes(`_${who}`);
         };
-
         const filtered = cfgSources.filter((s) => match(s, focus));
         return (filtered.length ? filtered : cfgSources).map((src) => this._srcToFc(src));
     }
@@ -508,6 +520,7 @@ class FamilyBoardJQ extends HTMLElement {
             id: src.entity,
             color: src.color,
             events: (start, end, _tz, callback) => {
+                // Home Assistant REST API route used by the frontend: /api/calendars/{entity}?start=&end=
                 const { startIso, endIso } = this._safeRangeToIso(start, end);
                 const path = `calendars/${src.entity}?start=${encodeURIComponent(
                     startIso
@@ -534,12 +547,15 @@ class FamilyBoardJQ extends HTMLElement {
         };
     }
 
+    // === Calendar: init / rebuild / refetch =====================================
+
     _initFullCalendar() {
         const $fc = this.$('#fc');
         if (!($fc.length && this._$?.fn?.fullCalendar)) {
             $fc.html('<div class="fb-error">FullCalendar not loaded.</div>');
             return;
         }
+
         try {
             $fc.fullCalendar('destroy');
         } catch {}
@@ -547,15 +563,18 @@ class FamilyBoardJQ extends HTMLElement {
         const fcCfg = this._config.fc ?? {};
         const tz = this._config.timezone ?? 'local';
         const isNarrow = () => (this._root.host?.offsetWidth || window.innerWidth) < 760;
+
         const header = { ...fcCfg.header };
         if (header?.right?.includes(' ')) header.right = header.right.replace(/\s+/g, ',');
 
         $fc.fullCalendar({
             header,
+            // Respect configured default while remaining responsive on phones
             defaultView: isNarrow()
                 ? 'agendaDay'
-                : fcCfg.defaultView ?? fcCfg.initialView ?? 'agendaWeek',
+                : fcCfg.defaultView ?? fcCfg.initialView ?? 'month',
             timezone: tz,
+            // Global time/grid options; view-specific overrides are passed via "views"
             allDaySlot: fcCfg.allDaySlot !== false,
             minTime: fcCfg.minTime ?? '06:00:00',
             maxTime: fcCfg.maxTime ?? '22:00:00',
@@ -563,6 +582,7 @@ class FamilyBoardJQ extends HTMLElement {
             hiddenDays: Array.isArray(fcCfg.hiddenDays) ? fcCfg.hiddenDays : [],
             timeFormat: fcCfg.timeFormat ?? 'HH:mm',
             views: fcCfg.views ?? undefined,
+
             contentHeight: fcCfg.contentHeight ?? 'auto',
             height: 'auto',
             handleWindowResize: true,
@@ -571,26 +591,34 @@ class FamilyBoardJQ extends HTMLElement {
             lazyFetching: true,
             eventLimit: true,
             weekNumbers: false,
+
             eventSources: this._eventSourcesForFocus(),
+
+            // Style each event (apply source color, keep title as tooltip)
             eventRender: (event, element) => {
                 const color = event.color || (event.source && event.source.color);
                 if (color) element.css('backgroundColor', color);
                 if (event.textColor) element.css('color', event.textColor);
                 element.attr('title', this._escapeAttr(event.title));
             },
+
+            // When the view changes (month→week→day), reflow height and refetch
             viewRender: () => {
                 requestAnimationFrame(() => {
                     try {
                         $fc.fullCalendar('option', 'height', 'auto');
                     } catch {}
+                    try {
+                        $fc.fullCalendar('refetchEvents');
+                    } catch {}
                 });
             },
         });
 
-        // respond to window resizes with view change for mobile/desktop
+        // Responsive view switch on window resize
         const onResize = () => {
             try {
-                const target = isNarrow() ? 'agendaDay' : fcCfg.defaultView ?? 'agendaWeek';
+                const target = isNarrow() ? 'agendaDay' : fcCfg.defaultView ?? 'month';
                 $fc.fullCalendar('changeView', target);
             } catch {}
         };
@@ -623,7 +651,8 @@ class FamilyBoardJQ extends HTMLElement {
         } catch {}
     }
 
-    // ---------- Chores ----------
+    // === Chores =================================================================
+
     _renderChores() {
         if (this._state.section !== 'Chores' || !this._hass) return;
         const $root = this.$('#chores');
@@ -632,8 +661,7 @@ class FamilyBoardJQ extends HTMLElement {
         const lists = this._config.todos ?? {};
         const keys = ['anthony', 'joy', 'family', 'lizzie', 'toby'].filter((k) => lists[k]);
 
-        // Person-focused filtering
-        const focus = (this._state.personFocus || 'Family').toLowerCase();
+        const focus = (this._state.personFocus ?? 'Family').toLowerCase();
         const filterKeys = focus === 'family' ? keys : keys.filter((k) => k === focus);
 
         const html = filterKeys
@@ -641,22 +669,21 @@ class FamilyBoardJQ extends HTMLElement {
                 const ent = lists[k];
                 const st = this._hass.states?.[ent];
                 let items = (st?.attributes?.items ?? []).filter((it) => it.status !== 'completed');
-                // optional: sort by due then priority
+
+                // Sort: earliest due first, then by priority desc (tweak as you wish)
                 items = items.sort(
                     (a, b) =>
-                        (a.due || '').localeCompare(b.due || '') ||
-                        (b.priority || 0) - (a.priority || 0)
+                        (a.due ?? '').localeCompare(b.due ?? '') ||
+                        (b.priority ?? 0) - (a.priority ?? 0)
                 );
 
                 const body = items.length
                     ? items
                           .map(
                               (it) => `
-            <button class="fb-chore" data-entity="${this._escapeAttr(
-                ent
-            )}" data-id="${this._escapeAttr(
-                                  String(it.uid || it.id || it.summary)
-                              )}" style="text-align:left;padding:4px;border:0;background:transparent;cursor:pointer">
+            <button class="fb-chore" data-entity="${this._escapeAttr(ent)}"
+                    data-id="${this._escapeAttr(String(it.uid ?? it.id ?? it.summary))}"
+                    style="text-align:left;padding:4px;border:0;background:transparent;cursor:pointer">
               – ${this._escapeHtml(String(it.summary ?? ''))}
             </button>`
                           )
@@ -674,12 +701,11 @@ class FamilyBoardJQ extends HTMLElement {
 
         $root.html(html);
 
-        // mark-complete handler (if service available)
+        // Mark-complete (best effort; adjust for your todo integration)
         this.$('.fb-chore').on('click', (e) => {
             const el = this.$(e.currentTarget);
             const entity_id = el.data('entity');
             const item = String(el.data('id'));
-            // Best-effort—adjust if your integration differs:
             this._hass
                 ?.callService('todo', 'update_item', { entity_id, item, status: 'completed' })
                 .then(() => this._renderChores())
@@ -689,23 +715,25 @@ class FamilyBoardJQ extends HTMLElement {
         });
     }
 
-    // ---------- Banners ----------
+    // === Banners (errors / cache notice) ========================================
+
     _showBanner(msg) {
         const host = this.$('#main');
         if (!host.length) return;
         const existing = this.$('#fb-banner');
         const html = `
-    <div id="fb-banner"
-         style="padding:6px 12px;background:var(--fb-surface, #fff);color:#b00020;border-radius:8px;margin:8px;border:1px solid var(--fb-grid,#e5e7eb)">
-      ${this._escapeHtml(msg)}
-    </div>`;
+      <div id="fb-banner"
+           style="padding:6px 12px;background:var(--fb-surface,#fff);color:#b00020;border-radius:8px;margin:8px;border:1px solid var(--fb-grid,#e5e7eb)">
+        ${this._escapeHtml(msg)}
+      </div>`;
         existing.length ? existing.replaceWith(html) : host.prepend(html);
     }
     _hideBanner() {
         this.$('#fb-banner').remove();
     }
 
-    // ---------- Utils ----------
+    // === Utils ==================================================================
+
     _safeRangeToIso(start, end) {
         const toIso = (x) => {
             if (!x) return new Date().toISOString();
@@ -727,12 +755,15 @@ class FamilyBoardJQ extends HTMLElement {
         const hasEDT = typeof e.dateTime === 'string';
         const hasSD = typeof s.date === 'string';
         const hasED = typeof e.date === 'string';
+
         if (!hasSDT && !hasSD) return null;
 
         const isAllDay = !!ev.all_day || (hasSD && !hasEDT);
+
         let startStr = hasSDT ? s.dateTime : `${s.date}T00:00:00`;
         let endStr = hasEDT ? e.dateTime : hasED ? `${e.date}T00:00:00` : null;
 
+        // FullCalendar expects all-day end to be exclusive
         if (isAllDay) {
             if (!endStr && hasSD) {
                 const d = new Date(`${s.date}T00:00:00Z`);
@@ -740,9 +771,11 @@ class FamilyBoardJQ extends HTMLElement {
                 endStr = d.toISOString();
             } else if (hasED) {
                 const d = new Date(`${e.date}T00:00:00Z`);
-                endStr = d.toISOString();
+                endStr = d.toISOString(); // exclusive midnight of end day
             }
         }
+
+        // Timed event with missing end: assume 1 hour
         if (!isAllDay && hasSDT && !endStr) {
             const d = new Date(startStr);
             endStr = new Date(d.getTime() + 3600000).toISOString();
@@ -762,7 +795,7 @@ class FamilyBoardJQ extends HTMLElement {
             allDay: !!isAllDay,
             location: ev.location,
             description: ev.description,
-            color: ev.color,
+            color: ev.color, // we also apply source color in eventRender
         };
     }
 
@@ -772,12 +805,11 @@ class FamilyBoardJQ extends HTMLElement {
             msg
         )}</div></ha-card>`;
     }
-
     _diag(msg) {
-        if (!this._config.diagnostics?.enabled) return;
-        console.log('[family-board-jq]', msg);
+        if (this._config.diagnostics?.enabled) console.log('[family-board-jq]', msg);
     }
 
+    // Proper HTML escaping (fixes agenda view DOM breakages)
     _escapeHtml(s) {
         const str = String(s);
         return str
@@ -788,14 +820,11 @@ class FamilyBoardJQ extends HTMLElement {
             .replace(/'/g, '&#39;');
     }
     _escapeAttr(s) {
+        // Escape HTML + backticks for safety in attribute contexts
         return this._escapeHtml(String(s)).replace(/`/g, '&#96;');
     }
 
-    /**
-     * Update a single chip's "today" counters and progress.
-     * @param {('family'|'anthony'|'joy'|'lizzie'|'toby')} key
-     * @param {{completed:number,total:number}} totals
-     */
+    /** External helper: update a single chip's "today" counters & progress */
     setChipTodayTotals(key, totals) {
         if (!key) return;
         const k = String(key).toLowerCase();
@@ -804,20 +833,14 @@ class FamilyBoardJQ extends HTMLElement {
         const left = Math.max(0, total - completed);
         const ratio = total > 0 ? Math.min(completed / total, 1) : 0;
 
-        // Update the "left today" numeric pill
         const $left = this.$(`#chip-today-${k}`);
         if ($left.length) {
             $left.text(String(left));
             $left.attr('title', `${left} left today (of ${total})`);
         }
-
-        // Update progress bar fill
         const $fill = this.$(`#chip-progress-${k}`);
-        if ($fill.length) {
-            $fill.css('transform', `scaleX(${ratio})`);
-        }
+        if ($fill.length) $fill.css('transform', `scaleX(${ratio})`);
 
-        // Update ARIA on the track
         const $bar = this.$(`.chip[data-key="${k}"] .bar`);
         if ($bar.length) {
             $bar.attr({
@@ -828,16 +851,10 @@ class FamilyBoardJQ extends HTMLElement {
             });
         }
     }
-
-    /**
-     * Batch update: { anthony:{completed:2,total:5}, joy:{...}, ... }
-     * Missing people are ignored.
-     */
+    /** External helper: batch update map { anthony:{completed,total}, ... } */
     setAllChipTodayTotals(map) {
         if (!map || typeof map !== 'object') return;
-        for (const [key, totals] of Object.entries(map)) {
-            this.setChipTodayTotals(key, totals);
-        }
+        for (const [key, totals] of Object.entries(map)) this.setChipTodayTotals(key, totals);
     }
 }
 

@@ -1,5 +1,4 @@
 # family_dashboard.yaml
-
 title: Family
 views:
     - title: Family
@@ -7,10 +6,11 @@ views:
       panel: true
       cards:
           - type: custom:family-board-jq
+            # === Card-level options passed into the custom element ===
             title: Panogu Family
             timezone: Europe/London
 
-            # Tag each calendar with the 'owner' used by chip filters.
+            # Calendars + owners used by chip filtering
             calendars:
                 - entity: calendar.family
                   color: var(--family-color-family)
@@ -37,6 +37,7 @@ views:
                   owner: family
                   label: Routine
 
+            # Per-person Todo entities for chips & chores view
             todos:
                 family: todo.family
                 anthony: todo.anthony
@@ -44,6 +45,7 @@ views:
                 lizzie: todo.lizzie
                 toby: todo.toby
 
+            # FullCalendar configuration (v2/3 compatible)
             fc:
                 firstDay: 1
                 defaultView: month

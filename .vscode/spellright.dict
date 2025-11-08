@@ -76,3 +76,11 @@ lt
 gt
 quot
 bg
+cnt
+progressbar
+valuemin
+valuemax
+valuenow
+uid
+settheme
+tabindex

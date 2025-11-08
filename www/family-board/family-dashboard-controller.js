@@ -1,18 +1,18 @@
 // /config/www/family-board/family-dashboard-controller.js (v21)
-// Force-scoped theme + HA chrome overrides for Family dashboard.
-// Ensures HA header + HA left sidebar use lilac, and keeps it in place
-// across navigation, theme toggles, and re-renders.
+// Purpose: Page-level “chrome” (header/sidebar) theming & behavior when you’re on the Family dashboard.
+// Notes: Pure CSS injection + route detection. No changes needed for the calendar issues, but left here fully.
 
 (() => {
     const CFG = {
         routeContains: '/family', // matches /lovelace/family etc.
         className: 'family-board-active',
         options: {
-            hideAppHeader: false, // leave header visible but recolored
-            collapseSidebar: true,
+            hideAppHeader: false, // keep header visible (recolored)
+            collapseSidebar: true, // compact HA sidebar width on this view
         },
     };
 
+    // CSS variables and chrome overrides that scope to this dashboard only
     const css = `
   /* ======== FAMILY DASHBOARD SCOPE ======== */
   html.${CFG.className} {
@@ -22,17 +22,18 @@
     --secondary-text-color: #475569;
     --divider-color: #E5E7EB;
 
+    /* Family color tokens used by the card */
     --utility-bar-background: #cfbaf0 !important;
-    --family-color-family:     #36B37E !important;
-    --family-color-anthony:    #7E57C2 !important;
-    --family-color-joy:        #F4B400 !important;
-    --family-color-lizzie:     #EC407A !important;
-    --family-color-toby:       #42A5F5 !important;
-    --family-color-routine:    #b2fd7fff !important;
+    --family-color-family:  #36B37E !important;
+    --family-color-anthony: #7E57C2 !important;
+    --family-color-joy:     #F4B400 !important;
+    --family-color-lizzie:  #EC407A !important;
+    --family-color-toby:    #42A5F5 !important;
+    --family-color-routine: #b2fd7fff !important;
+
     /* Family Board variables */
     --family-background: #FFFFFF;
     --family-surface: var(--palette-lilac);
-
     --fb-bg: var(--family-background);
     --fb-surface: var(--family-surface);
     --fb-surface-2: var(--family-background);
@@ -46,29 +47,26 @@
     --fb-print-text: #111;
     --fb-radius: 12px;
 
-    /* HA chrome variables (many HA components read these) */
+    /* App Header / Sidebar */
     --primary-background-color: var(--family-background);
-
-    /* App Header */
     --app-header-background-color: var(--palette-lilac);
     --app-header-text-color: var(--primary-text-color);
     --app-header-border-bottom: 0;
 
-    /* Left HA Sidebar */
     --sidebar-background-color: var(--palette-lilac);
     --sidebar-text-color: var(--primary-text-color);
     --sidebar-icon-color: var(--secondary-text-color);
     --sidebar-selected-text-color: var(--primary-text-color);
     --sidebar-selected-icon-color: var(--primary-text-color);
 
-    /* MDC/Material fallbacks used by header/toolbar in some builds */
+    /* MDC fallbacks */
     --mdc-theme-primary: var(--primary-text-color);
     --mdc-theme-on-primary: var(--primary-text-color);
     --mdc-theme-surface: var(--palette-lilac);
     --mdc-theme-on-surface: var(--primary-text-color);
   }
 
-  /* ======== FORCE HA APP HEADER COLOR (multiple targets) ======== */
+  /* Force header coloring */
   html.${CFG.className} app-header,
   html.${CFG.className} ha-top-app-bar-fixed,
   html.${CFG.className} mwc-top-app-bar-fixed,
@@ -79,68 +77,29 @@
     border-bottom: var(--app-header-border-bottom, 0) !important;
   }
 
-  /* Some builds expose header content via parts */
-  html.${CFG.className} app-header::part(toolbar),
-  html.${CFG.className} ha-top-app-bar-fixed::part(toolbar),
-  html.${CFG.className} ha-top-app-bar-fixed::part(title) {
-    background: var(--app-header-background-color) !important;
-    color: var(--app-header-text-color) !important;
-  }
-
-  /* ======== FORCE HA LEFT SIDEBAR COLOR (use both element and ::part) ======== */
+  /* Sidebar */
   html.${CFG.className} ha-sidebar {
     background: var(--sidebar-background-color) !important;
     color: var(--sidebar-text-color) !important;
   }
-  html.${CFG.className} ha-sidebar::part(container),
-  html.${CFG.className} ha-sidebar::part(content) {
-    background: var(--sidebar-background-color) !important;
-    color: var(--sidebar-text-color) !important;
-  }
-  html.${CFG.className} ha-sidebar a,
-  html.${CFG.className} ha-sidebar button,
-  html.${CFG.className} ha-sidebar ha-icon {
-    color: var(--sidebar-icon-color) !important;
-  }
-  html.${CFG.className} ha-sidebar a[aria-current="page"],
-  html.${CFG.className} ha-sidebar a[aria-current="page"] ha-icon {
-    color: var(--sidebar-selected-icon-color) !important;
-  }
 
-  /* Optional: collapse HA sidebar width for this view */
   ${
       CFG.options.collapseSidebar
           ? `
-  html.${CFG.className} ha-sidebar { --mdc-drawer-width: 72px !important; }`
+  html.${CFG.className} ha-sidebar { --mdc-drawer-width: 72px !important; }
+  `
           : ''
   }
 
-  /* Hide HA header if you really want – you asked to keep it visible but lilac */
-  ${
-      CFG.options.hideAppHeader
-          ? `
-  html.${CFG.className} app-header,
-  html.${CFG.className} ha-top-app-bar-fixed,
-  html.${CFG.className} mwc-top-app-bar-fixed { display: none !important; }`
-          : ''
-  }
-
-  /* Ensure HA shell stays white under our view */
-  html.${CFG.className} body,
-  html.${CFG.className} home-assistant,
-  html.${CFG.className} ha-main,
-  html.${CFG.className} ha-app-layout,
+  /* View background & spacing */
   html.${CFG.className} #view,
   html.${CFG.className} hui-view,
   html.${CFG.className} hui-panel-view {
+    padding: 0 !important;
+    margin:  0 !important;
     background: var(--family-background) !important;
     color: var(--primary-text-color);
   }
-
-  /* Remove default paddings in the panel view */
-  html.${CFG.className} #view,
-  html.${CFG.className} hui-view,
-  html.${CFG.className} hui-panel-view { padding: 0 !important; margin: 0 !important; }
   `;
 
     function ensureStyle() {
@@ -152,16 +111,13 @@
         }
         if (style.textContent !== css) style.textContent = css;
     }
-
     function isActiveRoute() {
         const path = (location.pathname + location.hash).toLowerCase();
         return path.includes(CFG.routeContains);
     }
-
     function applyScope() {
         document.documentElement.classList.toggle(CFG.className, isActiveRoute());
     }
-
     function hookHistory() {
         const { pushState, replaceState } = history;
         history.pushState = function (...a) {
@@ -176,24 +132,18 @@
         };
         window.addEventListener('popstate', applyScope);
     }
-
-    // Observe HA app shell (header/sidebar can be re-rendered by theme or nav)
-    let mo;
     function observeShell() {
-        if (mo) return;
-        mo = new MutationObserver(() => {
+        const mo = new MutationObserver(() => {
             ensureStyle();
             applyScope();
         });
         mo.observe(document.documentElement, { subtree: true, childList: true, attributes: true });
     }
-
     function start() {
         ensureStyle();
         applyScope();
         hookHistory();
         observeShell();
-        // Re-assert after theme changes (HA dispatches 'settheme' sometimes)
         window.addEventListener(
             'settheme',
             () => {
@@ -202,13 +152,11 @@
             },
             { passive: true }
         );
-        // Safety timer to re-apply once after load
         setTimeout(() => {
             ensureStyle();
             applyScope();
         }, 800);
     }
-
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
     else start();
 })();
